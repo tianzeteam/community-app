@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableSysRoleMenuMapping" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_role_menu_mapping"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建账户角色表</comment>
+        <sql>
+            CREATE TABLE sys_role_menu_mapping(
+            ID serial NOT NULL,
+            ROLE_ID INT,
+            ROLE_CODE VARCHAR(32),
+            MENU_ID INT,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE sys_role_menu_mapping IS '角色菜单映射';
+            COMMENT ON COLUMN sys_role_menu_mapping.ID IS '主键ID';
+            COMMENT ON COLUMN sys_role_menu_mapping.ROLE_ID IS '角色主键ID';
+            COMMENT ON COLUMN sys_role_menu_mapping.ROLE_CODE IS '角色编码，冗余字段';
+            COMMENT ON COLUMN sys_role_menu_mapping.MENU_ID IS '菜单主键ID';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

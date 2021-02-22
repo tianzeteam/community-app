@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableSysMenu" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_menu"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建系统菜单表</comment>
+        <sql>
+            CREATE TABLE sys_menu(
+            ID serial NOT NULL,
+            PID INT,
+            ICON VARCHAR(255),
+            NAME VARCHAR(32),
+            REMARK VARCHAR(128),
+            URL VARCHAR(128),
+            PERMIT VARCHAR(128),
+            TYPE INT,
+            STATE INT DEFAULT 0,
+            SORT INT DEFAULT 0,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE sys_menu IS '系统菜单';
+            COMMENT ON COLUMN sys_menu.ID IS '主键ID';
+            COMMENT ON COLUMN sys_menu.PID IS '父级菜单ID';
+            COMMENT ON COLUMN sys_menu.ICON IS '菜单图标';
+            COMMENT ON COLUMN sys_menu.NAME IS '菜单名称';
+            COMMENT ON COLUMN sys_menu.REMARK IS '菜单简介';
+            COMMENT ON COLUMN sys_menu.URL IS '菜单路径';
+            COMMENT ON COLUMN sys_menu.PERMIT IS '权限标识';
+            COMMENT ON COLUMN sys_menu.TYPE IS '0顶级菜单1子菜单2不是菜单';
+            COMMENT ON COLUMN sys_menu.STATE IS '0正常1暂停';
+            COMMENT ON COLUMN sys_menu.SORT IS '排序';
+            COMMENT ON COLUMN sys_menu.REVISION IS '乐观锁';
+            COMMENT ON COLUMN sys_menu.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN sys_menu.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN sys_menu.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN sys_menu.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserRoleMapping" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_role_mapping"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户角色映射表</comment>
+        <sql>
+            CREATE TABLE user_role_mapping(
+            ID serial NOT NULL,
+            USER_ID BIGINT,
+            ROLE_ID INT,
+            ROLE_CODE VARCHAR(32),
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_role_mapping IS '用户角色映射';
+            COMMENT ON COLUMN user_role_mapping.ID IS '主键ID';
+            COMMENT ON COLUMN user_role_mapping.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN user_role_mapping.ROLE_ID IS '角色主键ID';
+            COMMENT ON COLUMN user_role_mapping.ROLE_CODE IS '角色编码，冗余字段';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

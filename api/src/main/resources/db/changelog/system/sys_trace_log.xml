@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableSysTraceLog" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_trace_log"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建账户角色表</comment>
+        <sql>
+            CREATE TABLE sys_trace_log(
+            ID BIGINT NOT NULL,
+            TRACE_ID VARCHAR(32),
+            STATE VARCHAR(16),
+            URL VARCHAR(128),
+            COST_TIME INT,
+            LOGS TEXT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON COLUMN sys_trace_log.ID IS '主键ID';
+            COMMENT ON COLUMN sys_trace_log.TRACE_ID IS '追踪ID';
+            COMMENT ON COLUMN sys_trace_log.STATE IS '成功或者失败';
+            COMMENT ON COLUMN sys_trace_log.URL IS '接口地址';
+            COMMENT ON COLUMN sys_trace_log.COST_TIME IS '耗时';
+            COMMENT ON COLUMN sys_trace_log.LOGS IS '日志';
+            COMMENT ON COLUMN sys_trace_log.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE sys_trace_log_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "sys_trace_log" alter column ID set default nextval('sys_trace_log_id_seq');
+
+            CREATE INDEX idx_trace_id ON sys_trace_log USING btree (TRACE_ID);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

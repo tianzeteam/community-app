@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserAccount" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_account"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户表</comment>
+        <sql>
+            CREATE TABLE "user_account"(
+            ID BIGINT NOT NULL,
+            HEAD_URL VARCHAR(255),
+            USERNAME VARCHAR(32),
+            MOBILE VARCHAR(16),
+            NAME VARCHAR(32),
+            NICK_NAME VARCHAR(32),
+            PASSWORD VARCHAR(32),
+            SALT VARCHAR(32),
+            ACCESS_TOKEN VARCHAR(512),
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE "user_account" IS '用户信息';
+            COMMENT ON COLUMN "user_account".ID IS '主键ID';
+            COMMENT ON COLUMN "user_account".HEAD_URL IS '头像';
+            COMMENT ON COLUMN "user_account".USERNAME IS '用户名';
+            COMMENT ON COLUMN "user_account".MOBILE IS '手机号码';
+            COMMENT ON COLUMN "user_account".NAME IS '姓名';
+            COMMENT ON COLUMN "user_account".NICK_NAME IS '昵称';
+            COMMENT ON COLUMN "user_account".PASSWORD IS '密码';
+            COMMENT ON COLUMN "user_account".SALT IS '密码盐';
+            COMMENT ON COLUMN "user_account".ACCESS_TOKEN IS '访问令牌';
+            COMMENT ON COLUMN "user_account".REVISION IS '乐观锁';
+            COMMENT ON COLUMN "user_account".CREATED_BY IS '创建人';
+            COMMENT ON COLUMN "user_account".CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN "user_account".UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN "user_account".UPDATED_TIME IS '更新时间';
+
+            CREATE SEQUENCE user_account_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "user_account" alter column ID set default nextval('user_account_id_seq');
+        </sql>
+    </changeSet>
+    <changeSet id="addColumnState4UserAccount" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user_account" columnName="state"/>
+            </not>
+        </preConditions>
+        <comment>添加状态字段</comment>
+        <sql>
+            alter table user_account add column state int default 0;
+            comment on column user_account.state is '账户状态0正常1暂停2锁住';
+        </sql>
+    </changeSet>
+    <changeSet id="addIndex4UserAccount1" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="user_account" indexName="idx_username"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_username on user_account using btree (username);
+            create index idx_mobile on user_account using btree (mobile);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

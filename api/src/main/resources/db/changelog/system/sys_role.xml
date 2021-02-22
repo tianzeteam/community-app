@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableSysRole" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_role"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建账户角色表</comment>
+        <sql>
+            CREATE TABLE sys_role(
+            ID serial NOT NULL,
+            CODE VARCHAR(32),
+            NAME VARCHAR(32),
+            REMARK VARCHAR(32),
+            REVISION INT,
+            CREATED_BY VARCHAR(32),
+            CREATED_TIME DATE,
+            UPDATED_BY VARCHAR(32),
+            UPDATED_TIME DATE,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE sys_role IS '账户角色';
+            COMMENT ON COLUMN sys_role.ID IS '主键ID';
+            COMMENT ON COLUMN sys_role.CODE IS '角色编码';
+            COMMENT ON COLUMN sys_role.NAME IS '角色名称';
+            COMMENT ON COLUMN sys_role.REMARK IS '角色简介';
+            COMMENT ON COLUMN sys_role.REVISION IS '乐观锁';
+            COMMENT ON COLUMN sys_role.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN sys_role.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN sys_role.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN sys_role.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+    <changeSet id="sysRoleInsertRole1" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_role where code='superadmin';
+            </sqlCheck>
+        </preConditions>
+        <comment>创建内置超级管理员角色</comment>
+        <sql>
+            insert into sys_role(code,name,remark) values('superadmin','超级管理员','拥有全部权限');
+        </sql>
+    </changeSet>
+    <changeSet id="sysRoleInsertRole2" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_role where code = 'register';
+            </sqlCheck>
+        </preConditions>
+        <comment>创建内置注册用户角色</comment>
+        <sql>
+            insert into sys_role(code,name,remark) values('register','注册用户','可参与一切用户侧互动');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

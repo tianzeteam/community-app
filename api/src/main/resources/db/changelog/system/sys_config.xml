@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableSysConfig" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_config"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建系统参数表</comment>
+        <sql>
+            CREATE TABLE sys_config(
+            ID serial NOT NULL,
+            PARAM_KEY VARCHAR(32),
+            PARAM_VALUE VARCHAR(255),
+            REVISION INT,
+            CREATED_BY VARCHAR(32),
+            CREATED_TIME DATE,
+            UPDATED_BY VARCHAR(32),
+            UPDATED_TIME DATE,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE sys_config IS '系统配置';
+            COMMENT ON COLUMN sys_config.ID IS '主键ID';
+            COMMENT ON COLUMN sys_config.PARAM_KEY IS '参数KEY';
+            COMMENT ON COLUMN sys_config.PARAM_VALUE IS '参数VALUE';
+            COMMENT ON COLUMN sys_config.REVISION IS '乐观锁';
+            COMMENT ON COLUMN sys_config.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN sys_config.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN sys_config.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN sys_config.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+    <changeSet id="createIndex4SysConfig1" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="idx_param_key" tableName="sys_config"/>
+            </not>
+        </preConditions>
+        <comment>创建索引</comment>
+        <sql>
+            CREATE INDEX idx_param_key ON sys_config USING btree (param_key);
+        </sql>
+    </changeSet>
+    <changeSet id="addColumn4SysConfig1" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="sys_config" columnName="remark"></columnExists>
+            </not>
+        </preConditions>
+        <comment>新建备注字段</comment>
+        <sql>
+            alter table sys_config add column remark varchar(64);
+        </sql>
+    </changeSet>
+    <changeSet id="addRecord4SysConfig1" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_config where param_key = 'trace.log.storeType';
+            </sqlCheck>
+        </preConditions>
+        <comment>新建请求日志存储类型</comment>
+        <sql>
+            insert into sys_config(param_key, param_value, remark, REVISION) values ('trace.log.storeType', 'db','新建请求日志存储类型:db,log', 0);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableSysAgreement" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_agreement"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建协议/条款/政策表</comment>
+        <sql>
+            CREATE TABLE sys_agreement(
+            ID serial NOT NULL,
+            TYPE INT,
+            NAME VARCHAR(32),
+            DETAILS TEXT,
+            STATE INT DEFAULT 0,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE sys_agreement IS '各种协议政策啥的';
+            COMMENT ON COLUMN sys_agreement.ID IS '主键ID';
+            COMMENT ON COLUMN sys_agreement.TYPE IS '0关于APP1更新日志2用户协议3隐私政策4证照中心5权限说明6第三方服务';
+            COMMENT ON COLUMN sys_agreement.NAME IS '名称';
+            COMMENT ON COLUMN sys_agreement.DETAILS IS '详情';
+            COMMENT ON COLUMN sys_agreement.STATE IS '状态0正常1暂停';
+            COMMENT ON COLUMN sys_agreement.REVISION IS '乐观锁';
+            COMMENT ON COLUMN sys_agreement.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN sys_agreement.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN sys_agreement.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN sys_agreement.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

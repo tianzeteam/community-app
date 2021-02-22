@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableSysHelp" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_help"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建帮助内容表</comment>
+        <sql>
+            CREATE TABLE sys_help(
+            ID serial NOT NULL,
+            PID INT,
+            ICON VARCHAR(255),
+            TITLE VARCHAR(32),
+            SUB_TITLE VARCHAR(64),
+            DETAILS TEXT,
+            SORT INT,
+            TREE_LEVEL INT,
+            CATEGORY INT DEFAULT 0,
+            STATE INT DEFAULT 0,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE sys_help IS '帮助';
+            COMMENT ON COLUMN sys_help.ID IS '主键ID';
+            COMMENT ON COLUMN sys_help.PID IS '父级ID';
+            COMMENT ON COLUMN sys_help.ICON IS '图标';
+            COMMENT ON COLUMN sys_help.TITLE IS '标题';
+            COMMENT ON COLUMN sys_help.SUB_TITLE IS '副标题';
+            COMMENT ON COLUMN sys_help.DETAILS IS '详情';
+            COMMENT ON COLUMN sys_help.SORT IS '排序';
+            COMMENT ON COLUMN sys_help.TREE_LEVEL IS '树深度顶级为0';
+            COMMENT ON COLUMN sys_help.CATEGORY IS '分组0APP1其他';
+            COMMENT ON COLUMN sys_help.STATE IS '状态0正常1暂停';
+            COMMENT ON COLUMN sys_help.REVISION IS '乐观锁';
+            COMMENT ON COLUMN sys_help.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN sys_help.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN sys_help.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN sys_help.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

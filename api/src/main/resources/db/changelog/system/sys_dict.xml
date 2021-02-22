@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableSysDict" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_dict"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建数据字典表</comment>
+        <sql>
+            CREATE TABLE sys_dict(
+            ID serial NOT NULL,
+            PID INT DEFAULT 0,
+            DICT_NAME VARCHAR(32),
+            DICT_CODE VARCHAR(32),
+            DICT_VALUE VARCHAR(128),
+            DICT_TYPE INT,
+            DICT_GROUP INT DEFAULT 0,
+            STATE INT,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE sys_dict IS '数据字典';
+            COMMENT ON COLUMN sys_dict.ID IS '主键ID';
+            COMMENT ON COLUMN sys_dict.PID IS '父主键ID';
+            COMMENT ON COLUMN sys_dict.DICT_NAME IS '字典名称';
+            COMMENT ON COLUMN sys_dict.DICT_CODE IS '字典编码';
+            COMMENT ON COLUMN sys_dict.DICT_VALUE IS '字典值';
+            COMMENT ON COLUMN sys_dict.DICT_TYPE IS '0键值对1树形结构';
+            COMMENT ON COLUMN sys_dict.DICT_GROUP IS '0默认分组';
+            COMMENT ON COLUMN sys_dict.STATE IS '状态0正常1暂停';
+            COMMENT ON COLUMN sys_dict.REVISION IS '乐观锁';
+            COMMENT ON COLUMN sys_dict.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN sys_dict.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN sys_dict.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN sys_dict.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

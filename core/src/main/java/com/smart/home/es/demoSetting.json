@@ -1,0 +1,36 @@
+{
+  "index": {
+    "number_of_shards": "5",
+    "number_of_replicas": "2",
+    "refresh_interval": "1s",
+    "max_rescore_window": 10000000
+  },
+  "analysis": {
+    "filter": {
+      "spanish_stop": {
+        "type": "stop",
+        "stopwords": [
+          "si",
+          "esta",
+          "el",
+          "la"
+        ]
+      },
+      "light_spanish": {
+        "type": "stemmer",
+        "language": "light_spanish"
+      }
+    },
+    "analyzer": {
+      "my_spanish": {
+        "tokenizer": "spanish",
+        "filter": [
+          "lowercase",
+          "asciifolding",
+          "spanish_stop",
+          "light_spanish"
+        ]
+      }
+    }
+  }
+}
