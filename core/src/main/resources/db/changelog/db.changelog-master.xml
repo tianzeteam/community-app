@@ -15,4 +15,5 @@
     <include file="classpath:/db/changelog/system/sys_trace_log.xml"/>
     <include file="classpath:/db/changelog/user/user_account.xml"/>
     <include file="classpath:/db/changelog/user/user_role_mapping.xml"/>
+    <include file="classpath:/db/changelog/other/audit_history.xml"/>
 </databaseChangeLog>

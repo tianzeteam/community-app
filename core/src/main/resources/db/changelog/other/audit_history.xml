@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableAuditHistory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="audit_history"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户表</comment>
+        <sql>
+            CREATE TABLE audit_history(
+            ID BIGINT NOT NULL,
+            CATEGORY INT,
+            CATEGORY_NAME VARCHAR(32),
+            SOURCE_ID BIGINT,
+            DETAILS VARCHAR(255),
+            AUDIT_FLAG INT,
+            REMARK VARCHAR(255),
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME DATE,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME DATE,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE audit_history IS '审核历史';
+            COMMENT ON COLUMN audit_history.ID IS '主键ID';
+            COMMENT ON COLUMN audit_history.CATEGORY IS '分类';
+            COMMENT ON COLUMN audit_history.CATEGORY_NAME IS '分类名称';
+            COMMENT ON COLUMN audit_history.SOURCE_ID IS '关联记录主键ID';
+            COMMENT ON COLUMN audit_history.DETAILS IS '操作内容';
+            COMMENT ON COLUMN audit_history.AUDIT_FLAG IS '是否通过0否1是';
+            COMMENT ON COLUMN audit_history.REMARK IS '备注';
+            COMMENT ON COLUMN audit_history.REVISION IS '乐观锁';
+            COMMENT ON COLUMN audit_history.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN audit_history.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN audit_history.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN audit_history.UPDATED_TIME IS '更新时间';
+
+            CREATE SEQUENCE audit_history_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "audit_history" alter column ID set default nextval('audit_history_id_seq');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

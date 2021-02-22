@@ -23,4 +23,4 @@ http://ip:port/smart/doc.html
 - core模块存放 mapper/dao，entity，service代码，和数据库打交道的代码都在这里
 
 #特别强调
-- 一律不准自己修改数据库表结构，全部通过liquibase方式修改，请参考api/resources/db.changelog下现有的配置方式
+- 一律不准自己修改数据库表结构，全部通过liquibase方式修改，请参考core/resources/db.changelog下现有的配置方式
