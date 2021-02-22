@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableReportHistory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="report_history"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建举报记录表</comment>
+        <sql>
+            CREATE TABLE report_history(
+            ID BIGINT NOT NULL,
+            CATEGORY INT,
+            CATEGORY_NAME VARCHAR(32),
+            SOURCE_ID BIGINT,
+            CONTENTS VARCHAR(255),
+            IMAGES TEXT,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE report_history IS '举报历史';
+            COMMENT ON COLUMN report_history.ID IS '主键ID';
+            COMMENT ON COLUMN report_history.CATEGORY IS '类型';
+            COMMENT ON COLUMN report_history.CATEGORY_NAME IS '类型名称';
+            COMMENT ON COLUMN report_history.SOURCE_ID IS '关联主键ID';
+            COMMENT ON COLUMN report_history.CONTENTS IS '证据说明';
+            COMMENT ON COLUMN report_history.IMAGES IS '截图为证';
+            COMMENT ON COLUMN report_history.REVISION IS '乐观锁';
+            COMMENT ON COLUMN report_history.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN report_history.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN report_history.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN report_history.UPDATED_TIME IS '更新时间';
+
+            CREATE SEQUENCE report_history_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "report_history" alter column ID set default nextval('report_history_id_seq');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

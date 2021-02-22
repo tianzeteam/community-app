@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserCommunityAuth" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_community_auth"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户社区权限表</comment>
+        <sql>
+            CREATE TABLE user_community_auth(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            SPEAK_FLAG INT DEFAULT 0,
+            BLACK_FLAG INT DEFAULT 0,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_community_auth IS '用户社区权限';
+            COMMENT ON COLUMN user_community_auth.ID IS '主键ID';
+            COMMENT ON COLUMN user_community_auth.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN user_community_auth.SPEAK_FLAG IS '是否禁言0否1是';
+            COMMENT ON COLUMN user_community_auth.BLACK_FLAG IS '是否封禁0否1是';
+
+            CREATE SEQUENCE user_community_auth_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "user_community_auth" alter column ID set default nextval('user_community_auth_id_seq');
+
+            create index idx_community_auth_user_id on user_community_auth using btree (user_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserPrivacy" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_privacy"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户标签表</comment>
+        <sql>
+            CREATE TABLE user_privacy(
+            ID serial NOT NULL,
+            CATEGORY INT,
+            CATEGORY_NAME VARCHAR(32),
+            CODE INT,
+            TITLE VARCHAR(32),
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_privacy IS '用户隐私';
+            COMMENT ON COLUMN user_privacy.ID IS '主键ID';
+            COMMENT ON COLUMN user_privacy.CATEGORY IS '分类0动态隐私设置1个人主页隐私设置';
+            COMMENT ON COLUMN user_privacy.CATEGORY_NAME IS '分类名称';
+            COMMENT ON COLUMN user_privacy.CODE IS '0投稿1发帖3评价产品，0发帖1投稿评论2帖子回复3评价产品4投稿';
+            COMMENT ON COLUMN user_privacy.TITLE IS '隐私标题';
+            COMMENT ON COLUMN user_privacy.REVISION IS '乐观锁';
+            COMMENT ON COLUMN user_privacy.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN user_privacy.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN user_privacy.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN user_privacy.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+    <changeSet id="initData4UserPrivacy" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from user_privacy;
+            </sqlCheck>
+        </preConditions>
+        <comment>初始化数据</comment>
+        <sql>
+            insert into user_privacy(CATEGORY,CATEGORY_NAME,CODE,TITLE) VALUES (0,'动态隐私设置',0,'投稿');
+            insert into user_privacy(CATEGORY,CATEGORY_NAME,CODE,TITLE) VALUES (0,'动态隐私设置',1,'发帖');
+            insert into user_privacy(CATEGORY,CATEGORY_NAME,CODE,TITLE) VALUES (0,'动态隐私设置',2,'评价产品');
+            insert into user_privacy(CATEGORY,CATEGORY_NAME,CODE,TITLE) VALUES (1,'个人主页隐私设置',0,'投稿');
+            insert into user_privacy(CATEGORY,CATEGORY_NAME,CODE,TITLE) VALUES (1,'动态隐私设置',1,'投稿评论');
+            insert into user_privacy(CATEGORY,CATEGORY_NAME,CODE,TITLE) VALUES (1,'动态隐私设置',2,'帖子回复');
+            insert into user_privacy(CATEGORY,CATEGORY_NAME,CODE,TITLE) VALUES (1,'动态隐私设置',3,'评价产品');
+            insert into user_privacy(CATEGORY,CATEGORY_NAME,CODE,TITLE) VALUES (1,'动态隐私设置',4,'投稿');
+        </sql>
+    </changeSet>
+</databaseChangeLog>

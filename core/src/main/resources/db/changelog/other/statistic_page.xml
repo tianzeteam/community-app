@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableStatisticPage" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="statistic_page"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建举报记录表</comment>
+        <sql>
+            CREATE TABLE statistic_page(
+            ID serial NOT NULL,
+            CONTENTS TEXT,
+            URL VARCHAR(255),
+            CATEGORY INT,
+            CATEGORY_NAME VARCHAR(32),
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE statistic_page IS '静态页面';
+            COMMENT ON COLUMN statistic_page.ID IS '主键ID';
+            COMMENT ON COLUMN statistic_page.CONTENTS IS '页面内容';
+            COMMENT ON COLUMN statistic_page.URL IS '页面地址';
+            COMMENT ON COLUMN statistic_page.CATEGORY IS '分类';
+            COMMENT ON COLUMN statistic_page.CATEGORY_NAME IS '分类名称';
+            COMMENT ON COLUMN statistic_page.REVISION IS '乐观锁';
+            COMMENT ON COLUMN statistic_page.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN statistic_page.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN statistic_page.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN statistic_page.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

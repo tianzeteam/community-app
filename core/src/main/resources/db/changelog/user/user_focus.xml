@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserFocus" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_focus"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户关注表</comment>
+        <sql>
+            CREATE TABLE user_focus(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            FOCUS_USER_ID BIGINT,
+            FOCUS_RATE INT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_focus IS '用户关注';
+            COMMENT ON COLUMN user_focus.ID IS '主键ID';
+            COMMENT ON COLUMN user_focus.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN user_focus.FOCUS_USER_ID IS '关注的用户主键ID';
+            COMMENT ON COLUMN user_focus.FOCUS_RATE IS '关注热度';
+            COMMENT ON COLUMN user_focus.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE user_focus_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "user_focus" alter column ID set default nextval('user_focus_id_seq');
+
+            create index idx_focus_user_id on user_focus using btree (user_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

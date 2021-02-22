@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserData" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_data"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户数据表</comment>
+        <sql>
+            CREATE TABLE user_data(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            WX_OPENID VARCHAR(32),
+            SIGN VARCHAR(32),
+            REMARK VARCHAR(128),
+            USER_LEVEL INT,
+            USER_LEVEL_COUNT INT,
+            FOCUS_COUNT INT,
+            FOLLOW_COUNT INT,
+            LIKE_COUNT INT,
+            POST_COUNT INT,
+            COMMENT_COUNT INT,
+            REPLY_COUNT INT,
+            EVALUATE_COUNT INT,
+            CONTRIBUTE_COUNT INT,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_data IS '用户数据';
+            COMMENT ON COLUMN user_data.ID IS '主键ID';
+            COMMENT ON COLUMN user_data.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN user_data.WX_OPENID IS '微信openid';
+            COMMENT ON COLUMN user_data.SIGN IS '签名';
+            COMMENT ON COLUMN user_data.REMARK IS '简介';
+            COMMENT ON COLUMN user_data.USER_LEVEL IS '等级';
+            COMMENT ON COLUMN user_data.USER_LEVEL_COUNT IS '等级量';
+            COMMENT ON COLUMN user_data.FOCUS_COUNT IS '关注数量';
+            COMMENT ON COLUMN user_data.FOLLOW_COUNT IS '粉丝数量';
+            COMMENT ON COLUMN user_data.LIKE_COUNT IS '获得点赞';
+            COMMENT ON COLUMN user_data.POST_COUNT IS '发帖数量';
+            COMMENT ON COLUMN user_data.COMMENT_COUNT IS '评论数量';
+            COMMENT ON COLUMN user_data.REPLY_COUNT IS '回复数量';
+            COMMENT ON COLUMN user_data.EVALUATE_COUNT IS '评价数量';
+            COMMENT ON COLUMN user_data.CONTRIBUTE_COUNT IS '投稿数量';
+            COMMENT ON COLUMN user_data.REVISION IS '乐观锁';
+            COMMENT ON COLUMN user_data.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN user_data.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN user_data.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN user_data.UPDATED_TIME IS '更新时间';
+
+            CREATE SEQUENCE user_data_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "user_data" alter column ID set default nextval('user_data_id_seq');
+
+            create index idx_user_data_user_id on user_data using btree (user_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

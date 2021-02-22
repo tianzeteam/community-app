@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserTag" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_tag"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户标签表</comment>
+        <sql>
+            CREATE TABLE user_tag(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            TAG VARCHAR(32),
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_tag IS '用户标签';
+            COMMENT ON COLUMN user_tag.ID IS '主键ID';
+            COMMENT ON COLUMN user_tag.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN user_tag.TAG IS '用户标签';
+
+            CREATE SEQUENCE user_tag_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "user_tag" alter column ID set default nextval('user_tag_id_seq');
+
+            create index idx_user_id on user_tag using btree (user_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

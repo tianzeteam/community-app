@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserBlack" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_black"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户黑名单表</comment>
+        <sql>
+            CREATE TABLE user_black(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            BLACK_USER_ID BIGINT,
+            HEAD_URL VARCHAR(255),
+            NICK_NAME VARCHAR(32),
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_black IS '用户黑名单';
+            COMMENT ON COLUMN user_black.ID IS '主键ID';
+            COMMENT ON COLUMN user_black.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN user_black.BLACK_USER_ID IS '黑名单用户主键ID';
+            COMMENT ON COLUMN user_black.HEAD_URL IS '头像,冗余字段';
+            COMMENT ON COLUMN user_black.NICK_NAME IS '昵称,冗余字段';
+            COMMENT ON COLUMN user_black.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE user_black_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "user_black" alter column ID set default nextval('user_black_id_seq');
+
+            create index idx_black_user_id1 on user_black using btree (USER_ID);
+            create index idx_black_user_id2 on user_black using btree (BLACK_USER_ID);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

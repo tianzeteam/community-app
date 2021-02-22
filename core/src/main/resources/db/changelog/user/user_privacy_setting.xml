@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserPrivacySetting" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_privacy_setting"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户隐私设置表</comment>
+        <sql>
+            CREATE TABLE user_privacy_setting(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            PRIVACY_ID INT,
+            CHECK_FLAG INT DEFAULT 1,
+            CATEGORY INT,
+            CATEGORY_NAME INT,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_privacy_setting IS '用户隐私设置';
+            COMMENT ON COLUMN user_privacy_setting.ID IS '主键ID';
+            COMMENT ON COLUMN user_privacy_setting.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN user_privacy_setting.PRIVACY_ID IS '隐私主键ID';
+            COMMENT ON COLUMN user_privacy_setting.CHECK_FLAG IS '是否勾选0否1是';
+            COMMENT ON COLUMN user_privacy_setting.CATEGORY IS '分类，冗余字段';
+            COMMENT ON COLUMN user_privacy_setting.CATEGORY_NAME IS '分类名称，冗余字段';
+
+            CREATE SEQUENCE user_privacy_setting_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "user_privacy_setting" alter column ID set default nextval('user_privacy_setting_id_seq');
+
+            create index idx_privacy_user_id on user_privacy_setting using btree (user_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

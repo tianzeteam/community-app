@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserFeedback" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_feedback"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户标签表</comment>
+        <sql>
+            CREATE TABLE user_feedback(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            CONTENTS VARCHAR(255),
+            IMAGES TEXT,
+            REPLY_CONTENT VARCHAR(255),
+            READ_FLAG INT DEFAULT 0,
+            STATE INT,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_feedback IS '用户反馈';
+            COMMENT ON COLUMN user_feedback.ID IS '主键ID';
+            COMMENT ON COLUMN user_feedback.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN user_feedback.CONTENTS IS '反馈内容';
+            COMMENT ON COLUMN user_feedback.IMAGES IS '反馈图片';
+            COMMENT ON COLUMN user_feedback.REPLY_CONTENT IS '回复内容';
+            COMMENT ON COLUMN user_feedback.READ_FLAG IS '是否已读0否1是';
+            COMMENT ON COLUMN user_feedback.STATE IS '状态0等待回复1已回复2已关闭';
+            COMMENT ON COLUMN user_feedback.REVISION IS '乐观锁';
+            COMMENT ON COLUMN user_feedback.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN user_feedback.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN user_feedback.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN user_feedback.UPDATED_TIME IS '更新时间';
+
+            CREATE SEQUENCE user_feedback_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "user_feedback" alter column ID set default nextval('user_feedback_id_seq');
+
+            create index idx_feedback_user_id on user_feedback using btree (user_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

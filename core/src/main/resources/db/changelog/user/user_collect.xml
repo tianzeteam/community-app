@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserCollect" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_collect"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户收藏表</comment>
+        <sql>
+            CREATE TABLE user_collect(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            PRIMARY_KEY BIGINT,
+            COLLECT_TYPE INT,
+            COLLECT_TYPE_NAME VARCHAR(32),
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_collect IS '用户收藏';
+            COMMENT ON COLUMN user_collect.ID IS '主键ID';
+            COMMENT ON COLUMN user_collect.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN user_collect.PRIMARY_KEY IS '收藏内容主键ID';
+            COMMENT ON COLUMN user_collect.COLLECT_TYPE IS '0投稿1帖子2产品';
+            COMMENT ON COLUMN user_collect.COLLECT_TYPE_NAME IS '收藏类型名称';
+            COMMENT ON COLUMN user_collect.REVISION IS '乐观锁';
+            COMMENT ON COLUMN user_collect.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN user_collect.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN user_collect.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN user_collect.UPDATED_TIME IS '更新时间';
+
+            CREATE SEQUENCE user_collect_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "user_collect" alter column ID set default nextval('user_collect_id_seq');
+
+            create index idx_collect_user_id on user_collect using btree (user_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

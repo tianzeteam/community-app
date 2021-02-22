@@ -14,6 +14,20 @@
     <include file="classpath:/db/changelog/system/sys_help.xml"/>
     <include file="classpath:/db/changelog/system/sys_trace_log.xml"/>
     <include file="classpath:/db/changelog/user/user_account.xml"/>
+    <include file="classpath:/db/changelog/user/user_data.xml"/>
+    <include file="classpath:/db/changelog/user/user_tag.xml"/>
+    <include file="classpath:/db/changelog/user/user_focus.xml"/>
+    <include file="classpath:/db/changelog/user/user_follower.xml"/>
+    <include file="classpath:/db/changelog/user/user_collect.xml"/>
+    <include file="classpath:/db/changelog/user/user_privacy.xml"/>
+    <include file="classpath:/db/changelog/user/user_privacy_setting.xml"/>
+    <include file="classpath:/db/changelog/user/user_black.xml"/>
+    <include file="classpath:/db/changelog/user/user_feedback.xml"/>
     <include file="classpath:/db/changelog/user/user_role_mapping.xml"/>
+    <include file="classpath:/db/changelog/user/user_community_auth.xml"/>
+    <include file="classpath:/db/changelog/user/user_article_channel_preference.xml"/>
     <include file="classpath:/db/changelog/other/audit_history.xml"/>
+    <include file="classpath:/db/changelog/other/report_history.xml"/>
+    <include file="classpath:/db/changelog/other/statistic_page.xml"/>
+    <include file="classpath:/db/changelog/other/subject_card.xml"/>
 </databaseChangeLog>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableUserFollower" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_follower"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户粉丝表</comment>
+        <sql>
+            CREATE TABLE user_follower(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            FOLLOWER_USER_ID BIGINT,
+            FOLLOW_EACH INT DEFAULT 0,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE user_follower IS '用户粉丝';
+            COMMENT ON COLUMN user_follower.ID IS '主键ID';
+            COMMENT ON COLUMN user_follower.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN user_follower.FOLLOWER_USER_ID IS '粉丝用户主键ID';
+            COMMENT ON COLUMN user_follower.FOLLOW_EACH IS '是否互相关注0否1是';
+            COMMENT ON COLUMN user_follower.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE user_follower_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "user_follower" alter column ID set default nextval('user_follower_id_seq');
+
+            create index idx_follower_user_id on user_follower using btree (user_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
