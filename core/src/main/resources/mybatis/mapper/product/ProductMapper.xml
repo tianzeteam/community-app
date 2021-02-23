@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.home.modules.product.dao.ProductMapper">
+  <resultMap id="BaseResultMap" type="com.smart.home.modules.product.entity.Product">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="cover_image" jdbcType="VARCHAR" property="coverImage" />
+    <result column="banner_images" jdbcType="VARCHAR" property="bannerImages" />
+    <result column="product_name" jdbcType="VARCHAR" property="productName" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="online_date" jdbcType="DATE" property="onlineDate" />
+    <result column="specification" jdbcType="VARCHAR" property="specification" />
+    <result column="brand_id" jdbcType="INTEGER" property="brandId" />
+    <result column="brand_name" jdbcType="VARCHAR" property="brandName" />
+    <result column="online_flag" jdbcType="INTEGER" property="onlineFlag" />
+    <result column="recommend_flag" jdbcType="INTEGER" property="recommendFlag" />
+    <result column="details" jdbcType="VARCHAR" property="details" />
+    <result column="category_one_id" jdbcType="INTEGER" property="categoryOneId" />
+    <result column="category_one_name" jdbcType="VARCHAR" property="categoryOneName" />
+    <result column="category_two_id" jdbcType="INTEGER" property="categoryTwoId" />
+    <result column="category_two_name" jdbcType="VARCHAR" property="categoryTwoName" />
+    <result column="category_three_id" jdbcType="INTEGER" property="categoryThreeId" />
+    <result column="category_three_name" jdbcType="VARCHAR" property="categoryThreeName" />
+    <result column="average_score" jdbcType="NUMERIC" property="averageScore" />
+    <result column="praise_rate" jdbcType="INTEGER" property="praiseRate" />
+    <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
+    <result column="test_count" jdbcType="INTEGER" property="testCount" />
+    <result column="hot_rate" jdbcType="NUMERIC" property="hotRate" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="revision" jdbcType="INTEGER" property="revision" />
+    <result column="created_by" jdbcType="BIGINT" property="createdBy" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, cover_image, banner_images, product_name, remark, online_date, specification, 
+    brand_id, brand_name, online_flag, recommend_flag, details, category_one_id, category_one_name, 
+    category_two_id, category_two_name, category_three_id, category_three_name, average_score, 
+    praise_rate, comment_count, test_count, hot_rate, tag, revision, created_by, created_time, 
+    updated_by, updated_time
+  </sql>
+  <select id="selectByExample" parameterType="com.smart.home.modules.product.entity.ProductExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from product
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from product
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.smart.home.modules.product.entity.ProductExample">
+    delete from product
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.smart.home.modules.product.entity.Product">
+    insert into product (id, cover_image, banner_images, 
+      product_name, remark, online_date, 
+      specification, brand_id, brand_name, 
+      online_flag, recommend_flag, details, 
+      category_one_id, category_one_name, category_two_id, 
+      category_two_name, category_three_id, category_three_name, 
+      average_score, praise_rate, comment_count, 
+      test_count, hot_rate, tag, 
+      revision, created_by, created_time, 
+      updated_by, updated_time)
+    values (#{id,jdbcType=INTEGER}, #{coverImage,jdbcType=VARCHAR}, #{bannerImages,jdbcType=VARCHAR}, 
+      #{productName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{onlineDate,jdbcType=DATE}, 
+      #{specification,jdbcType=VARCHAR}, #{brandId,jdbcType=INTEGER}, #{brandName,jdbcType=VARCHAR}, 
+      #{onlineFlag,jdbcType=INTEGER}, #{recommendFlag,jdbcType=INTEGER}, #{details,jdbcType=VARCHAR}, 
+      #{categoryOneId,jdbcType=INTEGER}, #{categoryOneName,jdbcType=VARCHAR}, #{categoryTwoId,jdbcType=INTEGER}, 
+      #{categoryTwoName,jdbcType=VARCHAR}, #{categoryThreeId,jdbcType=INTEGER}, #{categoryThreeName,jdbcType=VARCHAR}, 
+      #{averageScore,jdbcType=NUMERIC}, #{praiseRate,jdbcType=INTEGER}, #{commentCount,jdbcType=INTEGER}, 
+      #{testCount,jdbcType=INTEGER}, #{hotRate,jdbcType=NUMERIC}, #{tag,jdbcType=VARCHAR}, 
+      #{revision,jdbcType=INTEGER}, #{createdBy,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{updatedBy,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smart.home.modules.product.entity.Product">
+    insert into product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="coverImage != null">
+        cover_image,
+      </if>
+      <if test="bannerImages != null">
+        banner_images,
+      </if>
+      <if test="productName != null">
+        product_name,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="onlineDate != null">
+        online_date,
+      </if>
+      <if test="specification != null">
+        specification,
+      </if>
+      <if test="brandId != null">
+        brand_id,
+      </if>
+      <if test="brandName != null">
+        brand_name,
+      </if>
+      <if test="onlineFlag != null">
+        online_flag,
+      </if>
+      <if test="recommendFlag != null">
+        recommend_flag,
+      </if>
+      <if test="details != null">
+        details,
+      </if>
+      <if test="categoryOneId != null">
+        category_one_id,
+      </if>
+      <if test="categoryOneName != null">
+        category_one_name,
+      </if>
+      <if test="categoryTwoId != null">
+        category_two_id,
+      </if>
+      <if test="categoryTwoName != null">
+        category_two_name,
+      </if>
+      <if test="categoryThreeId != null">
+        category_three_id,
+      </if>
+      <if test="categoryThreeName != null">
+        category_three_name,
+      </if>
+      <if test="averageScore != null">
+        average_score,
+      </if>
+      <if test="praiseRate != null">
+        praise_rate,
+      </if>
+      <if test="commentCount != null">
+        comment_count,
+      </if>
+      <if test="testCount != null">
+        test_count,
+      </if>
+      <if test="hotRate != null">
+        hot_rate,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="revision != null">
+        revision,
+      </if>
+      <if test="createdBy != null">
+        created_by,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+      <if test="updatedBy != null">
+        updated_by,
+      </if>
+      <if test="updatedTime != null">
+        updated_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="coverImage != null">
+        #{coverImage,jdbcType=VARCHAR},
+      </if>
+      <if test="bannerImages != null">
+        #{bannerImages,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineDate != null">
+        #{onlineDate,jdbcType=DATE},
+      </if>
+      <if test="specification != null">
+        #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null">
+        #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="brandName != null">
+        #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineFlag != null">
+        #{onlineFlag,jdbcType=INTEGER},
+      </if>
+      <if test="recommendFlag != null">
+        #{recommendFlag,jdbcType=INTEGER},
+      </if>
+      <if test="details != null">
+        #{details,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryOneId != null">
+        #{categoryOneId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryOneName != null">
+        #{categoryOneName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryTwoId != null">
+        #{categoryTwoId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryTwoName != null">
+        #{categoryTwoName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryThreeId != null">
+        #{categoryThreeId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryThreeName != null">
+        #{categoryThreeName,jdbcType=VARCHAR},
+      </if>
+      <if test="averageScore != null">
+        #{averageScore,jdbcType=NUMERIC},
+      </if>
+      <if test="praiseRate != null">
+        #{praiseRate,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null">
+        #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="testCount != null">
+        #{testCount,jdbcType=INTEGER},
+      </if>
+      <if test="hotRate != null">
+        #{hotRate,jdbcType=NUMERIC},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="revision != null">
+        #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null">
+        #{updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="updatedTime != null">
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.smart.home.modules.product.entity.ProductExample" resultType="java.lang.Long">
+    select count(*) from product
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update product
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.coverImage != null">
+        cover_image = #{record.coverImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bannerImages != null">
+        banner_images = #{record.bannerImages,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productName != null">
+        product_name = #{record.productName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.onlineDate != null">
+        online_date = #{record.onlineDate,jdbcType=DATE},
+      </if>
+      <if test="record.specification != null">
+        specification = #{record.specification,jdbcType=VARCHAR},
+      </if>
+      <if test="record.brandId != null">
+        brand_id = #{record.brandId,jdbcType=INTEGER},
+      </if>
+      <if test="record.brandName != null">
+        brand_name = #{record.brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.onlineFlag != null">
+        online_flag = #{record.onlineFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.recommendFlag != null">
+        recommend_flag = #{record.recommendFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.details != null">
+        details = #{record.details,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryOneId != null">
+        category_one_id = #{record.categoryOneId,jdbcType=INTEGER},
+      </if>
+      <if test="record.categoryOneName != null">
+        category_one_name = #{record.categoryOneName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryTwoId != null">
+        category_two_id = #{record.categoryTwoId,jdbcType=INTEGER},
+      </if>
+      <if test="record.categoryTwoName != null">
+        category_two_name = #{record.categoryTwoName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.categoryThreeId != null">
+        category_three_id = #{record.categoryThreeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.categoryThreeName != null">
+        category_three_name = #{record.categoryThreeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.averageScore != null">
+        average_score = #{record.averageScore,jdbcType=NUMERIC},
+      </if>
+      <if test="record.praiseRate != null">
+        praise_rate = #{record.praiseRate,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentCount != null">
+        comment_count = #{record.commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.testCount != null">
+        test_count = #{record.testCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.hotRate != null">
+        hot_rate = #{record.hotRate,jdbcType=NUMERIC},
+      </if>
+      <if test="record.tag != null">
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.revision != null">
+        revision = #{record.revision,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdBy != null">
+        created_by = #{record.createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.createdTime != null">
+        created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatedBy != null">
+        updated_by = #{record.updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.updatedTime != null">
+        updated_time = #{record.updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update product
+    set id = #{record.id,jdbcType=INTEGER},
+      cover_image = #{record.coverImage,jdbcType=VARCHAR},
+      banner_images = #{record.bannerImages,jdbcType=VARCHAR},
+      product_name = #{record.productName,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      online_date = #{record.onlineDate,jdbcType=DATE},
+      specification = #{record.specification,jdbcType=VARCHAR},
+      brand_id = #{record.brandId,jdbcType=INTEGER},
+      brand_name = #{record.brandName,jdbcType=VARCHAR},
+      online_flag = #{record.onlineFlag,jdbcType=INTEGER},
+      recommend_flag = #{record.recommendFlag,jdbcType=INTEGER},
+      details = #{record.details,jdbcType=VARCHAR},
+      category_one_id = #{record.categoryOneId,jdbcType=INTEGER},
+      category_one_name = #{record.categoryOneName,jdbcType=VARCHAR},
+      category_two_id = #{record.categoryTwoId,jdbcType=INTEGER},
+      category_two_name = #{record.categoryTwoName,jdbcType=VARCHAR},
+      category_three_id = #{record.categoryThreeId,jdbcType=INTEGER},
+      category_three_name = #{record.categoryThreeName,jdbcType=VARCHAR},
+      average_score = #{record.averageScore,jdbcType=NUMERIC},
+      praise_rate = #{record.praiseRate,jdbcType=INTEGER},
+      comment_count = #{record.commentCount,jdbcType=INTEGER},
+      test_count = #{record.testCount,jdbcType=INTEGER},
+      hot_rate = #{record.hotRate,jdbcType=NUMERIC},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      revision = #{record.revision,jdbcType=INTEGER},
+      created_by = #{record.createdBy,jdbcType=BIGINT},
+      created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+      updated_by = #{record.updatedBy,jdbcType=BIGINT},
+      updated_time = #{record.updatedTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smart.home.modules.product.entity.Product">
+    update product
+    <set>
+      <if test="coverImage != null">
+        cover_image = #{coverImage,jdbcType=VARCHAR},
+      </if>
+      <if test="bannerImages != null">
+        banner_images = #{bannerImages,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null">
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineDate != null">
+        online_date = #{onlineDate,jdbcType=DATE},
+      </if>
+      <if test="specification != null">
+        specification = #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="brandId != null">
+        brand_id = #{brandId,jdbcType=INTEGER},
+      </if>
+      <if test="brandName != null">
+        brand_name = #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="onlineFlag != null">
+        online_flag = #{onlineFlag,jdbcType=INTEGER},
+      </if>
+      <if test="recommendFlag != null">
+        recommend_flag = #{recommendFlag,jdbcType=INTEGER},
+      </if>
+      <if test="details != null">
+        details = #{details,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryOneId != null">
+        category_one_id = #{categoryOneId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryOneName != null">
+        category_one_name = #{categoryOneName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryTwoId != null">
+        category_two_id = #{categoryTwoId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryTwoName != null">
+        category_two_name = #{categoryTwoName,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryThreeId != null">
+        category_three_id = #{categoryThreeId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryThreeName != null">
+        category_three_name = #{categoryThreeName,jdbcType=VARCHAR},
+      </if>
+      <if test="averageScore != null">
+        average_score = #{averageScore,jdbcType=NUMERIC},
+      </if>
+      <if test="praiseRate != null">
+        praise_rate = #{praiseRate,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null">
+        comment_count = #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="testCount != null">
+        test_count = #{testCount,jdbcType=INTEGER},
+      </if>
+      <if test="hotRate != null">
+        hot_rate = #{hotRate,jdbcType=NUMERIC},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="revision != null">
+        revision = #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null">
+        created_by = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null">
+        updated_by = #{updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="updatedTime != null">
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smart.home.modules.product.entity.Product">
+    update product
+    set cover_image = #{coverImage,jdbcType=VARCHAR},
+      banner_images = #{bannerImages,jdbcType=VARCHAR},
+      product_name = #{productName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      online_date = #{onlineDate,jdbcType=DATE},
+      specification = #{specification,jdbcType=VARCHAR},
+      brand_id = #{brandId,jdbcType=INTEGER},
+      brand_name = #{brandName,jdbcType=VARCHAR},
+      online_flag = #{onlineFlag,jdbcType=INTEGER},
+      recommend_flag = #{recommendFlag,jdbcType=INTEGER},
+      details = #{details,jdbcType=VARCHAR},
+      category_one_id = #{categoryOneId,jdbcType=INTEGER},
+      category_one_name = #{categoryOneName,jdbcType=VARCHAR},
+      category_two_id = #{categoryTwoId,jdbcType=INTEGER},
+      category_two_name = #{categoryTwoName,jdbcType=VARCHAR},
+      category_three_id = #{categoryThreeId,jdbcType=INTEGER},
+      category_three_name = #{categoryThreeName,jdbcType=VARCHAR},
+      average_score = #{averageScore,jdbcType=NUMERIC},
+      praise_rate = #{praiseRate,jdbcType=INTEGER},
+      comment_count = #{commentCount,jdbcType=INTEGER},
+      test_count = #{testCount,jdbcType=INTEGER},
+      hot_rate = #{hotRate,jdbcType=NUMERIC},
+      tag = #{tag,jdbcType=VARCHAR},
+      revision = #{revision,jdbcType=INTEGER},
+      created_by = #{createdBy,jdbcType=BIGINT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updated_by = #{updatedBy,jdbcType=BIGINT},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.home.modules.community.dao.CommunityPostMapper">
+  <resultMap id="BaseResultMap" type="com.smart.home.modules.community.entity.CommunityPost">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="community" jdbcType="INTEGER" property="community" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="contents" jdbcType="VARCHAR" property="contents" />
+    <result column="images" jdbcType="VARCHAR" property="images" />
+    <result column="top_flag" jdbcType="INTEGER" property="topFlag" />
+    <result column="boutique_flag" jdbcType="INTEGER" property="boutiqueFlag" />
+    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
+    <result column="comment_flag" jdbcType="INTEGER" property="commentFlag" />
+    <result column="report_count" jdbcType="INTEGER" property="reportCount" />
+    <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
+    <result column="revision" jdbcType="INTEGER" property="revision" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="stamp_count" jdbcType="INTEGER" property="stampCount" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, community, user_id, title, contents, images, top_flag, boutique_flag, like_count, 
+    comment_flag, report_count, audit_status, revision, created_time, updated_by, updated_time, 
+    stamp_count
+  </sql>
+  <select id="selectByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from community_post
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from community_post
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from community_post
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostExample">
+    delete from community_post
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.smart.home.modules.community.entity.CommunityPost">
+    insert into community_post (id, community, user_id, 
+      title, contents, images, 
+      top_flag, boutique_flag, like_count, 
+      comment_flag, report_count, audit_status, 
+      revision, created_time, updated_by, 
+      updated_time, stamp_count)
+    values (#{id,jdbcType=BIGINT}, #{community,jdbcType=INTEGER}, #{userId,jdbcType=BIGINT}, 
+      #{title,jdbcType=VARCHAR}, #{contents,jdbcType=VARCHAR}, #{images,jdbcType=VARCHAR}, 
+      #{topFlag,jdbcType=INTEGER}, #{boutiqueFlag,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER}, 
+      #{commentFlag,jdbcType=INTEGER}, #{reportCount,jdbcType=INTEGER}, #{auditStatus,jdbcType=INTEGER}, 
+      #{revision,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=BIGINT}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, #{stampCount,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smart.home.modules.community.entity.CommunityPost">
+    insert into community_post
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="community != null">
+        community,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="contents != null">
+        contents,
+      </if>
+      <if test="images != null">
+        images,
+      </if>
+      <if test="topFlag != null">
+        top_flag,
+      </if>
+      <if test="boutiqueFlag != null">
+        boutique_flag,
+      </if>
+      <if test="likeCount != null">
+        like_count,
+      </if>
+      <if test="commentFlag != null">
+        comment_flag,
+      </if>
+      <if test="reportCount != null">
+        report_count,
+      </if>
+      <if test="auditStatus != null">
+        audit_status,
+      </if>
+      <if test="revision != null">
+        revision,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+      <if test="updatedBy != null">
+        updated_by,
+      </if>
+      <if test="updatedTime != null">
+        updated_time,
+      </if>
+      <if test="stampCount != null">
+        stamp_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="community != null">
+        #{community,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="contents != null">
+        #{contents,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null">
+        #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="topFlag != null">
+        #{topFlag,jdbcType=INTEGER},
+      </if>
+      <if test="boutiqueFlag != null">
+        #{boutiqueFlag,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="commentFlag != null">
+        #{commentFlag,jdbcType=INTEGER},
+      </if>
+      <if test="reportCount != null">
+        #{reportCount,jdbcType=INTEGER},
+      </if>
+      <if test="auditStatus != null">
+        #{auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="revision != null">
+        #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null">
+        #{updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="updatedTime != null">
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stampCount != null">
+        #{stampCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostExample" resultType="java.lang.Long">
+    select count(*) from community_post
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update community_post
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.community != null">
+        community = #{record.community,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contents != null">
+        contents = #{record.contents,jdbcType=VARCHAR},
+      </if>
+      <if test="record.images != null">
+        images = #{record.images,jdbcType=VARCHAR},
+      </if>
+      <if test="record.topFlag != null">
+        top_flag = #{record.topFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.boutiqueFlag != null">
+        boutique_flag = #{record.boutiqueFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.likeCount != null">
+        like_count = #{record.likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentFlag != null">
+        comment_flag = #{record.commentFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.reportCount != null">
+        report_count = #{record.reportCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.auditStatus != null">
+        audit_status = #{record.auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.revision != null">
+        revision = #{record.revision,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdTime != null">
+        created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatedBy != null">
+        updated_by = #{record.updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.updatedTime != null">
+        updated_time = #{record.updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.stampCount != null">
+        stamp_count = #{record.stampCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update community_post
+    set id = #{record.id,jdbcType=BIGINT},
+      community = #{record.community,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      title = #{record.title,jdbcType=VARCHAR},
+      contents = #{record.contents,jdbcType=VARCHAR},
+      images = #{record.images,jdbcType=VARCHAR},
+      top_flag = #{record.topFlag,jdbcType=INTEGER},
+      boutique_flag = #{record.boutiqueFlag,jdbcType=INTEGER},
+      like_count = #{record.likeCount,jdbcType=INTEGER},
+      comment_flag = #{record.commentFlag,jdbcType=INTEGER},
+      report_count = #{record.reportCount,jdbcType=INTEGER},
+      audit_status = #{record.auditStatus,jdbcType=INTEGER},
+      revision = #{record.revision,jdbcType=INTEGER},
+      created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+      updated_by = #{record.updatedBy,jdbcType=BIGINT},
+      updated_time = #{record.updatedTime,jdbcType=TIMESTAMP},
+      stamp_count = #{record.stampCount,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smart.home.modules.community.entity.CommunityPost">
+    update community_post
+    <set>
+      <if test="community != null">
+        community = #{community,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="contents != null">
+        contents = #{contents,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null">
+        images = #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="topFlag != null">
+        top_flag = #{topFlag,jdbcType=INTEGER},
+      </if>
+      <if test="boutiqueFlag != null">
+        boutique_flag = #{boutiqueFlag,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        like_count = #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="commentFlag != null">
+        comment_flag = #{commentFlag,jdbcType=INTEGER},
+      </if>
+      <if test="reportCount != null">
+        report_count = #{reportCount,jdbcType=INTEGER},
+      </if>
+      <if test="auditStatus != null">
+        audit_status = #{auditStatus,jdbcType=INTEGER},
+      </if>
+      <if test="revision != null">
+        revision = #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null">
+        updated_by = #{updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="updatedTime != null">
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stampCount != null">
+        stamp_count = #{stampCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smart.home.modules.community.entity.CommunityPost">
+    update community_post
+    set community = #{community,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
+      contents = #{contents,jdbcType=VARCHAR},
+      images = #{images,jdbcType=VARCHAR},
+      top_flag = #{topFlag,jdbcType=INTEGER},
+      boutique_flag = #{boutiqueFlag,jdbcType=INTEGER},
+      like_count = #{likeCount,jdbcType=INTEGER},
+      comment_flag = #{commentFlag,jdbcType=INTEGER},
+      report_count = #{reportCount,jdbcType=INTEGER},
+      audit_status = #{auditStatus,jdbcType=INTEGER},
+      revision = #{revision,jdbcType=INTEGER},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updated_by = #{updatedBy,jdbcType=BIGINT},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      stamp_count = #{stampCount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

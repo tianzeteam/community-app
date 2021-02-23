@@ -1,0 +1,32 @@
+package com.smart.home.modules.product.dao;
+
+import com.smart.home.modules.product.entity.ProductCommentReply;
+import com.smart.home.modules.product.entity.ProductCommentReplyExample;
+import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+@Mapper
+public interface ProductCommentReplyMapper {
+    long countByExample(ProductCommentReplyExample example);
+
+    int deleteByExample(ProductCommentReplyExample example);
+
+    int deleteByPrimaryKey(Long id);
+
+    int insert(ProductCommentReply record);
+
+    int insertSelective(ProductCommentReply record);
+
+    List<ProductCommentReply> selectByExample(ProductCommentReplyExample example);
+
+    ProductCommentReply selectByPrimaryKey(Long id);
+
+    int updateByExampleSelective(@Param("record") ProductCommentReply record, @Param("example") ProductCommentReplyExample example);
+
+    int updateByExample(@Param("record") ProductCommentReply record, @Param("example") ProductCommentReplyExample example);
+
+    int updateByPrimaryKeySelective(ProductCommentReply record);
+
+    int updateByPrimaryKey(ProductCommentReply record);
+}

@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.home.modules.article.dao.ArticleMapper">
+  <resultMap id="BaseResultMap" type="com.smart.home.modules.article.entity.Article">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="cover_image" jdbcType="VARCHAR" property="coverImage" />
+    <result column="banner_images" jdbcType="VARCHAR" property="bannerImages" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="channel_id" jdbcType="BIGINT" property="channelId" />
+    <result column="details" jdbcType="VARCHAR" property="details" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="audit_state" jdbcType="INTEGER" property="auditState" />
+    <result column="reject_reason" jdbcType="VARCHAR" property="rejectReason" />
+    <result column="recommend_flag" jdbcType="INTEGER" property="recommendFlag" />
+    <result column="top_flag" jdbcType="INTEGER" property="topFlag" />
+    <result column="test_flag" jdbcType="INTEGER" property="testFlag" />
+    <result column="test_result" jdbcType="VARCHAR" property="testResult" />
+    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
+    <result column="stamp_count" jdbcType="INTEGER" property="stampCount" />
+    <result column="category" jdbcType="INTEGER" property="category" />
+    <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
+    <result column="visit_count" jdbcType="INTEGER" property="visitCount" />
+    <result column="report_count" jdbcType="INTEGER" property="reportCount" />
+    <result column="revision" jdbcType="INTEGER" property="revision" />
+    <result column="created_by" jdbcType="BIGINT" property="createdBy" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, cover_image, banner_images, title, remark, tag, channel_id, details, user_id, 
+    state, audit_state, reject_reason, recommend_flag, top_flag, test_flag, test_result, 
+    like_count, stamp_count, category, comment_count, visit_count, report_count, revision, 
+    created_by, created_time, updated_by, updated_time
+  </sql>
+  <select id="selectByExample" parameterType="com.smart.home.modules.article.entity.ArticleExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from article
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from article
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.smart.home.modules.article.entity.ArticleExample">
+    delete from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.smart.home.modules.article.entity.Article">
+    insert into article (id, cover_image, banner_images, 
+      title, remark, tag, 
+      channel_id, details, user_id, 
+      state, audit_state, reject_reason, 
+      recommend_flag, top_flag, test_flag, 
+      test_result, like_count, stamp_count, 
+      category, comment_count, visit_count, 
+      report_count, revision, created_by, 
+      created_time, updated_by, updated_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{coverImage,jdbcType=VARCHAR}, #{bannerImages,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
+      #{channelId,jdbcType=BIGINT}, #{details,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
+      #{state,jdbcType=INTEGER}, #{auditState,jdbcType=INTEGER}, #{rejectReason,jdbcType=VARCHAR}, 
+      #{recommendFlag,jdbcType=INTEGER}, #{topFlag,jdbcType=INTEGER}, #{testFlag,jdbcType=INTEGER}, 
+      #{testResult,jdbcType=VARCHAR}, #{likeCount,jdbcType=INTEGER}, #{stampCount,jdbcType=INTEGER}, 
+      #{category,jdbcType=INTEGER}, #{commentCount,jdbcType=INTEGER}, #{visitCount,jdbcType=INTEGER}, 
+      #{reportCount,jdbcType=INTEGER}, #{revision,jdbcType=INTEGER}, #{createdBy,jdbcType=BIGINT}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.smart.home.modules.article.entity.Article">
+    insert into article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="coverImage != null">
+        cover_image,
+      </if>
+      <if test="bannerImages != null">
+        banner_images,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="channelId != null">
+        channel_id,
+      </if>
+      <if test="details != null">
+        details,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="auditState != null">
+        audit_state,
+      </if>
+      <if test="rejectReason != null">
+        reject_reason,
+      </if>
+      <if test="recommendFlag != null">
+        recommend_flag,
+      </if>
+      <if test="topFlag != null">
+        top_flag,
+      </if>
+      <if test="testFlag != null">
+        test_flag,
+      </if>
+      <if test="testResult != null">
+        test_result,
+      </if>
+      <if test="likeCount != null">
+        like_count,
+      </if>
+      <if test="stampCount != null">
+        stamp_count,
+      </if>
+      <if test="category != null">
+        category,
+      </if>
+      <if test="commentCount != null">
+        comment_count,
+      </if>
+      <if test="visitCount != null">
+        visit_count,
+      </if>
+      <if test="reportCount != null">
+        report_count,
+      </if>
+      <if test="revision != null">
+        revision,
+      </if>
+      <if test="createdBy != null">
+        created_by,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+      <if test="updatedBy != null">
+        updated_by,
+      </if>
+      <if test="updatedTime != null">
+        updated_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="coverImage != null">
+        #{coverImage,jdbcType=VARCHAR},
+      </if>
+      <if test="bannerImages != null">
+        #{bannerImages,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null">
+        #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="details != null">
+        #{details,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="auditState != null">
+        #{auditState,jdbcType=INTEGER},
+      </if>
+      <if test="rejectReason != null">
+        #{rejectReason,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendFlag != null">
+        #{recommendFlag,jdbcType=INTEGER},
+      </if>
+      <if test="topFlag != null">
+        #{topFlag,jdbcType=INTEGER},
+      </if>
+      <if test="testFlag != null">
+        #{testFlag,jdbcType=INTEGER},
+      </if>
+      <if test="testResult != null">
+        #{testResult,jdbcType=VARCHAR},
+      </if>
+      <if test="likeCount != null">
+        #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="stampCount != null">
+        #{stampCount,jdbcType=INTEGER},
+      </if>
+      <if test="category != null">
+        #{category,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null">
+        #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="visitCount != null">
+        #{visitCount,jdbcType=INTEGER},
+      </if>
+      <if test="reportCount != null">
+        #{reportCount,jdbcType=INTEGER},
+      </if>
+      <if test="revision != null">
+        #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null">
+        #{updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="updatedTime != null">
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.smart.home.modules.article.entity.ArticleExample" resultType="java.lang.Long">
+    select count(*) from article
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update article
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.coverImage != null">
+        cover_image = #{record.coverImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bannerImages != null">
+        banner_images = #{record.bannerImages,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null">
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tag != null">
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.channelId != null">
+        channel_id = #{record.channelId,jdbcType=BIGINT},
+      </if>
+      <if test="record.details != null">
+        details = #{record.details,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=INTEGER},
+      </if>
+      <if test="record.auditState != null">
+        audit_state = #{record.auditState,jdbcType=INTEGER},
+      </if>
+      <if test="record.rejectReason != null">
+        reject_reason = #{record.rejectReason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.recommendFlag != null">
+        recommend_flag = #{record.recommendFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.topFlag != null">
+        top_flag = #{record.topFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.testFlag != null">
+        test_flag = #{record.testFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.testResult != null">
+        test_result = #{record.testResult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.likeCount != null">
+        like_count = #{record.likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.stampCount != null">
+        stamp_count = #{record.stampCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.category != null">
+        category = #{record.category,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentCount != null">
+        comment_count = #{record.commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.visitCount != null">
+        visit_count = #{record.visitCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.reportCount != null">
+        report_count = #{record.reportCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.revision != null">
+        revision = #{record.revision,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdBy != null">
+        created_by = #{record.createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.createdTime != null">
+        created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatedBy != null">
+        updated_by = #{record.updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.updatedTime != null">
+        updated_time = #{record.updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update article
+    set id = #{record.id,jdbcType=BIGINT},
+      cover_image = #{record.coverImage,jdbcType=VARCHAR},
+      banner_images = #{record.bannerImages,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      channel_id = #{record.channelId,jdbcType=BIGINT},
+      details = #{record.details,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      state = #{record.state,jdbcType=INTEGER},
+      audit_state = #{record.auditState,jdbcType=INTEGER},
+      reject_reason = #{record.rejectReason,jdbcType=VARCHAR},
+      recommend_flag = #{record.recommendFlag,jdbcType=INTEGER},
+      top_flag = #{record.topFlag,jdbcType=INTEGER},
+      test_flag = #{record.testFlag,jdbcType=INTEGER},
+      test_result = #{record.testResult,jdbcType=VARCHAR},
+      like_count = #{record.likeCount,jdbcType=INTEGER},
+      stamp_count = #{record.stampCount,jdbcType=INTEGER},
+      category = #{record.category,jdbcType=INTEGER},
+      comment_count = #{record.commentCount,jdbcType=INTEGER},
+      visit_count = #{record.visitCount,jdbcType=INTEGER},
+      report_count = #{record.reportCount,jdbcType=INTEGER},
+      revision = #{record.revision,jdbcType=INTEGER},
+      created_by = #{record.createdBy,jdbcType=BIGINT},
+      created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+      updated_by = #{record.updatedBy,jdbcType=BIGINT},
+      updated_time = #{record.updatedTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smart.home.modules.article.entity.Article">
+    update article
+    <set>
+      <if test="coverImage != null">
+        cover_image = #{coverImage,jdbcType=VARCHAR},
+      </if>
+      <if test="bannerImages != null">
+        banner_images = #{bannerImages,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="channelId != null">
+        channel_id = #{channelId,jdbcType=BIGINT},
+      </if>
+      <if test="details != null">
+        details = #{details,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="auditState != null">
+        audit_state = #{auditState,jdbcType=INTEGER},
+      </if>
+      <if test="rejectReason != null">
+        reject_reason = #{rejectReason,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendFlag != null">
+        recommend_flag = #{recommendFlag,jdbcType=INTEGER},
+      </if>
+      <if test="topFlag != null">
+        top_flag = #{topFlag,jdbcType=INTEGER},
+      </if>
+      <if test="testFlag != null">
+        test_flag = #{testFlag,jdbcType=INTEGER},
+      </if>
+      <if test="testResult != null">
+        test_result = #{testResult,jdbcType=VARCHAR},
+      </if>
+      <if test="likeCount != null">
+        like_count = #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="stampCount != null">
+        stamp_count = #{stampCount,jdbcType=INTEGER},
+      </if>
+      <if test="category != null">
+        category = #{category,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null">
+        comment_count = #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="visitCount != null">
+        visit_count = #{visitCount,jdbcType=INTEGER},
+      </if>
+      <if test="reportCount != null">
+        report_count = #{reportCount,jdbcType=INTEGER},
+      </if>
+      <if test="revision != null">
+        revision = #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null">
+        created_by = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null">
+        updated_by = #{updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="updatedTime != null">
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smart.home.modules.article.entity.Article">
+    update article
+    set cover_image = #{coverImage,jdbcType=VARCHAR},
+      banner_images = #{bannerImages,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      channel_id = #{channelId,jdbcType=BIGINT},
+      details = #{details,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      state = #{state,jdbcType=INTEGER},
+      audit_state = #{auditState,jdbcType=INTEGER},
+      reject_reason = #{rejectReason,jdbcType=VARCHAR},
+      recommend_flag = #{recommendFlag,jdbcType=INTEGER},
+      top_flag = #{topFlag,jdbcType=INTEGER},
+      test_flag = #{testFlag,jdbcType=INTEGER},
+      test_result = #{testResult,jdbcType=VARCHAR},
+      like_count = #{likeCount,jdbcType=INTEGER},
+      stamp_count = #{stampCount,jdbcType=INTEGER},
+      category = #{category,jdbcType=INTEGER},
+      comment_count = #{commentCount,jdbcType=INTEGER},
+      visit_count = #{visitCount,jdbcType=INTEGER},
+      report_count = #{reportCount,jdbcType=INTEGER},
+      revision = #{revision,jdbcType=INTEGER},
+      created_by = #{createdBy,jdbcType=BIGINT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updated_by = #{updatedBy,jdbcType=BIGINT},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
