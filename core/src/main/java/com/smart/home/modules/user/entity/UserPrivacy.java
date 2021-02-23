@@ -26,6 +26,8 @@ public class UserPrivacy implements Serializable {
 
     private Date updatedTime;
 
+    private UserPrivacySetting userPrivacySetting;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -217,6 +219,14 @@ public class UserPrivacy implements Serializable {
         result = prime * result + ((getUpdatedBy() == null) ? 0 : getUpdatedBy().hashCode());
         result = prime * result + ((getUpdatedTime() == null) ? 0 : getUpdatedTime().hashCode());
         return result;
+    }
+
+    public UserPrivacySetting getUserPrivacySetting() {
+        return userPrivacySetting;
+    }
+
+    public void setUserPrivacySetting(UserPrivacySetting userPrivacySetting) {
+        this.userPrivacySetting = userPrivacySetting;
     }
 
     /**

@@ -54,4 +54,9 @@ public class UserPrivacyService {
         return userPrivacy;
     }
 
+    public List<UserPrivacy> findByCategory(Integer privacyType) {
+        UserPrivacyExample example = new UserPrivacyExample();
+        example.createCriteria().andCategoryEqualTo(privacyType);
+        return userPrivacyMapper.selectByExample(example);
+    }
 }
