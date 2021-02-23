@@ -5,6 +5,14 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <include file="classpath:/db/changelog/article/article_channel.xml"/>
+    <include file="classpath:/db/changelog/article/article.xml"/>
+    <include file="classpath:/db/changelog/article/article_comment.xml"/>
+    <include file="classpath:/db/changelog/article/article_comment_reply.xml"/>
+    <include file="classpath:/db/changelog/article/article_like_history.xml"/>
+    <include file="classpath:/db/changelog/article/article_stamp_history.xml"/>
+    <include file="classpath:/db/changelog/article/article_product_mapping.xml"/>
+
     <include file="classpath:/db/changelog/system/sys_config.xml"/>
     <include file="classpath:/db/changelog/system/sys_dict.xml"/>
     <include file="classpath:/db/changelog/system/sys_role.xml"/>

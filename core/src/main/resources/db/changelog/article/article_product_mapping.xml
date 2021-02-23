@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableArticleProductMapping" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="article_product_mapping"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建文章产品关联表</comment>
+        <sql>
+            CREATE TABLE article_product_mapping(
+            ID BIGINT NOT NULL,
+            ARTICLE_ID BIGINT,
+            PRODUCT_ID INT,
+            TEST_RESULT VARCHAR(255),
+            RECOMMEND_FLAG INT,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE article_product_mapping IS '文章涉及的产品';
+            COMMENT ON COLUMN article_product_mapping.ID IS '主键ID';
+            COMMENT ON COLUMN article_product_mapping.ARTICLE_ID IS '文章主键ID';
+            COMMENT ON COLUMN article_product_mapping.PRODUCT_ID IS '产品主键ID';
+            COMMENT ON COLUMN article_product_mapping.TEST_RESULT IS '评测结论';
+            COMMENT ON COLUMN article_product_mapping.RECOMMEND_FLAG IS '是否推荐0否1是';
+
+            CREATE SEQUENCE article_product_mapping_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "article_product_mapping" alter column ID set default nextval('article_product_mapping_id_seq');
+
+            create index idx_product_article_id on article_product_mapping using btree (ARTICLE_ID);
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

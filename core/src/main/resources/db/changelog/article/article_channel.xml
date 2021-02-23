@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableArticleChannel" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="article_channel"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建文章频道表</comment>
+        <sql>
+            CREATE TABLE article_channel(
+            ID serial NOT NULL,
+            TITLE VARCHAR(32),
+            REMARK VARCHAR(128),
+            SORT INT,
+            STATE INT,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE article_channel IS '文章频道';
+            COMMENT ON COLUMN article_channel.ID IS '主键ID';
+            COMMENT ON COLUMN article_channel.TITLE IS '名称';
+            COMMENT ON COLUMN article_channel.REMARK IS '简介';
+            COMMENT ON COLUMN article_channel.SORT IS '排序';
+            COMMENT ON COLUMN article_channel.STATE IS '是否启用0否1是';
+            COMMENT ON COLUMN article_channel.REVISION IS '乐观锁';
+            COMMENT ON COLUMN article_channel.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN article_channel.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN article_channel.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN article_channel.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableArticle" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="article"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建文章表</comment>
+        <sql>
+            CREATE TABLE article(
+            ID BIGINT NOT NULL,
+            COVER_IMAGE VARCHAR(255),
+            BANNER_IMAGES TEXT,
+            TITLE VARCHAR(32),
+            REMARK VARCHAR(128),
+            TAG VARCHAR(32),
+            CHANNEL_ID BIGINT,
+            DETAILS TEXT,
+            USER_ID BIGINT,
+            STATE INT DEFAULT 0,
+            AUDIT_STATE INT DEFAULT 0,
+            REJECT_REASON VARCHAR(255),
+            RECOMMEND_FLAG INT,
+            TOP_FLAG INT,
+            TEST_FLAG INT DEFAULT 0,
+            TEST_RESULT VARCHAR(255),
+            LIKE_COUNT INT,
+            STAMP_COUNT INT,
+            CATEGORY INT,
+            COMMENT_COUNT INT,
+            VISIT_COUNT INT,
+            REPORT_COUNT INT,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE article IS '文章';
+            COMMENT ON COLUMN article.ID IS '主键ID';
+            COMMENT ON COLUMN article.COVER_IMAGE IS '封面图片';
+            COMMENT ON COLUMN article.BANNER_IMAGES IS '轮播图片';
+            COMMENT ON COLUMN article.TITLE IS '标题';
+            COMMENT ON COLUMN article.REMARK IS '简介';
+            COMMENT ON COLUMN article.TAG IS '标签:全屋方案';
+            COMMENT ON COLUMN article.CHANNEL_ID IS '所属频道';
+            COMMENT ON COLUMN article.DETAILS IS '详细内容';
+            COMMENT ON COLUMN article.USER_ID IS '作者主键ID';
+            COMMENT ON COLUMN article.STATE IS '0草稿1上线';
+            COMMENT ON COLUMN article.AUDIT_STATE IS '0待审核1审核通过2审核失败';
+            COMMENT ON COLUMN article.REJECT_REASON IS '不过审理由';
+            COMMENT ON COLUMN article.RECOMMEND_FLAG IS '是否推荐0否1是';
+            COMMENT ON COLUMN article.TOP_FLAG IS '是否置顶0否1是';
+            COMMENT ON COLUMN article.TEST_FLAG IS '是否是评测文章0否1是';
+            COMMENT ON COLUMN article.TEST_RESULT IS '评测结论';
+            COMMENT ON COLUMN article.LIKE_COUNT IS '赞数量';
+            COMMENT ON COLUMN article.STAMP_COUNT IS '踩数量';
+            COMMENT ON COLUMN article.CATEGORY IS '0文章1视频';
+            COMMENT ON COLUMN article.COMMENT_COUNT IS '评论数量';
+            COMMENT ON COLUMN article.VISIT_COUNT IS '浏览量';
+            COMMENT ON COLUMN article.REPORT_COUNT IS '举报数量';
+            COMMENT ON COLUMN article.REVISION IS '乐观锁';
+            COMMENT ON COLUMN article.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN article.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN article.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN article.UPDATED_TIME IS '更新时间';
+
+            CREATE SEQUENCE article_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "article" alter column ID set default nextval('article_id_seq');
+
+            create index idx_article_user_id on article using btree (user_id);
+            create index idx_article_create_time on article using btree (CREATED_TIME);
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

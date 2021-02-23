@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableArticleComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="article_comment"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建文章评论表</comment>
+        <sql>
+            CREATE TABLE article_comment(
+            ID BIGINT NOT NULL,
+            ARTICLE_ID BIGINT,
+            USER_ID BIGINT,
+            CONTENTS VARCHAR(255),
+            AUTHOR_FLAG INT,
+            LIKE_COUNT INT,
+            STAMP_COUNT INT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE article_comment IS '文章评论';
+            COMMENT ON COLUMN article_comment.ID IS '主键ID';
+            COMMENT ON COLUMN article_comment.ARTICLE_ID IS '文章主键ID';
+            COMMENT ON COLUMN article_comment.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN article_comment.CONTENTS IS '评论内容';
+            COMMENT ON COLUMN article_comment.AUTHOR_FLAG IS '是否是作者0否1是';
+            COMMENT ON COLUMN article_comment.LIKE_COUNT IS '赞数量';
+            COMMENT ON COLUMN article_comment.STAMP_COUNT IS '踩数量';
+            COMMENT ON COLUMN article_comment.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE article_comment_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "article_comment" alter column ID set default nextval('article_comment_id_seq');
+
+            create index idx_comment_user_id on article_comment using btree (user_id);
+            create index idx_comment_article_id on article_comment using btree (ARTICLE_ID);
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>
