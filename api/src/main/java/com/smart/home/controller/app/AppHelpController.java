@@ -11,13 +11,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +35,7 @@ public class AppHelpController {
     @GetMapping("/queryTopList")
     public APIResponse<List<HelpVO>> queryTopList() {
         List<SysHelp> list = sysHelpService.findByPidAndState(0, RecordStatusEnum.NORMAL.getStatus());
-        List<HelpVO> helpVOList = HelpAssembler.assenblerHelpVO(list);
+        List<HelpVO> helpVOList = HelpAssembler.assemblerHelpVO(list);
         return APIResponse.OK(helpVOList);
     }
 
@@ -49,7 +47,7 @@ public class AppHelpController {
     @GetMapping("/queryListByPid")
     public APIResponse<List<HelpVO>> queryListByPid(Integer pid) {
         List<SysHelp> list = sysHelpService.findByPidAndState(pid, RecordStatusEnum.NORMAL.getStatus());
-        List<HelpVO> helpVOList = HelpAssembler.assenblerHelpVO(list);
+        List<HelpVO> helpVOList = HelpAssembler.assemblerHelpVO(list);
         return APIResponse.OK(helpVOList);
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
  **/
 public class HelpAssembler {
 
-    public static List<HelpVO> assenblerHelpVO(List<SysHelp> list) {
+    public static List<HelpVO> assemblerHelpVO(List<SysHelp> list) {
         List<HelpVO> helpVOList = new ArrayList<>();
         for (SysHelp sysHelp : list) {
             HelpVO vo = new HelpVO();
