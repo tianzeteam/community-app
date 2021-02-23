@@ -49,8 +49,8 @@ public class UserPrivacyService {
         return userPrivacyMapper.selectByExample(example);
     }
 
-    public UserPrivacy findById(Long id) {
-        UserPrivacy userPrivacy = userPrivacyMapper.selectByPrimaryKey(id.intValue());
+    public UserPrivacy findById(Integer id) {
+        UserPrivacy userPrivacy = userPrivacyMapper.selectByPrimaryKey(id);
         return userPrivacy;
     }
 

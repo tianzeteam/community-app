@@ -54,7 +54,7 @@ public class UserPrivacyController {
 
     @ApiOperation("按主键ID查询用户隐私")
     @GetMapping("/selectById")
-    public APIResponse<UserPrivacy> selectById(Long id) {
+    public APIResponse<UserPrivacy> selectById(Integer id) {
         return APIResponse.OK(userPrivacyService.findById(id));
     }
 

@@ -7,7 +7,7 @@
     <result column="privacy_id" jdbcType="INTEGER" property="privacyId" />
     <result column="check_flag" jdbcType="INTEGER" property="checkFlag" />
     <result column="category" jdbcType="INTEGER" property="category" />
-    <result column="category_name" jdbcType="INTEGER" property="categoryName" />
+    <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -113,7 +113,7 @@
       check_flag, category, category_name
       )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{privacyId,jdbcType=INTEGER}, 
-      #{checkFlag,jdbcType=INTEGER}, #{category,jdbcType=INTEGER}, #{categoryName,jdbcType=INTEGER}
+      #{checkFlag,jdbcType=INTEGER}, #{category,jdbcType=INTEGER}, #{categoryName,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.smart.home.modules.user.entity.UserPrivacySetting">
@@ -155,7 +155,7 @@
         #{category,jdbcType=INTEGER},
       </if>
       <if test="categoryName != null">
-        #{categoryName,jdbcType=INTEGER},
+        #{categoryName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -184,7 +184,7 @@
         category = #{record.category,jdbcType=INTEGER},
       </if>
       <if test="record.categoryName != null">
-        category_name = #{record.categoryName,jdbcType=INTEGER},
+        category_name = #{record.categoryName,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -198,7 +198,7 @@
       privacy_id = #{record.privacyId,jdbcType=INTEGER},
       check_flag = #{record.checkFlag,jdbcType=INTEGER},
       category = #{record.category,jdbcType=INTEGER},
-      category_name = #{record.categoryName,jdbcType=INTEGER}
+      category_name = #{record.categoryName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -219,7 +219,7 @@
         category = #{category,jdbcType=INTEGER},
       </if>
       <if test="categoryName != null">
-        category_name = #{categoryName,jdbcType=INTEGER},
+        category_name = #{categoryName,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -230,7 +230,7 @@
       privacy_id = #{privacyId,jdbcType=INTEGER},
       check_flag = #{checkFlag,jdbcType=INTEGER},
       category = #{category,jdbcType=INTEGER},
-      category_name = #{categoryName,jdbcType=INTEGER}
+      category_name = #{categoryName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

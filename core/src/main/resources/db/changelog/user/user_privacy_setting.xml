@@ -42,4 +42,10 @@
             create index idx_privacy_user_id on user_privacy_setting using btree (user_id);
         </sql>
     </changeSet>
+    <changeSet id="alterColumn4UserPrivacySetting1" author="jason">
+        <comment>修改分类名称字段类型</comment>
+        <sql>
+            alter table user_privacy_setting alter column CATEGORY_NAME type VARCHAR(32);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -73,5 +74,22 @@ public class UserPrivacySettingService {
             return null;
         }
         return list.get(0);
+    }
+
+    public void updatePrivacySetting(Long userId, Integer privacyId, Integer checkFlag) {
+        UserPrivacySetting userPrivacySetting = findByUserIdAndPrivacyId(userId, privacyId);
+        if (Objects.isNull(userPrivacySetting)) {
+            UserPrivacy userPrivacy = this.userPrivacyService.findById(privacyId);
+            userPrivacySetting = new UserPrivacySetting();
+            userPrivacySetting.withCategory(userPrivacy.getCategory())
+                    .withCategoryName(userPrivacy.getCategoryName())
+                    .withCheckFlag(checkFlag)
+                    .withPrivacyId(privacyId)
+                    .withUserId(userId);
+            create(userPrivacySetting);
+        } else {
+            userPrivacySetting.setCheckFlag(checkFlag);
+            update(userPrivacySetting);
+        }
     }
 }

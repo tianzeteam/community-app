@@ -15,7 +15,7 @@ public class UserPrivacySetting implements Serializable {
 
     private Integer category;
 
-    private Integer categoryName;
+    private String categoryName;
 
     private static final long serialVersionUID = 1L;
 
@@ -84,16 +84,16 @@ public class UserPrivacySetting implements Serializable {
         this.category = category;
     }
 
-    public Integer getCategoryName() {
+    public String getCategoryName() {
         return categoryName;
     }
 
-    public UserPrivacySetting withCategoryName(Integer categoryName) {
+    public UserPrivacySetting withCategoryName(String categoryName) {
         this.setCategoryName(categoryName);
         return this;
     }
 
-    public void setCategoryName(Integer categoryName) {
+    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
 
