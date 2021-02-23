@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductParamValue" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_param_value"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品参数值表</comment>
+        <sql>
+            CREATE TABLE product_param_value(
+            ID BIGINT NOT NULL,
+            PRODUCT_ID INT NOT NULL,
+            PARAM_ID INT NOT NULL,
+            PARAM_VALUE VARCHAR(32),
+            SORT INT DEFAULT 0 NOT NULL,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product_param_value IS '产品参数值';
+            COMMENT ON COLUMN product_param_value.ID IS '主键ID';
+            COMMENT ON COLUMN product_param_value.PRODUCT_ID IS '产品主键ID';
+            COMMENT ON COLUMN product_param_value.PARAM_ID IS '产品参数配置ID';
+            COMMENT ON COLUMN product_param_value.PARAM_VALUE IS '产品参数值';
+            COMMENT ON COLUMN product_param_value.SORT IS '排序';
+
+            CREATE SEQUENCE product_param_value_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "product_param_value" alter column ID set default nextval('product_param_value_id_seq');
+
+            create index idx_prdpv_product_id on product_param_value using btree (PRODUCT_ID);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

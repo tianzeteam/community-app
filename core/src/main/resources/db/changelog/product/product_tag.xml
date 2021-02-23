@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductTag" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_tag"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品标签表</comment>
+        <sql>
+            CREATE TABLE product_tag(
+            ID serial NOT NULL,
+            PRODUCT_ID INT NOT NULL,
+            TAG_NAME VARCHAR(32) NOT NULL,
+            BACKGROUND_COLOR VARCHAR(16),
+            ICON VARCHAR(255),
+            SORT INT,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product_tag IS '产品标签';
+            COMMENT ON COLUMN product_tag.ID IS '主键ID';
+            COMMENT ON COLUMN product_tag.PRODUCT_ID IS '产品主键ID';
+            COMMENT ON COLUMN product_tag.TAG_NAME IS '标签名称';
+            COMMENT ON COLUMN product_tag.BACKGROUND_COLOR IS '背景色';
+            COMMENT ON COLUMN product_tag.ICON IS '图标';
+            COMMENT ON COLUMN product_tag.SORT IS '排序';
+
+            create index idx_prdtag_product_id on product_tag using btree (PRODUCT_ID);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

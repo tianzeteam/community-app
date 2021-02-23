@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductCategory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_category"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品类目表</comment>
+        <sql>
+            CREATE TABLE product_category(
+            ID serial NOT NULL,
+            PID INT DEFAULT 0 NOT NULL,
+            ICON VARCHAR(255),
+            TITLE VARCHAR(32) NOT NULL,
+            SUB_TITLE VARCHAR(32),
+            SORT INT DEFAULT 0 NOT NULL,
+            BANNER VARCHAR(255),
+            STATE INT DEFAULT 1 NOT NULL,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product_category IS '产品类目';
+            COMMENT ON COLUMN product_category.ID IS '主键ID';
+            COMMENT ON COLUMN product_category.PID IS '顶级菜单这里为0';
+            COMMENT ON COLUMN product_category.ICON IS '图标';
+            COMMENT ON COLUMN product_category.TITLE IS '名称';
+            COMMENT ON COLUMN product_category.SUB_TITLE IS '副名称';
+            COMMENT ON COLUMN product_category.SORT IS '排序';
+            COMMENT ON COLUMN product_category.BANNER IS '大图';
+            COMMENT ON COLUMN product_category.STATE IS '是否启用0否1是';
+            COMMENT ON COLUMN product_category.REVISION IS '乐观锁';
+            COMMENT ON COLUMN product_category.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN product_category.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN product_category.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN product_category.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

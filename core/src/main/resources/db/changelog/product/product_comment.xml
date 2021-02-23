@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_comment"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品评价表</comment>
+        <sql>
+            CREATE TABLE product_comment(
+            ID BIGINT NOT NULL,
+            PRODUCT_ID INT,
+            USER_ID BIGINT,
+            STAR_COUNT INT,
+            DETAILS VARCHAR(255),
+            FUN_COUNT INT,
+            LIKE_COUNT INT,
+            STAMP_COUNT INT,
+            REPLY_COUNT INT,
+            CREATED_TIME DATE,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product_comment IS '产品评价';
+            COMMENT ON COLUMN product_comment.ID IS '主键ID';
+            COMMENT ON COLUMN product_comment.PRODUCT_ID IS '产品主键ID';
+            COMMENT ON COLUMN product_comment.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN product_comment.STAR_COUNT IS '最大5星好评';
+            COMMENT ON COLUMN product_comment.DETAILS IS '评价内容';
+            COMMENT ON COLUMN product_comment.FUN_COUNT IS '有趣数量';
+            COMMENT ON COLUMN product_comment.LIKE_COUNT IS '赞数量';
+            COMMENT ON COLUMN product_comment.STAMP_COUNT IS '踩数量';
+            COMMENT ON COLUMN product_comment.REPLY_COUNT IS '回复数量';
+            COMMENT ON COLUMN product_comment.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE product_comment_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "product_comment" alter column ID set default nextval('product_comment_id_seq');
+
+            create index idx_prdcom_product_id on product_comment using btree (PRODUCT_ID);
+            create index idx_prdcom_user_id on product_comment using btree (USER_ID);
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

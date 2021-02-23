@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProduct" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品表</comment>
+        <sql>
+            CREATE TABLE product(
+            ID serial NOT NULL,
+            COVER_IMAGE VARCHAR(255),
+            BANNER_IMAGES TEXT,
+            PRODUCT_NAME VARCHAR(32) NOT NULL,
+            REMARK VARCHAR(128),
+            ONLINE_DATE DATE,
+            SPECIFICATION VARCHAR(32),
+            BRAND_ID INT,
+            BRAND_NAME VARCHAR(32),
+            ONLINE_FLAG INT DEFAULT 1,
+            RECOMMEND_FLAG INT DEFAULT 0,
+            DETAILS TEXT,
+            CATEGORY_ONE_ID INT,
+            CATEGORY_ONE_NAME VARCHAR(32),
+            CATEGORY_TWO_ID INT,
+            CATEGORY_TWO_NAME VARCHAR(32),
+            CATEGORY_THREE_ID INT,
+            CATEGORY_THREE_NAME VARCHAR(32),
+            AVERAGE_SCORE DECIMAL(4,2),
+            PRAISE_RATE INT,
+            COMMENT_COUNT INT,
+            TEST_COUNT INT,
+            HOT_RATE DECIMAL(4,2),
+            TAG VARCHAR(32),
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product IS '产品';
+            COMMENT ON COLUMN product.ID IS '主键ID';
+            COMMENT ON COLUMN product.COVER_IMAGE IS '封面图片';
+            COMMENT ON COLUMN product.BANNER_IMAGES IS '轮播图片';
+            COMMENT ON COLUMN product.PRODUCT_NAME IS '产品名称';
+            COMMENT ON COLUMN product.REMARK IS '产品简介';
+            COMMENT ON COLUMN product.ONLINE_DATE IS '上市时间';
+            COMMENT ON COLUMN product.SPECIFICATION IS '规格型号';
+            COMMENT ON COLUMN product.BRAND_ID IS '品牌主键ID';
+            COMMENT ON COLUMN product.BRAND_NAME IS '品牌名称,r冗余字段';
+            COMMENT ON COLUMN product.ONLINE_FLAG IS '是否上架0否1是';
+            COMMENT ON COLUMN product.RECOMMEND_FLAG IS '是否首页推荐0否1是';
+            COMMENT ON COLUMN product.DETAILS IS '产品详情';
+            COMMENT ON COLUMN product.CATEGORY_ONE_ID IS '一级分类主键ID';
+            COMMENT ON COLUMN product.CATEGORY_ONE_NAME IS '一级分类名称,冗余字段';
+            COMMENT ON COLUMN product.CATEGORY_TWO_ID IS '二级分类主键ID';
+            COMMENT ON COLUMN product.CATEGORY_TWO_NAME IS '二级分类名称,冗余字段';
+            COMMENT ON COLUMN product.CATEGORY_THREE_ID IS '三级分类主键ID';
+            COMMENT ON COLUMN product.CATEGORY_THREE_NAME IS '三级分类名称,冗余字段';
+            COMMENT ON COLUMN product.AVERAGE_SCORE IS '综合评分';
+            COMMENT ON COLUMN product.PRAISE_RATE IS '好评率';
+            COMMENT ON COLUMN product.COMMENT_COUNT IS '评论数量';
+            COMMENT ON COLUMN product.TEST_COUNT IS '评测数量';
+            COMMENT ON COLUMN product.HOT_RATE IS '热度';
+            COMMENT ON COLUMN product.TAG IS '标签：石头热销榜第一名';
+            COMMENT ON COLUMN product.REVISION IS '乐观锁';
+            COMMENT ON COLUMN product.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN product.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN product.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN product.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

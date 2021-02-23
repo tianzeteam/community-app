@@ -19,7 +19,21 @@
     <include file="classpath:/db/changelog/community/community_post_reply.xml"/>
     <include file="classpath:/db/changelog/community/community_like_history.xml"/>
     <include file="classpath:/db/changelog/community/community_stamp_history.xml"/>
-
+    <include file="classpath:/db/changelog/product/product.xml"/>
+    <include file="classpath:/db/changelog/product/product_brand.xml"/>
+    <include file="classpath:/db/changelog/product/product_category.xml"/>
+    <include file="classpath:/db/changelog/product/product_category_param.xml"/>
+    <include file="classpath:/db/changelog/product/product_category_tag.xml"/>
+    <include file="classpath:/db/changelog/product/product_comment.xml"/>
+    <include file="classpath:/db/changelog/product/product_comment_reply.xml"/>
+    <include file="classpath:/db/changelog/product/product_comment_fun_history.xml"/>
+    <include file="classpath:/db/changelog/product/product_comment_like_history.xml"/>
+    <include file="classpath:/db/changelog/product/product_comment_stamp_history.xml"/>
+    <include file="classpath:/db/changelog/product/product_param_setting.xml"/>
+    <include file="classpath:/db/changelog/product/product_param_value.xml"/>
+    <include file="classpath:/db/changelog/product/product_shop.xml"/>
+    <include file="classpath:/db/changelog/product/product_shop_mapping.xml"/>
+    <include file="classpath:/db/changelog/product/product_tag.xml"/>
     <include file="classpath:/db/changelog/system/sys_config.xml"/>
     <include file="classpath:/db/changelog/system/sys_dict.xml"/>
     <include file="classpath:/db/changelog/system/sys_role.xml"/>

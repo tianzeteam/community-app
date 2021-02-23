@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductCommentLikeHistory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_comment_like_history"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建历史表</comment>
+        <sql>
+            CREATE TABLE product_comment_like_history(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            SOURCE_ID BIGINT,
+            CATEGORY INT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product_comment_like_history IS '产品评价有趣历史';
+            COMMENT ON COLUMN product_comment_like_history.ID IS '主键ID';
+            COMMENT ON COLUMN product_comment_like_history.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN product_comment_like_history.SOURCE_ID IS '评价/回复主键ID';
+            COMMENT ON COLUMN product_comment_like_history.CATEGORY IS '0评价1回复';
+            COMMENT ON COLUMN product_comment_like_history.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE product_comment_like_history_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "product_comment_like_history" alter column ID set default nextval('product_comment_like_history_id_seq');
+
+            create index idx_prdcom_like_user_id on product_comment_like_history using btree (USER_ID);
+            create index idx_prdcom_like_source_id on product_comment_like_history using btree (SOURCE_ID,CATEGORY);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductShopMapping" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_shop_mapping"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品商城映射表</comment>
+        <sql>
+            CREATE TABLE product_shop_mapping(
+            ID BIGINT NOT NULL,
+            PRODUCT_ID INT,
+            SHOP_ID INT,
+            SHOP_ICON VARCHAR(255),
+            SHOP_NAME VARCHAR(32),
+            URL VARCHAR(255),
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON COLUMN product_shop_mapping.ID IS '主键ID';
+            COMMENT ON COLUMN product_shop_mapping.PRODUCT_ID IS '产品主键ID';
+            COMMENT ON COLUMN product_shop_mapping.SHOP_ID IS '商城主键ID';
+            COMMENT ON COLUMN product_shop_mapping.SHOP_ICON IS '商城图标,冗余字段';
+            COMMENT ON COLUMN product_shop_mapping.SHOP_NAME IS '商城名称,冗余字段';
+            COMMENT ON COLUMN product_shop_mapping.URL IS '跳转链接';
+
+            CREATE SEQUENCE product_shop_mapping_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "product_shop_mapping" alter column ID set default nextval('product_shop_mapping_id_seq');
+
+            create index idx_prdshop_product_id on product_shop_mapping using btree (PRODUCT_ID);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

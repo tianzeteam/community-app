@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductBrand" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_brand"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品品牌表</comment>
+        <sql>
+            CREATE TABLE product_brand(
+            ID serial NOT NULL,
+            LOGO VARCHAR(255),
+            BRAND_NAME VARCHAR(32) NOT NULL,
+            REMARK VARCHAR(255),
+            URL VARCHAR(255),
+            SORT INT DEFAULT 0 NOT NULL,
+            STATE INT DEFAULT 1 NOT NULL,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product_brand IS '产品品牌';
+            COMMENT ON COLUMN product_brand.ID IS '主键ID';
+            COMMENT ON COLUMN product_brand.LOGO IS '图标';
+            COMMENT ON COLUMN product_brand.BRAND_NAME IS '品牌名称';
+            COMMENT ON COLUMN product_brand.REMARK IS '简介';
+            COMMENT ON COLUMN product_brand.URL IS '品牌官网';
+            COMMENT ON COLUMN product_brand.SORT IS '排序';
+            COMMENT ON COLUMN product_brand.STATE IS '是否启用0否1是';
+            COMMENT ON COLUMN product_brand.REVISION IS '乐观锁';
+            COMMENT ON COLUMN product_brand.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN product_brand.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN product_brand.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN product_brand.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

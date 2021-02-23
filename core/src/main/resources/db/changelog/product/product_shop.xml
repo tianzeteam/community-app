@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductShop" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_shop"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品销售店铺表</comment>
+        <sql>
+            CREATE TABLE product_shop(
+            ID serial NOT NULL,
+            COVER_IMAGE VARCHAR(1024),
+            SHOP_NAME VARCHAR(32),
+            REMARK VARCHAR(32),
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product_shop IS '产品商城';
+            COMMENT ON COLUMN product_shop.ID IS '主键ID';
+            COMMENT ON COLUMN product_shop.COVER_IMAGE IS '封面图片';
+            COMMENT ON COLUMN product_shop.SHOP_NAME IS '名称';
+            COMMENT ON COLUMN product_shop.REMARK IS '简介';
+            COMMENT ON COLUMN product_shop.REVISION IS '乐观锁';
+            COMMENT ON COLUMN product_shop.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN product_shop.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN product_shop.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN product_shop.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

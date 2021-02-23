@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductCategoryParam" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_category_param"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品类目标参数表</comment>
+        <sql>
+            CREATE TABLE product_category_param(
+            ID BIGINT NOT NULL,
+            PRODUCT_CATEGORY_ID INT NOT NULL,
+            PRODUCT_PARAM_ID INT NOT NULL,
+            MANDATORY_FLAG INT,
+            SORT INT DEFAULT 0 NOT NULL,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product_category_param IS '产品类别参数';
+            COMMENT ON COLUMN product_category_param.ID IS '主键ID';
+            COMMENT ON COLUMN product_category_param.PRODUCT_CATEGORY_ID IS '产品分类ID';
+            COMMENT ON COLUMN product_category_param.PRODUCT_PARAM_ID IS '产品参数配置ID';
+            COMMENT ON COLUMN product_category_param.MANDATORY_FLAG IS '是否必填0否1是';
+            COMMENT ON COLUMN product_category_param.SORT IS '排序';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

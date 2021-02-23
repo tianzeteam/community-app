@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductCategoryTag" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_category_tag"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品类目标签表</comment>
+        <sql>
+            CREATE TABLE product_category_tag(
+            ID serial NOT NULL,
+            CATEGORY_ID INT,
+            TAG_NAME VARCHAR(32),
+            BACKGROUND_COLOR VARCHAR(16),
+            ICON VARCHAR(255),
+            SORT INT DEFAULT 0,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product_category_tag IS '产品类目标签';
+            COMMENT ON COLUMN product_category_tag.ID IS '主键ID';
+            COMMENT ON COLUMN product_category_tag.CATEGORY_ID IS '产品类目主键ID';
+            COMMENT ON COLUMN product_category_tag.TAG_NAME IS '标签名称';
+            COMMENT ON COLUMN product_category_tag.BACKGROUND_COLOR IS '背景颜色';
+            COMMENT ON COLUMN product_category_tag.ICON IS '图标';
+            COMMENT ON COLUMN product_category_tag.SORT IS '排序';
+        </sql>
+    </changeSet>
+</databaseChangeLog>
