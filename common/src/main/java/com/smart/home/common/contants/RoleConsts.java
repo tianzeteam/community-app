@@ -7,6 +7,9 @@ package com.smart.home.common.contants;
 public class RoleConsts {
 
     public static final String SUPER_ADMIN = "superadmin";
+    /**
+     * 注册用户
+     */
     public static final String REGISTER = "register";
 
 

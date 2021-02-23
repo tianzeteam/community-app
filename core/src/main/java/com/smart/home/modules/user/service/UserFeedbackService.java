@@ -1,6 +1,8 @@
 package com.smart.home.modules.user.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.enums.FeedbackStatusEnum;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.modules.user.dao.UserFeedbackMapper;
 import com.smart.home.modules.user.entity.UserFeedback;
 import com.smart.home.modules.user.entity.UserFeedbackExample;
@@ -22,7 +24,34 @@ public class UserFeedbackService {
 
     public int create(UserFeedback userFeedback) {
         userFeedback.setCreatedTime(new Date());
+        userFeedback.setRevision(0);
         return userFeedbackMapper.insertSelective(userFeedback);
+    }
+
+    /**
+     * 更新成已读
+     * @param id
+     * @param userId
+     */
+    public void updateToRead(Long id, Long userId) {
+        UserFeedback userFeedback = new UserFeedback();
+        userFeedback.setId(id);
+        userFeedback.setReadFlag(YesNoEnum.YES.getCode());
+        userFeedback.setUpdatedBy(userId);
+        update(userFeedback);
+    }
+
+    /**
+     * 更细成已关闭
+     * @param id
+     * @param userId
+     */
+    public void updateToClose(Long id, Long userId) {
+        UserFeedback userFeedback = new UserFeedback();
+        userFeedback.setId(id);
+        userFeedback.setUpdatedBy(userId);
+        userFeedback.setState(FeedbackStatusEnum.CLOSED.getStatus());
+        update(userFeedback);
     }
 
     public int update(UserFeedback userFeedback) {
@@ -45,7 +74,9 @@ public class UserFeedbackService {
         PageHelper.startPage(pageNum, pageSize);
         UserFeedbackExample example = new UserFeedbackExample();
         UserFeedbackExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
+        if (userFeedback.getUserId() != null) {
+           criteria.andUserIdEqualTo(userFeedback.getUserId());
+        }
         return userFeedbackMapper.selectByExample(example);
     }
 
