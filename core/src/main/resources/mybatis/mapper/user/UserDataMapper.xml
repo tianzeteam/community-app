@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.smart.home.modules.user.dao.UserDataMapper">
+  <resultMap id="BaseResultMap" type="com.smart.home.modules.user.entity.UserData">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="wx_openid" jdbcType="VARCHAR" property="wxOpenid" />
+    <result column="sign" jdbcType="VARCHAR" property="sign" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="user_level" jdbcType="INTEGER" property="userLevel" />
+    <result column="user_level_count" jdbcType="INTEGER" property="userLevelCount" />
+    <result column="focus_count" jdbcType="INTEGER" property="focusCount" />
+    <result column="follow_count" jdbcType="INTEGER" property="followCount" />
+    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
+    <result column="post_count" jdbcType="INTEGER" property="postCount" />
+    <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
+    <result column="reply_count" jdbcType="INTEGER" property="replyCount" />
+    <result column="evaluate_count" jdbcType="INTEGER" property="evaluateCount" />
+    <result column="contribute_count" jdbcType="INTEGER" property="contributeCount" />
+    <result column="revision" jdbcType="INTEGER" property="revision" />
+    <result column="created_by" jdbcType="BIGINT" property="createdBy" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
+    <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, user_id, wx_openid, sign, remark, user_level, user_level_count, focus_count, 
+    follow_count, like_count, post_count, comment_count, reply_count, evaluate_count, 
+    contribute_count, revision, created_by, created_time, updated_by, updated_time
+  </sql>
+  <select id="selectByExample" parameterType="com.smart.home.modules.user.entity.UserDataExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_data
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_data
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user_data
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.smart.home.modules.user.entity.UserDataExample">
+    delete from user_data
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.smart.home.modules.user.entity.UserData">
+    insert into user_data (id, user_id, wx_openid, 
+      sign, remark, user_level, 
+      user_level_count, focus_count, follow_count, 
+      like_count, post_count, comment_count, 
+      reply_count, evaluate_count, contribute_count, 
+      revision, created_by, created_time, 
+      updated_by, updated_time)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{wxOpenid,jdbcType=VARCHAR}, 
+      #{sign,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{userLevel,jdbcType=INTEGER}, 
+      #{userLevelCount,jdbcType=INTEGER}, #{focusCount,jdbcType=INTEGER}, #{followCount,jdbcType=INTEGER}, 
+      #{likeCount,jdbcType=INTEGER}, #{postCount,jdbcType=INTEGER}, #{commentCount,jdbcType=INTEGER}, 
+      #{replyCount,jdbcType=INTEGER}, #{evaluateCount,jdbcType=INTEGER}, #{contributeCount,jdbcType=INTEGER}, 
+      #{revision,jdbcType=INTEGER}, #{createdBy,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{updatedBy,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.smart.home.modules.user.entity.UserData">
+    insert into user_data
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="wxOpenid != null">
+        wx_openid,
+      </if>
+      <if test="sign != null">
+        sign,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="userLevel != null">
+        user_level,
+      </if>
+      <if test="userLevelCount != null">
+        user_level_count,
+      </if>
+      <if test="focusCount != null">
+        focus_count,
+      </if>
+      <if test="followCount != null">
+        follow_count,
+      </if>
+      <if test="likeCount != null">
+        like_count,
+      </if>
+      <if test="postCount != null">
+        post_count,
+      </if>
+      <if test="commentCount != null">
+        comment_count,
+      </if>
+      <if test="replyCount != null">
+        reply_count,
+      </if>
+      <if test="evaluateCount != null">
+        evaluate_count,
+      </if>
+      <if test="contributeCount != null">
+        contribute_count,
+      </if>
+      <if test="revision != null">
+        revision,
+      </if>
+      <if test="createdBy != null">
+        created_by,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+      <if test="updatedBy != null">
+        updated_by,
+      </if>
+      <if test="updatedTime != null">
+        updated_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="wxOpenid != null">
+        #{wxOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null">
+        #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null">
+        #{userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="userLevelCount != null">
+        #{userLevelCount,jdbcType=INTEGER},
+      </if>
+      <if test="focusCount != null">
+        #{focusCount,jdbcType=INTEGER},
+      </if>
+      <if test="followCount != null">
+        #{followCount,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="postCount != null">
+        #{postCount,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null">
+        #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="replyCount != null">
+        #{replyCount,jdbcType=INTEGER},
+      </if>
+      <if test="evaluateCount != null">
+        #{evaluateCount,jdbcType=INTEGER},
+      </if>
+      <if test="contributeCount != null">
+        #{contributeCount,jdbcType=INTEGER},
+      </if>
+      <if test="revision != null">
+        #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null">
+        #{updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="updatedTime != null">
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.smart.home.modules.user.entity.UserDataExample" resultType="java.lang.Long">
+    select count(*) from user_data
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update user_data
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=BIGINT},
+      </if>
+      <if test="record.wxOpenid != null">
+        wx_openid = #{record.wxOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sign != null">
+        sign = #{record.sign,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userLevel != null">
+        user_level = #{record.userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.userLevelCount != null">
+        user_level_count = #{record.userLevelCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.focusCount != null">
+        focus_count = #{record.focusCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.followCount != null">
+        follow_count = #{record.followCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.likeCount != null">
+        like_count = #{record.likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.postCount != null">
+        post_count = #{record.postCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.commentCount != null">
+        comment_count = #{record.commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.replyCount != null">
+        reply_count = #{record.replyCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.evaluateCount != null">
+        evaluate_count = #{record.evaluateCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.contributeCount != null">
+        contribute_count = #{record.contributeCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.revision != null">
+        revision = #{record.revision,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdBy != null">
+        created_by = #{record.createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.createdTime != null">
+        created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatedBy != null">
+        updated_by = #{record.updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="record.updatedTime != null">
+        updated_time = #{record.updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update user_data
+    set id = #{record.id,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
+      wx_openid = #{record.wxOpenid,jdbcType=VARCHAR},
+      sign = #{record.sign,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      user_level = #{record.userLevel,jdbcType=INTEGER},
+      user_level_count = #{record.userLevelCount,jdbcType=INTEGER},
+      focus_count = #{record.focusCount,jdbcType=INTEGER},
+      follow_count = #{record.followCount,jdbcType=INTEGER},
+      like_count = #{record.likeCount,jdbcType=INTEGER},
+      post_count = #{record.postCount,jdbcType=INTEGER},
+      comment_count = #{record.commentCount,jdbcType=INTEGER},
+      reply_count = #{record.replyCount,jdbcType=INTEGER},
+      evaluate_count = #{record.evaluateCount,jdbcType=INTEGER},
+      contribute_count = #{record.contributeCount,jdbcType=INTEGER},
+      revision = #{record.revision,jdbcType=INTEGER},
+      created_by = #{record.createdBy,jdbcType=BIGINT},
+      created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+      updated_by = #{record.updatedBy,jdbcType=BIGINT},
+      updated_time = #{record.updatedTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.smart.home.modules.user.entity.UserData">
+    update user_data
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="wxOpenid != null">
+        wx_openid = #{wxOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null">
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null">
+        user_level = #{userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="userLevelCount != null">
+        user_level_count = #{userLevelCount,jdbcType=INTEGER},
+      </if>
+      <if test="focusCount != null">
+        focus_count = #{focusCount,jdbcType=INTEGER},
+      </if>
+      <if test="followCount != null">
+        follow_count = #{followCount,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        like_count = #{likeCount,jdbcType=INTEGER},
+      </if>
+      <if test="postCount != null">
+        post_count = #{postCount,jdbcType=INTEGER},
+      </if>
+      <if test="commentCount != null">
+        comment_count = #{commentCount,jdbcType=INTEGER},
+      </if>
+      <if test="replyCount != null">
+        reply_count = #{replyCount,jdbcType=INTEGER},
+      </if>
+      <if test="evaluateCount != null">
+        evaluate_count = #{evaluateCount,jdbcType=INTEGER},
+      </if>
+      <if test="contributeCount != null">
+        contribute_count = #{contributeCount,jdbcType=INTEGER},
+      </if>
+      <if test="revision != null">
+        revision = #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null">
+        created_by = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null">
+        updated_by = #{updatedBy,jdbcType=BIGINT},
+      </if>
+      <if test="updatedTime != null">
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.smart.home.modules.user.entity.UserData">
+    update user_data
+    set user_id = #{userId,jdbcType=BIGINT},
+      wx_openid = #{wxOpenid,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      user_level = #{userLevel,jdbcType=INTEGER},
+      user_level_count = #{userLevelCount,jdbcType=INTEGER},
+      focus_count = #{focusCount,jdbcType=INTEGER},
+      follow_count = #{followCount,jdbcType=INTEGER},
+      like_count = #{likeCount,jdbcType=INTEGER},
+      post_count = #{postCount,jdbcType=INTEGER},
+      comment_count = #{commentCount,jdbcType=INTEGER},
+      reply_count = #{replyCount,jdbcType=INTEGER},
+      evaluate_count = #{evaluateCount,jdbcType=INTEGER},
+      contribute_count = #{contributeCount,jdbcType=INTEGER},
+      revision = #{revision,jdbcType=INTEGER},
+      created_by = #{createdBy,jdbcType=BIGINT},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      updated_by = #{updatedBy,jdbcType=BIGINT},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
