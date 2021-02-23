@@ -12,6 +12,12 @@
     <include file="classpath:/db/changelog/article/article_like_history.xml"/>
     <include file="classpath:/db/changelog/article/article_stamp_history.xml"/>
     <include file="classpath:/db/changelog/article/article_product_mapping.xml"/>
+    <include file="classpath:/db/changelog/community/community_category.xml"/>
+    <include file="classpath:/db/changelog/community/community.xml"/>
+    <include file="classpath:/db/changelog/community/community_user_mapping.xml"/>
+    <include file="classpath:/db/changelog/community/community_post.xml"/>
+    <include file="classpath:/db/changelog/community/community_post_reply.xml"/>
+    <include file="classpath:/db/changelog/community/community_like_history.xml"/>
 
     <include file="classpath:/db/changelog/system/sys_config.xml"/>
     <include file="classpath:/db/changelog/system/sys_dict.xml"/>

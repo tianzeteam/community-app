@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableCommunityUserMapping" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="community_user_mapping"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建用户加入的社区表</comment>
+        <sql>
+            CREATE TABLE community_user_mapping(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            COMMUNITY_ID INT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE community_user_mapping IS '用户加入的社区';
+            COMMENT ON COLUMN community_user_mapping.ID IS '主键ID';
+            COMMENT ON COLUMN community_user_mapping.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN community_user_mapping.COMMUNITY_ID IS '社区主键ID';
+            COMMENT ON COLUMN community_user_mapping.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE community_user_mapping_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "community_user_mapping" alter column ID set default nextval('community_user_mapping_id_seq');
+
+            create index idx_community_user_id on community_user_mapping using btree (user_id);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

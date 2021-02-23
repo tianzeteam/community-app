@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableCommunityPost" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="community_post"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建社区帖子表</comment>
+        <sql>
+            CREATE TABLE community_post(
+            ID BIGINT NOT NULL,
+            COMMUNITY INT,
+            USER_ID BIGINT,
+            TITLE VARCHAR(32),
+            CONTENTS TEXT,
+            IMAGES TEXT,
+            TOP_FLAG INT DEFAULT 0,
+            BOUTIQUE_FLAG INT DEFAULT 0,
+            LIKE_COUNT INT,
+            COMMENT_FLAG INT DEFAULT 1,
+            REPORT_COUNT INT DEFAULT 0,
+            AUDIT_STATUS INT DEFAULT 0,
+            REVISION INT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE community_post IS '社区帖子';
+            COMMENT ON COLUMN community_post.ID IS '主键ID';
+            COMMENT ON COLUMN community_post.COMMUNITY IS '社区主键ID';
+            COMMENT ON COLUMN community_post.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN community_post.TITLE IS '标题';
+            COMMENT ON COLUMN community_post.CONTENTS IS '内容';
+            COMMENT ON COLUMN community_post.IMAGES IS '图片列表';
+            COMMENT ON COLUMN community_post.TOP_FLAG IS '是否置顶0否1是';
+            COMMENT ON COLUMN community_post.BOUTIQUE_FLAG IS '是否加精0否1是';
+            COMMENT ON COLUMN community_post.LIKE_COUNT IS '赞数量';
+            COMMENT ON COLUMN community_post.COMMENT_FLAG IS '是否能评论0否1是';
+            COMMENT ON COLUMN community_post.REPORT_COUNT IS '被举报数量';
+            COMMENT ON COLUMN community_post.AUDIT_STATUS IS '审核状态0待审核1审核通过2审核失败';
+            COMMENT ON COLUMN community_post.REVISION IS '乐观锁';
+            COMMENT ON COLUMN community_post.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN community_post.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN community_post.UPDATED_TIME IS '更新时间';
+
+            CREATE SEQUENCE community_post_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "community_post" alter column ID set default nextval('community_post_id_seq');
+
+            create index idx_post_user_id on community_post using btree (user_id);
+            create index idx_post_create_time on community_post using btree (CREATED_TIME);
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

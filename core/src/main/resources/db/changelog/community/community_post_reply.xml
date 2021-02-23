@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableCommunityPostReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="community_post_reply"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建社区帖子评论表</comment>
+        <sql>
+            CREATE TABLE community_post_reply(
+            ID BIGINT NOT NULL,
+            USER_ID BIGINT,
+            POST_ID BIGINT,
+            POST_REPLY_ID BIGINT,
+            REPLY_TYPE INT DEFAULT 0,
+            CONTENTS VARCHAR(255),
+            LIKE_COUNT INT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE community_post_reply IS '社区帖子评论';
+            COMMENT ON COLUMN community_post_reply.ID IS '主键ID';
+            COMMENT ON COLUMN community_post_reply.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN community_post_reply.POST_ID IS '主贴主键ID';
+            COMMENT ON COLUMN community_post_reply.POST_REPLY_ID IS '回帖主键ID';
+            COMMENT ON COLUMN community_post_reply.REPLY_TYPE IS '0主贴回复1二级回复';
+            COMMENT ON COLUMN community_post_reply.CONTENTS IS '回帖内容';
+            COMMENT ON COLUMN community_post_reply.LIKE_COUNT IS '赞数量';
+            COMMENT ON COLUMN community_post_reply.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE community_post_reply_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "community_post_reply" alter column ID set default nextval('community_post_reply_id_seq');
+
+            create index idx_pstrpl_user_id on community_post_reply using btree (user_id);
+            create index idx_pstrpl_post_id on community_post_reply using btree (POST_ID);
+            create index idx_pstrpl_pstrpl_id on community_post_reply using btree (POST_REPLY_ID);
+            create index idx_pstrpl_create_time on community_post_reply using btree (CREATED_TIME);
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

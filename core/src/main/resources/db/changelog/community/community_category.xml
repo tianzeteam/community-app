@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableCommunityCategory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="community_category"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建社区分类表</comment>
+        <sql>
+            CREATE TABLE community_category(
+            ID serial NOT NULL,
+            COVER_IMAGE VARCHAR(255),
+            TITLE VARCHAR(32),
+            REMARK VARCHAR(255),
+            SORT INT,
+            STATE INT DEFAULT 0,
+            REVISION INT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE community_category IS '社区类目';
+            COMMENT ON COLUMN community_category.ID IS '主键ID';
+            COMMENT ON COLUMN community_category.COVER_IMAGE IS '封面图片';
+            COMMENT ON COLUMN community_category.TITLE IS '名称';
+            COMMENT ON COLUMN community_category.REMARK IS '简介';
+            COMMENT ON COLUMN community_category.SORT IS '排序';
+            COMMENT ON COLUMN community_category.STATE IS '状态0正常1暂停';
+            COMMENT ON COLUMN community_category.REVISION IS '乐观锁';
+            COMMENT ON COLUMN community_category.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN community_category.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN community_category.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN community_category.UPDATED_TIME IS '更新时间';
+        </sql>
+    </changeSet>
+</databaseChangeLog>
