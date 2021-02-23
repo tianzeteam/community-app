@@ -26,6 +26,8 @@
     <include file="classpath:/db/changelog/user/user_role_mapping.xml"/>
     <include file="classpath:/db/changelog/user/user_community_auth.xml"/>
     <include file="classpath:/db/changelog/user/user_article_channel_preference.xml"/>
+    <include file="classpath:/db/changelog/message/message_content.xml"/>
+    <include file="classpath:/db/changelog/message/message_read_history.xml"/>
     <include file="classpath:/db/changelog/other/audit_history.xml"/>
     <include file="classpath:/db/changelog/other/report_history.xml"/>
     <include file="classpath:/db/changelog/other/statistic_page.xml"/>

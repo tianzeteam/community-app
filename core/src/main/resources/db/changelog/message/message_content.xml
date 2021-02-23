@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableMessageContent" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="message_content"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建消息内容表</comment>
+        <sql>
+            CREATE TABLE message_content(
+            ID BIGINT NOT NULL,
+            COVER_IMAGE VARCHAR(255),
+            MESSAGE_TYPE INT,
+            SOURCE_ID BIGINT,
+            TITLE VARCHAR(32),
+            MESSAGE_CONTENT VARCHAR(255),
+            SENDER_ID BIGINT,
+            RECEIVER_ID BIGINT,
+            READ_FLAG INT DEFAULT 0,
+            DELETE_FLAG INT DEFAULT 0,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE message_content IS '消息';
+            COMMENT ON COLUMN message_content.ID IS '主键ID';
+            COMMENT ON COLUMN message_content.COVER_IMAGE IS '封面图片';
+            COMMENT ON COLUMN message_content.MESSAGE_TYPE IS '0用户私信1评论回复2点赞收藏3系统公告';
+            COMMENT ON COLUMN message_content.SOURCE_ID IS '原文主键ID';
+            COMMENT ON COLUMN message_content.TITLE IS '标题';
+            COMMENT ON COLUMN message_content.MESSAGE_CONTENT IS '内容';
+            COMMENT ON COLUMN message_content.SENDER_ID IS '消息发送者';
+            COMMENT ON COLUMN message_content.RECEIVER_ID IS '消息接收者';
+            COMMENT ON COLUMN message_content.READ_FLAG IS '是否已读0否1是';
+            COMMENT ON COLUMN message_content.DELETE_FLAG IS '是否删除0否1是';
+            COMMENT ON COLUMN message_content.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN message_content.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE message_content_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "message_content" alter column ID set default nextval('message_content_id_seq');
+
+            create index idx_msg_sender_id on message_content using btree (SENDER_ID);
+            create index idx_msg_receiver_id on message_content using btree (RECEIVER_ID);
+            create index idx_msg_create_time on message_content using btree (CREATED_TIME);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

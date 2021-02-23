@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableMessageReadHistory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="message_read_history"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建消息已读历史表</comment>
+        <sql>
+            CREATE TABLE message_read_history(
+            ID BIGINT NOT NULL,
+            MESSAGE_ID BIGINT,
+            USER_ID BIGINT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE message_read_history IS '消息已读历史';
+            COMMENT ON COLUMN message_read_history.ID IS '主键ID';
+            COMMENT ON COLUMN message_read_history.MESSAGE_ID IS '消息主键ID';
+            COMMENT ON COLUMN message_read_history.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN message_read_history.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE message_read_history_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "message_read_history" alter column ID set default nextval('message_read_history_id_seq');
+
+            create index idx_msg_history_user_id on message_read_history using btree (USER_ID);
+            create index idx_msg_history_id on message_read_history using btree (MESSAGE_ID);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
