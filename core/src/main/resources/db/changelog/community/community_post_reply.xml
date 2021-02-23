@@ -50,4 +50,15 @@
 
         </sql>
     </changeSet>
+    <changeSet id="addColumnStamp4PostReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post_reply" columnName="stamp_count"/>
+            </not>
+        </preConditions>
+        <comment>增加点踩字段</comment>
+        <sql>
+            alter table community_post_reply add column stamp_count int;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
