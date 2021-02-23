@@ -370,4 +370,8 @@
   <update id="updateNewToken">
     update user_account set access_token = #{token,jdbcType=VARCHAR} where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="updateHeadUrl">
+    update user_account set head_url = #{headUrl} where id = #{userId,jdbcType=BIGINT}
+    </update>
 </mapper>

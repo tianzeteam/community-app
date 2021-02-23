@@ -55,4 +55,12 @@ public class AppAboutController {
         return APIResponse.OK(BeanCopyUtils.convertTo(sysAgreement, AboutVO::new));
     }
 
+    @ApiOperation("获取app版本号")
+    @AnonAccess
+    @GetMapping("/queryAppVersion")
+    public APIResponse queryAppVersion() {
+        // TODO 这个后续从数据库配置拿
+        return APIResponse.OK("v1.0");
+    }
+
 }

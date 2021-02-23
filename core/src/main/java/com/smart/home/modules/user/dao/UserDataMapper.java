@@ -29,4 +29,6 @@ public interface UserDataMapper {
     int updateByPrimaryKeySelective(UserData record);
 
     int updateByPrimaryKey(UserData record);
+
+    int updateSign(@Param("userId") Long userId,@Param("sign") String sign);
 }

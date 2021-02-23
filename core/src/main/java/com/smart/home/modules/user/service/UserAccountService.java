@@ -6,16 +6,14 @@ import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.APIResponseCodeEnum;
 import com.smart.home.common.enums.AccountStatusEnum;
 import com.smart.home.common.exception.AuthorizationException;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.JwtUtil;
 import com.smart.home.common.util.SummaryUtils;
 import com.smart.home.common.util.UUIDUtil;
 import com.smart.home.modules.system.service.SysRoleService;
 import com.smart.home.modules.user.dao.UserAccountMapper;
 import com.smart.home.modules.user.dao.UserRoleMappingMapper;
-import com.smart.home.modules.user.entity.UserAccount;
-import com.smart.home.modules.user.entity.UserAccountExample;
-import com.smart.home.modules.user.entity.UserRoleMapping;
-import com.smart.home.modules.user.entity.UserRoleMappingExample;
+import com.smart.home.modules.user.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +40,8 @@ public class UserAccountService {
     private UserRoleMappingMapper userRoleMappingMapper;
     @Autowired
     private SysRoleService sysRoleService;
+    @Autowired
+    private UserDataService userDataService;
 
     @Transactional(rollbackFor = Exception.class)
     public int insert(UserAccount entity, List<Integer> roleIdList) {
@@ -269,4 +269,57 @@ public class UserAccountService {
         return userAccount;
     }
 
+    /**
+     * 查询user_account和user_data数据基础信息
+     * @param userId
+     * @return
+     */
+    public UserAccount queryUserAccountAndData(Long userId) {
+        UserAccount userAccount = this.mapper.selectByPrimaryKey(userId);
+        UserData userData = userDataService.findByUserId(userId);
+        if (Objects.isNull(userData)) {
+            userData = userDataService.initUserData(userId);
+        }
+        userAccount.setUserData(userData);
+        return userAccount;
+    }
+
+    public void updateHeadUrl(Long userId, String headUrl) {
+        mapper.updateHeadUrl(userId, headUrl);
+    }
+
+    public void updateNickName(Long userId, String nickName) {
+        UserAccount userAccount = new UserAccount();
+        userAccount.setId(userId);
+        userAccount.setNickName(nickName);
+        userAccount.setUpdatedTime(new Date());
+        userAccount.setUpdatedBy(userId);
+        this.mapper.updateByPrimaryKeySelective(userAccount);
+    }
+
+    /**
+     * 设置密码
+     * @param userId
+     * @param password
+     */
+    public void initPassword(Long userId, String password) {
+        UserAccount userAccount = findUserByUserId(userId);
+        if (StringUtils.isNotBlank(userAccount.getPassword())) {
+            throw new ServiceException("已经设置过密码了");
+        }
+        if (password.length() < 6) {
+            throw new ServiceException("密码不能低于6位");
+        }
+        if (password.length() > 32) {
+            throw new ServiceException("密码不能超过32位");
+        }
+        String salt = userAccount.getSalt();
+        if (StringUtils.isBlank(salt)) {
+            salt = UUIDUtil.uuid();
+        }
+        password = encryptPassword(password, salt);
+        userAccount.setPassword(password);
+        userAccount.setSalt(salt);
+        mapper.updateByPrimaryKeySelective(userAccount);
+    }
 }

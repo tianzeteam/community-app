@@ -32,4 +32,6 @@ public interface UserAccountMapper {
     int updateByPrimaryKey(UserAccount record);
 
     int updateNewToken(@Param("id") Long id,@Param("token") String token);
+
+    int updateHeadUrl(@Param("userId") Long userId,@Param("headUrl") String headUrl);
 }

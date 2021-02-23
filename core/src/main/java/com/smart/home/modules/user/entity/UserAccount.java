@@ -36,6 +36,8 @@ public class UserAccount implements Serializable {
 
     private List<String> roleCodeList;
 
+    private UserData userData;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -310,6 +312,14 @@ public class UserAccount implements Serializable {
 
     public void setRoleCodeList(List<String> roleCodeList) {
         this.roleCodeList = roleCodeList;
+    }
+
+    public UserData getUserData() {
+        return userData;
+    }
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 
     /**
