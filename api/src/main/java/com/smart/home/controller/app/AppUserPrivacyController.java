@@ -27,7 +27,7 @@ import java.util.Objects;
  * @author jason
  * @date 2021/2/23
  **/
-@Api(tags = "user用户隐私设置")
+@Api(tags = "设置-用户隐私设置")
 @RestController
 @RequestMapping("/api/app/userPrivacy")
 public class AppUserPrivacyController {
