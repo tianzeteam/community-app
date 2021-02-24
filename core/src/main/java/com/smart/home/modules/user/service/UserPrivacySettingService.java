@@ -92,4 +92,8 @@ public class UserPrivacySettingService {
             update(userPrivacySetting);
         }
     }
+
+    public List<Integer> queryUserSettingList(Long userId) {
+        return userPrivacySettingMapper.queryCheckedSettingList(userId);
+    }
 }

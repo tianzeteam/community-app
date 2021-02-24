@@ -6,6 +6,7 @@ import com.smart.home.modules.user.entity.UserTag;
 import com.smart.home.modules.user.entity.UserTagExample;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -52,4 +53,13 @@ public class UserTagService {
         return userTag;
     }
 
+    public UserTag findByUserId(Long userId) {
+        UserTagExample example = new UserTagExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<UserTag> list = userTagMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

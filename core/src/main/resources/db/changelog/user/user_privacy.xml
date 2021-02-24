@@ -57,4 +57,16 @@
             insert into user_privacy(CATEGORY,CATEGORY_NAME,CODE,TITLE) VALUES (1,'动态隐私设置',4,'投稿');
         </sql>
     </changeSet>
+    <changeSet id="updateData4UserPrivacy" author="jason">
+        <comment>更新错误的基础数据</comment>
+        <sql>
+            update user_privacy set CATEGORY_NAME = '个人主页隐私设置' where CATEGORY = 1;
+        </sql>
+    </changeSet>
+    <changeSet id="updateData4UserPrivacy1" author="jason">
+        <comment>更新错误的基础数据</comment>
+        <sql>
+            update user_privacy set TITLE = '发帖' where CATEGORY = 1 and code = 0;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

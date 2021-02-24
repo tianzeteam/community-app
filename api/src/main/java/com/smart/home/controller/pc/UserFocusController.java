@@ -24,12 +24,6 @@ public class UserFocusController {
     @Autowired
     private UserFocusService userFocusService;
 
-    @ApiOperation("创建用户关注")
-    @PostMapping("/create")
-    public APIResponse create(UserFocus userFocus) {
-        return APIResponse.OK(userFocusService.create(userFocus));
-    }
-
     @ApiOperation("更新用户关注")
     @PostMapping("/update")
     public APIResponse update(UserFocus userFocus) {

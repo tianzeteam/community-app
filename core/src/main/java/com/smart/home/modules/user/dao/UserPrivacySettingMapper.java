@@ -29,4 +29,6 @@ public interface UserPrivacySettingMapper {
     int updateByPrimaryKeySelective(UserPrivacySetting record);
 
     int updateByPrimaryKey(UserPrivacySetting record);
+
+    List<Integer> queryCheckedSettingList(@Param("userId") Long userId);
 }
