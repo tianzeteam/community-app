@@ -37,4 +37,8 @@ public interface ProductCommentMapper {
     int increaseStampCount(@Param("id") Long id);
 
     int decreaseStampCount(@Param("id") Long id);
+
+    int increaseFunCount(@Param("id") Long id);
+
+    int decreaseFunCount(@Param("id") Long id);
 }

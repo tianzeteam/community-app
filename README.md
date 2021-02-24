@@ -38,3 +38,7 @@ com.smart.home.service.LikeService
 ```
 com.smart.home.service.StmapService
 ```
+- 有趣/取消有趣统一入口service
+```
+com.smart.home.service.FunService
+```

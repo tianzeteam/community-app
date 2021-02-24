@@ -4,12 +4,12 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.product.dao.ProductCommentFunHistoryMapper;
 import com.smart.home.modules.product.entity.ProductCommentFunHistory;
 import com.smart.home.modules.product.entity.ProductCommentFunHistoryExample;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -19,24 +19,38 @@ public class ProductCommentFunHistoryService {
 
     @Resource
     ProductCommentFunHistoryMapper productCommentFunHistoryMapper;
+    @Autowired
+    private ProductCommentService productCommentService;
+    @Autowired
+    private ProductCommentReplyService productCommentReplyService;
 
     public int create(ProductCommentFunHistory productCommentFunHistory) {
         productCommentFunHistory.setCreatedTime(new Date());
-        return productCommentFunHistoryMapper.insertSelective(productCommentFunHistory);
+        int affectRow = productCommentFunHistoryMapper.insertSelective(productCommentFunHistory);
+        if (affectRow > 0) {
+            if (productCommentFunHistory.getCategory() == 0) {
+                productCommentService.increaseFunCount(productCommentFunHistory.getSourceId());
+            }
+            if (productCommentFunHistory.getCategory() == 1) {
+                productCommentReplyService.increaseFunCount(productCommentFunHistory.getSourceId());
+            }
+        }
+        return affectRow;
     }
 
-    public int update(ProductCommentFunHistory productCommentFunHistory) {
-        return productCommentFunHistoryMapper.updateByPrimaryKeySelective(productCommentFunHistory);
+    public void unfunCommnet(Long userId, Long id) {
+        ProductCommentFunHistoryExample example = new ProductCommentFunHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(0);
+        if (productCommentFunHistoryMapper.deleteByExample(example) > 0) {
+            productCommentService.decreaseFunCount(id);
+        }
     }
 
-    public int deleteById(Long id) {
-        return productCommentFunHistoryMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            productCommentFunHistoryMapper.deleteByPrimaryKey(id);
+    public void unfunCommnetReply(Long userId, Long id) {
+        ProductCommentFunHistoryExample example = new ProductCommentFunHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(1);
+        if (productCommentFunHistoryMapper.deleteByExample(example) > 0) {
+            productCommentReplyService.decreaseFunCount(id);
         }
     }
 

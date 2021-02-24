@@ -20,6 +20,8 @@ public class ProductCommentReply implements Serializable {
 
     private Integer stampCount;
 
+    private Integer funCount;
+
     private Integer revision;
 
     private Date createdTime;
@@ -199,6 +201,14 @@ public class ProductCommentReply implements Serializable {
         result = prime * result + ((getRevision() == null) ? 0 : getRevision().hashCode());
         result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
         return result;
+    }
+
+    public Integer getFunCount() {
+        return funCount;
+    }
+
+    public void setFunCount(Integer funCount) {
+        this.funCount = funCount;
     }
 
     /**

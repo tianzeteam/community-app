@@ -1,6 +1,7 @@
 package com.smart.home.service;
 
 import com.smart.home.enums.LikeCategoryEnum;
+import com.smart.home.enums.StampCategoryEnum;
 import com.smart.home.modules.article.entity.ArticleStampHistory;
 import com.smart.home.modules.article.service.ArticleStampHistoryService;
 import com.smart.home.modules.community.entity.CommunityStampHistory;
@@ -27,13 +28,13 @@ public class StampService {
     private CommunityStampHistoryService communityStampHistoryService;
 
     /**
-     * 增加一条赞历史记录
-     * @param likeCategoryEnum 赞分类
+     * 增加一条踩历史记录
+     * @param stampCategoryEnum 踩分类
      * @param userId 用户主键ID
      * @param primaryKey 关联记录主键ID
      */
-    public void stamp(LikeCategoryEnum likeCategoryEnum, Long userId, Long primaryKey) {
-        switch (likeCategoryEnum) {
+    public void stamp(StampCategoryEnum stampCategoryEnum, Long userId, Long primaryKey) {
+        switch (stampCategoryEnum) {
             case ARTICLE:
                 createArticleStampHistory(userId, primaryKey, 0);
                 break;
@@ -82,13 +83,13 @@ public class StampService {
     }
 
     /**
-     * 取消一条赞历史记录
-     * @param likeCategoryEnum 赞分类
+     * 取消一条踩历史记录
+     * @param stampCategoryEnum 踩分类
      * @param userId 用户主键ID
      * @param primaryKey 关联记录主键ID
      */
-    public void cancelStamp(LikeCategoryEnum likeCategoryEnum, Long userId, Long primaryKey) {
-        switch (likeCategoryEnum) {
+    public void cancelStamp(StampCategoryEnum stampCategoryEnum, Long userId, Long primaryKey) {
+        switch (stampCategoryEnum) {
             case ARTICLE:
                 articleStampHistoryService.unstampArticle(userId, primaryKey);
                 break;

@@ -51,4 +51,16 @@
 
         </sql>
     </changeSet>
+    <changeSet id="addColumnFunCount4ProductCommentReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_comment_reply" columnName="fun_count"></columnExists>
+            </not>
+        </preConditions>
+        <comment>增加字段</comment>
+        <sql>
+            alter table product_comment_reply add column fun_count int;
+            COMMENT ON COLUMN product_comment_reply.fun_count IS '有趣数量';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

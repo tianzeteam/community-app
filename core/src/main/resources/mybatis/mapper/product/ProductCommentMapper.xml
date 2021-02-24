@@ -312,4 +312,11 @@
   <update id="decreaseStampCount">
     update product_comment set stamp_count = stamp_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="increaseFunCount">
+    update product_comment set fun_count = fun_count + 1 where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="decreaseFunCount">
+    update product_comment set fun_count = fun_count - 1 where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

@@ -9,6 +9,7 @@
     <result column="details" jdbcType="VARCHAR" property="details" />
     <result column="like_count" jdbcType="INTEGER" property="likeCount" />
     <result column="stamp_count" jdbcType="INTEGER" property="stampCount" />
+    <result column="fun_count" jdbcType="INTEGER" property="funCount" />
     <result column="revision" jdbcType="INTEGER" property="revision" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
   </resultMap>
@@ -71,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, comment_id, pid, user_id, details, like_count, stamp_count, revision, created_time
+    id, comment_id, pid, user_id, details, like_count, stamp_count,fun_count, revision, created_time
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.product.entity.ProductCommentReplyExample" resultMap="BaseResultMap">
     select
@@ -295,5 +296,12 @@
 
   <update id="decreaseStampCount">
     update product_comment_reply set stamp_count = stamp_count - 1 where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="increaseFunCount">
+    update product_comment_reply set fun_count = fun_count + 1 where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="decreaseFunCount">
+    update product_comment_reply set fun_count = fun_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

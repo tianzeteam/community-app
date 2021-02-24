@@ -1,15 +1,16 @@
 package com.smart.home.controller.pc;
 
 import com.smart.home.dto.APIResponse;
-import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.modules.product.entity.ProductCommentFunHistory;
 import com.smart.home.modules.product.service.ProductCommentFunHistoryService;
-import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -23,25 +24,6 @@ public class ProductCommentFunHistoryController {
 
     @Autowired
     private ProductCommentFunHistoryService productCommentFunHistoryService;
-
-    @ApiOperation("创建产品评价有趣历史")
-    @PostMapping("/create")
-    public APIResponse create(ProductCommentFunHistory productCommentFunHistory) {
-        return APIResponse.OK(productCommentFunHistoryService.create(productCommentFunHistory));
-    }
-
-    @ApiOperation("更新产品评价有趣历史")
-    @PostMapping("/update")
-    public APIResponse update(ProductCommentFunHistory productCommentFunHistory) {
-        return APIResponse.OK(productCommentFunHistoryService.update(productCommentFunHistory));
-    }
-
-    @ApiOperation("删除产品评价有趣历史")
-    @PostMapping("/delete")
-    public APIResponse delete(@RequestBody IdListBean idListBean) {
-        productCommentFunHistoryService.delete(idListBean.getIdList());
-        return APIResponse.OK();
-    }
 
     @ApiOperation("分页查询产品评价有趣历史")
     @PostMapping("/selectByPage")
