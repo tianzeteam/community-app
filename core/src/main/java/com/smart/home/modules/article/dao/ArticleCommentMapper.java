@@ -29,4 +29,8 @@ public interface ArticleCommentMapper {
     int updateByPrimaryKeySelective(ArticleComment record);
 
     int updateByPrimaryKey(ArticleComment record);
+
+    int increaseLikeCount(@Param("id") Long id);
+
+    int decreaseLikeCount(@Param("id") Long id);
 }

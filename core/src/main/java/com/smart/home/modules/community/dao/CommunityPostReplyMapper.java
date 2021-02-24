@@ -29,4 +29,9 @@ public interface CommunityPostReplyMapper {
     int updateByPrimaryKeySelective(CommunityPostReply record);
 
     int updateByPrimaryKey(CommunityPostReply record);
+
+    int increaseLikeCount(@Param("id") Long id);
+
+    int decreaseLikeCount(@Param("id") Long id);
+
 }

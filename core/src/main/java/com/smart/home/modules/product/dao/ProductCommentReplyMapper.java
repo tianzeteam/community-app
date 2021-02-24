@@ -29,4 +29,9 @@ public interface ProductCommentReplyMapper {
     int updateByPrimaryKeySelective(ProductCommentReply record);
 
     int updateByPrimaryKey(ProductCommentReply record);
+
+    int increaseLikeCount(@Param("id") Long id);
+
+    int decreaseLikeCount(@Param("id") Long id);
+
 }

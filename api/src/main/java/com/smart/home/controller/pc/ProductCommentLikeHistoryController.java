@@ -24,25 +24,6 @@ public class ProductCommentLikeHistoryController {
     @Autowired
     private ProductCommentLikeHistoryService productCommentLikeHistoryService;
 
-    @ApiOperation("创建产品评价有趣历史")
-    @PostMapping("/create")
-    public APIResponse create(ProductCommentLikeHistory productCommentLikeHistory) {
-        return APIResponse.OK(productCommentLikeHistoryService.create(productCommentLikeHistory));
-    }
-
-    @ApiOperation("更新产品评价有趣历史")
-    @PostMapping("/update")
-    public APIResponse update(ProductCommentLikeHistory productCommentLikeHistory) {
-        return APIResponse.OK(productCommentLikeHistoryService.update(productCommentLikeHistory));
-    }
-
-    @ApiOperation("删除产品评价有趣历史")
-    @PostMapping("/delete")
-    public APIResponse delete(@RequestBody IdListBean idListBean) {
-        productCommentLikeHistoryService.delete(idListBean.getIdList());
-        return APIResponse.OK();
-    }
-
     @ApiOperation("分页查询产品评价有趣历史")
     @PostMapping("/selectByPage")
     public APIResponse<ResponsePageBean<ProductCommentLikeHistory>> selectByPage(ProductCommentLikeHistory productCommentLikeHistory, int pageNum, int pageSize) {

@@ -53,4 +53,11 @@ public class ArticleCommentService {
         return articleComment;
     }
 
+    public void increaseLikeCount(Long id) {
+        articleCommentMapper.increaseLikeCount(id);
+    }
+
+    public void decreaseLikeCount(Long id) {
+        articleCommentMapper.decreaseLikeCount(id);
+    }
 }

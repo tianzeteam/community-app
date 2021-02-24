@@ -296,4 +296,12 @@
       created_time = #{createdTime,jdbcType=DATE}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="increaseLikeCount">
+    update product_comment set like_count = like_count + 1 where id = #{id,jdbcType=BIGINT}
+    </update>
+
+  <update id="decreaseLikeCount">
+    update product_comment set like_count = like_count - 1 where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

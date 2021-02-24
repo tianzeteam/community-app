@@ -29,4 +29,9 @@ public interface CommunityPostMapper {
     int updateByPrimaryKeySelective(CommunityPost record);
 
     int updateByPrimaryKey(CommunityPost record);
+
+    int increaseLikeCount(@Param("id") Long id);
+
+    int decreaseLikeCount(@Param("id") Long id);
+
 }

@@ -24,3 +24,13 @@ http://ip:port/smart/doc.html
 
 # 特别强调
 - 一律不准自己修改数据库表结构，全部通过liquibase方式修改，请参考core/resources/db.changelog下现有的配置方式
+
+# 公共方法
+- 新增一条审核历史记录
+```
+com.smart.home.modules.other.service.AuditHistoryService.create
+```
+- 点赞/取消赞统一入口service
+```
+com.smart.home.service.LikeService
+```

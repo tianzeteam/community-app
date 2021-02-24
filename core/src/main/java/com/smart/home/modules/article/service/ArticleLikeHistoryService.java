@@ -4,12 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.article.dao.ArticleLikeHistoryMapper;
 import com.smart.home.modules.article.entity.ArticleLikeHistory;
 import com.smart.home.modules.article.entity.ArticleLikeHistoryExample;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -19,24 +20,27 @@ public class ArticleLikeHistoryService {
 
     @Resource
     ArticleLikeHistoryMapper articleLikeHistoryMapper;
+    @Autowired
+    private ArticleCommentService articleCommentService;
 
     public int create(ArticleLikeHistory articleLikeHistory) {
         articleLikeHistory.setCreatedTime(new Date());
-        return articleLikeHistoryMapper.insertSelective(articleLikeHistory);
+        int affectRow = articleLikeHistoryMapper.insertSelective(articleLikeHistory);
+        if (affectRow > 0) {
+            // 增加点赞数量
+            if (articleLikeHistory.getCategory() == 0) {
+                articleCommentService.increaseLikeCount(articleLikeHistory.getSourceId());
+            }
+        }
+        return affectRow;
     }
 
-    public int update(ArticleLikeHistory articleLikeHistory) {
-        return articleLikeHistoryMapper.updateByPrimaryKeySelective(articleLikeHistory);
-    }
-
-    public int deleteById(Long id) {
-        return articleLikeHistoryMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            articleLikeHistoryMapper.deleteByPrimaryKey(id);
+    public void unlikeArticle(Long userId, Long id) {
+        ArticleLikeHistoryExample example = new ArticleLikeHistoryExample();
+        example.createCriteria().andUserIdEqualTo(userId).andIdEqualTo(id).andCategoryEqualTo(0);
+        int affectRow = articleLikeHistoryMapper.deleteByExample(example);
+        if (affectRow > 0) {
+            articleCommentService.decreaseLikeCount(id);
         }
     }
 

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.community.dao.CommunityLikeHistoryMapper;
 import com.smart.home.modules.community.entity.CommunityLikeHistory;
 import com.smart.home.modules.community.entity.CommunityLikeHistoryExample;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,24 +20,38 @@ public class CommunityLikeHistoryService {
 
     @Resource
     CommunityLikeHistoryMapper communityLikeHistoryMapper;
+    @Autowired
+    private CommunityPostService communityPostService;
+    @Autowired
+    private CommunityPostReplyService communityPostReplyService;
 
     public int create(CommunityLikeHistory communityLikeHistory) {
         communityLikeHistory.setCreatedTime(new Date());
-        return communityLikeHistoryMapper.insertSelective(communityLikeHistory);
+        int affectRow = communityLikeHistoryMapper.insertSelective(communityLikeHistory);
+        if (affectRow > 0) {
+            if (communityLikeHistory.getType() == 0) {
+                communityPostService.increaseLikeCount(communityLikeHistory.getPostId());
+            }
+            if (communityLikeHistory.getType() == 1) {
+                communityPostReplyService.increaseLikeCount(communityLikeHistory.getPostId());
+            }
+        }
+        return affectRow;
     }
 
-    public int update(CommunityLikeHistory communityLikeHistory) {
-        return communityLikeHistoryMapper.updateByPrimaryKeySelective(communityLikeHistory);
+    public void unlikePost(Long userId, Long id) {
+        CommunityLikeHistoryExample example = new CommunityLikeHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
+        if (communityLikeHistoryMapper.deleteByExample(example) > 0) {
+            communityPostService.decreaseLikeCount(id);
+        }
     }
 
-    public int deleteById(Long id) {
-        return communityLikeHistoryMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            communityLikeHistoryMapper.deleteByPrimaryKey(id);
+    public void unlikePostReply(Long userId, Long id) {
+        CommunityLikeHistoryExample example = new CommunityLikeHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(1);
+        if (communityLikeHistoryMapper.deleteByExample(example) > 0) {
+            communityPostReplyService.decreaseLikeCount(id);
         }
     }
 

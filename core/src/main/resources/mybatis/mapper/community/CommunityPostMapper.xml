@@ -406,4 +406,12 @@
       stamp_count = #{stampCount,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="increaseLikeCount">
+    update community_post set like_count = like_count + 1 where id = #{id,jdbcType=BIGINT}
+    </update>
+
+  <update id="decreaseLikeCount">
+    update community_post set like_count = like_count - 1 where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

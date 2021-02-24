@@ -53,4 +53,11 @@ public class CommunityPostReplyService {
         return communityPostReply;
     }
 
+    public void increaseLikeCount(Long id) {
+        communityPostReplyMapper.increaseLikeCount(id);
+    }
+
+    public void decreaseLikeCount(Long id) {
+        communityPostReplyMapper.decreaseLikeCount(id);
+    }
 }

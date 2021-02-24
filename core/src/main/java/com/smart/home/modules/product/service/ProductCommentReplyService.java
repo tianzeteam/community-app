@@ -53,4 +53,11 @@ public class ProductCommentReplyService {
         return productCommentReply;
     }
 
+    public void increaseLikeCount(Long id) {
+        productCommentReplyMapper.increaseLikeCount(id);
+    }
+
+    public void decreaseLikeCount(Long id) {
+        productCommentReplyMapper.decreaseLikeCount(id);
+    }
 }

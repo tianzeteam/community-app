@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -53,4 +53,11 @@ public class ProductCommentService {
         return productComment;
     }
 
+    public void increaseLikeCount(Long id) {
+        productCommentMapper.increaseLikeCount(id);
+    }
+
+    public void decreaseLikeCount(Long id) {
+        productCommentMapper.decreaseLikeCount(id);
+    }
 }

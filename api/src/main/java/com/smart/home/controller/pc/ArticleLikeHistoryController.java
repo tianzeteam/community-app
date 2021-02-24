@@ -24,25 +24,6 @@ public class ArticleLikeHistoryController {
     @Autowired
     private ArticleLikeHistoryService articleLikeHistoryService;
 
-    @ApiOperation("创建文章点赞历史")
-    @PostMapping("/create")
-    public APIResponse create(ArticleLikeHistory articleLikeHistory) {
-        return APIResponse.OK(articleLikeHistoryService.create(articleLikeHistory));
-    }
-
-    @ApiOperation("更新文章点赞历史")
-    @PostMapping("/update")
-    public APIResponse update(ArticleLikeHistory articleLikeHistory) {
-        return APIResponse.OK(articleLikeHistoryService.update(articleLikeHistory));
-    }
-
-    @ApiOperation("删除文章点赞历史")
-    @PostMapping("/delete")
-    public APIResponse delete(@RequestBody IdListBean idListBean) {
-        articleLikeHistoryService.delete(idListBean.getIdList());
-        return APIResponse.OK();
-    }
-
     @ApiOperation("分页查询文章点赞历史")
     @PostMapping("/selectByPage")
     public APIResponse<ResponsePageBean<ArticleLikeHistory>> selectByPage(ArticleLikeHistory articleLikeHistory, int pageNum, int pageSize) {

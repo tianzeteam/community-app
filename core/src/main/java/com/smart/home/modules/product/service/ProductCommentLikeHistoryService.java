@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.product.dao.ProductCommentLikeHistoryMapper;
 import com.smart.home.modules.product.entity.ProductCommentLikeHistory;
 import com.smart.home.modules.product.entity.ProductCommentLikeHistoryExample;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,24 +20,38 @@ public class ProductCommentLikeHistoryService {
 
     @Resource
     ProductCommentLikeHistoryMapper productCommentLikeHistoryMapper;
+    @Autowired
+    private ProductCommentService productCommentService;
+    @Autowired
+    private ProductCommentReplyService productCommentReplyService;
 
     public int create(ProductCommentLikeHistory productCommentLikeHistory) {
         productCommentLikeHistory.setCreatedTime(new Date());
-        return productCommentLikeHistoryMapper.insertSelective(productCommentLikeHistory);
+        int affectRow = productCommentLikeHistoryMapper.insertSelective(productCommentLikeHistory);
+        if (affectRow > 0) {
+            if (productCommentLikeHistory.getCategory() == 0) {
+                productCommentService.increaseLikeCount(productCommentLikeHistory.getSourceId());
+            }
+            if (productCommentLikeHistory.getCategory() == 1) {
+                productCommentReplyService.increaseLikeCount(productCommentLikeHistory.getSourceId());
+            }
+        }
+        return affectRow;
     }
 
-    public int update(ProductCommentLikeHistory productCommentLikeHistory) {
-        return productCommentLikeHistoryMapper.updateByPrimaryKeySelective(productCommentLikeHistory);
+    public void unlikeComment(Long userId, Long id) {
+        ProductCommentLikeHistoryExample example = new ProductCommentLikeHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(0);
+        if (productCommentLikeHistoryMapper.deleteByExample(example) > 0) {
+            productCommentService.decreaseLikeCount(id);
+        }
     }
 
-    public int deleteById(Long id) {
-        return productCommentLikeHistoryMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            productCommentLikeHistoryMapper.deleteByPrimaryKey(id);
+    public void unlikeCommentReply(Long userId, Long id) {
+        ProductCommentLikeHistoryExample example = new ProductCommentLikeHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(1);
+        if (productCommentLikeHistoryMapper.deleteByExample(example) > 0) {
+            productCommentReplyService.decreaseLikeCount(id);
         }
     }
 
