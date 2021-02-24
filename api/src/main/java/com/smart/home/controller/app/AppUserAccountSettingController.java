@@ -101,4 +101,13 @@ public class AppUserAccountSettingController {
         return APIResponse.OK();
     }
 
+    @ApiOperation("注销登陆")
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("logout")
+    public APIResponse logout() {
+        Long userId = UserUtils.getLoginUserId();
+        userAccountService.doLogout(userId);
+        return APIResponse.OK();
+    }
+
 }

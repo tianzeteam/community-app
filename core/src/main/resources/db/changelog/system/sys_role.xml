@@ -59,4 +59,18 @@
             insert into sys_role(code,name,remark) values('register','注册用户','可参与一切用户侧互动');
         </sql>
     </changeSet>
+    <changeSet id="sysRoleInsertRole3" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_role where code = 'admin';
+            </sqlCheck>
+        </preConditions>
+        <comment>创建内置其他相关角色</comment>
+        <sql>
+            insert into sys_role(code,name,remark) values('operator','运营','拥有');
+            insert into sys_role(code,name,remark) values('creator','运营','可以在web端投稿，任何一个用户可以在web端申请成为创作者');
+            insert into sys_role(code,name,remark) values('auditor','运营','可以审核文章，视频，帖子；评论的查看和封禁');
+            insert into sys_role(code,name,remark) values('admin','运营','可进行版主，创作者，运营，审核权限（中的一种或多种）的授权');
+        </sql>
+    </changeSet>
 </databaseChangeLog>

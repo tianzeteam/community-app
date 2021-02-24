@@ -194,6 +194,14 @@ public class UserAccountService {
         throw new AuthorizationException("用户名或者密码错误");
     }
 
+    public void doLogout(Long userId) {
+        UserAccount userAccount = findUserByUserId(userId);
+        String token = userAccount.getAccessToken();
+        UserTokenCache.remove(token);
+        userAccount.setAccessToken(null);
+        mapper.updateByPrimaryKeySelective(userAccount);
+    }
+
     private int verifyWhenLogin(UserAccount userAccount) {
         if (Objects.isNull(userAccount)) {
             throw new AuthorizationException("用户名或者密码错误");
@@ -322,4 +330,5 @@ public class UserAccountService {
         userAccount.setSalt(salt);
         mapper.updateByPrimaryKeySelective(userAccount);
     }
+
 }
