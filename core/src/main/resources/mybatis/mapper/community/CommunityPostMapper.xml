@@ -13,6 +13,7 @@
     <result column="like_count" jdbcType="INTEGER" property="likeCount" />
     <result column="comment_flag" jdbcType="INTEGER" property="commentFlag" />
     <result column="report_count" jdbcType="INTEGER" property="reportCount" />
+    <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
     <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
     <result column="revision" jdbcType="INTEGER" property="revision" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
@@ -81,7 +82,7 @@
   <sql id="Base_Column_List">
     id, community, user_id, title, contents, images, top_flag, boutique_flag, like_count, 
     comment_flag, report_count, audit_status, revision, created_time, updated_by, updated_time, 
-    stamp_count
+    stamp_count,collect_count
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostExample" resultMap="BaseResultMap">
     select
@@ -421,5 +422,12 @@
 
   <update id="decreaseStampCount">
     update community_post set stamp_count = stamp_count - 1 where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="increaseCollectCount">
+    update community_post set collect_count = collect_count + 1 where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="decreaseCollectCount">
+    update community_post set collect_count = collect_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -23,6 +23,7 @@
     <result column="average_score" jdbcType="NUMERIC" property="averageScore" />
     <result column="praise_rate" jdbcType="INTEGER" property="praiseRate" />
     <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
+    <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
     <result column="test_count" jdbcType="INTEGER" property="testCount" />
     <result column="hot_rate" jdbcType="NUMERIC" property="hotRate" />
     <result column="tag" jdbcType="VARCHAR" property="tag" />
@@ -95,7 +96,7 @@
     brand_id, brand_name, online_flag, recommend_flag, details, category_one_id, category_one_name, 
     category_two_id, category_two_name, category_three_id, category_three_name, average_score, 
     praise_rate, comment_count, test_count, hot_rate, tag, revision, created_by, created_time, 
-    updated_by, updated_time
+    updated_by, updated_time,collect_count
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.product.entity.ProductExample" resultMap="BaseResultMap">
     select
@@ -595,5 +596,12 @@
       updated_by = #{updatedBy,jdbcType=BIGINT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="increaseCollectCount">
+    update product set collect_count = collect_count + 1 where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="decreaseCollectCount">
+    update product set collect_count = collect_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -44,6 +44,12 @@ public class ArticleLikeHistoryService {
         }
     }
 
+    public long countLikeArticle(Long userId, Long id) {
+        ArticleLikeHistoryExample example = new ArticleLikeHistoryExample();
+        example.createCriteria().andUserIdEqualTo(userId).andIdEqualTo(id).andCategoryEqualTo(0);
+        return articleLikeHistoryMapper.countByExample(example);
+    }
+
     public List<ArticleLikeHistory> selectByPage(ArticleLikeHistory articleLikeHistory, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         ArticleLikeHistoryExample example = new ArticleLikeHistoryExample();

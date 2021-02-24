@@ -55,33 +55,6 @@ public class StampService {
         }
     }
 
-    private void createPostStampHistory(Long userId, Long primaryKey, Integer category) {
-        CommunityStampHistory communityStampHistory = new CommunityStampHistory();
-        communityStampHistory.withCreatedTime(new Date())
-                .withPostId(primaryKey)
-                .withUserId(userId)
-                .withType(category);
-        communityStampHistoryService.create(communityStampHistory);
-    }
-
-    private void createProductCommentStampHistory(Long userId, Long primaryKey, Integer category) {
-        ProductCommentStampHistory productCommentStampHistory = new ProductCommentStampHistory();
-        productCommentStampHistory.withCategory(category)
-                .withCreatedTime(new Date())
-                .withSourceId(primaryKey)
-                .withUserId(userId);
-        productCommentStampHistoryService.create(productCommentStampHistory);
-    }
-
-    private void createArticleStampHistory(Long userId, Long primaryKey, Integer category) {
-        ArticleStampHistory articleStampHistory = new ArticleStampHistory();
-        articleStampHistory.withType(category)
-                .withCreatedTime(new Date())
-                .withSourceId(primaryKey)
-                .withUserId(userId);
-        articleStampHistoryService.create(articleStampHistory);
-    }
-
     /**
      * 取消一条踩历史记录
      * @param stampCategoryEnum 踩分类
@@ -108,6 +81,57 @@ public class StampService {
             default:
                 break;
         }
+    }
+
+    /**
+     * 根据用户id判断某条记录是否点过踩了
+     * @param stampCategoryEnum 踩分类
+     * @param userId 用户主键ID
+     * @param primaryKey 关联记录主键ID
+     */
+    public boolean hasStamp(StampCategoryEnum stampCategoryEnum, Long userId, Long primaryKey) {
+        switch (stampCategoryEnum) {
+            case ARTICLE:
+                return articleStampHistoryService.countStamp(userId, primaryKey) > 0;
+            case PRODUCT_COMMENT:
+                return productCommentStampHistoryService.countStamp(userId, primaryKey, 0) > 0;
+            case PRODUCT_REPLY:
+                return productCommentStampHistoryService.countStamp(userId, primaryKey, 1) > 0;
+            case POST:
+                return communityStampHistoryService.countStamp(userId, primaryKey, 0) > 0;
+            case POST_REPLY:
+                return communityStampHistoryService.countStamp(userId, primaryKey, 1) > 0;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    private void createPostStampHistory(Long userId, Long primaryKey, Integer category) {
+        CommunityStampHistory communityStampHistory = new CommunityStampHistory();
+        communityStampHistory.withCreatedTime(new Date())
+                .withPostId(primaryKey)
+                .withUserId(userId)
+                .withType(category);
+        communityStampHistoryService.create(communityStampHistory);
+    }
+
+    private void createProductCommentStampHistory(Long userId, Long primaryKey, Integer category) {
+        ProductCommentStampHistory productCommentStampHistory = new ProductCommentStampHistory();
+        productCommentStampHistory.withCategory(category)
+                .withCreatedTime(new Date())
+                .withSourceId(primaryKey)
+                .withUserId(userId);
+        productCommentStampHistoryService.create(productCommentStampHistory);
+    }
+
+    private void createArticleStampHistory(Long userId, Long primaryKey, Integer category) {
+        ArticleStampHistory articleStampHistory = new ArticleStampHistory();
+        articleStampHistory.withType(category)
+                .withCreatedTime(new Date())
+                .withSourceId(primaryKey)
+                .withUserId(userId);
+        articleStampHistoryService.create(articleStampHistory);
     }
 
 }

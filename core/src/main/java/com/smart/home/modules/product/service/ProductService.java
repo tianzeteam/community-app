@@ -54,4 +54,11 @@ public class ProductService {
         return product;
     }
 
+    public void increaseCollectCount(Long id) {
+        productMapper.increaseCollectCount(id);
+    }
+
+    public void decreaseCollectCount(Long id) {
+        productMapper.decreaseCollectCount(id);
+    }
 }

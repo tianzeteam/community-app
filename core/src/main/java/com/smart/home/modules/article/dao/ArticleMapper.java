@@ -29,4 +29,8 @@ public interface ArticleMapper {
     int updateByPrimaryKeySelective(Article record);
 
     int updateByPrimaryKey(Article record);
+
+    int increaseCollectCount(@Param("id") Long id);
+
+    int decreaseCollectCount(@Param("id") Long id);
 }

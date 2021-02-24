@@ -42,6 +42,12 @@ public class ArticleStampHistoryService {
         }
     }
 
+    public long countStamp(Long userId, Long id) {
+        ArticleStampHistoryExample example = new ArticleStampHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
+        return articleStampHistoryMapper.countByExample(example);
+    }
+
     public List<ArticleStampHistory> selectByPage(ArticleStampHistory articleStampHistory, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         ArticleStampHistoryExample example = new ArticleStampHistoryExample();

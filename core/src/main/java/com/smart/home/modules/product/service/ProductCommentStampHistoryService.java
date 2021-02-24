@@ -54,6 +54,12 @@ public class ProductCommentStampHistoryService {
         }
     }
 
+    public long countStamp(Long userId, Long id, int category) {
+        ProductCommentStampHistoryExample example = new ProductCommentStampHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(category);
+        return productCommentStampHistoryMapper.countByExample(example);
+    }
+
     public List<ProductCommentStampHistory> selectByPage(ProductCommentStampHistory productCommentStampHistory, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         ProductCommentStampHistoryExample example = new ProductCommentStampHistoryExample();

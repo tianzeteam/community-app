@@ -29,4 +29,9 @@ public interface ProductMapper {
     int updateByPrimaryKeySelective(Product record);
 
     int updateByPrimaryKey(Product record);
+
+    int increaseCollectCount(@Param("id") Long id);
+
+    int decreaseCollectCount(@Param("id") Long id);
+
 }

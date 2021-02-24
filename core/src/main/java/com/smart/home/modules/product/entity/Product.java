@@ -49,6 +49,8 @@ public class Product implements Serializable {
 
     private Integer commentCount;
 
+    private Integer collectCount;
+
     private Integer testCount;
 
     private BigDecimal hotRate;
@@ -560,6 +562,14 @@ public class Product implements Serializable {
         result = prime * result + ((getUpdatedBy() == null) ? 0 : getUpdatedBy().hashCode());
         result = prime * result + ((getUpdatedTime() == null) ? 0 : getUpdatedTime().hashCode());
         return result;
+    }
+
+    public Integer getCollectCount() {
+        return collectCount;
+    }
+
+    public void setCollectCount(Integer collectCount) {
+        this.collectCount = collectCount;
     }
 
     /**

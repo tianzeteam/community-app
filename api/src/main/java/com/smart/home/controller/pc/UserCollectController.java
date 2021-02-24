@@ -1,15 +1,16 @@
 package com.smart.home.controller.pc;
 
 import com.smart.home.dto.APIResponse;
-import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.modules.user.entity.UserCollect;
 import com.smart.home.modules.user.service.UserCollectService;
-import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -23,27 +24,6 @@ public class UserCollectController {
 
     @Autowired
     private UserCollectService userCollectService;
-
-    @ApiOperation("创建用户收藏")
-    @PostMapping("/create")
-    public APIResponse create(UserCollect userCollect) {
-        userCollect.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(userCollectService.create(userCollect));
-    }
-
-    @ApiOperation("更新用户收藏")
-    @PostMapping("/update")
-    public APIResponse update(UserCollect userCollect) {
-        userCollect.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(userCollectService.update(userCollect));
-    }
-
-    @ApiOperation("删除用户收藏")
-    @PostMapping("/delete")
-    public APIResponse delete(@RequestBody IdListBean idListBean) {
-        userCollectService.delete(idListBean.getIdList());
-        return APIResponse.OK();
-    }
 
     @ApiOperation("分页查询用户收藏")
     @PostMapping("/selectByPage")

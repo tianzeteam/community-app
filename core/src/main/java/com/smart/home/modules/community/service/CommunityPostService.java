@@ -69,4 +69,12 @@ public class CommunityPostService {
     public void decreaseStampCount(Long id) {
         communityPostMapper.decreaseStampCount(id);
     }
+
+    public void increaseCollectCount(Long id) {
+        communityPostMapper.increaseCollectCount(id);
+    }
+
+    public void decreaseCollectCount(Long id) {
+        communityPostMapper.decreaseCollectCount(id);
+    }
 }

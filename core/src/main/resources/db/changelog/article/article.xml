@@ -86,4 +86,16 @@
 
         </sql>
     </changeSet>
+    <changeSet id="addColumnCollectCount4Article" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article" columnName="collect_count"/>
+            </not>
+        </preConditions>
+        <comment>新增字段收藏数量</comment>
+        <sql>
+            alter table article add column collect_count int;
+            COMMENT ON COLUMN article.collect_count IS '收藏数量';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

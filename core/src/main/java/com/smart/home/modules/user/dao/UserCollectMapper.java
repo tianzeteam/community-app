@@ -29,4 +29,6 @@ public interface UserCollectMapper {
     int updateByPrimaryKeySelective(UserCollect record);
 
     int updateByPrimaryKey(UserCollect record);
+
+    List<Long> countCollect(@Param("type") int type,@Param("userId") Long userId,@Param("primaryKeyList") List<Long> primaryKeyList);
 }

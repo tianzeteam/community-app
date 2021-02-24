@@ -37,15 +37,6 @@ public class FunService {
         }
     }
 
-    private void createCommentHistory(Long userId, Long primaryKey, Integer category) {
-        ProductCommentFunHistory productCommentFunHistory  = new ProductCommentFunHistory();
-        productCommentFunHistory.withCreatedTime(new Date())
-                .withCategory(category)
-                .withSourceId(primaryKey)
-                .withUserId(userId);
-        productCommentFunHistoryService.create(productCommentFunHistory);
-    }
-
     /**
      * 取消一条有趣历史记录
      * @param funCategoryEnum 有趣分类
@@ -63,6 +54,34 @@ public class FunService {
             default:
                 break;
         }
+    }
+
+    /**
+     * 根据用户主键ID判断该用户针对该条记录是否点过有趣了
+     * @param funCategoryEnum 有趣分类
+     * @param userId 用户主键ID
+     * @param primaryKey 关联记录主键ID
+     * @return
+     */
+    public boolean hasFun(FunCategoryEnum funCategoryEnum, Long userId, Long primaryKey) {
+        switch (funCategoryEnum) {
+            case PRODUCT_COMMENT:
+                return productCommentFunHistoryService.countFun(userId, primaryKey, 0) > 0;
+            case PRODUCT_REPLY:
+                return productCommentFunHistoryService.countFun(userId, primaryKey, 1) > 0;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    private void createCommentHistory(Long userId, Long primaryKey, Integer category) {
+        ProductCommentFunHistory productCommentFunHistory  = new ProductCommentFunHistory();
+        productCommentFunHistory.withCreatedTime(new Date())
+                .withCategory(category)
+                .withSourceId(primaryKey)
+                .withUserId(userId);
+        productCommentFunHistoryService.create(productCommentFunHistory);
     }
 
 }

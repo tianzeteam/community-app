@@ -28,6 +28,8 @@ public class CommunityPost implements Serializable {
 
     private Integer reportCount;
 
+    private Integer collectCount;
+
     private Integer auditStatus;
 
     private Integer revision;
@@ -343,6 +345,14 @@ public class CommunityPost implements Serializable {
         result = prime * result + ((getUpdatedTime() == null) ? 0 : getUpdatedTime().hashCode());
         result = prime * result + ((getStampCount() == null) ? 0 : getStampCount().hashCode());
         return result;
+    }
+
+    public Integer getCollectCount() {
+        return collectCount;
+    }
+
+    public void setCollectCount(Integer collectCount) {
+        this.collectCount = collectCount;
     }
 
     /**

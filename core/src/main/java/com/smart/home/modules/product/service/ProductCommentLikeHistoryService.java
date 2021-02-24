@@ -55,6 +55,12 @@ public class ProductCommentLikeHistoryService {
         }
     }
 
+    public long countLike(Long userId, Long id, Integer category) {
+        ProductCommentLikeHistoryExample example = new ProductCommentLikeHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(category);
+        return productCommentLikeHistoryMapper.countByExample(example);
+    }
+
     public List<ProductCommentLikeHistory> selectByPage(ProductCommentLikeHistory productCommentLikeHistory, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         ProductCommentLikeHistoryExample example = new ProductCommentLikeHistoryExample();

@@ -47,6 +47,12 @@ public class CommunityLikeHistoryService {
         }
     }
 
+    public long countLike(Long userId, Long id, Integer category) {
+        CommunityLikeHistoryExample example = new CommunityLikeHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(category);
+        return communityLikeHistoryMapper.countByExample(example);
+    }
+
     public void unlikePostReply(Long userId, Long id) {
         CommunityLikeHistoryExample example = new CommunityLikeHistoryExample();
         example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(1);

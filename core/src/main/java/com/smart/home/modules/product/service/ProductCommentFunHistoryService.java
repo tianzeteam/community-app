@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author jason
@@ -67,4 +68,9 @@ public class ProductCommentFunHistoryService {
         return productCommentFunHistory;
     }
 
+    public long countFun(Long userId, Long primaryKey, Integer category) {
+        ProductCommentFunHistoryExample example = new ProductCommentFunHistoryExample();
+        example.createCriteria().andUserIdEqualTo(userId).andSourceIdEqualTo(primaryKey).andCategoryEqualTo(category);
+        return productCommentFunHistoryMapper.countByExample(example);
+    }
 }

@@ -50,6 +50,8 @@ public class Article implements Serializable {
 
     private Integer reportCount;
 
+    private Integer collectCount;
+
     private Integer revision;
 
     private Long createdBy;
@@ -523,6 +525,14 @@ public class Article implements Serializable {
         result = prime * result + ((getUpdatedBy() == null) ? 0 : getUpdatedBy().hashCode());
         result = prime * result + ((getUpdatedTime() == null) ? 0 : getUpdatedTime().hashCode());
         return result;
+    }
+
+    public Integer getCollectCount() {
+        return collectCount;
+    }
+
+    public void setCollectCount(Integer collectCount) {
+        this.collectCount = collectCount;
     }
 
     /**

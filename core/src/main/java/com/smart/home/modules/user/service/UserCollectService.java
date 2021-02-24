@@ -5,11 +5,11 @@ import com.smart.home.modules.user.dao.UserCollectMapper;
 import com.smart.home.modules.user.entity.UserCollect;
 import com.smart.home.modules.user.entity.UserCollectExample;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import sun.java2d.pipe.SpanIterator;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -25,22 +25,6 @@ public class UserCollectService {
         return userCollectMapper.insertSelective(userCollect);
     }
 
-    public int update(UserCollect userCollect) {
-        userCollect.setUpdatedTime(new Date());
-        return userCollectMapper.updateByPrimaryKeySelective(userCollect);
-    }
-
-    public int deleteById(Long id) {
-        return userCollectMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            userCollectMapper.deleteByPrimaryKey(id);
-        }
-    }
-
     public List<UserCollect> selectByPage(UserCollect userCollect, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         UserCollectExample example = new UserCollectExample();
@@ -54,4 +38,13 @@ public class UserCollectService {
         return userCollect;
     }
 
+    public int delete(Integer collectType, Long userId, Long primaryKey) {
+        UserCollectExample example = new UserCollectExample();
+        example.createCriteria().andUserIdEqualTo(userId).andCollectTypeEqualTo(collectType).andPrimaryKeyEqualTo(primaryKey);
+        return userCollectMapper.deleteByExample(example);
+    }
+
+    public List<Long> countCollect(int type, Long userId, List<Long> primaryKeyList) {
+        return userCollectMapper.countCollect(type, userId, primaryKeyList);
+    }
 }

@@ -55,6 +55,12 @@ public class CommunityStampHistoryService {
         }
     }
 
+    public long countStamp(Long userId, Long id, int category) {
+        CommunityStampHistoryExample example = new CommunityStampHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(category);
+        return communityStampHistoryMapper.countByExample(example);
+    }
+
     public List<CommunityStampHistory> selectByPage(CommunityStampHistory communityStampHistory, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         CommunityStampHistoryExample example = new CommunityStampHistoryExample();

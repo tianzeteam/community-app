@@ -20,6 +20,7 @@
     <result column="test_result" jdbcType="VARCHAR" property="testResult" />
     <result column="like_count" jdbcType="INTEGER" property="likeCount" />
     <result column="stamp_count" jdbcType="INTEGER" property="stampCount" />
+    <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
     <result column="category" jdbcType="INTEGER" property="category" />
     <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
     <result column="visit_count" jdbcType="INTEGER" property="visitCount" />
@@ -92,7 +93,7 @@
     id, cover_image, banner_images, title, remark, tag, channel_id, details, user_id, 
     state, audit_state, reject_reason, recommend_flag, top_flag, test_flag, test_result, 
     like_count, stamp_count, category, comment_count, visit_count, report_count, revision, 
-    created_by, created_time, updated_by, updated_time
+    created_by, created_time, updated_by, updated_time,collect_count
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.article.entity.ArticleExample" resultMap="BaseResultMap">
     select
@@ -564,5 +565,13 @@
       updated_by = #{updatedBy,jdbcType=BIGINT},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="increaseCollectCount">
+    update article set collect_count = collect_count + 1 where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="decreaseCollectCount">
+    update article set collect_count = collect_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

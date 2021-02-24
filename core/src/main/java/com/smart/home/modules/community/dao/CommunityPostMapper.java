@@ -37,4 +37,9 @@ public interface CommunityPostMapper {
     int increaseStampCount(@Param("id") Long id);
 
     int decreaseStampCount(@Param("id") Long id);
+
+    int increaseCollectCount(@Param("id") Long id);
+
+    int decreaseCollectCount(@Param("id") Long id);
+
 }

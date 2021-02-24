@@ -42,3 +42,7 @@ com.smart.home.service.StmapService
 ```
 com.smart.home.service.FunService
 ```
+- 收藏/取消收藏统一入口service
+```
+com.smart.home.service.CollectService
+```

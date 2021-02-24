@@ -75,4 +75,16 @@
             alter table community_post add column stamp_count int;
         </sql>
     </changeSet>
+    <changeSet id="addColumnCollectCount4Post" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post" columnName="collect_count"/>
+            </not>
+        </preConditions>
+        <comment>增加收藏数量字段</comment>
+        <sql>
+            alter table community_post add column collect_count int;
+            COMMENT ON COLUMN community_post.collect_count IS '收藏数量';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

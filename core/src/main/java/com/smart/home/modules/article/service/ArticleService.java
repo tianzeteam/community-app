@@ -54,4 +54,11 @@ public class ArticleService {
         return article;
     }
 
+    public void increaseCollectCount(Long id) {
+        articleMapper.increaseCollectCount(id);
+    }
+    public void decreaseCollectCount(Long id) {
+        articleMapper.decreaseCollectCount(id);
+    }
+
 }
