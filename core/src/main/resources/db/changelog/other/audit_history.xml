@@ -52,4 +52,15 @@
             alter table "audit_history" alter column ID set default nextval('audit_history_id_seq');
         </sql>
     </changeSet>
+    <changeSet id="addIndexSourceId4AuditHistory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="audit_history" indexName="idx_audit_source_id"/>
+            </not>
+        </preConditions>
+        <comment>添加索引</comment>
+        <sql>
+            create index idx_audit_source_id on audit_history using btree (SOURCE_ID);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
