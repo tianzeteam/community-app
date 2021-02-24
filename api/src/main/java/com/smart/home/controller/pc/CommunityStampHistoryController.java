@@ -24,25 +24,6 @@ public class CommunityStampHistoryController {
     @Autowired
     private CommunityStampHistoryService communityStampHistoryService;
 
-    @ApiOperation("创建帖子点踩历史")
-    @PostMapping("/create")
-    public APIResponse create(CommunityStampHistory communityStampHistory) {
-        return APIResponse.OK(communityStampHistoryService.create(communityStampHistory));
-    }
-
-    @ApiOperation("更新帖子点踩历史")
-    @PostMapping("/update")
-    public APIResponse update(CommunityStampHistory communityStampHistory) {
-        return APIResponse.OK(communityStampHistoryService.update(communityStampHistory));
-    }
-
-    @ApiOperation("删除帖子点踩历史")
-    @PostMapping("/delete")
-    public APIResponse delete(@RequestBody IdListBean idListBean) {
-        communityStampHistoryService.delete(idListBean.getIdList());
-        return APIResponse.OK();
-    }
-
     @ApiOperation("分页查询帖子点踩历史")
     @PostMapping("/selectByPage")
     public APIResponse<ResponsePageBean<CommunityStampHistory>> selectByPage(CommunityStampHistory communityStampHistory, int pageNum, int pageSize) {

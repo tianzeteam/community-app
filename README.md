@@ -34,3 +34,7 @@ com.smart.home.modules.other.service.AuditHistoryService.create
 ```
 com.smart.home.service.LikeService
 ```
+- 踩/取消踩统一入口service
+```
+com.smart.home.service.StmapService
+```

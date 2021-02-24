@@ -289,4 +289,12 @@
   <update id="decreaseLikeCount">
     update community_post_reply set like_count = like_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="increaseStampCount">
+    update community_post_reply set stamp_count = stamp_count + 1 where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="decreaseStampCount">
+    update community_post_reply set stamp_count = stamp_count - 1 where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

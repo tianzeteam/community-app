@@ -271,4 +271,12 @@
   <update id="decreaseLikeCount">
     update article_comment set like_count = like_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="increaseStampCount">
+    update article_comment set stamp_count = stamp_count + 1 where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="decreaseStampCount">
+    update article_comment set stamp_count = stamp_count - 1 where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

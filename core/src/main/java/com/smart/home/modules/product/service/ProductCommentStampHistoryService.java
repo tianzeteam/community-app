@@ -4,12 +4,12 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.product.dao.ProductCommentStampHistoryMapper;
 import com.smart.home.modules.product.entity.ProductCommentStampHistory;
 import com.smart.home.modules.product.entity.ProductCommentStampHistoryExample;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -19,24 +19,38 @@ public class ProductCommentStampHistoryService {
 
     @Resource
     ProductCommentStampHistoryMapper productCommentStampHistoryMapper;
+    @Autowired
+    private ProductCommentService productCommentService;
+    @Autowired
+    private ProductCommentReplyService productCommentReplyService;
 
     public int create(ProductCommentStampHistory productCommentStampHistory) {
         productCommentStampHistory.setCreatedTime(new Date());
-        return productCommentStampHistoryMapper.insertSelective(productCommentStampHistory);
+        int affectRow = productCommentStampHistoryMapper.insertSelective(productCommentStampHistory);
+        if (affectRow > 0) {
+            if (productCommentStampHistory.getCategory() == 0) {
+                productCommentService.increaseStampCount(productCommentStampHistory.getSourceId());
+            }
+            if (productCommentStampHistory.getCategory() == 1) {
+                productCommentReplyService.increaseStampCount(productCommentStampHistory.getSourceId());
+            }
+        }
+        return affectRow;
     }
 
-    public int update(ProductCommentStampHistory productCommentStampHistory) {
-        return productCommentStampHistoryMapper.updateByPrimaryKeySelective(productCommentStampHistory);
+    public void unstampComment(Long userId, Long id) {
+        ProductCommentStampHistoryExample example = new ProductCommentStampHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(0);
+        if (productCommentStampHistoryMapper.deleteByExample(example) > 0) {
+            productCommentService.decreaseStampCount(id);
+        }
     }
 
-    public int deleteById(Long id) {
-        return productCommentStampHistoryMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            productCommentStampHistoryMapper.deleteByPrimaryKey(id);
+    public void unstampCommentReply(Long userId, Long id) {
+        ProductCommentStampHistoryExample example = new ProductCommentStampHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(1);
+        if (productCommentStampHistoryMapper.deleteByExample(example) > 0) {
+            productCommentReplyService.decreaseStampCount(id);
         }
     }
 

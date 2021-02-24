@@ -87,7 +87,7 @@ public class LikeService {
      * @param userId 用户主键ID
      * @param primaryKey 关联记录主键ID
      */
-    public void unlike(LikeCategoryEnum likeCategoryEnum, Long userId, Long primaryKey) {
+    public void cancelLike(LikeCategoryEnum likeCategoryEnum, Long userId, Long primaryKey) {
         switch (likeCategoryEnum) {
             case ARTICLE:
                 articleLikeHistoryService.unlikeArticle(userId, primaryKey);

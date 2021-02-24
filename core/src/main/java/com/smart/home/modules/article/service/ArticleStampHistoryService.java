@@ -4,12 +4,12 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.article.dao.ArticleStampHistoryMapper;
 import com.smart.home.modules.article.entity.ArticleStampHistory;
 import com.smart.home.modules.article.entity.ArticleStampHistoryExample;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -19,24 +19,26 @@ public class ArticleStampHistoryService {
 
     @Resource
     ArticleStampHistoryMapper articleStampHistoryMapper;
+    @Autowired
+    private ArticleCommentService articleCommentService;
 
     public int create(ArticleStampHistory articleStampHistory) {
         articleStampHistory.setCreatedTime(new Date());
-        return articleStampHistoryMapper.insertSelective(articleStampHistory);
+        int affectRow = articleStampHistoryMapper.insertSelective(articleStampHistory);
+        if (affectRow > 0) {
+            // 增加点赞数量
+            if (articleStampHistory.getType() == 0) {
+                articleCommentService.increaseStampCount(articleStampHistory.getSourceId());
+            }
+        }
+        return affectRow;
     }
 
-    public int update(ArticleStampHistory articleStampHistory) {
-        return articleStampHistoryMapper.updateByPrimaryKeySelective(articleStampHistory);
-    }
-
-    public int deleteById(Long id) {
-        return articleStampHistoryMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            articleStampHistoryMapper.deleteByPrimaryKey(id);
+    public void unstampArticle(Long userId, Long id) {
+        ArticleStampHistoryExample example = new ArticleStampHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
+        if (articleStampHistoryMapper.deleteByExample(example) > 0) {
+            articleCommentService.decreaseStampCount(id);
         }
     }
 

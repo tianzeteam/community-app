@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.community.dao.CommunityStampHistoryMapper;
 import com.smart.home.modules.community.entity.CommunityStampHistory;
 import com.smart.home.modules.community.entity.CommunityStampHistoryExample;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,24 +20,38 @@ public class CommunityStampHistoryService {
 
     @Resource
     CommunityStampHistoryMapper communityStampHistoryMapper;
+    @Autowired
+    private CommunityPostService communityPostService;
+    @Autowired
+    private CommunityPostReplyService communityPostReplyService;
 
     public int create(CommunityStampHistory communityStampHistory) {
         communityStampHistory.setCreatedTime(new Date());
-        return communityStampHistoryMapper.insertSelective(communityStampHistory);
+        int affectRow = communityStampHistoryMapper.insertSelective(communityStampHistory);
+        if (affectRow > 0) {
+            if (communityStampHistory.getType() == 0) {
+                communityPostService.increaseStampCount(communityStampHistory.getPostId());
+            }
+            if (communityStampHistory.getType() == 1) {
+                communityPostReplyService.increaseStampCount(communityStampHistory.getPostId());
+            }
+        }
+        return affectRow;
     }
 
-    public int update(CommunityStampHistory communityStampHistory) {
-        return communityStampHistoryMapper.updateByPrimaryKeySelective(communityStampHistory);
+    public void unstampPost(Long userId, Long id) {
+        CommunityStampHistoryExample example = new CommunityStampHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
+        if (communityStampHistoryMapper.deleteByExample(example) > 0) {
+            communityPostService.decreaseStampCount(id);
+        }
     }
 
-    public int deleteById(Long id) {
-        return communityStampHistoryMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            communityStampHistoryMapper.deleteByPrimaryKey(id);
+    public void unstampPostReply(Long userId, Long id) {
+        CommunityStampHistoryExample example = new CommunityStampHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(1);
+        if (communityStampHistoryMapper.deleteByExample(example) > 0) {
+            communityPostReplyService.decreaseStampCount(id);
         }
     }
 

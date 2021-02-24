@@ -61,4 +61,12 @@ public class CommunityPostService {
     public void decreaseLikeCount(Long id) {
         communityPostMapper.decreaseLikeCount(id);
     }
+
+    public void increaseStampCount(Long id) {
+        communityPostMapper.increaseStampCount(id);
+    }
+
+    public void decreaseStampCount(Long id) {
+        communityPostMapper.decreaseStampCount(id);
+    }
 }

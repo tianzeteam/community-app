@@ -60,4 +60,12 @@ public class ProductCommentService {
     public void decreaseLikeCount(Long id) {
         productCommentMapper.decreaseLikeCount(id);
     }
+
+    public void increaseStampCount(Long id) {
+        productCommentMapper.increaseStampCount(id);
+    }
+
+    public void decreaseStampCount(Long id) {
+        productCommentMapper.decreaseStampCount(id);
+    }
 }
