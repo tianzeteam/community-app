@@ -61,4 +61,7 @@ public class ArticleService {
         articleMapper.decreaseCollectCount(id);
     }
 
+    public Long findAuthorById(Long id) {
+        return articleMapper.findAuthorById(id);
+    }
 }

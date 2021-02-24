@@ -4,9 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.article.dao.ArticleLikeHistoryMapper;
 import com.smart.home.modules.article.entity.ArticleLikeHistory;
 import com.smart.home.modules.article.entity.ArticleLikeHistoryExample;
+import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -22,6 +22,10 @@ public class ArticleLikeHistoryService {
     ArticleLikeHistoryMapper articleLikeHistoryMapper;
     @Autowired
     private ArticleCommentService articleCommentService;
+    @Autowired
+    private ArticleService articleService;
+    @Autowired
+    private UserDataService userDataService;
 
     public int create(ArticleLikeHistory articleLikeHistory) {
         articleLikeHistory.setCreatedTime(new Date());
@@ -30,6 +34,9 @@ public class ArticleLikeHistoryService {
             // 增加点赞数量
             if (articleLikeHistory.getCategory() == 0) {
                 articleCommentService.increaseLikeCount(articleLikeHistory.getSourceId());
+                Long authorId = articleService.findAuthorById(articleLikeHistory.getSourceId());
+                // 给作者的获赞数量加1
+                userDataService.increaseLikeCount(authorId);
             }
         }
         return affectRow;
@@ -41,6 +48,9 @@ public class ArticleLikeHistoryService {
         int affectRow = articleLikeHistoryMapper.deleteByExample(example);
         if (affectRow > 0) {
             articleCommentService.decreaseLikeCount(id);
+            Long authorId = articleService.findAuthorById(id);
+            // 给作者的获赞数量减1
+            userDataService.decreaseLikeCount(authorId);
         }
     }
 

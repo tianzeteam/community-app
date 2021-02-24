@@ -31,4 +31,9 @@ public interface UserDataMapper {
     int updateByPrimaryKey(UserData record);
 
     int updateSign(@Param("userId") Long userId,@Param("sign") String sign);
+
+    int increaseLikeCount(@Param("userId") Long userId);
+
+    int decreaseLikeCount(@Param("userId") Long userId);
+
 }

@@ -574,4 +574,8 @@
   <update id="decreaseCollectCount">
     update article set collect_count = collect_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="findAuthorById" resultType="java.lang.Long">
+    select user_id from article where id = #{id,jdbcType=BIGINT}
+  </select>
 </mapper>

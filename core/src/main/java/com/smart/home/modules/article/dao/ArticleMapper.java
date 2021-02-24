@@ -33,4 +33,6 @@ public interface ArticleMapper {
     int increaseCollectCount(@Param("id") Long id);
 
     int decreaseCollectCount(@Param("id") Long id);
+
+    Long findAuthorById(@Param("id") Long id);
 }

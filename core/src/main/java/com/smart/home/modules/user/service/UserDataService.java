@@ -101,4 +101,12 @@ public class UserDataService {
         userData.setWxOpenid(openid);
         userDataMapper.updateByPrimaryKeySelective(userData);
     }
+
+    public void increaseLikeCount(Long userId) {
+        userDataMapper.increaseLikeCount(userId);
+    }
+
+    public void decreaseLikeCount(Long userId) {
+        userDataMapper.decreaseLikeCount(userId);
+    }
 }
