@@ -8,12 +8,14 @@ import com.smart.home.modules.user.dao.UserFollowerMapper;
 import com.smart.home.modules.user.entity.UserFocus;
 import com.smart.home.modules.user.entity.UserFocusExample;
 import com.smart.home.modules.user.entity.UserFollower;
+import com.smart.home.modules.user.entity.UserFollowerExample;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -86,5 +88,27 @@ public class UserFocusService {
             userFollower.setFollowEach(YesNoEnum.NO.getCode());
         }
         userFollowerMapper.insertSelective(userFollower);
+    }
+
+    public void cancelFocusUser(Long focusUserId, Long loginUserId) {
+        // 从关注列表里删掉这个人
+        UserFocusExample example = new UserFocusExample();
+        example.createCriteria().andUserIdEqualTo(loginUserId).andFocusUserIdEqualTo(focusUserId);
+        int affectRow = userFocusMapper.deleteByExample(example);
+        if (affectRow > 0) {
+            // 删除我在对方的粉丝列表里
+            UserFollowerExample userFollowerExample = new UserFollowerExample();
+            userFollowerExample.createCriteria().andUserIdEqualTo(focusUserId).andFollowerUserIdEqualTo(loginUserId);
+            userFollowerMapper.deleteByExample(userFollowerExample);
+            // 如果被关注的人也是我的粉丝，所以在我的粉丝列表里要取消互相关注标记
+            userFollowerExample = new UserFollowerExample();
+            userFollowerExample.createCriteria().andUserIdEqualTo(loginUserId).andFollowerUserIdEqualTo(focusUserId);
+            List<UserFollower> userFollowerList = userFollowerMapper.selectByExample(userFollowerExample);
+            if (!CollectionUtils.isEmpty(userFollowerList)) {
+                UserFollower userFollower = userFollowerList.get(0);
+                userFollower.setFollowEach(YesNoEnum.NO.getCode());
+                userFollowerMapper.updateByPrimaryKeySelective(userFollower);
+            }
+        }
     }
 }

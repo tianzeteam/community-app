@@ -2,6 +2,8 @@ package com.smart.home.modules.user.service;
 
 import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.user.dao.UserFollowerMapper;
+import com.smart.home.modules.user.dto.MyFocusDTO;
+import com.smart.home.modules.user.dto.MyFollowerDTO;
 import com.smart.home.modules.user.entity.UserFollower;
 import com.smart.home.modules.user.entity.UserFollowerExample;
 import org.springframework.stereotype.Service;
@@ -53,4 +55,13 @@ public class UserFollowerService {
         return userFollower;
     }
 
+    public List<MyFollowerDTO> myFollowerByPage(Long userId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return userFollowerMapper.myFollowerByPage(userId);
+    }
+
+    public List<MyFocusDTO> myFocusByPage(Long userId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return userFollowerMapper.myFocusByPage(userId);
+    }
 }

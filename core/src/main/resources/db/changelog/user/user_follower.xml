@@ -40,4 +40,15 @@
             create index idx_follower_user_id on user_follower using btree (user_id);
         </sql>
     </changeSet>
+    <changeSet id="addIndexUserId4UserFollower" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="user_follower" indexName="idx_follow_user_id"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_follow_user_id on user_follower using btree (USER_ID);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

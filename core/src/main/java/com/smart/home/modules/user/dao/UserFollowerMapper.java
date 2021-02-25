@@ -1,5 +1,7 @@
 package com.smart.home.modules.user.dao;
 
+import com.smart.home.modules.user.dto.MyFocusDTO;
+import com.smart.home.modules.user.dto.MyFollowerDTO;
 import com.smart.home.modules.user.entity.UserFollower;
 import com.smart.home.modules.user.entity.UserFollowerExample;
 import java.util.List;
@@ -29,4 +31,8 @@ public interface UserFollowerMapper {
     int updateByPrimaryKeySelective(UserFollower record);
 
     int updateByPrimaryKey(UserFollower record);
+
+    List<MyFollowerDTO> myFollowerByPage(@Param("userId") Long userId);
+
+    List<MyFocusDTO> myFocusByPage(@Param("userId") Long userId);
 }

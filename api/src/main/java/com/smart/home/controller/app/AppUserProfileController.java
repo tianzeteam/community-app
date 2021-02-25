@@ -1,9 +1,15 @@
 package com.smart.home.controller.app;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.util.BeanCopyUtils;
+import com.smart.home.controller.app.response.MyFocusVO;
+import com.smart.home.controller.app.response.MyFollowerVO;
 import com.smart.home.controller.app.response.MyProfileVO;
 import com.smart.home.dto.APIResponse;
+import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.RoleAccess;
+import com.smart.home.modules.user.dto.MyFocusDTO;
+import com.smart.home.modules.user.dto.MyFollowerDTO;
 import com.smart.home.modules.user.entity.UserAccount;
 import com.smart.home.modules.user.entity.UserData;
 import com.smart.home.modules.user.entity.UserTag;
@@ -18,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
+import java.util.List;
 
 /**
  * @author jason
@@ -38,6 +45,8 @@ public class AppUserProfileController {
     private UserPrivacySettingService userPrivacySettingService;
     @Autowired
     private UserFocusService userFocusService;
+    @Autowired
+    private UserFollowerService userFollowerService;
 
     @ApiOperation("基本用户信息")
     @ApiImplicitParams({
@@ -65,11 +74,13 @@ public class AppUserProfileController {
 
     @ApiOperation("发帖数据")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false)
+            @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false),
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfilePost")
-    public APIResponse queryMyRootProfileData(@RequestParam(value = "userId", required = false) Long userId) {
+    public APIResponse queryMyRootProfileData(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
@@ -78,11 +89,13 @@ public class AppUserProfileController {
     }
     @ApiOperation("评论数据")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false)
+            @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false),
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfileComment")
-    public APIResponse queryMyRootProfileComment(@RequestParam(value = "userId", required = false) Long userId) {
+    public APIResponse queryMyRootProfileComment(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
@@ -91,11 +104,13 @@ public class AppUserProfileController {
     }
     @ApiOperation("回帖数据")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false)
+            @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false),
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfileReply")
-    public APIResponse queryMyRootProfileReply(@RequestParam(value = "userId", required = false) Long userId) {
+    public APIResponse queryMyRootProfileReply(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
@@ -104,11 +119,13 @@ public class AppUserProfileController {
     }
     @ApiOperation("评价数据")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false)
+            @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false),
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfileEvaluate")
-    public APIResponse queryMyRootProfileEvaluate(@RequestParam(value = "userId", required = false) Long userId) {
+    public APIResponse queryMyRootProfileEvaluate(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
@@ -117,11 +134,13 @@ public class AppUserProfileController {
     }
     @ApiOperation("投稿数据")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false)
+            @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false),
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfileContribute")
-    public APIResponse queryMyRootProfileContribute(@RequestParam(value = "userId", required = false) Long userId) {
+    public APIResponse queryMyRootProfileContribute(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
@@ -137,6 +156,70 @@ public class AppUserProfileController {
     @PostMapping("/focusUser")
     public APIResponse focusUser(Long focusUserId) {
         userFocusService.focusUser(focusUserId, UserUtils.getLoginUserId());
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("关注-用户点击取消关注按钮")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "focusUserId", value = "被关注的用户主键ID", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/cancelFocusUser")
+    public APIResponse cancelFocusUser(Long focusUserId) {
+        userFocusService.cancelFocusUser(focusUserId, UserUtils.getLoginUserId());
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("关注-分页查询我的关注")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @GetMapping("/myFocusByPage")
+    public APIResponse<ResponsePageBean<MyFocusVO>> myFocusByPage(int pageNum, int pageSize) {
+        Long userId = UserUtils.getLoginUserId();
+        List<MyFocusDTO> list = userFollowerService.myFocusByPage(userId, pageNum, pageSize);
+        List<MyFocusVO> resultList = BeanCopyUtils.convertListTo(list, MyFocusVO::new);
+        return APIResponse.OK(ResponsePageBean.restPage(resultList));
+    }
+
+    @ApiOperation("粉丝-分页查询我的粉丝")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @GetMapping("/myFollowerByPage")
+    public APIResponse<ResponsePageBean<MyFollowerVO>> myFollowerByPage(int pageNum, int pageSize) {
+        Long userId = UserUtils.getLoginUserId();
+        List<MyFollowerDTO> list = userFollowerService.myFollowerByPage(userId, pageNum, pageSize);
+        List<MyFollowerVO> resultList = BeanCopyUtils.convertListTo(list, MyFollowerVO::new);
+        return APIResponse.OK(ResponsePageBean.restPage(resultList));
+    }
+
+    @ApiOperation("收藏-分页查询我的收藏")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true),
+            @ApiImplicitParam(name = "collectType", value = "收藏类型：0投稿1帖子2产品", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @GetMapping("/myCollectByPage")
+    public APIResponse myCollectByPage() {
+        // TODO
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("草稿箱-分页查询我的草稿箱")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @GetMapping("/myDraftArticleByPage")
+    public APIResponse myDraftArticleByPage() {
+        // TODO
         return APIResponse.OK();
     }
 
