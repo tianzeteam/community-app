@@ -1,26 +1,16 @@
-package com.smart.home.dto;
+package com.smart.home.util;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.ApiModelProperty;
+import com.smart.home.common.bean.ResponsePageBean;
 
 import java.util.List;
 
 /**
  * @author jason
- * @param <T>
- */
-public class ResponsePageBean<T> {
-    @ApiModelProperty("分页页码")
-    private Integer pageNum;
-    @ApiModelProperty("每页数据")
-    private Integer pageSize;
-    @ApiModelProperty("总页数")
-    private Integer totalPage;
-    @ApiModelProperty("总数据量")
-    private Long totalCount;
-    @ApiModelProperty("分页数据")
-    private List<T> list;
+ * @date 2021/2/25
+ **/
+public class ResponsePageUtil {
 
     /**
      * 将PageHelper分页后的list转为分页信息
@@ -49,46 +39,6 @@ public class ResponsePageBean<T> {
         result.setList(list);
         PageHelper.clearPage();
         return result;
-    }
-
-    public Integer getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public Integer getTotalPage() {
-        return totalPage;
-    }
-
-    public void setTotalPage(Integer totalPage) {
-        this.totalPage = totalPage;
-    }
-
-    public List<T> getList() {
-        return list;
-    }
-
-    public void setList(List<T> list) {
-        this.list = list;
-    }
-
-    public Long getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(Long totalCount) {
-        this.totalCount = totalCount;
     }
 
 }

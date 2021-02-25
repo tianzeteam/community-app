@@ -1,9 +1,6 @@
 package com.smart.home.es.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.Map;
@@ -13,6 +10,7 @@ import java.util.Map;
  */
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
 @Accessors(chain = true)

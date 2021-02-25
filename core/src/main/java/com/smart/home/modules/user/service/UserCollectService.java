@@ -6,7 +6,6 @@ import com.smart.home.modules.user.dao.UserCollectMapper;
 import com.smart.home.modules.user.entity.UserCollect;
 import com.smart.home.modules.user.entity.UserCollectExample;
 import org.springframework.stereotype.Service;
-import sun.java2d.pipe.SpanIterator;
 
 import javax.annotation.Resource;
 import java.util.Date;
