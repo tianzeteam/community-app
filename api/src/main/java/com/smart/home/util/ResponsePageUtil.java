@@ -2,7 +2,7 @@ package com.smart.home.util;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.smart.home.common.bean.ResponsePageBean;
+import com.smart.home.dto.ResponsePageBean;
 
 import java.util.List;
 
