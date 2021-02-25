@@ -89,4 +89,24 @@
             COMMENT ON COLUMN product.collect_count IS '收藏数量';
         </sql>
     </changeSet>
+    <changeSet id="addColumn4Product1" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product" columnName="one_star_count"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product add column one_star_count int;
+            alter table product add column two_star_count int;
+            alter table product add column three_star_count int;
+            alter table product add column four_star_count int;
+            alter table product add column five_star_count int;
+            COMMENT ON COLUMN product.one_star_count IS '一星数量';
+            COMMENT ON COLUMN product.two_star_count IS '二星数量';
+            COMMENT ON COLUMN product.three_star_count IS '三星数量';
+            COMMENT ON COLUMN product.four_star_count IS '四星数量';
+            COMMENT ON COLUMN product.five_star_count IS '五星数量';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -52,4 +52,10 @@
 
         </sql>
     </changeSet>
+    <changeSet id="modifyColumnType4ProductComment" author="jason">
+        <comment>修改字段类型</comment>
+        <sql>
+            alter table product_comment alter column STAR_COUNT type decimal(4,2);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

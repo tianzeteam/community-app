@@ -5,7 +5,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="user_id" jdbcType="BIGINT" property="userId" />
-    <result column="star_count" jdbcType="INTEGER" property="starCount" />
+    <result column="star_count" jdbcType="DECIMAL" property="starCount" />
     <result column="details" jdbcType="VARCHAR" property="details" />
     <result column="fun_count" jdbcType="INTEGER" property="funCount" />
     <result column="like_count" jdbcType="INTEGER" property="likeCount" />
@@ -319,4 +319,46 @@
   <update id="decreaseFunCount">
     update product_comment set fun_count = fun_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryCommentByPage" resultType="com.smart.home.modules.product.entity.ProductComment">
+    select ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel,
+           pc.star_count as starCount,
+           pc.details as details,
+           pc.fun_count as funCount,
+           pc.like_count as likeCount,
+           pc.stamp_count as stampCount,
+           pcfh.id as funId,
+           pclh.id as likeId,
+           pcsh.id as stampId
+    from product_comment pc
+                 left join user_account ua on pc.user_id = ua.id
+                 left join user_data ud on ua.id = ud.user_id
+                 left join product_comment_fun_history pcfh on pcfh.source_id = pc.id and pcfh.user_id = #{loginUserId} and pcfh.category = 0
+                 left join product_comment_like_history pclh on pclh.source_id = pc.id and pclh.user_id = #{loginUserId} and pclh.category = 0
+                 left join product_comment_stamp_history pcsh on pcsh.source_id = pc.id and pcsh.user_id = #{loginUserId} and pcsh.category = 0
+    where product_id = #{productId}
+  </select>
+
+  <select id="queryCommentDetailHead" resultType="com.smart.home.modules.product.entity.ProductComment">
+    select ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel,
+           pc.star_count as starCount,
+           pc.details as details,
+           pc.fun_count as funCount,
+           pc.like_count as likeCount,
+           pc.stamp_count as stampCount,
+           pcfh.id as funId,
+           pclh.id as likeId,
+           pcsh.id as stampId
+    from product_comment pc
+                 left join user_account ua on pc.user_id = ua.id
+                 left join user_data ud on ua.id = ud.user_id
+                 left join product_comment_fun_history pcfh on pcfh.source_id = pc.id and pcfh.user_id = #{loginUserId} and pcfh.category = 0
+                 left join product_comment_like_history pclh on pclh.source_id = pc.id and pclh.user_id = #{loginUserId} and pclh.category = 0
+                 left join product_comment_stamp_history pcsh on pcsh.source_id = pc.id and pcsh.user_id = #{loginUserId} and pcsh.category = 0
+    where pc.id = #{productCommentId}
+  </select>
 </mapper>

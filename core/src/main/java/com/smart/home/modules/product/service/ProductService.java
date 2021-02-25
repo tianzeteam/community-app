@@ -49,8 +49,8 @@ public class ProductService {
         return productMapper.selectByExample(example);
     }
 
-    public Product findById(Long id) {
-        Product product = productMapper.selectByPrimaryKey(id.intValue());
+    public Product findById(Integer id) {
+        Product product = productMapper.selectByPrimaryKey(id);
         return product;
     }
 
@@ -60,5 +60,9 @@ public class ProductService {
 
     public void decreaseCollectCount(Long id) {
         productMapper.decreaseCollectCount(id);
+    }
+
+    public Product queryProductCommentCountInfo(Integer productId) {
+        return productMapper.queryProductCommentCountInfo(productId);
     }
 }

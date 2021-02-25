@@ -304,4 +304,19 @@
   <update id="decreaseFunCount">
     update product_comment_reply set fun_count = fun_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryCommentDetailReplyByPage" resultType="com.smart.home.modules.product.entity.ProductCommentReply">
+    select ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           pcr.details as details,
+           pcr.fun_count as funCount,
+           pcr.like_count as likeCount,
+           pclh.id as likeId,
+           pcsh.id as stampId
+    from product_comment_reply pcr
+                 left join user_account ua on pcr.user_id = ua.id
+                 left join product_comment_like_history pclh on pclh.source_id = pc.id and pclh.user_id = #{loginUserId} and pclh.category = 1
+                 left join product_comment_stamp_history pcsh on pcsh.source_id = pc.id and pcsh.user_id = #{loginUserId} and pcsh.category = 1
+    where pcr.comment_id = #{productCommentId} and pcr.pid = #{pid}
+  </select>
 </mapper>

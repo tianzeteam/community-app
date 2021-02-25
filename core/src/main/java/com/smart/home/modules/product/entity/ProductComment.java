@@ -1,18 +1,27 @@
 package com.smart.home.modules.product.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
 public class ProductComment implements Serializable {
+
+    private String headUrl;
+    private String nickName;
+    private Integer userLevel;
+    private Long funId;
+    private Long likeId;
+    private Long stampId;
+/////////////////////////////////
     private Long id;
 
     private Integer productId;
 
     private Long userId;
 
-    private Integer starCount;
+    private BigDecimal starCount;
 
     private String details;
 
@@ -67,16 +76,16 @@ public class ProductComment implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getStarCount() {
+    public BigDecimal getStarCount() {
         return starCount;
     }
 
-    public ProductComment withStarCount(Integer starCount) {
+    public ProductComment withStarCount(BigDecimal starCount) {
         this.setStarCount(starCount);
         return this;
     }
 
-    public void setStarCount(Integer starCount) {
+    public void setStarCount(BigDecimal starCount) {
         this.starCount = starCount;
     }
 
@@ -217,6 +226,54 @@ public class ProductComment implements Serializable {
         result = prime * result + ((getReplyCount() == null) ? 0 : getReplyCount().hashCode());
         result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
         return result;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public Long getFunId() {
+        return funId;
+    }
+
+    public void setFunId(Long funId) {
+        this.funId = funId;
+    }
+
+    public Long getLikeId() {
+        return likeId;
+    }
+
+    public void setLikeId(Long likeId) {
+        this.likeId = likeId;
+    }
+
+    public Long getStampId() {
+        return stampId;
+    }
+
+    public void setStampId(Long stampId) {
+        this.stampId = stampId;
+    }
+
+    public Integer getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(Integer userLevel) {
+        this.userLevel = userLevel;
     }
 
     /**

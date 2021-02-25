@@ -45,6 +45,12 @@ public class Product implements Serializable {
 
     private BigDecimal averageScore;
 
+    private Integer oneStarCount;
+    private Integer twoStarCount;
+    private Integer threeStarCount;
+    private Integer fourStarCount;
+    private Integer fiveStarCount;
+
     private Integer praiseRate;
 
     private Integer commentCount;
@@ -570,6 +576,46 @@ public class Product implements Serializable {
 
     public void setCollectCount(Integer collectCount) {
         this.collectCount = collectCount;
+    }
+
+    public Integer getOneStarCount() {
+        return oneStarCount;
+    }
+
+    public void setOneStarCount(Integer oneStarCount) {
+        this.oneStarCount = oneStarCount;
+    }
+
+    public Integer getTwoStarCount() {
+        return twoStarCount;
+    }
+
+    public void setTwoStarCount(Integer twoStarCount) {
+        this.twoStarCount = twoStarCount;
+    }
+
+    public Integer getThreeStarCount() {
+        return threeStarCount;
+    }
+
+    public void setThreeStarCount(Integer threeStarCount) {
+        this.threeStarCount = threeStarCount;
+    }
+
+    public Integer getFourStarCount() {
+        return fourStarCount;
+    }
+
+    public void setFourStarCount(Integer fourStarCount) {
+        this.fourStarCount = fourStarCount;
+    }
+
+    public Integer getFiveStarCount() {
+        return fiveStarCount;
+    }
+
+    public void setFiveStarCount(Integer fiveStarCount) {
+        this.fiveStarCount = fiveStarCount;
     }
 
     /**
