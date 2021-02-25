@@ -41,7 +41,7 @@ import java.util.List;
  * @author jason
  * @date 2021/2/25
  **/
-@Api("产品库-产品评价")
+@Api(tags = "产品库-产品评价")
 @RestController
 @RequestMapping("/api/app/productComment")
 public class AppProductCommentController {
@@ -193,7 +193,7 @@ public class AppProductCommentController {
         funService.fun(FunCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
         return APIResponse.OK();
     }
-    @ApiOperation("产品评价-点有趣")
+    @ApiOperation("产品评价-取消点有趣")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
     })
