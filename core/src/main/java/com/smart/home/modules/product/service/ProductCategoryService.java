@@ -1,6 +1,7 @@
 package com.smart.home.modules.product.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.modules.product.dao.ProductCategoryMapper;
 import com.smart.home.modules.product.entity.ProductCategory;
 import com.smart.home.modules.product.entity.ProductCategoryExample;
@@ -54,4 +55,9 @@ public class ProductCategoryService {
         return productCategory;
     }
 
+    public List<ProductCategory> queryAllValidByPid(int pid) {
+        ProductCategoryExample example = new ProductCategoryExample();
+        example.createCriteria().andPidEqualTo(pid).andStateEqualTo(RecordStatusEnum.NORMAL.getStatus());
+        return productCategoryMapper.selectByExample(example);
+    }
 }

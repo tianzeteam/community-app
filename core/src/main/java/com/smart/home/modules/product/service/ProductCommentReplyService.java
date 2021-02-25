@@ -76,4 +76,9 @@ public class ProductCommentReplyService {
     public void decreaseFunCount(Long id) {
         productCommentReplyMapper.decreaseFunCount(id);
     }
+
+    public List<ProductCommentReply> queryCommentDetailReplyByPage(Long userId, Long productCommentId, Long pid, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return productCommentReplyMapper.queryCommentDetailReplyByPage(userId, productCommentId, pid);
+    }
 }

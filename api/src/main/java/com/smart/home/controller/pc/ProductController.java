@@ -54,7 +54,7 @@ public class ProductController {
 
     @ApiOperation("按主键ID查询产品")
     @GetMapping("/selectById")
-    public APIResponse<Product> selectById(Long id) {
+    public APIResponse<Product> selectById(Integer id) {
         return APIResponse.OK(productService.findById(id));
     }
 

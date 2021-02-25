@@ -13,10 +13,7 @@ import com.smart.home.modules.user.service.UserCollectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CollectService {
@@ -93,6 +90,10 @@ public class CollectService {
             index ++;
         }
         return resultMap;
+    }
+
+    public boolean hasCollect(CollectTypeEnum collectTypeEnum, Long userId, Long id) {
+        return hasCollect(collectTypeEnum, userId, Arrays.asList(id)).get(id);
     }
 
     private void createCollect(Integer collectType, String collectTypeName, Long userId, Long primaryKey) {

@@ -1,6 +1,7 @@
 package com.smart.home.modules.product.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.modules.product.dao.ProductCommentLikeHistoryMapper;
 import com.smart.home.modules.product.entity.ProductCommentLikeHistory;
 import com.smart.home.modules.product.entity.ProductCommentLikeHistoryExample;
@@ -26,6 +27,13 @@ public class ProductCommentLikeHistoryService {
     private ProductCommentReplyService productCommentReplyService;
 
     public int create(ProductCommentLikeHistory productCommentLikeHistory) {
+        ProductCommentLikeHistoryExample example = new ProductCommentLikeHistoryExample();
+        example.createCriteria().andUserIdEqualTo(productCommentLikeHistory.getUserId())
+                .andCategoryEqualTo(productCommentLikeHistory.getCategory())
+                .andSourceIdEqualTo(productCommentLikeHistory.getSourceId());
+        if (productCommentLikeHistoryMapper.countByExample(example) > 0) {
+            throw new DuplicateDataException("已经点过了");
+        }
         productCommentLikeHistory.setCreatedTime(new Date());
         int affectRow = productCommentLikeHistoryMapper.insertSelective(productCommentLikeHistory);
         if (affectRow > 0) {

@@ -6,6 +6,13 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class ProductCommentReply implements Serializable {
+
+    private String headUrl;
+    private String nickName;
+    private Integer userLevel;
+    private Long likeId;
+    private Long stampId;
+////////////////////////////////////////
     private Long id;
 
     private Long commentId;
@@ -209,6 +216,46 @@ public class ProductCommentReply implements Serializable {
 
     public void setFunCount(Integer funCount) {
         this.funCount = funCount;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public Integer getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(Integer userLevel) {
+        this.userLevel = userLevel;
+    }
+
+    public Long getLikeId() {
+        return likeId;
+    }
+
+    public void setLikeId(Long likeId) {
+        this.likeId = likeId;
+    }
+
+    public Long getStampId() {
+        return stampId;
+    }
+
+    public void setStampId(Long stampId) {
+        this.stampId = stampId;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
     }
 
     /**

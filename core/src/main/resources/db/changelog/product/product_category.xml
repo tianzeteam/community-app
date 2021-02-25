@@ -45,4 +45,15 @@
             COMMENT ON COLUMN product_category.UPDATED_TIME IS '更新时间';
         </sql>
     </changeSet>
+    <changeSet id="addIndexPid4ProductCategory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="product_category" indexName="idx_prd_cat_pid"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_prd_cat_pid on product_category using btree(pid);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -42,4 +42,5 @@ public interface ProductCommentReplyMapper {
 
     int decreaseFunCount(@Param("id") Long id);
 
+    List<ProductCommentReply> queryCommentDetailReplyByPage(@Param("loginUserId") Long loginUserId,@Param("productCommentId") Long productCommentId,@Param("pid") Long pid);
 }

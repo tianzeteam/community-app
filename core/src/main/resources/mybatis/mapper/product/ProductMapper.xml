@@ -32,6 +32,11 @@
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="one_star_count" jdbcType="INTEGER" property="oneStarCount" />
+    <result column="two_star_count" jdbcType="INTEGER" property="twoStarCount" />
+    <result column="three_star_count" jdbcType="INTEGER" property="threeStarCount" />
+    <result column="four_star_count" jdbcType="INTEGER" property="fourStarCount" />
+    <result column="five_star_count" jdbcType="INTEGER" property="fiveStarCount" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -96,7 +101,7 @@
     brand_id, brand_name, online_flag, recommend_flag, details, category_one_id, category_one_name, 
     category_two_id, category_two_name, category_three_id, category_three_name, average_score, 
     praise_rate, comment_count, test_count, hot_rate, tag, revision, created_by, created_time, 
-    updated_by, updated_time,collect_count
+    updated_by, updated_time,collect_count,one_star_count,two_star_count,three_star_count,four_star_count,five_star_count
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.product.entity.ProductExample" resultMap="BaseResultMap">
     select
@@ -562,6 +567,21 @@
       <if test="updatedTime != null">
         updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="oneStarCount != null">
+        one_star_count = #{oneStarCount,jdbcType=INTEGER},
+      </if>
+      <if test="twoStarCount != null">
+        two_star_count = #{twoStarCount,jdbcType=INTEGER},
+      </if>
+      <if test="threeStarCount != null">
+        three_star_count = #{threeStarCount,jdbcType=INTEGER},
+      </if>
+      <if test="fourStarCount != null">
+        four_star_count = #{fourStarCount,jdbcType=INTEGER},
+      </if>
+      <if test="fiveStarCount != null">
+        five_star_count = #{fiveStarCount,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -604,4 +624,15 @@
   <update id="decreaseCollectCount">
     update product set collect_count = collect_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryProductCommentCountInfo" resultType="com.smart.home.modules.product.entity.Product">
+    select average_score as averageScore,
+           one_star_count as oneStarCount,
+           two_star_count as twoStartCount,
+           three_star_count as threeStarCount,
+           four_star_count as fourStarCount,
+           five_star_count as fiveStarCount
+    from product
+    where id = #{productId}
+  </select>
 </mapper>
