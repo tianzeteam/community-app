@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -165,6 +166,41 @@ public class EsQueryService {
      */
     protected MatchQueryBuilder equals(String fieldName, String fieldValue) {
         return new MatchQueryBuilder(fieldName,fieldValue);
+    }
+
+
+    /***
+     * 设置字段高亮
+     *
+     * @param preTags
+     * @param postTags
+     * @param fields
+     * @return
+     */
+    protected HighlightBuilder getHighlightBuilder(String preTags,String postTags, String... fields)
+    {
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
+
+        for (String field : fields)
+        {
+            highlightBuilder.field(field);
+        }
+        if (StringUtils.isBlank(preTags))
+        {
+            preTags = "<span style=\"color:red\">";
+        }
+        if (StringUtils.isBlank(postTags))
+        {
+            postTags = "</span>";
+        }
+
+        highlightBuilder.requireFieldMatch(false);
+        highlightBuilder.preTags(preTags);
+        highlightBuilder.postTags(postTags);
+        highlightBuilder.fragmentSize(800000);
+        highlightBuilder.numOfFragments(0);
+
+        return highlightBuilder;
     }
 
 }
