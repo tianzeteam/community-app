@@ -4,6 +4,7 @@ import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.request.PrimaryKeyPageDTO;
 import com.smart.home.controller.app.request.ProductCommentCreateDTO;
+import com.smart.home.controller.app.request.ProductCommentReplyCreateDTO;
 import com.smart.home.controller.app.response.product.ProductCommentReplyVO;
 import com.smart.home.controller.app.response.product.ProductCommentVO;
 import com.smart.home.controller.app.response.product.ProductPageCommentTabHeadVO;
@@ -11,6 +12,7 @@ import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
+import com.smart.home.enums.FunCategoryEnum;
 import com.smart.home.enums.LikeCategoryEnum;
 import com.smart.home.enums.StampCategoryEnum;
 import com.smart.home.modules.product.entity.Product;
@@ -19,6 +21,7 @@ import com.smart.home.modules.product.entity.ProductCommentReply;
 import com.smart.home.modules.product.service.ProductCommentReplyService;
 import com.smart.home.modules.product.service.ProductCommentService;
 import com.smart.home.modules.product.service.ProductService;
+import com.smart.home.service.FunService;
 import com.smart.home.service.LikeService;
 import com.smart.home.service.StampService;
 import com.smart.home.util.UserUtils;
@@ -53,6 +56,8 @@ public class AppProductCommentController {
     private StampService stampService;
     @Autowired
     private LikeService likeService;
+    @Autowired
+    private FunService funService;
 
     @ApiOperation("获取顶部综合评分信息")
     @ApiImplicitParams({
@@ -117,7 +122,7 @@ public class AppProductCommentController {
         return APIResponse.OK(vo);
     }
 
-    @ApiOperation("评价详情-回复列表-分页")
+    @ApiOperation("评价的回复-回复列表-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true),
             @ApiImplicitParam(name = "pid",value = "父级回复主键id，一级传0", required = true),
@@ -146,7 +151,6 @@ public class AppProductCommentController {
         likeService.like(LikeCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
         return APIResponse.OK();
     }
-
     @ApiOperation("产品评价-取消点有用")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
@@ -168,7 +172,6 @@ public class AppProductCommentController {
         stampService.stamp(StampCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
         return APIResponse.OK();
     }
-
     @ApiOperation("产品评价-取消点无用")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
@@ -177,6 +180,81 @@ public class AppProductCommentController {
     @PostMapping("/cancelClickUseless")
     public APIResponse cancelClickUseless(Long productCommentId) {
         stampService.cancelStamp(StampCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("产品评价-点有趣")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/clickFun")
+    public APIResponse clickFun(Long productCommentId) {
+        funService.fun(FunCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+        return APIResponse.OK();
+    }
+    @ApiOperation("产品评价-点有趣")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/cancelClickFun")
+    public APIResponse cancelClickFun(Long productCommentId) {
+        funService.cancelFun(FunCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("评价的回复-回复别人的评价")
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/createCommentReply")
+    public APIResponse createCommentReply(@Valid @RequestBody ProductCommentReplyCreateDTO productCommentReplyCreateDTO, BindingResult bindingResult) {
+        Long productCommentId = productCommentReplyCreateDTO.getProductCommentId();
+        String details = productCommentReplyCreateDTO.getDetails();
+        Long userId = UserUtils.getLoginUserId();
+        Long pid = productCommentReplyCreateDTO.getPid();
+        productCommentReplyService.create(userId, details, productCommentId, pid);
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("评价的回复-点赞别人的回复")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "productCommentReplyId", value = "产品回复主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/likeCommentReply")
+    public APIResponse likeCommentReply(Long productCommentReplyId) {
+        likeService.like(LikeCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+        return APIResponse.OK();
+    }
+    @ApiOperation("评价的回复-取消点赞别人的回复")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "productCommentReplyId", value = "产品回复主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/cancelLikeCommentReply")
+    public APIResponse cancelLikeCommentReply(Long productCommentReplyId) {
+        likeService.cancelLike(LikeCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("评价的回复-点踩别人的回复")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "productCommentReplyId", value = "产品回复主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/stampCommentReply")
+    public APIResponse stampCommentReply(Long productCommentReplyId) {
+        stampService.stamp(StampCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+        return APIResponse.OK();
+    }
+    @ApiOperation("评价的回复-取消点踩别人的回复")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "productCommentReplyId", value = "产品回复主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/cancelStampCommentReply")
+    public APIResponse cancelStampCommentReply(Long productCommentReplyId) {
+        stampService.cancelStamp(StampCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
         return APIResponse.OK();
     }
 

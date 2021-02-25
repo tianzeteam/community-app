@@ -35,4 +35,6 @@ public interface ArticleMapper {
     int decreaseCollectCount(@Param("id") Long id);
 
     Long findAuthorById(@Param("id") Long id);
+
+    List<Article> queryTestForProductByPage(@Param("productId") Integer productId);
 }

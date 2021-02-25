@@ -64,4 +64,16 @@ public class ArticleService {
     public Long findAuthorById(Long id) {
         return articleMapper.findAuthorById(id);
     }
+
+    /**
+     * 产品页面的评测tab下的评测列表数据
+     * @param productId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    public List<Article> queryTestForProductByPage(Integer productId, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleMapper.queryTestForProductByPage(productId);
+    }
 }

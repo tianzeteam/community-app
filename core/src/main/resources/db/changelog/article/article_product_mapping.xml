@@ -41,4 +41,15 @@
 
         </sql>
     </changeSet>
+    <changeSet id="addIndex4ArticleProductMapping" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="article_product_mapping" indexName="idx_apm_product_id"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_apm_product_id on article_product_mapping using btree (PRODUCT_ID);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

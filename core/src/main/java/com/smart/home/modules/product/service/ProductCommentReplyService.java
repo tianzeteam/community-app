@@ -81,4 +81,17 @@ public class ProductCommentReplyService {
         PageHelper.startPage(pageNum, pageSize);
         return productCommentReplyMapper.queryCommentDetailReplyByPage(userId, productCommentId, pid);
     }
+
+    public void create(Long userId, String details, Long productCommentId, Long pid) {
+        ProductCommentReply productCommentReply = new ProductCommentReply();
+        productCommentReply.withCommentId(productCommentId)
+                .withCreatedTime(new Date())
+                .withDetails(details)
+                .withLikeCount(0)
+                .withPid(pid)
+                .withRevision(0)
+                .withStampCount(0)
+                .withUserId(userId);
+        productCommentReplyMapper.insertSelective(productCommentReply);
+    }
 }
