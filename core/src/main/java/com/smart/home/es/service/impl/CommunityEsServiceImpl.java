@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.smart.home.es.bean.CommunityBean;
 import com.smart.home.es.common.EsPageResult;
+import com.smart.home.es.dao.CommunityRepository;
 import com.smart.home.es.dto.CommunitySearchDTO;
 import com.smart.home.es.service.CommunityEsService;
 import com.smart.home.es.service.EsQueryService;
@@ -18,6 +19,7 @@ import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.SearchResultMapper;
@@ -39,6 +41,9 @@ import java.util.Objects;
 @Service
 public class CommunityEsServiceImpl extends EsQueryService implements CommunityEsService
 {
+    @Autowired
+    private CommunityRepository communityRepository;
+
     /**
      * 搜索
      *
@@ -176,6 +181,69 @@ public class CommunityEsServiceImpl extends EsQueryService implements CommunityE
         EsPageResult<CommunityBean> pageResult = new EsPageResult<>(pageNum, pageSize, page.getTotalElements(), page.getContent());
 
         return pageResult;
+    }
+
+    /**
+     * 创建
+     *
+     * @param communityBean
+     * @return
+     */
+    @Override
+    public void saveCommunityBean(CommunityBean communityBean)
+    {
+        communityRepository.save(communityBean);
+    }
+
+    /**
+     * 批量创建
+     *
+     * @param communityBeanList
+     */
+    @Override
+    public void batchSaveCommunityBean(List<CommunityBean> communityBeanList)
+    {
+
+        if (CollectionUtils.isEmpty(communityBeanList)){
+            return;
+        }
+
+        communityRepository.saveAll(communityBeanList);
+
+    }
+
+    /**
+     * 根据Id获取
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public CommunityBean findCommunityBeanById(Integer id)
+    {
+        return communityRepository.findById(id).get();
+    }
+
+    /**
+     * 根据id删除
+     *
+     * @param id
+     */
+    @Override
+    public void deleteCommunityBeanById(Integer id)
+    {
+        communityRepository.deleteById(id);
+    }
+
+    /**
+     * 更新
+     *
+     * @param communityBean
+     */
+    @Override
+    public void updateCommunityBean(CommunityBean communityBean)
+    {
+        communityRepository.save(communityBean);
     }
 
 
