@@ -2,8 +2,8 @@ package com.smart.home.controller.pc;
 
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.article.ArticleChannelCreateDTO;
-import com.smart.home.controller.pc.response.product.ArticleChannelSelectVO;
 import com.smart.home.controller.pc.request.article.ArticleChannelUpdateDTO;
+import com.smart.home.controller.pc.response.article.ArticleChannelSelectVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
