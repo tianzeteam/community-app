@@ -26,6 +26,8 @@ public class ArticleChannel implements Serializable {
 
     private Date updatedTime;
 
+    private Integer indexFlag;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -217,6 +219,14 @@ public class ArticleChannel implements Serializable {
         result = prime * result + ((getUpdatedBy() == null) ? 0 : getUpdatedBy().hashCode());
         result = prime * result + ((getUpdatedTime() == null) ? 0 : getUpdatedTime().hashCode());
         return result;
+    }
+
+    public Integer getIndexFlag() {
+        return indexFlag;
+    }
+
+    public void setIndexFlag(Integer indexFlag) {
+        this.indexFlag = indexFlag;
     }
 
     /**

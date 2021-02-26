@@ -37,4 +37,6 @@ public interface ArticleMapper {
     Long findAuthorById(@Param("id") Long id);
 
     List<Article> queryTestForProductByPage(@Param("productId") Integer productId);
+
+    long countArticleByChannelId(@Param("channelId") Long channelId);
 }

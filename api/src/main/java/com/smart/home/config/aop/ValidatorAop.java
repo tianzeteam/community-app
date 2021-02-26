@@ -1,5 +1,7 @@
 package com.smart.home.config.aop;
 
+import com.smart.home.common.exception.RestfulRequestException;
+import com.smart.home.dto.APIResponse;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -45,7 +47,7 @@ public class ValidatorAop {
                         for (ObjectError objectError : list) {
                             errorMessage.append(objectError.getDefaultMessage()).append(";");
                         }
-                        throw new RuntimeException(errorMessage.toString());
+                        return APIResponse.ERROR(errorMessage.toString());
                     }
                 }
             }

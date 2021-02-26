@@ -13,6 +13,11 @@ public class RestfulRequestException extends RuntimeException {
 		this.code = code;
 	}
 
+	public RestfulRequestException(String message) {
+		super(message);
+		this.code = 500;
+	}
+
 	public int getCode() {
 		return code;
 	}

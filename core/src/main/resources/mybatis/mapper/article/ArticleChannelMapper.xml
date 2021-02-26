@@ -12,6 +12,7 @@
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="index_flag" jdbcType="INTEGER" property="indexFlag" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, remark, sort, state, revision, created_by, created_time, updated_by, updated_time
+    id, title, remark, sort, state, revision, created_by, created_time, updated_by, updated_time,index_flag
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.article.entity.ArticleChannelExample" resultMap="BaseResultMap">
     select
@@ -155,6 +156,9 @@
       <if test="updatedTime != null">
         updated_time,
       </if>
+      <if test="indexFlag != null">
+        index_flag,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -186,6 +190,9 @@
       </if>
       <if test="updatedTime != null">
         #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="indexFlag != null">
+        #{indexFlag,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -278,6 +285,9 @@
       </if>
       <if test="updatedTime != null">
         updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="indexFlag != null">
+        index_flag = #{indexFlag,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

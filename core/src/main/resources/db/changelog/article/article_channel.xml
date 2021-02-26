@@ -39,4 +39,16 @@
             COMMENT ON COLUMN article_channel.UPDATED_TIME IS '更新时间';
         </sql>
     </changeSet>
+    <changeSet id="addColumnIndexFlag4ArticleChannel" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article_channel" columnName="index_flag"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article_channel add column index_flag int;
+            COMMENT ON COLUMN article_channel.index_flag IS '是否显示在首页0否1是';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

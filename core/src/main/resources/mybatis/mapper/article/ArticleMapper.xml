@@ -594,4 +594,8 @@
                  left join user_data ud on ua.id = ud.user_id
     where apm.product_id = #{productId}
   </select>
+
+  <select id="countArticleByChannelId" resultType="long">
+    select count(1) from article where channel_id = #{channelId,jdbcType=BIGINT}
+  </select>
 </mapper>
