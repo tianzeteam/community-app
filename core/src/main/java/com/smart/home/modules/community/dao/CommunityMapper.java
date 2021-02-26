@@ -29,4 +29,6 @@ public interface CommunityMapper {
     int updateByPrimaryKeySelective(Community record);
 
     int updateByPrimaryKey(Community record);
+
+    long countByCategoryId(@Param("categoryId") Long categoryId);
 }

@@ -375,4 +375,8 @@
       updated_time = #{updatedTime,jdbcType=DATE}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="countByCategoryId" resultType="long">
+    select count(1) from community where category_id = #{categoryId}
+  </select>
 </mapper>
