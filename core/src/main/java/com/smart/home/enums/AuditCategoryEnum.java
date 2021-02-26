@@ -14,7 +14,7 @@ public enum AuditCategoryEnum {
     DELETE_IMAGE(4, "删图"),
     WARNING(5, "警告"),
     NO_SPEECH(6, "禁言"),
-    CLOSE(7, "封禁"),
+    BAN(7, "封禁"),
     // 内容审查部分
     IMAGE_AUDIT(8, "图片审查"),
     ARTICLE_AUDIT(9, "文章人工审查"),

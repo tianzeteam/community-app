@@ -38,4 +38,34 @@
             create index idx_community_auth_user_id on user_community_auth using btree (user_id);
         </sql>
     </changeSet>
+    <changeSet id="addColumn4UserCommunityAuth" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user_community_auth" columnName="effectiveStartDate"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table user_community_auth add column effective_start_date date;
+            alter table user_community_auth add column effective_end_date date;
+            alter table user_community_auth add column remark varchar(32);
+            COMMENT ON COLUMN user_community_auth.effective_start_date IS '开始时间';
+            COMMENT ON COLUMN user_community_auth.effective_end_date IS '结束时间';
+            COMMENT ON COLUMN user_community_auth.remark IS '备注';
+        </sql>
+    </changeSet>
+    <changeSet id="addColumn4UserCommunityAuth2" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user_community_auth" columnName="created_time"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table user_community_auth add column created_time timestamp;
+            alter table user_community_auth add column created_by bigint;
+            COMMENT ON COLUMN user_community_auth.created_time IS '创建时间';
+            COMMENT ON COLUMN user_community_auth.created_by IS '创建人';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

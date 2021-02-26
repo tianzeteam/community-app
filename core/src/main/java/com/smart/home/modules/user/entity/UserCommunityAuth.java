@@ -3,6 +3,7 @@ package com.smart.home.modules.user.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 public class UserCommunityAuth implements Serializable {
     private Long id;
@@ -12,6 +13,12 @@ public class UserCommunityAuth implements Serializable {
     private Integer speakFlag;
 
     private Integer blackFlag;
+
+    private String remark;
+    private Date effectiveStartDate;
+    private Date effectiveEndDate;
+    private Date createdTime;
+    private Long createdBy;
 
     private static final long serialVersionUID = 1L;
 
@@ -108,6 +115,46 @@ public class UserCommunityAuth implements Serializable {
         result = prime * result + ((getSpeakFlag() == null) ? 0 : getSpeakFlag().hashCode());
         result = prime * result + ((getBlackFlag() == null) ? 0 : getBlackFlag().hashCode());
         return result;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Date getEffectiveStartDate() {
+        return effectiveStartDate;
+    }
+
+    public void setEffectiveStartDate(Date effectiveStartDate) {
+        this.effectiveStartDate = effectiveStartDate;
+    }
+
+    public Date getEffectiveEndDate() {
+        return effectiveEndDate;
+    }
+
+    public void setEffectiveEndDate(Date effectiveEndDate) {
+        this.effectiveEndDate = effectiveEndDate;
+    }
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
     }
 
     /**

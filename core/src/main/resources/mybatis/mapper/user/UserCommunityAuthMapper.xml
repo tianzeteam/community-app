@@ -6,6 +6,12 @@
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="speak_flag" jdbcType="INTEGER" property="speakFlag" />
     <result column="black_flag" jdbcType="INTEGER" property="blackFlag" />
+    <result column="effective_start_date" jdbcType="TIMESTAMP" property="effectiveStartDate" />
+    <result column="effective_end_date" jdbcType="TIMESTAMP" property="effectiveEndDate" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="created_by" jdbcType="BIGINT" property="createdBy" />
+
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, speak_flag, black_flag
+    id, user_id, speak_flag, black_flag,effective_start_date,effective_end_date,remark,created_time,created_by
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.user.entity.UserCommunityAuthExample" resultMap="BaseResultMap">
     select
@@ -127,6 +133,21 @@
       <if test="blackFlag != null">
         black_flag,
       </if>
+      <if test="effectiveStartDate != null">
+        effective_start_date,
+      </if>
+      <if test="effectiveEndDate != null">
+        effective_end_date,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createdTime != null">
+        created_time,
+      </if>
+      <if test="createdBy != null">
+        created_by,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -140,6 +161,21 @@
       </if>
       <if test="blackFlag != null">
         #{blackFlag,jdbcType=INTEGER},
+      </if>
+      <if test="effectiveStartDate != null">
+        #{effectiveStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="effectiveEndDate != null">
+        #{effectiveEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -190,6 +226,15 @@
       </if>
       <if test="blackFlag != null">
         black_flag = #{blackFlag,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="effectiveStartDate != null">
+        effective_start_date = #{effectiveStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="effectiveEndDate != null">
+        effective_end_date = #{effectiveEndDate,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

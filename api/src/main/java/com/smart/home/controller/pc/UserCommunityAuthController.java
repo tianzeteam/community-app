@@ -24,12 +24,6 @@ public class UserCommunityAuthController {
     @Autowired
     private UserCommunityAuthService userCommunityAuthService;
 
-    @ApiOperation("创建用户社区权限")
-    @PostMapping("/create")
-    public APIResponse create(UserCommunityAuth userCommunityAuth) {
-        return APIResponse.OK(userCommunityAuthService.create(userCommunityAuth));
-    }
-
     @ApiOperation("更新用户社区权限")
     @PostMapping("/update")
     public APIResponse update(UserCommunityAuth userCommunityAuth) {
