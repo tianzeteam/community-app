@@ -7,7 +7,8 @@ package com.smart.home.common.enums;
 public enum RecordStatusEnum {
 
     NORMAL(0, "正常"),
-    PAUSED(1, "暂停");
+    PAUSED(1, "暂停"),
+    DELETE(2, "删除");
 
     private int status;
     private String desc;

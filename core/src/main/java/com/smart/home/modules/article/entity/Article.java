@@ -67,6 +67,19 @@ public class Article implements Serializable {
 
     private Date updatedTime;
 
+    /**
+     * 文章类型0原创1转载
+     */
+    private Integer articleType;
+    /**
+     * 转载授权0未授权1已授权
+     */
+    private Integer originalAuth;
+    /**
+     * 转载来源
+     */
+    private String originalUrl;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -562,6 +575,30 @@ public class Article implements Serializable {
 
     public void setUserLevel(Integer userLevel) {
         this.userLevel = userLevel;
+    }
+
+    public Integer getArticleType() {
+        return articleType;
+    }
+
+    public void setArticleType(Integer articleType) {
+        this.articleType = articleType;
+    }
+
+    public Integer getOriginalAuth() {
+        return originalAuth;
+    }
+
+    public void setOriginalAuth(Integer originalAuth) {
+        this.originalAuth = originalAuth;
+    }
+
+    public String getOriginalUrl() {
+        return originalUrl;
+    }
+
+    public void setOriginalUrl(String originalUrl) {
+        this.originalUrl = originalUrl;
     }
 
     /**

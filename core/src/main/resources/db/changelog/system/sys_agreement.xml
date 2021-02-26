@@ -39,4 +39,16 @@
             COMMENT ON COLUMN sys_agreement.UPDATED_TIME IS '更新时间';
         </sql>
     </changeSet>
+    <changeSet id="insertData4SysAgreement" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_agreement where type = 50;
+            </sqlCheck>
+        </preConditions>
+        <comment>新增记录</comment>
+        <sql>
+            insert into sys_agreement(type,name,REVISION) values (50,'内容创作规范',0);
+            insert into sys_agreement(type,name,REVISION) values (51,'文章投稿协议',0);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

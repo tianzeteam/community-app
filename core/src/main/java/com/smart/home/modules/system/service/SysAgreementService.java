@@ -1,5 +1,6 @@
 package com.smart.home.modules.system.service;
 
+import com.smart.home.enums.AgreementTypeEnum;
 import com.smart.home.modules.system.dao.SysAgreementMapper;
 import com.smart.home.modules.system.entity.SysAgreement;
 import com.smart.home.modules.system.entity.SysAgreementExample;
@@ -28,4 +29,7 @@ public class SysAgreementService {
         return null;
     }
 
+    public String selectByType(AgreementTypeEnum articleCreateRule) {
+        return findByType(articleCreateRule.getType()).getDetails();
+    }
 }

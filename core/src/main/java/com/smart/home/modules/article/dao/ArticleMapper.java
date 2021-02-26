@@ -1,5 +1,6 @@
 package com.smart.home.modules.article.dao;
 
+import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleExample;
 import java.util.List;
@@ -39,4 +40,6 @@ public interface ArticleMapper {
     List<Article> queryTestForProductByPage(@Param("productId") Integer productId);
 
     long countArticleByChannelId(@Param("channelId") Long channelId);
+
+    int updateState(@Param("id") Long id,@Param("state") Integer state);
 }

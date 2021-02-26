@@ -98,4 +98,26 @@
             COMMENT ON COLUMN article.collect_count IS '收藏数量';
         </sql>
     </changeSet>
+    <changeSet id="addColumnArticleType4Article" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article" columnName="article_type"/>
+            </not>
+        </preConditions>
+        <comment>新增字段文章类型</comment>
+        <sql>
+            alter table article add column article_type int;
+            alter table article add column original_auth int;
+            alter table article add column original_url varchar(255);
+            COMMENT ON COLUMN article.article_type IS '文章类型0原创1转载';
+            COMMENT ON COLUMN article.original_auth IS '转载授权0未授权1已授权';
+            COMMENT ON COLUMN article.original_url IS '转载来源';
+        </sql>
+    </changeSet>
+    <changeSet id="alterColumnTitle4Article" author="jason">
+        <comment>修改title字段长度</comment>
+        <sql>
+            alter table article alter column title type varchar(40);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
