@@ -1,9 +1,11 @@
 package com.smart.home.modules.message.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.enums.MessageTypeEnum;
 import com.smart.home.modules.message.dao.MessageContentMapper;
 import com.smart.home.modules.message.entity.MessageContent;
 import com.smart.home.modules.message.entity.MessageContentExample;
+import com.smart.home.modules.message.entity.MessageReadHistory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ public class MessageContentService {
 
     @Resource
     MessageContentMapper messageContentMapper;
+    @Resource
+    MessageReadHistoryService messageReadHistoryService;
 
     public int create(MessageContent messageContent) {
         messageContent.setCreatedTime(new Date());
@@ -53,4 +57,38 @@ public class MessageContentService {
         return messageContent;
     }
 
+    public List<MessageContent> queryMessageByPage(MessageTypeEnum messageTypeEnum, Long receiverId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        switch (messageTypeEnum) {
+            case NOTIFY:
+                return messageContentMapper.queryUnReadNotifyMessage(receiverId);
+            case LIKE:
+            case REPLY_ME:
+                MessageContentExample example = new MessageContentExample();
+                MessageContentExample.Criteria criteria = example.createCriteria();
+                if (receiverId != null) {
+                    criteria.andReceiverIdEqualTo(receiverId);
+                }
+                criteria.andMessageTypeEqualTo(messageTypeEnum.getType());
+                example.setOrderByClause("created_time desc");
+                return messageContentMapper.selectByExample(example);
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * 标记已读
+     * @param idList
+     * @param loginUserId
+     */
+    public void markRead(List<Long> idList, Long loginUserId) {
+        for (Long id : idList) {
+            MessageReadHistory messageReadHistory = new MessageReadHistory();
+            messageReadHistory.withCreatedTime(new Date())
+                    .withMessageId(id)
+                    .withUserId(loginUserId);
+            messageReadHistoryService.create(messageReadHistory);
+        }
+    }
 }

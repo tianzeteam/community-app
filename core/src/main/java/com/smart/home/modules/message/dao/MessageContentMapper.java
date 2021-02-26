@@ -29,4 +29,6 @@ public interface MessageContentMapper {
     int updateByPrimaryKeySelective(MessageContent record);
 
     int updateByPrimaryKey(MessageContent record);
+
+    List<MessageContent> queryUnReadNotifyMessage(@Param("receiverId") Long receiverId);
 }

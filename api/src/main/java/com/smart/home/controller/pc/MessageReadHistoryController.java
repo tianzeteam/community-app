@@ -14,26 +14,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
-* @author jason
-**/
+ * @author jason
+ **/
 @Api(tags = "message消息已读历史接口")
 @RestController
 @RequestMapping("/api/pc/messageReadHistory")
-public class MessageReadHistoryController{
+public class MessageReadHistoryController {
 
     @Autowired
     private MessageReadHistoryService messageReadHistoryService;
 
-    @ApiOperation("创建消息已读历史")
-    @PostMapping("/create")
-    public APIResponse create(MessageReadHistory messageReadHistory) {
-                                                                                                                            return APIResponse.OK(messageReadHistoryService.create(messageReadHistory));
-    }
-
     @ApiOperation("更新消息已读历史")
     @PostMapping("/update")
     public APIResponse update(MessageReadHistory messageReadHistory) {
-                                                                                                                            return APIResponse.OK(messageReadHistoryService.update(messageReadHistory));
+        return APIResponse.OK(messageReadHistoryService.update(messageReadHistory));
     }
 
     @ApiOperation("删除消息已读历史")

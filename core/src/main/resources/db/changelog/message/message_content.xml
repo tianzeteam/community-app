@@ -56,4 +56,28 @@
             create index idx_msg_create_time on message_content using btree (CREATED_TIME);
         </sql>
     </changeSet>
+    <changeSet id="addColumnNickName4MessageContent" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="message_content" columnName="nick_name"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table message_content add column nick_name varchar(32);
+            COMMENT ON COLUMN message_content.nick_name IS '昵称';
+        </sql>
+    </changeSet>
+    <changeSet id="addColumnSubType4MessageContent" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="message_content" columnName="message_sub_type"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table message_content add column message_sub_type int;
+            COMMENT ON COLUMN message_content.message_sub_type IS '消息子分类';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

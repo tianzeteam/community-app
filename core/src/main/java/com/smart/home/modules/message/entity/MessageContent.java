@@ -30,6 +30,9 @@ public class MessageContent implements Serializable {
 
     private Date createdTime;
 
+    private String nickName;
+    private Integer messageSubType;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -253,6 +256,22 @@ public class MessageContent implements Serializable {
         result = prime * result + ((getCreatedBy() == null) ? 0 : getCreatedBy().hashCode());
         result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
         return result;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public Integer getMessageSubType() {
+        return messageSubType;
+    }
+
+    public void setMessageSubType(Integer messageSubType) {
+        this.messageSubType = messageSubType;
     }
 
     /**

@@ -14,6 +14,8 @@
     <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
     <result column="created_by" jdbcType="BIGINT" property="createdBy" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="message_sub_type" jdbcType="INTEGER" property="messageSubType" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -75,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, cover_image, message_type, source_id, title, message_content, sender_id, receiver_id, 
-    read_flag, delete_flag, created_by, created_time
+    read_flag, delete_flag, created_by, created_time,nick_name,message_sub_type
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.message.entity.MessageContentExample" resultMap="BaseResultMap">
     select
@@ -166,6 +168,12 @@
       <if test="createdTime != null">
         created_time,
       </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="messageSubType != null">
+        message_sub_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -203,6 +211,12 @@
       </if>
       <if test="createdTime != null">
         #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="messageSubType != null">
+        #{messageSubType,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -328,4 +342,17 @@
       created_time = #{createdTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryUnReadNotifyMessage" resultType="com.smart.home.modules.message.entity.MessageContent">
+    select message_content.id,
+           message_content.cover_image as coverImage,
+           message_content.title,
+           message_content.message_content as messageContent,
+           message_content.created_time as createdTime
+    from message_content
+                 left join message_read_history
+            on message_content.id = message_read_history.message_id
+                    and message_content.receiver_id = message_read_history.user_id
+    where message_content.receiver_id = #{receiverId,jdbcType=BIGINT} and message_content.message_type = 2 and message_read_history.id is null
+  </select>
 </mapper>
