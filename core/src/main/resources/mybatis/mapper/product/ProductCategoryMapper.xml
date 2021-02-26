@@ -15,6 +15,7 @@
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="level" jdbcType="INTEGER" property="level" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, pid, icon, title, sub_title, sort, banner, state, revision, created_by, created_time, 
-    updated_by, updated_time
+    updated_by, updated_time,level
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.product.entity.ProductCategoryExample" resultMap="BaseResultMap">
     select
@@ -170,6 +171,9 @@
       <if test="updatedTime != null">
         updated_time,
       </if>
+      <if test="level != null">
+        level,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -210,6 +214,9 @@
       </if>
       <if test="updatedTime != null">
         #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -343,4 +350,12 @@
       updated_time = #{updatedTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="findParentLevel" resultType="java.lang.Integer">
+    select level from product_category where pid = #{pid}
+    </select>
+
+  <select id="findLevelById" resultType="java.lang.Integer">
+    select level from product_category where id = #{id}
+  </select>
 </mapper>

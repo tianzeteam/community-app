@@ -56,4 +56,16 @@
             create index idx_prd_cat_pid on product_category using btree(pid);
         </sql>
     </changeSet>
+    <changeSet id="addColumnLevel4ProductCategory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_category" columnName="level"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_category add column level int;
+            COMMENT ON COLUMN product_category.level IS '等级:分为1，2，3';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

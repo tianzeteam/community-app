@@ -2,7 +2,7 @@ package com.smart.home.controller.pc;
 
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.article.ArticleChannelCreateDTO;
-import com.smart.home.controller.pc.request.article.ArticleChannelSelectVO;
+import com.smart.home.controller.pc.response.product.ArticleChannelSelectVO;
 import com.smart.home.controller.pc.request.article.ArticleChannelUpdateDTO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
@@ -20,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.List;
 
 /**

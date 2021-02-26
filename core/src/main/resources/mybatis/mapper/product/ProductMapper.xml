@@ -635,4 +635,14 @@
     from product
     where id = #{productId}
   </select>
+
+  <select id="countByCategoryOne" resultType="long">
+    select count(1) from product where category_one_id = #{categoryId}
+  </select>
+  <select id="countByCategoryTwo" resultType="long">
+    select count(1) from product where category_two_id = #{categoryId}
+  </select>
+  <select id="countByCategoryThree" resultType="long">
+    select count(1) from product where category_three_id = #{categoryId}
+  </select>
 </mapper>

@@ -32,6 +32,8 @@ public class ProductCategory implements Serializable {
 
     private Date updatedTime;
 
+    private Integer level;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -271,6 +273,14 @@ public class ProductCategory implements Serializable {
         result = prime * result + ((getUpdatedBy() == null) ? 0 : getUpdatedBy().hashCode());
         result = prime * result + ((getUpdatedTime() == null) ? 0 : getUpdatedTime().hashCode());
         return result;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     /**

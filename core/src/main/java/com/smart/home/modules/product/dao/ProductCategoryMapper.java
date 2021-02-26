@@ -29,4 +29,8 @@ public interface ProductCategoryMapper {
     int updateByPrimaryKeySelective(ProductCategory record);
 
     int updateByPrimaryKey(ProductCategory record);
+
+    Integer findParentLevel(@Param("pid") Integer pid);
+
+    Integer findLevelById(@Param("id") Integer id);
 }

@@ -1,4 +1,4 @@
-package com.smart.home.controller.pc.request.article;
+package com.smart.home.controller.pc.response.product;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,11 +10,11 @@ import lombok.ToString;
  **/
 @Data
 @ToString
-public class ArticleChannelSelectVO {
+public class ProductCategorySelectVO {
 
-    @ApiModelProperty("频道主键id")
+    @ApiModelProperty("主键id")
     private Integer id;
-    @ApiModelProperty("频道名称")
+    @ApiModelProperty("名称")
     private String title;
 
 }

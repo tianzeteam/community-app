@@ -35,4 +35,8 @@ public interface ProductMapper {
     int decreaseCollectCount(@Param("id") Long id);
 
     Product queryProductCommentCountInfo(@Param("productId") Integer productId);
+
+    long countByCategoryOne(@Param("categoryId") Integer categoryId);
+    long countByCategoryTwo(@Param("categoryId") Integer categoryId);
+    long countByCategoryThree(@Param("categoryId") Integer categoryId);
 }
