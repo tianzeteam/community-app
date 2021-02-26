@@ -42,6 +42,8 @@ public class CommunityPost implements Serializable {
 
     private Integer stampCount;
 
+    private Integer state;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -353,6 +355,14 @@ public class CommunityPost implements Serializable {
 
     public void setCollectCount(Integer collectCount) {
         this.collectCount = collectCount;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     /**

@@ -1,6 +1,9 @@
 package com.smart.home.modules.community.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.enums.AuditStatusEnum;
+import com.smart.home.common.enums.RecordStatusEnum;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
@@ -21,6 +24,14 @@ public class CommunityPostService {
     CommunityPostMapper communityPostMapper;
 
     public int create(CommunityPost communityPost) {
+        communityPost.setTopFlag(YesNoEnum.NO.getCode());
+        communityPost.setBoutiqueFlag(YesNoEnum.NO.getCode());
+        communityPost.setLikeCount(0);
+        communityPost.setReportCount(0);
+        communityPost.setAuditStatus(AuditStatusEnum.WAIT_AUDIT.getCode());
+        communityPost.setRevision(0);
+        communityPost.setStampCount(0);
+        communityPost.setCollectCount(0);
         communityPost.setCreatedTime(new Date());
         return communityPostMapper.insertSelective(communityPost);
     }
@@ -37,7 +48,8 @@ public class CommunityPostService {
     @Transactional(rollbackFor = RuntimeException.class)
     public void delete(List<Long> idList) {
         for (Long id : idList) {
-            communityPostMapper.deleteByPrimaryKey(id);
+            // 软删除
+            communityPostMapper.updateState(id, RecordStatusEnum.DELETE.getStatus());
         }
     }
 

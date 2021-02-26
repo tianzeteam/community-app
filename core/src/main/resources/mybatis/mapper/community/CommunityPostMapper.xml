@@ -13,13 +13,14 @@
     <result column="like_count" jdbcType="INTEGER" property="likeCount" />
     <result column="comment_flag" jdbcType="INTEGER" property="commentFlag" />
     <result column="report_count" jdbcType="INTEGER" property="reportCount" />
-    <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
     <result column="audit_status" jdbcType="INTEGER" property="auditStatus" />
     <result column="revision" jdbcType="INTEGER" property="revision" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
     <result column="stamp_count" jdbcType="INTEGER" property="stampCount" />
+    <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
+    <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -82,7 +83,7 @@
   <sql id="Base_Column_List">
     id, community, user_id, title, contents, images, top_flag, boutique_flag, like_count, 
     comment_flag, report_count, audit_status, revision, created_time, updated_by, updated_time, 
-    stamp_count,collect_count
+    stamp_count,collect_count,state
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostExample" resultMap="BaseResultMap">
     select
@@ -190,6 +191,12 @@
       <if test="stampCount != null">
         stamp_count,
       </if>
+      <if test="collectCount != null">
+        collect_count,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -242,6 +249,12 @@
       </if>
       <if test="stampCount != null">
         #{stampCount,jdbcType=INTEGER},
+      </if>
+      <if test="collectCount != null">
+        #{collectCount,jdbcType=INTEGER},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -357,14 +370,8 @@
       <if test="boutiqueFlag != null">
         boutique_flag = #{boutiqueFlag,jdbcType=INTEGER},
       </if>
-      <if test="likeCount != null">
-        like_count = #{likeCount,jdbcType=INTEGER},
-      </if>
       <if test="commentFlag != null">
         comment_flag = #{commentFlag,jdbcType=INTEGER},
-      </if>
-      <if test="reportCount != null">
-        report_count = #{reportCount,jdbcType=INTEGER},
       </if>
       <if test="auditStatus != null">
         audit_status = #{auditStatus,jdbcType=INTEGER},
@@ -380,9 +387,6 @@
       </if>
       <if test="updatedTime != null">
         updated_time = #{updatedTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stampCount != null">
-        stamp_count = #{stampCount,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -434,4 +438,8 @@
   <select id="countByCommunityId" resultType="long">
     select count(1) from community_post where community = #{communityId}
   </select>
+
+  <update id="updateState">
+    update community_post set state = #{state} where id = #{id}
+  </update>
 </mapper>

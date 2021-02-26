@@ -87,4 +87,18 @@
             COMMENT ON COLUMN community_post.collect_count IS '收藏数量';
         </sql>
     </changeSet>
+    <changeSet id="addColumnState4Post" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post" columnName="state"/>
+            </not>
+        </preConditions>
+        <comment>增加状态字段</comment>
+        <sql>
+            alter table community_post add column state int;
+            COMMENT ON COLUMN community_post.state IS '状态0草稿1发布2删除';
+
+            alter table community_post alter column title type varchar(40);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
