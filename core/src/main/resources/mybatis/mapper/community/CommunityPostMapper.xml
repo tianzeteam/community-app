@@ -430,4 +430,8 @@
   <update id="decreaseCollectCount">
     update community_post set collect_count = collect_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="countByCommunityId" resultType="long">
+    select count(1) from community_post where community = #{communityId}
+  </select>
 </mapper>

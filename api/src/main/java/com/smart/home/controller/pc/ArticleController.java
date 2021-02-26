@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * @author jason
  **/
-@Api(tags = "文章接口")
+@Api(tags = "投稿")
 @RestController
 @RequestMapping("/api/pc/article")
 public class ArticleController {

@@ -42,4 +42,5 @@ public interface CommunityPostMapper {
 
     int decreaseCollectCount(@Param("id") Long id);
 
+    long countByCommunityId(@Param("communityId") int communityId);
 }

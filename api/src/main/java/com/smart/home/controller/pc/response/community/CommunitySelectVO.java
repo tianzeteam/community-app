@@ -10,10 +10,10 @@ import lombok.ToString;
  **/
 @Data
 @ToString
-public class CommunityCategorySelectVO {
+public class CommunitySelectVO {
 
-    @ApiModelProperty("社区类目主键id")
-    private Long id;
+    @ApiModelProperty("社区主键id")
+    private Integer id;
     @ApiModelProperty("名称")
     private String title;
 
