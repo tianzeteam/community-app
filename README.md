@@ -46,3 +46,7 @@ com.smart.home.service.FunService
 ```
 com.smart.home.service.CollectService
 ```
+- 新增一条举报记录
+```
+com.smart.home.modules.other.service.ReportHistoryService.create
+```

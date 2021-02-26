@@ -24,13 +24,6 @@ public class ReportHistoryController {
     @Autowired
     private ReportHistoryService reportHistoryService;
 
-    @ApiOperation("创建举报历史")
-    @PostMapping("/create")
-    public APIResponse create(ReportHistory reportHistory) {
-        reportHistory.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(reportHistoryService.create(reportHistory));
-    }
-
     @ApiOperation("更新举报历史")
     @PostMapping("/update")
     public APIResponse update(ReportHistory reportHistory) {

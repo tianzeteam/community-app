@@ -50,4 +50,15 @@
             alter table "report_history" alter column ID set default nextval('report_history_id_seq');
         </sql>
     </changeSet>
+    <changeSet id="addIndex4ReportHistory1" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="report_history" indexName="idx_rh_user_id"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_rh_user_id on report_history using btree (UPDATED_BY, SOURCE_ID);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
