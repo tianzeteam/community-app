@@ -92,4 +92,17 @@ public class ArticleService {
         PageHelper.startPage(pageNum, pageSize);
         return articleMapper.queryTestForProductByPage(productId);
     }
+
+    public Long countByUserIdAndState(Long userId, int state) {
+        ArticleExample example = new ArticleExample();
+        example.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andStateEqualTo(state);
+        return articleMapper.countByExample(example);
+    }
+
+    public List<Article> selectTitleImageCreateIimeByPage(Long userId, Integer state, Integer auditState, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleMapper.selectTitleImageCreateIimeByPage(userId, state, auditState);
+    }
 }

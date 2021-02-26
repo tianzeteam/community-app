@@ -42,4 +42,6 @@ public interface ArticleMapper {
     long countArticleByChannelId(@Param("channelId") Long channelId);
 
     int updateState(@Param("id") Long id,@Param("state") Integer state);
+
+    List<Article> selectTitleImageCreateIimeByPage(@Param("userId") Long userId,@Param("state") Integer state,@Param("auditState") Integer auditState);
 }
