@@ -79,6 +79,10 @@ public class Article implements Serializable {
      * 转载来源
      */
     private String originalUrl;
+    /**
+     * 取消撤稿/撤稿 0/1
+     */
+    private Integer onlineStatus;
 
     private static final long serialVersionUID = 1L;
 
@@ -599,6 +603,14 @@ public class Article implements Serializable {
 
     public void setOriginalUrl(String originalUrl) {
         this.originalUrl = originalUrl;
+    }
+
+    public Integer getOnlineStatus() {
+        return onlineStatus;
+    }
+
+    public void setOnlineStatus(Integer onlineStatus) {
+        this.onlineStatus = onlineStatus;
     }
 
     /**

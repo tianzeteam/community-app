@@ -120,4 +120,16 @@
             alter table article alter column title type varchar(40);
         </sql>
     </changeSet>
+    <changeSet id="addColumnOnlineStatus4Article" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article" columnName="online_status"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article add column online_status int default 0;
+            COMMENT ON COLUMN article.online_status IS '稿子状态:0正常1撤稿';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

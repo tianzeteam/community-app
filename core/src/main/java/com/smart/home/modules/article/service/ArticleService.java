@@ -4,10 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
-import com.smart.home.enums.ArticleCategoryEnum;
+import com.smart.home.enums.ArticleStateEnum;
+import com.smart.home.enums.AuditCategoryEnum;
 import com.smart.home.modules.article.dao.ArticleMapper;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleExample;
+import com.smart.home.modules.other.service.AuditHistoryService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +27,8 @@ public class ArticleService {
 
     @Resource
     ArticleMapper articleMapper;
+    @Autowired
+    private AuditHistoryService auditHistoryService;
 
     public int create(Article article) {
         article.setCreatedTime(new Date());
@@ -37,6 +43,7 @@ public class ArticleService {
         article.setReportCount(0);
         article.setRevision(0);
         article.setCollectCount(0);
+        article.setOnlineStatus(RecordStatusEnum.NORMAL.getStatus());
         return articleMapper.insertSelective(article);
     }
 
@@ -57,11 +64,26 @@ public class ArticleService {
         }
     }
 
-    public List<Article> selectByPage(Article article, int pageNum, int pageSize) {
+    public List<Article> selectByPage(Article article, int pageNum, int pageSize, String sortType, String sortField) {
         PageHelper.startPage(pageNum, pageSize);
         ArticleExample example = new ArticleExample();
         ArticleExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
+        if (article.getState() != null) {
+            criteria.andStateEqualTo(article.getState());
+        }
+        if (article.getAuditState() != null) {
+            criteria.andAuditStateEqualTo(article.getAuditState());
+        }
+        if (article.getRecommendFlag() != null) {
+            criteria.andRecommendFlagEqualTo(article.getRecommendFlag());
+        }
+        if (StringUtils.isBlank(sortField)) {
+            sortField = "created_time";
+        }
+        if (StringUtils.isBlank(sortType)) {
+            sortType = "desc";
+        }
+        example.setOrderByClause(sortField + " " + sortType);
         return articleMapper.selectByExample(example);
     }
 
@@ -104,5 +126,71 @@ public class ArticleService {
     public List<Article> selectTitleImageCreateIimeByPage(Long userId, Integer state, Integer auditState, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         return articleMapper.selectTitleImageCreateIimeByPage(userId, state, auditState);
+    }
+
+    /**
+     * 人工审核通过
+     * @param idList
+     * @param userId
+     */
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void approveArticleManually(List<Long> idList, Long userId) {
+        for (Long id : idList) {
+            Article article = findById(id);
+            // 草稿状态不做处理
+            if (ArticleStateEnum.DRAFT.getState() == article.getState().intValue()) {
+                continue;
+            }
+            // 已经审核通过的不做处理
+            if (AuditStatusEnum.APPROVED.getCode() == article.getAuditState().intValue()) {
+                continue;
+            }
+            // 已经拒绝的不做处理
+            if (AuditStatusEnum.REJECT.getCode() == article.getAuditState().intValue()) {
+                continue;
+            }
+            article.setAuditState(AuditStatusEnum.APPROVED.getCode());
+            article.setUpdatedBy(userId);
+            article.setUpdatedTime(new Date());
+            int affectRow = update(article);
+            if (affectRow > 0) {
+                // 增加一条审核记录
+                auditHistoryService.create(AuditCategoryEnum.ARTICLE_AUDIT, id, "文章审核通过", YesNoEnum.YES, userId);
+            }
+        }
+    }
+
+    /**
+     * 人工拒绝通过
+     * @param idList
+     * @param rejectReason
+     * @param userId
+     */
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void rejectArticleManually(List<Long> idList, String rejectReason, Long userId) {
+        for (Long id : idList) {
+            Article article = findById(id);
+            // 草稿状态不做处理
+            if (ArticleStateEnum.DRAFT.getState() == article.getState().intValue()) {
+                continue;
+            }
+            // 已经审核通过的不做处理
+            if (AuditStatusEnum.APPROVED.getCode() == article.getAuditState().intValue()) {
+                continue;
+            }
+            // 已经拒绝的不做处理
+            if (AuditStatusEnum.REJECT.getCode() == article.getAuditState().intValue()) {
+                continue;
+            }
+            article.setAuditState(AuditStatusEnum.REJECT.getCode());
+            article.setUpdatedBy(userId);
+            article.setUpdatedTime(new Date());
+            article.setRejectReason(rejectReason);
+            int affectRow = update(article);
+            if (affectRow > 0) {
+                // 增加一条审核记录
+                auditHistoryService.create(AuditCategoryEnum.ARTICLE_AUDIT, id, "文章审核未通过", YesNoEnum.NO, userId);
+            }
+        }
     }
 }

@@ -7,7 +7,6 @@ import com.smart.home.controller.pc.response.article.ArticleEditVO;
 import com.smart.home.controller.pc.response.article.ArticleEditVideoVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
-import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.enums.AgreementTypeEnum;
@@ -22,10 +21,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author jason
@@ -123,14 +120,6 @@ public class ArticleController {
     public APIResponse delete(@RequestBody IdListBean idListBean) {
         articleService.delete(idListBean.getIdList());
         return APIResponse.OK();
-    }
-
-    @ApiIgnore
-    @ApiOperation("分页查询文章")
-    @PostMapping("/selectByPage")
-    public APIResponse<ResponsePageBean<Article>> selectByPage(Article article, int pageNum, int pageSize) {
-        List<Article> list = articleService.selectByPage(article, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
     }
 
 }
