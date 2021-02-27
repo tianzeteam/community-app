@@ -243,4 +243,12 @@ public class ArticleService {
             articleMapper.updateByPrimaryKeySelective(article);
         }
     }
+
+    public Article queryDetailByIdNoLogin(Long articleId) {
+        return articleMapper.queryDetailByIdNoLogin(articleId);
+    }
+
+    public Article queryDetailByIdWhenLogin(Long articleId, Long userId) {
+        return articleMapper.queryDetailByIdWhenLogin(articleId, userId);
+    }
 }

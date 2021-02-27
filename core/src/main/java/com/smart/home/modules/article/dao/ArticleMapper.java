@@ -44,4 +44,8 @@ public interface ArticleMapper {
     int updateState(@Param("id") Long id,@Param("state") Integer state);
 
     List<Article> selectTitleImageCreateIimeByPage(@Param("userId") Long userId,@Param("state") Integer state,@Param("auditState") Integer auditState);
+
+    Article queryDetailByIdNoLogin(@Param("articleId") Long articleId);
+
+    Article queryDetailByIdWhenLogin(@Param("articleId") Long articleId,@Param("userId") Long userId);
 }

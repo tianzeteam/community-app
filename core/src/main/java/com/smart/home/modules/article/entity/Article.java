@@ -10,6 +10,12 @@ public class Article implements Serializable {
     private String headUrl;
     private String nickName;
     private Integer userLevel;
+    private String sign;
+    private String channelName;
+    private Integer collectFlag;
+    private Integer likeFlag;
+    private Integer stampFlag;
+    private Integer focusFlag;
 ////////////////////////////////
     private Long id;
 
@@ -659,6 +665,54 @@ public class Article implements Serializable {
 
     public void setRecommendTime(Date recommendTime) {
         this.recommendTime = recommendTime;
+    }
+
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    public Integer getCollectFlag() {
+        return collectFlag;
+    }
+
+    public void setCollectFlag(Integer collectFlag) {
+        this.collectFlag = collectFlag;
+    }
+
+    public Integer getLikeFlag() {
+        return likeFlag;
+    }
+
+    public void setLikeFlag(Integer likeFlag) {
+        this.likeFlag = likeFlag;
+    }
+
+    public Integer getStampFlag() {
+        return stampFlag;
+    }
+
+    public void setStampFlag(Integer stampFlag) {
+        this.stampFlag = stampFlag;
+    }
+
+    public Integer getFocusFlag() {
+        return focusFlag;
+    }
+
+    public void setFocusFlag(Integer focusFlag) {
+        this.focusFlag = focusFlag;
     }
 
     /**

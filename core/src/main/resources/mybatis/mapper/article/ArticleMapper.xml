@@ -663,4 +663,50 @@
     from article where user_id = #{userId}
                    and state = #{state} and audit_state = #{auditState}
   </select>
+
+  <select id="queryDetailByIdNoLogin" resultType="com.smart.home.modules.article.entity.Article">
+    select a.id,
+           a.cover_image as coverImage ,
+           a.title,
+           a.details,
+           a.like_count as likeCount,
+           a.visit_count as visitCount,
+           a.created_time as createdTime,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.sign,
+           ac.title as channelName
+    from article a
+                 left join user_account ua on a.user_id = ua.id
+                 left join user_data ud on ua.id = ud.user_id
+                 left join article_channel ac on a.channel_id = ac.id
+    where a.id = #{articleId,jdbcType=BIGINT}
+  </select>
+
+  <select id="queryDetailByIdWhenLogin" resultType="com.smart.home.modules.article.entity.Article">
+    select a.id,
+           a.cover_image as coverImage ,
+           a.title,
+           a.details,
+           a.like_count as likeCount,
+           a.visit_count as visitCount,
+           a.created_time as createdTime,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.sign,
+           ac.title as channelName,
+           case when uc.id is null then 0 else 1 end as collectFlag,
+           case when alh.id is null then 0 else 1 end as likeFlag,
+           case when ash.id is null then 0 else 1 end as stampFlag,
+           case when uf.id is null then 0 else 1 end as focusFlag
+    from article a
+                 left join user_account ua on a.user_id = ua.id
+                 left join user_data ud on ua.id = ud.user_id
+                 left join article_channel ac on a.channel_id = ac.id
+                 left join user_collect uc on uc.primary_key = a.id and uc.user_id = #{userId,jdbcType=BIGINT}
+                 left join article_like_history alh on alh.source_id = a.id and alh.category = 0 and alh.user_id = #{userId,jdbcType=BIGINT}
+                 left join article_stamp_history ash on ash.source_id = a.id and ash.type = 0 and ash.user_id = #{userId,jdbcType=BIGINT}
+                 left join user_follower uf on ua.id = uf.user_id and uf.follower_user_id = #{userId,jdbcType=BIGINT}
+    where a.id = #{articleId,jdbcType=BIGINT}
+  </select>
 </mapper>
