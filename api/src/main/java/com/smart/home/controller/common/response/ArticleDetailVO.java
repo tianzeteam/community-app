@@ -24,6 +24,8 @@ public class ArticleDetailVO {
     private String headUrl;
     @ApiModelProperty("用户昵称")
     private String nickName;
+    @ApiModelProperty("用户等级")
+    private Integer userLevel;
     @ApiModelProperty("用户签名")
     private String sign;
     @ApiModelProperty("浏览量")
