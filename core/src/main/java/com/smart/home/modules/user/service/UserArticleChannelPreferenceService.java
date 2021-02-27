@@ -1,6 +1,8 @@
 package com.smart.home.modules.user.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.exception.DuplicateDataException;
+import com.smart.home.modules.article.entity.ArticleChannel;
 import com.smart.home.modules.user.dao.UserArticleChannelPreferenceMapper;
 import com.smart.home.modules.user.entity.UserArticleChannelPreference;
 import com.smart.home.modules.user.entity.UserArticleChannelPreferenceExample;
@@ -20,36 +22,27 @@ public class UserArticleChannelPreferenceService {
     @Resource
     UserArticleChannelPreferenceMapper userArticleChannelPreferenceMapper;
 
-    public int create(UserArticleChannelPreference userArticleChannelPreference) {
-        return userArticleChannelPreferenceMapper.insertSelective(userArticleChannelPreference);
-    }
-
-    public int update(UserArticleChannelPreference userArticleChannelPreference) {
-        return userArticleChannelPreferenceMapper.updateByPrimaryKeySelective(userArticleChannelPreference);
-    }
-
-    public int deleteById(Long id) {
-        return userArticleChannelPreferenceMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            userArticleChannelPreferenceMapper.deleteByPrimaryKey(id);
-        }
-    }
-
-    public List<UserArticleChannelPreference> selectByPage(UserArticleChannelPreference userArticleChannelPreference, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
+    public void create(Long userId, Long channelId, Integer sort) {
+        // 检查重复记录
         UserArticleChannelPreferenceExample example = new UserArticleChannelPreferenceExample();
-        UserArticleChannelPreferenceExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
-        return userArticleChannelPreferenceMapper.selectByExample(example);
+        example.createCriteria().andUserIdEqualTo(userId).andChannelIdEqualTo(channelId);
+        if (userArticleChannelPreferenceMapper.countByExample(example) > 0) {
+            throw new DuplicateDataException("已经添加过该频道了");
+        }
+        UserArticleChannelPreference userArticleChannelPreference = new UserArticleChannelPreference();
+        userArticleChannelPreference.withChannelId(channelId)
+                .withSort(sort)
+                .withUserId(userId);
+        userArticleChannelPreferenceMapper.insertSelective(userArticleChannelPreference);
     }
 
-    public UserArticleChannelPreference findById(Long id) {
-        UserArticleChannelPreference userArticleChannelPreference = userArticleChannelPreferenceMapper.selectByPrimaryKey(id);
-        return userArticleChannelPreference;
+    public void delete(Long userId, Long channelId) {
+        UserArticleChannelPreferenceExample example = new UserArticleChannelPreferenceExample();
+        example.createCriteria().andUserIdEqualTo(userId).andChannelIdEqualTo(channelId);
+        userArticleChannelPreferenceMapper.deleteByExample(example);
     }
 
+    public List<ArticleChannel> queryMyChannel(Long loginUserId) {
+        return userArticleChannelPreferenceMapper.queryMyChannel(loginUserId);
+    }
 }

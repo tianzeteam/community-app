@@ -1,5 +1,6 @@
 package com.smart.home.modules.user.dao;
 
+import com.smart.home.modules.article.entity.ArticleChannel;
 import com.smart.home.modules.user.entity.UserArticleChannelPreference;
 import com.smart.home.modules.user.entity.UserArticleChannelPreferenceExample;
 import java.util.List;
@@ -29,4 +30,6 @@ public interface UserArticleChannelPreferenceMapper {
     int updateByPrimaryKeySelective(UserArticleChannelPreference record);
 
     int updateByPrimaryKey(UserArticleChannelPreference record);
+
+    List<ArticleChannel> queryMyChannel(@Param("loginUserId") Long loginUserId);
 }
