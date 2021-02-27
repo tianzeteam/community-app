@@ -17,6 +17,7 @@
     <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
     <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="permits" jdbcType="VARCHAR" property="permits" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -78,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, head_url, username, mobile, name, nick_name, password, salt, access_token, revision, 
-    created_by, created_time, updated_by, updated_time, state
+    created_by, created_time, updated_by, updated_time, state,permits
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.user.entity.UserAccountExample" resultMap="BaseResultMap">
     select
@@ -374,4 +375,31 @@
   <update id="updateHeadUrl">
     update user_account set head_url = #{headUrl} where id = #{userId,jdbcType=BIGINT}
     </update>
+
+  <select id="findPermitsById" resultType="java.lang.String">
+    select permits from user_account where id = #{id,jdbcType=BIGINT}
+    </select>
+
+  <update id="savePermits">
+    update user_account set permits = '${permitJson}' where id = #{id}
+  </update>
+
+  <select id="selectByIdAndNicknameAndPermit" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_account
+    where 1=1
+    <if test="idList != null">
+      and id in
+      <foreach collection="idList" item="id" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </if>
+    <if test="nickName != null and nickName != ''">
+      and nick_name like CONCAT('%',#{nickName},'%')
+    </if>
+    <if test="permitCode != null and permitCode != ''">
+      and (permits::json -> 'permits' ->> '${permitCode}')::int = 1
+    </if>
+  </select>
 </mapper>

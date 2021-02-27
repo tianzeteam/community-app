@@ -7,9 +7,9 @@ import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.UserRole;
 import com.smart.home.util.UserUtils;
-import com.smart.home.controller.pc.request.UserAccountCreateDTO;
-import com.smart.home.controller.pc.request.UserAccountSearchDTO;
-import com.smart.home.controller.pc.request.UserRoleAssignDTO;
+import com.smart.home.controller.pc.request.user.UserAccountCreateDTO;
+import com.smart.home.controller.pc.request.user.UserAccountSearchDTO;
+import com.smart.home.controller.pc.request.user.UserRoleAssignDTO;
 import com.smart.home.modules.user.entity.UserAccount;
 import com.smart.home.modules.user.entity.UserRoleMapping;
 import com.smart.home.modules.user.service.UserAccountService;
@@ -22,7 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -87,4 +87,10 @@ public class SysMenuService {
         example.createCriteria().andIdIn(menuIdList);
         return mapper.selectByExample(example);
     }
+
+    public List<SysMenu> selectAllValidByPid(int pid) {
+        SysMenuExample example = new SysMenuExample();
+        example.createCriteria().andPidEqualTo(pid).andStateEqualTo(RecordStatusEnum.NORMAL.getStatus());
+        return mapper.selectByExample(example);
+    }
 }

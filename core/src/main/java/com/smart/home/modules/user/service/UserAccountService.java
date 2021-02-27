@@ -1,5 +1,8 @@
 package com.smart.home.modules.user.service;
 
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.cache.UserTokenCache;
 import com.smart.home.common.contants.RoleConsts;
@@ -10,10 +13,13 @@ import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.JwtUtil;
 import com.smart.home.common.util.SummaryUtils;
 import com.smart.home.common.util.UUIDUtil;
+import com.smart.home.modules.system.entity.SysMenu;
+import com.smart.home.modules.system.service.SysMenuService;
 import com.smart.home.modules.system.service.SysRoleService;
 import com.smart.home.modules.user.dao.UserAccountMapper;
 import com.smart.home.modules.user.dao.UserRoleMappingMapper;
 import com.smart.home.modules.user.entity.*;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author jason
  * @date 2021/2/20
  **/
+@Log4j2
 @Service
 public class UserAccountService {
 
@@ -42,6 +46,8 @@ public class UserAccountService {
     private SysRoleService sysRoleService;
     @Autowired
     private UserDataService userDataService;
+    @Autowired
+    private SysMenuService sysMenuService;
 
     @Transactional(rollbackFor = Exception.class)
     public int insert(UserAccount entity, List<Integer> roleIdList) {
@@ -331,4 +337,49 @@ public class UserAccountService {
         mapper.updateByPrimaryKeySelective(userAccount);
     }
 
+    public Map<String, Map<String, Integer>> selectMyAdminPermit(Long loginUserId) {
+        String permitJson = mapper.findPermitsById(loginUserId);
+        Map<String, Map<String, Integer>> rootMap = new HashMap<>();
+        if (StringUtils.isBlank(permitJson)) {
+            List<SysMenu> list = sysMenuService.selectAllValidByPid(0);
+            Map<String, Integer> map = new HashMap<>();
+            for (SysMenu sysMenu : list) {
+                map.put(sysMenu.getPermit(), 0);
+            }
+            rootMap.put("permits", map);
+            permitJson = JSON.toJSONString(rootMap);
+            mapper.savePermits(loginUserId, permitJson);
+        } else {
+            rootMap = JSON.parseObject(permitJson, Map.class);
+        }
+        return rootMap;
+    }
+
+    public List<UserAccount> selectByIdAndNicknameAndPermit(List<Long> idList, String nickName, String permitCode, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<UserAccount> resultList = mapper.selectByIdAndNicknameAndPermit(idList, nickName, permitCode);
+        for (UserAccount userAccount : resultList) {
+            String permitJson = userAccount.getPermits();
+            Map<String, Map<String, Integer>> rootMap = new HashMap<>();
+            if (StringUtils.isBlank(permitJson)) {
+                List<SysMenu> list = sysMenuService.selectAllValidByPid(0);
+                Map<String, Integer> map = new HashMap<>();
+                for (SysMenu sysMenu : list) {
+                    map.put(sysMenu.getPermit(), 0);
+                }
+                rootMap.put("permits", map);
+                permitJson = JSON.toJSONString(rootMap);
+                mapper.savePermits(userAccount.getId(), permitJson);
+                userAccount.setPermits(permitJson);
+            }
+        }
+        return resultList;
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void updateUserAdminPermit(Map<Long, String> userPermitMap) {
+        userPermitMap.forEach((userId, permits)->{
+            mapper.savePermits(userId, permits);
+        });
+    }
 }

@@ -80,4 +80,16 @@
             create index idx_mobile on user_account using btree (mobile);
         </sql>
     </changeSet>
+    <changeSet id="addColumnPermits4UserAccount" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user_account" columnName="permits"/>
+            </not>
+        </preConditions>
+        <comment>添加状态字段</comment>
+        <sql>
+            alter table user_account add column permits JSONB;
+            comment on column user_account.permits is '用户后台权限json数据';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

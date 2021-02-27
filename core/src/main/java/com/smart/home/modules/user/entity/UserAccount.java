@@ -38,6 +38,8 @@ public class UserAccount implements Serializable {
 
     private UserData userData;
 
+    private String permits;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -320,6 +322,14 @@ public class UserAccount implements Serializable {
 
     public void setUserData(UserData userData) {
         this.userData = userData;
+    }
+
+    public String getPermits() {
+        return permits;
+    }
+
+    public void setPermits(String permits) {
+        this.permits = permits;
     }
 
     /**

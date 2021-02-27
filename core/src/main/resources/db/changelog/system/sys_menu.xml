@@ -49,4 +49,32 @@
             COMMENT ON COLUMN sys_menu.UPDATED_TIME IS '更新时间';
         </sql>
     </changeSet>
+    <changeSet id="initData4SysMenu" author="jason">
+        <comment>初始化数据</comment>
+        <sql>
+            insert into sys_menu(pid,name,permit,type,state,sort,revision)
+            values (0,'配置中心','configCenter',0,0,0,0);
+            insert into sys_menu(pid,name,permit,type,state,sort,revision)
+            values (0,'数据看板','dashboard',0,0,0,0);
+            insert into sys_menu(pid,name,permit,type,state,sort,revision)
+            values (0,'用户管理','userManage',0,0,0,0);
+            insert into sys_menu(pid,name,permit,type,state,sort,revision)
+            values (0,'投稿管理','articleManage',0,0,0,0);
+            insert into sys_menu(pid,name,permit,type,state,sort,revision)
+            values (0,'审核管理','auditManage',0,0,0,0);
+            insert into sys_menu(pid,name,permit,type,state,sort,revision)
+            values (0,'固定页管理','staticManage',0,0,0,0);
+            insert into sys_menu(pid,name,permit,type,state,sort,revision)
+            values (0,'社区管理','communityManage',0,0,0,0);
+            insert into sys_menu(pid,name,permit,type,state,sort,revision)
+            values (0,'产品库运营','productMaintain',0,0,0,0);
+        </sql>
+    </changeSet>
+    <changeSet id="initData4SysMenu2" author="jason">
+        <comment>初始化数据2</comment>
+        <sql>
+            insert into sys_menu(pid,name,permit,type,state,sort,revision)
+            values (0,'权限管理','permissionManage',0,0,0,0);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
