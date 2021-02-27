@@ -50,3 +50,35 @@ com.smart.home.service.CollectService
 ```
 com.smart.home.modules.other.service.ReportHistoryService.create
 ```
+# postgresql数据库安装(centos7)
+```
+# Install the repository RPM:
+sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+# Install PostgreSQL:
+sudo yum install -y postgresql13-server
+
+# Optionally initialize the database and enable automatic start:
+sudo /usr/pgsql-13/bin/postgresql-13-setup initdb
+sudo systemctl enable postgresql-13
+sudo systemctl start postgresql-13
+
+su - postgres
+create user test_user with password 'abc123';            // 创建用户
+create database test_db owner test_user;                 // 创建数据库
+grant all privileges on database test_db to test_user;   // 授权
+\q
+/var/lib/pgsql/13/data/postgresql.conf // listen_address = '*'
+/var/lib/pgsql/13/data/pg_hba.conf
+systemctl restart postgresql-13.service
+systemctl start postgresql-10.service     // 启动服务
+systemctl stop postgresql-10.service      // 关闭服务
+systemctl restart postgresql-10.service   // 重启服务
+systemctl status postgresql-10.service    // 查看状态
+```
+# jdk8安装(centos7)
+```
+yum search java|grep jdk
+yum install java-1.8.0-openjdk.x86_64
+java -version
+```
