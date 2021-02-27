@@ -1,6 +1,7 @@
 package com.smart.home.modules.product.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.modules.product.dao.ProductCategoryParamMapper;
 import com.smart.home.modules.product.entity.ProductCategoryParam;
 import com.smart.home.modules.product.entity.ProductCategoryParamExample;
@@ -52,4 +53,18 @@ public class ProductCategoryParamService {
         return productCategoryParam;
     }
 
+    public void create(int productCategoryId, Integer productParamId, Integer sort) {
+        ProductCategoryParam productCategoryParam = new ProductCategoryParam();
+        productCategoryParam.withMandatoryFlag(YesNoEnum.NO.getCode())
+                .withProductCategoryId(productCategoryId)
+                .withProductParamId(productParamId)
+                .withSort(sort);
+        create(productCategoryParam);
+    }
+
+    public void deleteByProductCategoryId(Integer productCategoryId) {
+        ProductCategoryParamExample example = new ProductCategoryParamExample();
+        example.createCriteria().andProductCategoryIdEqualTo(productCategoryId);
+        this.productCategoryParamMapper.deleteByExample(example);
+    }
 }

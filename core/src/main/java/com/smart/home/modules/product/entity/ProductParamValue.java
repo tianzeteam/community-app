@@ -15,6 +15,8 @@ public class ProductParamValue implements Serializable {
 
     private Integer sort;
 
+    private String paramName;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -126,6 +128,14 @@ public class ProductParamValue implements Serializable {
         result = prime * result + ((getParamValue() == null) ? 0 : getParamValue().hashCode());
         result = prime * result + ((getSort() == null) ? 0 : getSort().hashCode());
         return result;
+    }
+
+    public String getParamName() {
+        return paramName;
+    }
+
+    public void setParamName(String paramName) {
+        this.paramName = paramName;
     }
 
     /**

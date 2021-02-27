@@ -29,4 +29,6 @@ public interface ProductParamValueMapper {
     int updateByPrimaryKeySelective(ProductParamValue record);
 
     int updateByPrimaryKey(ProductParamValue record);
+
+    long countByParamId(@Param("paramId") int paramId);
 }

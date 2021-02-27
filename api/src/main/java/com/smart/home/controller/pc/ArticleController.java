@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import com.google.common.collect.Maps;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.controller.pc.request.article.ArticleCreateDTO;
 import com.smart.home.controller.pc.request.article.ArticleUpdateDTO;
@@ -23,6 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @author jason
@@ -49,6 +51,16 @@ public class ArticleController {
     @GetMapping("/selectArticleCreateAgreement")
     public APIResponse selectArticleCreateAgreement() {
         return APIResponse.OK(sysAgreementService.selectByType(AgreementTypeEnum.ARTICLE_CREATE_AGREEMENT));
+    }
+
+    @ApiOperation("获取版权申明列表")
+    @AnonAccess
+    @GetMapping("/selectCopyrightNoticItems")
+    public APIResponse selectCopyrightNoticItems() {
+        Map<String, String> map = Maps.newHashMap();
+        map.put("许署名转载", "许署名转载");
+        map.put("未经授权禁止转载", "未经授权禁止转载");
+        return APIResponse.OK(map);
     }
 
     @ApiOperation("投稿/保存草稿文章")

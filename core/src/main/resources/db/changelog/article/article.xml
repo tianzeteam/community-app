@@ -132,4 +132,16 @@
             COMMENT ON COLUMN article.online_status IS '稿子状态:0正常1撤稿';
         </sql>
     </changeSet>
+    <changeSet id="addColumnCopyrightNotice4Article" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article" columnName="COPYRIGHT_NOTICE"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article add column COPYRIGHT_NOTICE varchar(32);
+            COMMENT ON COLUMN article.COPYRIGHT_NOTICE IS '版权申明：许署名转载，未经授权禁止转载';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

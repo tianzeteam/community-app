@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author jason
@@ -26,5 +27,9 @@ public class ProductCategoryCreateDTO {
     @ApiModelProperty("排序，越大越靠前")
     @NotNull(message = "排序不能为空")
     private Integer sort;
+
+    @ApiModelProperty("关联参数库主键id数组")
+    private List<Integer> paramIdList;
+
 
 }

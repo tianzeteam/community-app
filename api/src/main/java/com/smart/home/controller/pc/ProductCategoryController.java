@@ -39,7 +39,8 @@ public class ProductCategoryController {
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(productCategoryCreateDTO, productCategory);
         productCategory.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(productCategoryService.create(productCategory));
+        int affectRow = productCategoryService.create(productCategory, productCategoryCreateDTO.getParamIdList());
+        return APIResponse.OK(affectRow);
     }
 
     @ApiOperation("更新产品类目")
@@ -48,7 +49,7 @@ public class ProductCategoryController {
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(productCategoryUpdateDTO, productCategory);
         productCategory.setUpdatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(productCategoryService.update(productCategory));
+        return APIResponse.OK(productCategoryService.update(productCategory, productCategoryUpdateDTO.getParamIdList()));
     }
 
     @ApiOperation("删除产品类目")

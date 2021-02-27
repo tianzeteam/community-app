@@ -39,6 +39,9 @@ public class ArticleCreateDTO {
     @ApiModelProperty("文章类型：0原创1转载")
     private Integer articleType;
 
+    @ApiModelProperty("原创版权申明")
+    private String copyrightNotice;
+
     @ApiModelProperty("转载来源")
     private String originalUrl;
 

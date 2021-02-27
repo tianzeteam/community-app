@@ -7,6 +7,7 @@
     <result column="param_id" jdbcType="INTEGER" property="paramId" />
     <result column="param_value" jdbcType="VARCHAR" property="paramValue" />
     <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="param_name" jdbcType="VARCHAR" property="paramName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, product_id, param_id, param_value, sort
+    id, product_id, param_id, param_value, sort,param_name
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.product.entity.ProductParamValueExample" resultMap="BaseResultMap">
     select
@@ -131,6 +132,9 @@
       <if test="sort != null">
         sort,
       </if>
+      <if test="paramName != null">
+        param_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -147,6 +151,9 @@
       </if>
       <if test="sort != null">
         #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="paramName != null">
+        #{paramName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -205,6 +212,9 @@
       <if test="sort != null">
         sort = #{sort,jdbcType=INTEGER},
       </if>
+      <if test="paramName != null">
+        param_name = #{paramName,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -216,4 +226,8 @@
       sort = #{sort,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="countByParamId" resultType="long">
+    select count(1) from product_param_value where param_id = #{paramId};
+    </select>
 </mapper>

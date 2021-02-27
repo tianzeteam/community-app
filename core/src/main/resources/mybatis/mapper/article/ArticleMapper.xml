@@ -34,6 +34,7 @@
     <result column="original_auth" jdbcType="INTEGER" property="originalAuth" />
     <result column="original_url" jdbcType="VARCHAR" property="originalUrl" />
     <result column="online_status" jdbcType="INTEGER" property="onlineStatus" />
+    <result column="copyright_notice" jdbcType="VARCHAR" property="copyrightNotice" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -97,7 +98,8 @@
     id, cover_image, banner_images, title, remark, tag, channel_id, details, user_id, 
     state, audit_state, reject_reason, recommend_flag, top_flag, test_flag, test_result, 
     like_count, stamp_count, category, comment_count, visit_count, report_count, revision, 
-    created_by, created_time, updated_by, updated_time,collect_count,article_type,original_auth,original_url,online_status
+    created_by, created_time, updated_by, updated_time,collect_count,article_type,original_auth,
+    original_url,online_status,copyright_notice
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.article.entity.ArticleExample" resultMap="BaseResultMap">
     select
@@ -258,6 +260,9 @@
       <if test="onlineStatus != null">
         online_status,
       </if>
+      <if test="copyrightNotice != null">
+        copyright_notice,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -355,6 +360,9 @@
       </if>
       <if test="onlineStatus != null">
         #{onlineStatus,jdbcType=INTEGER},
+      </if>
+      <if test="copyrightNotice != null">
+        #{copyrightNotice,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -563,6 +571,9 @@
       </if>
       <if test="onlineStatus != null">
         online_status = #{onlineStatus,jdbcType=INTEGER},
+      </if>
+      <if test="copyrightNotice != null">
+        copyright_notice = #{copyrightNotice,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

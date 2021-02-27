@@ -9,8 +9,10 @@ import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.entity.ProductCategory;
 import com.smart.home.modules.product.entity.ProductCategoryExample;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -27,8 +29,11 @@ public class ProductCategoryService {
     ProductCategoryMapper productCategoryMapper;
     @Resource
     ProductMapper productMapper;
+    @Autowired
+    private ProductCategoryParamService productCategoryParamService;
 
-    public int create(ProductCategory productCategory) {
+    @Transactional(rollbackFor = RuntimeException.class)
+    public int create(ProductCategory productCategory, List<Integer> paramIdList) {
         // 检查同级同名
         ProductCategoryExample example = new ProductCategoryExample();
         example.createCriteria().andPidEqualTo(productCategory.getPid())
@@ -50,10 +55,20 @@ public class ProductCategoryService {
             }
             productCategory.setLevel(level+1);
         }
-        return productCategoryMapper.insertSelective(productCategory);
+        int affectRow = productCategoryMapper.insertSelective(productCategory);
+        int productCategoryId = productCategory.getId();
+        if (!CollectionUtils.isEmpty(paramIdList)) {
+            int sort = 0;
+            for (Integer productParamId : paramIdList) {
+                productCategoryParamService.create(productCategoryId, productParamId, sort);
+                sort ++;
+            }
+        }
+        return affectRow;
     }
 
-    public int update(ProductCategory productCategory) {
+    @Transactional(rollbackFor = RuntimeException.class)
+    public int update(ProductCategory productCategory, List<Integer> paramIdList) {
         ProductCategoryExample example = new ProductCategoryExample();
         example.createCriteria().andPidEqualTo(productCategory.getPid())
                 .andTitleEqualTo(productCategory.getTitle()).andIdNotEqualTo(productCategory.getId());
@@ -71,6 +86,9 @@ public class ProductCategoryService {
                 throw new ServiceException("父级类目不存在");
             }
             productCategory.setLevel(level+1);
+        }
+        if (paramIdList != null && paramIdList.isEmpty()) {
+            productCategoryParamService.deleteByProductCategoryId(productCategory.getId());
         }
         return productCategoryMapper.updateByPrimaryKeySelective(productCategory);
     }

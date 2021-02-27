@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class ProductCategory implements Serializable {
+
     private Integer id;
 
     private Integer pid;

@@ -40,4 +40,17 @@
             create index idx_prdpv_product_id on product_param_value using btree (PRODUCT_ID);
         </sql>
     </changeSet>
+    <changeSet id="addColumnParamName4ProductParamValue" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_param_value" columnName="param_name"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_param_value add column param_name varchar(32);
+            COMMENT ON COLUMN product_param_value.param_name IS '参数名称:冗余字段';
+            create index idx_param_id on product_param_value using btree(PARAM_ID);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

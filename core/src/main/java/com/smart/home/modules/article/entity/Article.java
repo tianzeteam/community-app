@@ -83,6 +83,10 @@ public class Article implements Serializable {
      * 取消撤稿/撤稿 0/1
      */
     private Integer onlineStatus;
+    /**
+     * 版权申明：许署名转载，未经授权禁止转载
+     */
+    private String copyrightNotice;
 
     private static final long serialVersionUID = 1L;
 
@@ -611,6 +615,14 @@ public class Article implements Serializable {
 
     public void setOnlineStatus(Integer onlineStatus) {
         this.onlineStatus = onlineStatus;
+    }
+
+    public String getCopyrightNotice() {
+        return copyrightNotice;
+    }
+
+    public void setCopyrightNotice(String copyrightNotice) {
+        this.copyrightNotice = copyrightNotice;
     }
 
     /**

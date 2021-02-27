@@ -24,12 +24,6 @@ public class ProductCategoryParamController {
     @Autowired
     private ProductCategoryParamService productCategoryParamService;
 
-    @ApiOperation("创建产品类别参数")
-    @PostMapping("/create")
-    public APIResponse create(ProductCategoryParam productCategoryParam) {
-        return APIResponse.OK(productCategoryParamService.create(productCategoryParam));
-    }
-
     @ApiOperation("更新产品类别参数")
     @PostMapping("/update")
     public APIResponse update(ProductCategoryParam productCategoryParam) {
