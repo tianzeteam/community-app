@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.enums.ArticleRecommendTypeEnum;
 import com.smart.home.enums.ArticleStateEnum;
 import com.smart.home.enums.AuditCategoryEnum;
 import com.smart.home.modules.article.dao.ArticleMapper;
@@ -202,6 +203,10 @@ public class ArticleService {
             article.setRecommendFlag(YesNoEnum.YES.getCode());
             article.setRecommendType(recommendType);
             article.setUpdatedBy(userId);
+            if (ArticleRecommendTypeEnum.BIG_IMAGE_TOP.getCode() == recommendType.intValue()) {
+                // 设置为置顶
+                article.setTopFlag(YesNoEnum.YES.getCode());
+            }
             articleMapper.updateByPrimaryKeySelective(article);
         });
     }
@@ -211,6 +216,10 @@ public class ArticleService {
             Article article = findById(id);
             article.setRecommendFlag(YesNoEnum.NO.getCode());
             article.setUpdatedBy(userId);
+            if (ArticleRecommendTypeEnum.BIG_IMAGE_TOP.getCode() == article.getRecommendType().intValue()) {
+                // 取消设置为置顶
+                article.setTopFlag(YesNoEnum.NO.getCode());
+            }
             articleMapper.updateByPrimaryKeySelective(article);
         }
     }

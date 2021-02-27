@@ -18,4 +18,7 @@ public enum ArticleRecommendTypeEnum {
         this.desc = desc;
     }
 
+    public int getCode() {
+        return code;
+    }
 }
