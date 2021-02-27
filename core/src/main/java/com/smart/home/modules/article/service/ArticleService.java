@@ -154,6 +154,7 @@ public class ArticleService {
             article.setAuditState(AuditStatusEnum.APPROVED.getCode());
             article.setUpdatedBy(userId);
             article.setUpdatedTime(new Date());
+            article.setAuditTime(new Date());
             int affectRow = update(article);
             if (affectRow > 0) {
                 // 增加一条审核记录
@@ -203,6 +204,7 @@ public class ArticleService {
             article.setRecommendFlag(YesNoEnum.YES.getCode());
             article.setRecommendType(recommendType);
             article.setUpdatedBy(userId);
+            article.setRecommendTime(new Date());
             if (ArticleRecommendTypeEnum.BIG_IMAGE_TOP.getCode() == recommendType.intValue()) {
                 // 设置为置顶
                 article.setTopFlag(YesNoEnum.YES.getCode());

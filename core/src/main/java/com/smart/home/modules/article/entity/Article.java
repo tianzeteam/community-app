@@ -91,6 +91,14 @@ public class Article implements Serializable {
      * 推荐类型：0文章卡片1大图卡片2置顶大图
      */
     private Integer recommendType;
+    /**
+     * 过审时间
+     */
+    private Date auditTime;
+    /**
+     * 推荐时间
+     */
+    private Date recommendTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -635,6 +643,22 @@ public class Article implements Serializable {
 
     public void setRecommendType(Integer recommendType) {
         this.recommendType = recommendType;
+    }
+
+    public Date getAuditTime() {
+        return auditTime;
+    }
+
+    public void setAuditTime(Date auditTime) {
+        this.auditTime = auditTime;
+    }
+
+    public Date getRecommendTime() {
+        return recommendTime;
+    }
+
+    public void setRecommendTime(Date recommendTime) {
+        this.recommendTime = recommendTime;
     }
 
     /**

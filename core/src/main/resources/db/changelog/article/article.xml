@@ -156,5 +156,19 @@
             COMMENT ON COLUMN article.COPYRIGHT_NOTICE IS '推荐类型：0文章卡片1大图卡片2置顶大图';
         </sql>
     </changeSet>
+    <changeSet id="addColumnTime4Article" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article" columnName="recommend_time"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article add column recommend_time timestamp;
+            COMMENT ON COLUMN article.recommend_time IS '推荐时间';
 
+            alter table article add column audit_time timestamp;
+            COMMENT ON COLUMN article.audit_time IS '过审时间';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

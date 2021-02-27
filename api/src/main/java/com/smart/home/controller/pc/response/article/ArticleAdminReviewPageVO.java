@@ -19,6 +19,6 @@ public class ArticleAdminReviewPageVO extends ArticleAdminPageVO {
     @ApiModelProperty("上线状态:0正常1撤稿")
     private Integer onlineStatus;
     @ApiModelProperty("过审时间")
-    private Date updatedTime;
+    private Date auditTime;
 
 }
