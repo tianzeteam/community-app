@@ -87,6 +87,10 @@ public class Article implements Serializable {
      * 版权申明：许署名转载，未经授权禁止转载
      */
     private String copyrightNotice;
+    /**
+     * 推荐类型：0文章卡片1大图卡片2置顶大图
+     */
+    private Integer recommendType;
 
     private static final long serialVersionUID = 1L;
 
@@ -623,6 +627,14 @@ public class Article implements Serializable {
 
     public void setCopyrightNotice(String copyrightNotice) {
         this.copyrightNotice = copyrightNotice;
+    }
+
+    public Integer getRecommendType() {
+        return recommendType;
+    }
+
+    public void setRecommendType(Integer recommendType) {
+        this.recommendType = recommendType;
     }
 
     /**

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author jason
@@ -191,6 +192,44 @@ public class ArticleService {
                 // 增加一条审核记录
                 auditHistoryService.create(AuditCategoryEnum.ARTICLE_AUDIT, id, "文章审核未通过", YesNoEnum.NO, userId);
             }
+        }
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void recommend(Map<Long, Integer> map, Long userId) {
+        map.forEach((articleId, recommendType)->{
+            Article article = findById(articleId);
+            article.setRecommendFlag(YesNoEnum.YES.getCode());
+            article.setRecommendType(recommendType);
+            article.setUpdatedBy(userId);
+            articleMapper.updateByPrimaryKeySelective(article);
+        });
+    }
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void cancelRecommend(List<Long> idList, Long userId) {
+        for (Long id : idList) {
+            Article article = findById(id);
+            article.setRecommendFlag(YesNoEnum.NO.getCode());
+            article.setUpdatedBy(userId);
+            articleMapper.updateByPrimaryKeySelective(article);
+        }
+    }
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void offLine(List<Long> idList, Long userId) {
+        for (Long id : idList) {
+            Article article = findById(id);
+            article.setOnlineStatus(RecordStatusEnum.PAUSED.getStatus());
+            article.setUpdatedBy(userId);
+            articleMapper.updateByPrimaryKeySelective(article);
+        }
+    }
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void cancelOffLine(List<Long> idList, Long userId) {
+        for (Long id : idList) {
+            Article article = findById(id);
+            article.setOnlineStatus(RecordStatusEnum.NORMAL.getStatus());
+            article.setUpdatedBy(userId);
+            articleMapper.updateByPrimaryKeySelective(article);
         }
     }
 }

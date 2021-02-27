@@ -35,6 +35,8 @@
     <result column="original_url" jdbcType="VARCHAR" property="originalUrl" />
     <result column="online_status" jdbcType="INTEGER" property="onlineStatus" />
     <result column="copyright_notice" jdbcType="VARCHAR" property="copyrightNotice" />
+    <result column="recommend_type" jdbcType="INTEGER" property="recommendType" />
+
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -99,7 +101,7 @@
     state, audit_state, reject_reason, recommend_flag, top_flag, test_flag, test_result, 
     like_count, stamp_count, category, comment_count, visit_count, report_count, revision, 
     created_by, created_time, updated_by, updated_time,collect_count,article_type,original_auth,
-    original_url,online_status,copyright_notice
+    original_url,online_status,copyright_notice,recommend_type
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.article.entity.ArticleExample" resultMap="BaseResultMap">
     select
@@ -574,6 +576,9 @@
       </if>
       <if test="copyrightNotice != null">
         copyright_notice = #{copyrightNotice,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendType != null">
+        recommend_type = #{recommendType,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}

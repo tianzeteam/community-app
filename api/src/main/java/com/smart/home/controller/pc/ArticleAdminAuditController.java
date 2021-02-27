@@ -1,10 +1,11 @@
 package com.smart.home.controller.pc;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.util.BeanCopyUtils;
+import com.smart.home.controller.pc.response.article.ArticleAdminAuditSearchDTO;
 import com.smart.home.controller.pc.response.article.ArticleAdminPageVO;
 import com.smart.home.controller.pc.response.article.ArticleAdminRejectDTO;
-import com.smart.home.controller.pc.response.article.ArticleAdminSearchDTO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
@@ -27,10 +28,10 @@ import java.util.List;
  * @author jason
  * @date 2021/2/26
  **/
-@Api(tags = "投稿-管理")
+@Api(tags = "投稿管理-投稿审核")
 @RestController
-@RequestMapping("/api/pc/articleAdmin")
-public class ArticleAdminController {
+@RequestMapping("/api/pc/articleAdminAduit")
+public class ArticleAdminAuditController {
 
     @Autowired
     private ArticleService articleService;
@@ -38,7 +39,7 @@ public class ArticleAdminController {
     @ApiOperation("分页查询文章")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/selectByPage")
-    public APIResponse<ResponsePageBean<ArticleAdminPageVO>> selectByPage(@RequestBody ArticleAdminSearchDTO articleAdminSearchDTO) {
+    public APIResponse<ResponsePageBean<ArticleAdminPageVO>> selectByPage(@RequestBody ArticleAdminAuditSearchDTO articleAdminSearchDTO) {
         Article article = new Article();
         int pageNum = articleAdminSearchDTO.getPageNum();
         int pageSize = articleAdminSearchDTO.getPageSize();
@@ -47,6 +48,8 @@ public class ArticleAdminController {
         BeanUtils.copyProperties(articleAdminSearchDTO, article);
         // 只查发布的
         article.setState(ArticleStateEnum.PUBLISH.getState());
+        // 只查待审核的
+        article.setAuditState(AuditStatusEnum.WAIT_AUDIT.getCode());
         List<Article> list = articleService.selectByPage(article, pageNum, pageSize, sortType, sortField);
         List<ArticleAdminPageVO> resultList = BeanCopyUtils.convertListTo(list, ArticleAdminPageVO::new, (s, t) -> {
             t.setAuthorId(s.getUserId());
