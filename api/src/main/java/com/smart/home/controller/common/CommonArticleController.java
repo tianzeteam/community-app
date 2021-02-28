@@ -10,6 +10,7 @@ import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
+import com.smart.home.enums.CollectTypeEnum;
 import com.smart.home.enums.LikeCategoryEnum;
 import com.smart.home.enums.StampCategoryEnum;
 import com.smart.home.modules.article.entity.Article;
@@ -18,6 +19,7 @@ import com.smart.home.modules.article.entity.ArticleCommentReply;
 import com.smart.home.modules.article.service.ArticleCommentReplyService;
 import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.article.service.ArticleService;
+import com.smart.home.service.CollectService;
 import com.smart.home.service.LikeService;
 import com.smart.home.service.StampService;
 import com.smart.home.util.ResponsePageUtil;
@@ -52,6 +54,8 @@ public class CommonArticleController {
     private LikeService likeService;
     @Autowired
     private StampService stampService;
+    @Autowired
+    private CollectService collectService;
 
     @ApiOperation("根据文章主键id获取详情")
     @ApiImplicitParams({
@@ -114,6 +118,26 @@ public class CommonArticleController {
     @PostMapping("/cancelStampArticle")
     public APIResponse cancelStampArticle(Long articleId) {
         stampService.cancelStamp(StampCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+        return APIResponse.OK();
+    }
+    @ApiOperation("收藏文章")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/addCollect")
+    public APIResponse addCollect(Long articleId) {
+        collectService.addCollect(CollectTypeEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+        return APIResponse.OK();
+    }
+    @ApiOperation("取消收藏文章")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/cancelAdCollect")
+    public APIResponse cancelAdCollect(Long articleId) {
+        collectService.cancelCollect(CollectTypeEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
         return APIResponse.OK();
     }
 
