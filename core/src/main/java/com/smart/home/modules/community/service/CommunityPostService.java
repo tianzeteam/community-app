@@ -89,4 +89,12 @@ public class CommunityPostService {
     public void decreaseCollectCount(Long id) {
         communityPostMapper.decreaseCollectCount(id);
     }
+
+    public void updateBoutiqueFlag(Long postId, int flag) {
+        communityPostMapper.updateBoutiqueFlag(postId, flag);
+    }
+
+    public void updateTopFlag(Long postId, int flag) {
+        communityPostMapper.updateTopFlag(postId, flag);
+    }
 }

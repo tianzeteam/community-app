@@ -446,4 +446,12 @@
   <update id="increaseReportCount">
     update community_post set report_count = report_count + 1 where id = #{id,jdbcType=BIGINT}
     </update>
+
+  <update id="updateBoutiqueFlag">
+    update community_post set boutique_flag = #{flag} where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateTopFlag">
+    update community_post set top_flag = #{flag} where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

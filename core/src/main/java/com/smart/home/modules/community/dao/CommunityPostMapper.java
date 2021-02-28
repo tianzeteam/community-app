@@ -47,4 +47,8 @@ public interface CommunityPostMapper {
     int updateState(@Param("id") Long id, @Param("state") int state);
 
     int increaseReportCount(@Param("id") Long id);
+
+    int updateBoutiqueFlag(@Param("id") Long id,@Param("flag") int flag);
+
+    int updateTopFlag(@Param("id") Long id,@Param("flag") int flag);
 }
