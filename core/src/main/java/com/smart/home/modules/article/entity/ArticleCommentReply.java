@@ -6,6 +6,11 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class ArticleCommentReply implements Serializable {
+
+    private String headUrl;
+    private String nickName;
+    private Integer userLevel;
+////////////////////////////////////
     private Long id;
 
     private Long pid;
@@ -163,6 +168,30 @@ public class ArticleCommentReply implements Serializable {
         result = prime * result + ((getContents() == null) ? 0 : getContents().hashCode());
         result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
         return result;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public Integer getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(Integer userLevel) {
+        this.userLevel = userLevel;
     }
 
     /**

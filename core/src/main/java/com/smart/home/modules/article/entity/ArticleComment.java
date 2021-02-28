@@ -6,6 +6,13 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class ArticleComment implements Serializable {
+
+    private String headUrl;
+    private String nickName;
+    private Integer userLevel;
+    private Integer likeFlag;
+    private Integer stampFlag;
+////////////////////////////////////
     private Long id;
 
     private Long articleId;
@@ -181,6 +188,46 @@ public class ArticleComment implements Serializable {
         result = prime * result + ((getStampCount() == null) ? 0 : getStampCount().hashCode());
         result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
         return result;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public Integer getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(Integer userLevel) {
+        this.userLevel = userLevel;
+    }
+
+    public Integer getLikeFlag() {
+        return likeFlag;
+    }
+
+    public void setLikeFlag(Integer likeFlag) {
+        this.likeFlag = likeFlag;
+    }
+
+    public Integer getStampFlag() {
+        return stampFlag;
+    }
+
+    public void setStampFlag(Integer stampFlag) {
+        this.stampFlag = stampFlag;
     }
 
     /**

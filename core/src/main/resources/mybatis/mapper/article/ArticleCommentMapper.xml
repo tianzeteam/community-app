@@ -279,4 +279,44 @@
   <update id="decreaseStampCount">
     update article_comment set stamp_count = stamp_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryCommentByPageNoLogin" resultType="com.smart.home.modules.article.entity.ArticleComment">
+    select ac.id,
+           ac.article_id as articleId,
+           ac.contents,
+           ac.created_time as createdTime,
+           ac.like_count as likeCount,
+           ac.stamp_count as stampCount,
+           ac.author_flag as authorFlag,
+           0 as likeFlag,
+           0 as stampFlag,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel
+    from article_comment ac
+                 left join user_account ua on ua.id = ac.user_id
+                 left join user_data ud on ud.user_id = ua.id
+    where ac.article_id = #{articleId,jdbcType=BIGINT}
+    </select>
+
+  <select id="queryCommentByPageWhenLogin"  resultType="com.smart.home.modules.article.entity.ArticleComment">
+    select ac.id,
+           ac.article_id as articleId,
+           ac.contents,
+           ac.created_time as createdTime,
+           ac.like_count as likeCount,
+           ac.stamp_count as stampCount,
+           ac.author_flag as authorFlag,
+           case when alh.id is null then 0 else 1 end as likeFlag,
+           case when ash.id is null then 0 else 1 end as stampFlag,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel
+    from article_comment ac
+                 left join user_account ua on ua.id = ac.user_id
+                 left join user_data ud on ud.user_id = ua.id
+                 left join article_like_history alh on alh.source_id = ac.id and alh.category = 0 and alh.user_id = #{userId,jdbcType=BIGINT}
+                 left join article_stamp_history ash on ash.source_id = ash.id and ash.type = 0 and ash.user_id = #{userId,jdbcType=BIGINT}
+    where ac.article_id = #{articleId,jdbcType=BIGINT}
+  </select>
 </mapper>

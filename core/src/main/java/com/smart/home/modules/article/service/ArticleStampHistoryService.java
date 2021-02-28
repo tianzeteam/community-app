@@ -21,6 +21,8 @@ public class ArticleStampHistoryService {
     ArticleStampHistoryMapper articleStampHistoryMapper;
     @Autowired
     private ArticleCommentService articleCommentService;
+    @Autowired
+    private ArticleService articleService;
 
     public int create(ArticleStampHistory articleStampHistory) {
         articleStampHistory.setCreatedTime(new Date());
@@ -28,6 +30,9 @@ public class ArticleStampHistoryService {
         if (affectRow > 0) {
             // 增加点赞数量
             if (articleStampHistory.getType() == 0) {
+                articleService.increaseStampCount(articleStampHistory.getSourceId());
+            }
+            if (articleStampHistory.getType() == 1) {
                 articleCommentService.increaseStampCount(articleStampHistory.getSourceId());
             }
         }
@@ -37,6 +42,14 @@ public class ArticleStampHistoryService {
     public void unstampArticle(Long userId, Long id) {
         ArticleStampHistoryExample example = new ArticleStampHistoryExample();
         example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
+        if (articleStampHistoryMapper.deleteByExample(example) > 0) {
+            articleService.decreaseStampCount(id);
+        }
+    }
+
+    public void unstampArticleComment(Long userId, Long id) {
+        ArticleStampHistoryExample example = new ArticleStampHistoryExample();
+        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(1);
         if (articleStampHistoryMapper.deleteByExample(example) > 0) {
             articleCommentService.decreaseStampCount(id);
         }

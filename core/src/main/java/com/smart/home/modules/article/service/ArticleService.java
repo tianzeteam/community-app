@@ -245,10 +245,29 @@ public class ArticleService {
     }
 
     public Article queryDetailByIdNoLogin(Long articleId) {
+        // 增加一次浏览量
+        articleMapper.increaseVisitCount(articleId);
         return articleMapper.queryDetailByIdNoLogin(articleId);
     }
 
     public Article queryDetailByIdWhenLogin(Long articleId, Long userId) {
+        // 增加一次浏览量
+        articleMapper.increaseVisitCount(articleId);
         return articleMapper.queryDetailByIdWhenLogin(articleId, userId);
+    }
+
+    public void increaseLikeCount(Long id) {
+        articleMapper.increaseLikeCount(id);
+    }
+    public void decreaseLikeCount(Long id) {
+        articleMapper.decreaseLikeCount(id);
+    }
+
+    public void increaseStampCount(Long id) {
+        articleMapper.increaseStampCount(id);
+    }
+
+    public void decreaseStampCount(Long id) {
+        articleMapper.decreaseStampCount(id);
     }
 }

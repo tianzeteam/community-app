@@ -40,6 +40,8 @@ public class ArticleDetailVO {
     private String details;
     @ApiModelProperty("获赞数量")
     private Integer likeCount;
+    @ApiModelProperty("评论数量")
+    private Integer commentCount;
     @ApiModelProperty("我有没有赞过了：0否1是")
     private Integer likeFlag;
     @ApiModelProperty("我有没有踩过了：0否1是")

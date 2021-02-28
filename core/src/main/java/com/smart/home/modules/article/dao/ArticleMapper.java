@@ -48,4 +48,15 @@ public interface ArticleMapper {
     Article queryDetailByIdNoLogin(@Param("articleId") Long articleId);
 
     Article queryDetailByIdWhenLogin(@Param("articleId") Long articleId,@Param("userId") Long userId);
+
+    int increaseCommentCount(@Param("articleId") Long articleId);
+
+    int increaseVisitCount(@Param("articleId") Long articleId);
+
+    int increaseLikeCount(@Param("id") Long id);
+    int decreaseLikeCount(@Param("id") Long id);
+    int increaseStampCount(@Param("id") Long id);
+    int decreaseStampCount(@Param("id") Long id);
+
+
 }

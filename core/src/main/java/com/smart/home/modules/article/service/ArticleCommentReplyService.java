@@ -20,11 +20,6 @@ public class ArticleCommentReplyService {
     @Resource
     ArticleCommentReplyMapper articleCommentReplyMapper;
 
-    public int create(ArticleCommentReply articleCommentReply) {
-        articleCommentReply.setCreatedTime(new Date());
-        return articleCommentReplyMapper.insertSelective(articleCommentReply);
-    }
-
     public int update(ArticleCommentReply articleCommentReply) {
         return articleCommentReplyMapper.updateByPrimaryKeySelective(articleCommentReply);
     }
@@ -53,4 +48,24 @@ public class ArticleCommentReplyService {
         return articleCommentReply;
     }
 
+    public void create(Long loginUserId, Long articleId, Long articleCommentId, String contents) {
+        ArticleCommentReply articleCommentReply = new ArticleCommentReply();
+        articleCommentReply.withArticleCommentId(articleCommentId)
+                .withArticleId(articleId)
+                .withContents(contents)
+                .withCreatedTime(new Date())
+                .withPid(0L)
+                .withUserId(loginUserId);
+        articleCommentReplyMapper.insertSelective(articleCommentReply);
+    }
+
+    public List<ArticleCommentReply> queryCommentReplyByPageNoLogin(Long articleCommentId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleCommentReplyMapper.queryCommentReplyByPageNoLogin(articleCommentId);
+    }
+
+    public List<ArticleCommentReply> queryCommentReplyByPageWhenLogin(Long userId, Long articleCommentId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleCommentReplyMapper.queryCommentReplyByPageNoLogin(articleCommentId);
+    }
 }

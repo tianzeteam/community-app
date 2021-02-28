@@ -37,6 +37,9 @@ public class LikeService {
             case ARTICLE:
                 createArticleLikeHistory(userId, primaryKey, 0);
                 break;
+            case ARTICLE_COMMENT:
+                createArticleLikeHistory(userId, primaryKey, 1);
+                break;
             case PRODUCT_COMMENT:
                 createProductCommentLikeHistory(userId, primaryKey, 0);
                 break;
@@ -64,6 +67,9 @@ public class LikeService {
         switch (likeCategoryEnum) {
             case ARTICLE:
                 articleLikeHistoryService.unlikeArticle(userId, primaryKey);
+                break;
+            case ARTICLE_COMMENT:
+                articleLikeHistoryService.unlikeArticleComment(userId, primaryKey);
                 break;
             case PRODUCT_COMMENT:
                 productCommentLikeHistoryService.unlikeComment(userId, primaryKey);

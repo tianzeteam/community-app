@@ -33,6 +33,12 @@ public class ArticleLikeHistoryService {
         if (affectRow > 0) {
             // 增加点赞数量
             if (articleLikeHistory.getCategory() == 0) {
+                articleService.increaseLikeCount(articleLikeHistory.getSourceId());
+                Long authorId = articleService.findAuthorById(articleLikeHistory.getSourceId());
+                // 给作者的获赞数量加1
+                userDataService.increaseLikeCount(authorId);
+            }
+            if (articleLikeHistory.getCategory() == 1) {
                 articleCommentService.increaseLikeCount(articleLikeHistory.getSourceId());
                 Long authorId = articleService.findAuthorById(articleLikeHistory.getSourceId());
                 // 给作者的获赞数量加1
@@ -45,6 +51,18 @@ public class ArticleLikeHistoryService {
     public void unlikeArticle(Long userId, Long id) {
         ArticleLikeHistoryExample example = new ArticleLikeHistoryExample();
         example.createCriteria().andUserIdEqualTo(userId).andIdEqualTo(id).andCategoryEqualTo(0);
+        int affectRow = articleLikeHistoryMapper.deleteByExample(example);
+        if (affectRow > 0) {
+            articleService.decreaseLikeCount(id);
+            Long authorId = articleService.findAuthorById(id);
+            // 给作者的获赞数量减1
+            userDataService.decreaseLikeCount(authorId);
+        }
+    }
+
+    public void unlikeArticleComment(Long userId, Long id) {
+        ArticleLikeHistoryExample example = new ArticleLikeHistoryExample();
+        example.createCriteria().andUserIdEqualTo(userId).andIdEqualTo(id).andCategoryEqualTo(1);
         int affectRow = articleLikeHistoryMapper.deleteByExample(example);
         if (affectRow > 0) {
             articleCommentService.decreaseLikeCount(id);

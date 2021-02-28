@@ -38,6 +38,9 @@ public class StampService {
             case ARTICLE:
                 createArticleStampHistory(userId, primaryKey, 0);
                 break;
+            case ARTICLE_COMMENT:
+                createArticleStampHistory(userId, primaryKey, 1);
+                break;
             case PRODUCT_COMMENT:
                 createProductCommentStampHistory(userId, primaryKey, 0);
                 break;
@@ -65,6 +68,9 @@ public class StampService {
         switch (stampCategoryEnum) {
             case ARTICLE:
                 articleStampHistoryService.unstampArticle(userId, primaryKey);
+                break;
+            case ARTICLE_COMMENT:
+                articleStampHistoryService.unstampArticleComment(userId, primaryKey);
                 break;
             case PRODUCT_COMMENT:
                 productCommentStampHistoryService.unstampComment(userId, primaryKey);

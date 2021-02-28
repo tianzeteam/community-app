@@ -8,8 +8,7 @@ package com.smart.home.enums;
 public enum StampCategoryEnum {
 
     ARTICLE(0, "文章"),
-    // 文章评论暂时没有
-    //ARTICLE_COMMENT(1, "文章评论"),
+    ARTICLE_COMMENT(1, "文章评论"),
     PRODUCT_COMMENT(2, "产品评价"),
     PRODUCT_REPLY(3, "产品评价的回复"),
     POST(4, "主贴"),

@@ -30,5 +30,6 @@ public interface ArticleCommentReplyMapper {
 
     int updateByPrimaryKey(ArticleCommentReply record);
 
-    int increaseLikeCount(@Param("id") Long id);
+    List<ArticleCommentReply> queryCommentReplyByPageNoLogin(Long articleCommentId);
+
 }

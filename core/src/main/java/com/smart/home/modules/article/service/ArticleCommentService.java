@@ -1,7 +1,10 @@
 package com.smart.home.modules.article.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.modules.article.dao.ArticleCommentMapper;
+import com.smart.home.modules.article.dao.ArticleMapper;
+import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.entity.ArticleCommentExample;
 import org.springframework.stereotype.Service;
@@ -19,10 +22,27 @@ public class ArticleCommentService {
 
     @Resource
     ArticleCommentMapper articleCommentMapper;
+    @Resource
+    private ArticleMapper articleMapper;
 
-    public int create(ArticleComment articleComment) {
-        articleComment.setCreatedTime(new Date());
-        return articleCommentMapper.insertSelective(articleComment);
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void create(Long loginUserId, Long articleId, String contents) {
+        ArticleComment articleComment = new ArticleComment();
+        articleComment.withArticleId(articleId)
+                .withContents(contents)
+                .withLikeCount(0)
+                .withStampCount(0)
+                .withCreatedTime(new Date())
+                .withUserId(loginUserId);
+        Long authorId = articleMapper.findAuthorById(articleId);
+        if (authorId.equals(loginUserId)) {
+            articleComment.setAuthorFlag(YesNoEnum.YES.getCode());
+        } else {
+            articleComment.setAuthorFlag(YesNoEnum.NO.getCode());
+        }
+        articleCommentMapper.insertSelective(articleComment);
+        // 文章增加一次评论数量
+        articleMapper.increaseCommentCount(articleId);
     }
 
     public int update(ArticleComment articleComment) {
@@ -67,5 +87,15 @@ public class ArticleCommentService {
 
     public void decreaseStampCount(Long id) {
         articleCommentMapper.decreaseStampCount(id);
+    }
+
+    public List<ArticleComment> queryCommentByPageNoLogin(Long articleId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleCommentMapper.queryCommentByPageNoLogin(articleId);
+    }
+
+    public List<ArticleComment> queryCommentByPageWhenLogin(Long userId, Long articleId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleCommentMapper.queryCommentByPageWhenLogin(userId, articleId);
     }
 }
