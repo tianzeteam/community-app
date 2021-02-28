@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import com.alibaba.fastjson.JSON;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.product.ProductParamSettingCreateDTO;
 import com.smart.home.controller.pc.request.product.ProductParamSettingUpdateDTO;
@@ -16,6 +17,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +41,9 @@ public class ProductParamSettingController {
         ProductParamSetting productParamSetting = new ProductParamSetting();
         BeanUtils.copyProperties(productParamSettingCreateDTO, productParamSetting);
         productParamSetting.setCreatedBy(UserUtils.getLoginUserId());
+        if (!CollectionUtils.isEmpty(productParamSettingCreateDTO.getEnumValueList())) {
+            productParamSetting.setEnumValues(JSON.toJSONString(productParamSettingCreateDTO.getEnumValueList()));
+        }
         return APIResponse.OK(productParamSettingService.create(productParamSetting));
     }
 
@@ -48,6 +53,9 @@ public class ProductParamSettingController {
         ProductParamSetting productParamSetting = new ProductParamSetting();
         BeanUtils.copyProperties(productParamSettingUpdateDTO, productParamSetting);
         productParamSetting.setCreatedBy(UserUtils.getLoginUserId());
+        if (!CollectionUtils.isEmpty(productParamSettingUpdateDTO.getEnumValueList())) {
+            productParamSetting.setEnumValues(JSON.toJSONString(productParamSettingUpdateDTO.getEnumValueList()));
+        }
         return APIResponse.OK(productParamSettingService.update(productParamSetting));
     }
 

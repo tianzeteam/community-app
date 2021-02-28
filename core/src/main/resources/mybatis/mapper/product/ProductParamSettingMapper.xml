@@ -12,6 +12,7 @@
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="enum_values" jdbcType="VARCHAR" property="enumValues" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,7 +74,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, param_name, param_name_en, remark, default_value, revision, created_by, created_time, 
-    updated_by, updated_time
+    updated_by, updated_time, enum_values
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.product.entity.ProductParamSettingExample" resultMap="BaseResultMap">
     select
@@ -156,6 +157,9 @@
       <if test="updatedTime != null">
         updated_time,
       </if>
+      <if test="enumValues != null">
+        enum_values,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -187,6 +191,9 @@
       </if>
       <if test="updatedTime != null">
         #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enumValues != null">
+        #{enumValues,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -279,6 +286,9 @@
       </if>
       <if test="updatedTime != null">
         updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="enumValues != null">
+        enum_values = #{enumValues,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

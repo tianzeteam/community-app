@@ -39,4 +39,16 @@
             COMMENT ON COLUMN product_param_setting.UPDATED_TIME IS '更新时间';
         </sql>
     </changeSet>
+    <changeSet id="addColumn4ProductParamSetting1" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_param_setting" columnName="ENUM_VALUES"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_param_setting add column ENUM_VALUES varchar(255);
+            COMMENT ON COLUMN product_param_setting.ENUM_VALUES IS '枚举值';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

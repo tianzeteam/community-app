@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * @author jason
@@ -27,5 +28,8 @@ public class ProductParamSettingCreateDTO {
     @ApiModelProperty("参数简介")
     @Max(64)
     private String remark;
+
+    @ApiModelProperty("枚举值列表")
+    private List<String> enumValueList;
 
 }
