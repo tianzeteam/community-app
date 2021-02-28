@@ -1,9 +1,12 @@
 package com.smart.home.modules.other.service;
 
 import com.github.pagehelper.PageHelper;
+import com.google.common.html.HtmlEscapers;
 import com.smart.home.modules.other.dao.StatisticPageMapper;
 import com.smart.home.modules.other.entity.StatisticPage;
 import com.smart.home.modules.other.entity.StatisticPageExample;
+import com.smart.home.modules.system.service.SysConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +22,20 @@ public class StatisticPageService {
 
     @Resource
     StatisticPageMapper statisticPageMapper;
+    @Autowired
+    private SysConfigService sysConfigService;
 
     public int create(StatisticPage statisticPage) {
         statisticPage.setCreatedTime(new Date());
-        return statisticPageMapper.insertSelective(statisticPage);
+        statisticPage.setRevision(0);
+        int affectRow = statisticPageMapper.insertSelective(statisticPage);
+        if (affectRow > 0) {
+            String host = sysConfigService.findValueFromCache("server.host");
+            String url = host + "/smart/api/static/page/" + statisticPage.getId();
+            statisticPage.setUrl(url);
+            affectRow = statisticPageMapper.updateByPrimaryKeySelective(statisticPage);
+        }
+        return affectRow;
     }
 
     public int update(StatisticPage statisticPage) {
@@ -49,9 +62,13 @@ public class StatisticPageService {
         return statisticPageMapper.selectByExample(example);
     }
 
-    public StatisticPage findById(Long id) {
-        StatisticPage statisticPage = statisticPageMapper.selectByPrimaryKey(id.intValue());
+    public StatisticPage findById(Integer id) {
+        StatisticPage statisticPage = statisticPageMapper.selectByPrimaryKey(id);
         return statisticPage;
     }
 
+    public List<StatisticPage> selectSummaryByPage(String name, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return statisticPageMapper.selectSummaryByPage(name);
+    }
 }

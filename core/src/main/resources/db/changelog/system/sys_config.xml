@@ -68,4 +68,15 @@
             insert into sys_config(param_key, param_value, remark, REVISION) values ('trace.log.storeType', 'db','新建请求日志存储类型:db,log', 0);
         </sql>
     </changeSet>
+    <changeSet id="addRecord4SysConfig2" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_config where param_key = 'server.host';
+            </sqlCheck>
+        </preConditions>
+        <comment>新建服务端请求地址</comment>
+        <sql>
+            insert into sys_config(param_key, param_value, remark, REVISION) values ('server.host', 'http://localhost','服务端请求根地址', 0);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

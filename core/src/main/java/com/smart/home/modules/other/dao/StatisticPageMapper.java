@@ -29,4 +29,6 @@ public interface StatisticPageMapper {
     int updateByPrimaryKeySelective(StatisticPage record);
 
     int updateByPrimaryKey(StatisticPage record);
+
+    List<StatisticPage> selectSummaryByPage(@Param("name") String name);
 }
