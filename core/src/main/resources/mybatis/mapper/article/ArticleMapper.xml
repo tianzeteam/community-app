@@ -741,4 +741,12 @@
   <update id="increaseReportCount">
     update article set report_count = report_count + 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="updateTopFlag">
+    update article set top_flag = #{flag} where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateRecommendType">
+    update article set recommend_type = #{type} where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

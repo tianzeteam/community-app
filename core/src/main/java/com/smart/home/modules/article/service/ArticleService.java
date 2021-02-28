@@ -12,6 +12,7 @@ import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleExample;
 import com.smart.home.modules.other.service.AuditHistoryService;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -269,5 +270,29 @@ public class ArticleService {
 
     public void decreaseStampCount(Long id) {
         articleMapper.decreaseStampCount(id);
+    }
+
+    public List<Article> selectAllTopRecommend() {
+        ArticleExample example = new ArticleExample();
+        example.createCriteria().andStateEqualTo(ArticleStateEnum.PUBLISH.getState())
+                .andAuditStateEqualTo(AuditStatusEnum.APPROVED.getCode())
+                .andRecommendFlagEqualTo(YesNoEnum.YES.getCode());
+        return articleMapper.selectByExample(example);
+    }
+
+    public void cancelSetTop(Long articleId) {
+        articleMapper.updateTopFlag(articleId, YesNoEnum.NO.getCode());
+    }
+
+    public void setTop(Long articleId) {
+        articleMapper.updateTopFlag(articleId, YesNoEnum.YES.getCode());
+    }
+
+    public void setBigImage(Long articleId) {
+        articleMapper.updateRecommendType(articleId, ArticleRecommendTypeEnum.BIG_IMAGE_CARD.getCode());
+    }
+
+    public void setAsArticle(Long articleId) {
+        articleMapper.updateRecommendType(articleId, ArticleRecommendTypeEnum.ARTCILE_CARD.getCode());
     }
 }

@@ -22,6 +22,7 @@ public class SubjectCardService {
 
     public int create(SubjectCard subjectCard) {
         subjectCard.setCreatedTime(new Date());
+        subjectCard.setRevision(0);
         return subjectCardMapper.insertSelective(subjectCard);
     }
 

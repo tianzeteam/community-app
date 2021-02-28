@@ -11,11 +11,11 @@ import lombok.ToString;
  **/
 @Data
 @ToString
-public class ArticleAdminReviewSearchDTO extends RequestPageBean {
+public class ArticleAdminRcommendSearchDTO extends RequestPageBean {
 
     @ApiModelProperty("排序规则：desc 或者 asc")
     private String sortType;
-    @ApiModelProperty("排序字段:created_time,audit_time")
+    @ApiModelProperty("排序字段:created_time,audit_time,recommend_time")
     private String sortField;
 
 }

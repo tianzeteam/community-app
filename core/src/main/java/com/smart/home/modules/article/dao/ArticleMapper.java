@@ -1,6 +1,7 @@
 package com.smart.home.modules.article.dao;
 
 import com.smart.home.common.enums.RecordStatusEnum;
+import com.smart.home.enums.ArticleRecommendTypeEnum;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleExample;
 import java.util.List;
@@ -60,4 +61,8 @@ public interface ArticleMapper {
 
 
     int increaseReportCount(@Param("id") Long id);
+
+    int updateTopFlag(@Param("id") Long id,@Param("flag") int flag);
+
+    int updateRecommendType(@Param("id") Long id,@Param("flag") int type);
 }
