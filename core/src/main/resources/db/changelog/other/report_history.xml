@@ -61,4 +61,12 @@
             create index idx_rh_user_id on report_history using btree (UPDATED_BY, SOURCE_ID);
         </sql>
     </changeSet>
+    <changeSet id="addIndex4ReportHistory2" author="jason">
+        <comment>新增索引</comment>
+        <sql>
+            drop index idx_rh_user_id;
+            create index idx_rh_user_id on report_history using btree (CREATED_BY);
+            create index idx_rh_source_id on report_history using btree (SOURCE_ID);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

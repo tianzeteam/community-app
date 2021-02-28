@@ -3,6 +3,8 @@ package com.smart.home.modules.other.service;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.enums.ReportCategoryEnum;
+import com.smart.home.modules.article.dao.ArticleMapper;
+import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.other.dao.ReportHistoryMapper;
 import com.smart.home.modules.other.entity.ReportHistory;
 import com.smart.home.modules.other.entity.ReportHistoryExample;
@@ -21,6 +23,10 @@ public class ReportHistoryService {
 
     @Resource
     ReportHistoryMapper reportHistoryMapper;
+    @Resource
+    ArticleMapper articleMapper;
+    @Resource
+    CommunityPostMapper communityPostMapper;
 
     /**
      * 举报文章/帖子
@@ -50,7 +56,20 @@ public class ReportHistoryService {
                 .withRevision(0)
                 .withSourceId(primaryKey)
                 .withCreatedTime(new Date());
-        return reportHistoryMapper.insertSelective(reportHistory);
+        int affectRow = reportHistoryMapper.insertSelective(reportHistory);
+        if (affectRow > 0) {
+            switch (reportCategoryEnum) {
+                case ARTICLE:
+                    articleMapper.increaseReportCount(primaryKey);
+                    break;
+                case POST:
+                    communityPostMapper.increaseReportCount(primaryKey);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return affectRow;
     }
 
     public int update(ReportHistory reportHistory) {

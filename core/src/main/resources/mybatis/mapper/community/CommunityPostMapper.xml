@@ -442,4 +442,8 @@
   <update id="updateState">
     update community_post set state = #{state} where id = #{id}
   </update>
+
+  <update id="increaseReportCount">
+    update community_post set report_count = report_count + 1 where id = #{id,jdbcType=BIGINT}
+    </update>
 </mapper>

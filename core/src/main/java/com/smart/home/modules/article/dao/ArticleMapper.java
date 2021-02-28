@@ -59,4 +59,5 @@ public interface ArticleMapper {
     int decreaseStampCount(@Param("id") Long id);
 
 
+    int increaseReportCount(@Param("id") Long id);
 }

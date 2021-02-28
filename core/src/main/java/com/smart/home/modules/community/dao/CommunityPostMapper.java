@@ -45,4 +45,6 @@ public interface CommunityPostMapper {
     long countByCommunityId(@Param("communityId") int communityId);
 
     int updateState(@Param("id") Long id, @Param("state") int state);
+
+    int increaseReportCount(@Param("id") Long id);
 }

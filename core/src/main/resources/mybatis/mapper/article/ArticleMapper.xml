@@ -737,4 +737,8 @@
   <update id="decreaseStampCount">
     update article set stamp_count = stamp_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="increaseReportCount">
+    update article set report_count = report_count + 1 where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>
