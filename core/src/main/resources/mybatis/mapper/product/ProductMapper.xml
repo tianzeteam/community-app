@@ -649,4 +649,8 @@
   <select id="countByBrandId" resultType="long">
     select count(1) from product where brand_id = #{brandId}
   </select>
+
+  <select id="countByShopId" resultType="long">
+    select count(1) from product_shop_mapping where shop_id = #{shopId}
+  </select>
 </mapper>
