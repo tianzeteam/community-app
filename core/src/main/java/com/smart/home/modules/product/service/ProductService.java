@@ -1,13 +1,20 @@
 package com.smart.home.modules.product.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.enums.RecordStatusEnum;
+import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.modules.product.dao.ProductMapper;
-import com.smart.home.modules.product.entity.Product;
-import com.smart.home.modules.product.entity.ProductExample;
+import com.smart.home.modules.product.dao.ProductParamSettingMapper;
+import com.smart.home.modules.product.dao.ProductParamValueMapper;
+import com.smart.home.modules.product.dao.ProductShopMappingMapper;
+import com.smart.home.modules.product.entity.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Date;
 
@@ -19,15 +26,117 @@ public class ProductService {
 
     @Resource
     ProductMapper productMapper;
+    @Resource
+    ProductParamValueMapper productParamValueMapper;
+    @Resource
+    ProductShopMappingMapper productShopMappingMapper;
+    @Resource
+    ProductParamSettingMapper productParamSettingMapper;
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public int create(Product product) {
+        // 查重
+        ProductExample example = new ProductExample();
+        ProductExample.Criteria criteria = example.createCriteria();
+        if (product.getCategoryOneId() != null) {
+            criteria.andCategoryOneIdEqualTo(product.getCategoryOneId());
+        }
+        if (product.getCategoryTwoId() != null) {
+            criteria.andCategoryTwoIdEqualTo(product.getCategoryTwoId());
+        }
+        if (product.getCategoryThreeId() != null) {
+            criteria.andCategoryThreeIdEqualTo(product.getCategoryThreeId());
+        }
+        if (StringUtils.isNotBlank(product.getProductName())) {
+            criteria.andProductNameEqualTo(product.getProductName());
+        }
+        if (StringUtils.isNotBlank(product.getBrandName())) {
+            criteria.andBrandNameEqualTo(product.getBrandName());
+        }
+        if (StringUtils.isNotBlank(product.getSpecification())) {
+            criteria.andSpecificationEqualTo(product.getSpecification());
+        }
+        if (productMapper.countByExample(example) > 0) {
+            throw new DuplicateDataException("该产品已经存在");
+        }
         product.setCreatedTime(new Date());
-        return productMapper.insertSelective(product);
+        product.setRevision(0);
+        product.setAverageScore(new BigDecimal(10));
+        product.setPraiseRate(100);
+        product.setCommentCount(0);
+        product.setTestCount(0);
+        product.setHotRate(new BigDecimal(0));
+        product.setCollectCount(0);
+        product.setOneStarCount(0);
+        product.setTwoStarCount(0);
+        product.setThreeStarCount(0);
+        product.setFourStarCount(0);
+        product.setFiveStarCount(0);
+        product.setOnlineFlag(RecordStatusEnum.NORMAL.getStatus());
+        int affectRow = productMapper.insertSelective(product);
+        if (affectRow > 0) {
+            Integer productId = product.getId();
+            if (product.getProductParamValueList() != null) {
+                for (ProductParamValue productParamValue : product.getProductParamValueList()) {
+                    if (productParamValue.getParamId() == null) {
+                        // 添加到参数库
+                        ProductParamSetting productParamSetting = new ProductParamSetting();
+                        productParamSetting.withParamName(productParamValue.getParamName())
+                                .withRevision(0);
+                        productParamSettingMapper.insertSelective(productParamSetting);
+                        productParamValue.setParamId(productParamSetting.getId());
+                    }
+                    productParamValue.setProductId(productId);
+                    productParamValueMapper.insertSelective(productParamValue);
+                }
+                productMapper.saveParams(productId, JSON.toJSONString(product.getProductParamValueList()));
+            }
+            if (product.getProductShopMappingList() != null) {
+                for (ProductShopMapping productShopMapping : product.getProductShopMappingList()) {
+                    productShopMapping.setProductId(productId);
+                    productShopMappingMapper.insertSelective(productShopMapping);
+                }
+                productMapper.saveShops(productId, JSON.toJSONString(product.getProductShopMappingList()));
+            }
+        }
+        return affectRow;
     }
 
     public int update(Product product) {
         product.setUpdatedTime(new Date());
-        return productMapper.updateByPrimaryKeySelective(product);
+        int affectRow = productMapper.updateByPrimaryKeySelective(product);
+        if (affectRow > 0) {
+            Integer productId = product.getId();
+            productParamValueMapper.deleteByProductId(product.getId());
+            if (product.getProductParamValueList() != null) {
+                for (ProductParamValue productParamValue : product.getProductParamValueList()) {
+                    if (productParamValue.getParamId() == null) {
+                        // 添加到参数库
+                        ProductParamSetting productParamSetting = new ProductParamSetting();
+                        productParamSetting.withParamName(productParamValue.getParamName())
+                                .withRevision(0);
+                        productParamSettingMapper.insertSelective(productParamSetting);
+                        productParamValue.setParamId(productParamSetting.getId());
+                    }
+                    productParamValue.setProductId(productId);
+                    productParamValueMapper.insertSelective(productParamValue);
+                }
+                productMapper.saveParams(productId, JSON.toJSONString(product.getProductParamValueList()));
+            } else {
+                productMapper.saveParams(productId, "");
+            }
+            productShopMappingMapper.deleteByProductId(product.getId());
+            if (product.getProductShopMappingList() != null) {
+                for (ProductShopMapping productShopMapping : product.getProductShopMappingList()) {
+                    productShopMapping.setProductId(productId);
+                    productShopMappingMapper.insertSelective(productShopMapping);
+                }
+                productMapper.saveShops(productId, JSON.toJSONString(product.getProductShopMappingList()));
+            } else {
+                productMapper.saveShops(productId, "");
+            }
+        }
+        return affectRow;
     }
 
     public int deleteById(Long id) {

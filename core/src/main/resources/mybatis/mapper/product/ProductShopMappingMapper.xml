@@ -233,4 +233,8 @@
       url = #{url,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteByProductId">
+    delete from product_shop_mapping where product_id = #{productId}
+    </delete>
 </mapper>

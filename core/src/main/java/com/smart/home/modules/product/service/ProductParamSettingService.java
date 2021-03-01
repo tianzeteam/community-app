@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
+import com.smart.home.modules.product.dao.ProductCategoryParamMapper;
 import com.smart.home.modules.product.dao.ProductParamSettingMapper;
 import com.smart.home.modules.product.dao.ProductParamValueMapper;
 import com.smart.home.modules.product.entity.ProductParamSetting;
@@ -27,6 +28,8 @@ public class ProductParamSettingService {
     ProductParamSettingMapper productParamSettingMapper;
     @Resource
     ProductParamValueMapper productParamValueMapper;
+    @Resource
+    ProductCategoryParamMapper productCategoryParamMapper;
 
     public int create(ProductParamSetting productParamSetting) {
         ProductParamSettingExample example = new ProductParamSettingExample();
@@ -95,6 +98,19 @@ public class ProductParamSettingService {
     public List<ProductParamSetting> queryAllValidExceptEnableAll() {
         ProductParamSettingExample example = new ProductParamSettingExample();
         example.createCriteria().andEnableAllEqualTo(YesNoEnum.NO.getCode());
+        return productParamSettingMapper.selectByExample(example);
+    }
+
+    public List<ProductParamSetting> queryAllValidWithEnableAll() {
+        ProductParamSettingExample example = new ProductParamSettingExample();
+        example.createCriteria().andEnableAllEqualTo(YesNoEnum.YES.getCode());
+        return productParamSettingMapper.selectByExample(example);
+    }
+
+    public List<ProductParamSetting> queryAllValidExceptEnableAll(Integer categoryId) {
+        List<Integer> paramIdList = productCategoryParamMapper.findParamIdListByCategoryId(categoryId);
+        ProductParamSettingExample example = new ProductParamSettingExample();
+        example.createCriteria().andIdIn(paramIdList);
         return productParamSettingMapper.selectByExample(example);
     }
 }

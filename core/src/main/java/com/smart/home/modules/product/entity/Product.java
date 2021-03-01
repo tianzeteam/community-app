@@ -5,8 +5,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-
+import java.util.List;
 public class Product implements Serializable {
+
+    private List<ProductShopMapping> productShopMappingList;
+    private List<ProductParamValue> productParamValueList;
+
     private Integer id;
 
     private String coverImage;
@@ -72,6 +76,18 @@ public class Product implements Serializable {
     private Long updatedBy;
 
     private Date updatedTime;
+    /**
+     * 支持的平台
+     */
+    private String supportPlatform;
+    /**
+     * 参数json
+     */
+    private String params;
+    /**
+     * 商店json
+     */
+    private String shops;
 
     private static final long serialVersionUID = 1L;
 
@@ -616,6 +632,46 @@ public class Product implements Serializable {
 
     public void setFiveStarCount(Integer fiveStarCount) {
         this.fiveStarCount = fiveStarCount;
+    }
+
+    public String getSupportPlatform() {
+        return supportPlatform;
+    }
+
+    public void setSupportPlatform(String supportPlatform) {
+        this.supportPlatform = supportPlatform;
+    }
+
+    public List<ProductShopMapping> getProductShopMappingList() {
+        return productShopMappingList;
+    }
+
+    public void setProductShopMappingList(List<ProductShopMapping> productShopMappingList) {
+        this.productShopMappingList = productShopMappingList;
+    }
+
+    public List<ProductParamValue> getProductParamValueList() {
+        return productParamValueList;
+    }
+
+    public void setProductParamValueList(List<ProductParamValue> productParamValueList) {
+        this.productParamValueList = productParamValueList;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
+    }
+
+    public String getShops() {
+        return shops;
+    }
+
+    public void setShops(String shops) {
+        this.shops = shops;
     }
 
     /**

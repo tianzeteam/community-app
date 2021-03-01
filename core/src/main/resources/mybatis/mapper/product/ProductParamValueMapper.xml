@@ -230,4 +230,8 @@
   <select id="countByParamId" resultType="long">
     select count(1) from product_param_value where param_id = #{paramId};
     </select>
+
+  <delete id="deleteByProductId">
+    delete from product_param_value where product_id = #{productId}
+  </delete>
 </mapper>

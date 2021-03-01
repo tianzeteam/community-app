@@ -43,4 +43,8 @@ public interface ProductMapper {
     long countByBrandId(@Param("brandId") Integer brandId);
 
     long countByShopId(@Param("shopId") int shopId);
+
+    int saveParams(@Param("productId") Integer productId,@Param("paramsJson") String paramsJson);
+
+    int saveShops(@Param("productId") Integer productId,@Param("shopsJson") String shopsJson);
 }

@@ -9,6 +9,7 @@ import com.smart.home.modules.system.entity.SysDictExample;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -95,4 +96,13 @@ public class SysDictService {
         return sysDictMapper.selectByExample(example);
     }
 
+    public SysDict queryByDictCode(String dictCode) {
+        SysDictExample example = new SysDictExample();
+        example.createCriteria().andDictCodeEqualTo(dictCode);
+        List<SysDict> list = this.sysDictMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

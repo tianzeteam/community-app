@@ -29,4 +29,6 @@ public interface ProductShopMappingMapper {
     int updateByPrimaryKeySelective(ProductShopMapping record);
 
     int updateByPrimaryKey(ProductShopMapping record);
+
+    int deleteByProductId(@Param("productId") Integer productId);
 }

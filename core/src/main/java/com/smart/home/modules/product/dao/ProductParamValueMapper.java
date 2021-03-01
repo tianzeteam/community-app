@@ -31,4 +31,6 @@ public interface ProductParamValueMapper {
     int updateByPrimaryKey(ProductParamValue record);
 
     long countByParamId(@Param("paramId") int paramId);
+
+    int deleteByProductId(@Param("productId") Integer productId);
 }

@@ -109,4 +109,36 @@
             COMMENT ON COLUMN product.five_star_count IS '五星数量';
         </sql>
     </changeSet>
+    <changeSet id="modifyColumn4Product1" author="jason">
+        <comment>修改字段</comment>
+        <sql>
+           alter table product alter column REMARK type varchar(200);
+        </sql>
+    </changeSet>
+    <changeSet id="addColumn4Product2" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product" columnName="support_platform"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product add column support_platform varchar(64);
+            COMMENT ON COLUMN product.support_platform IS '支持的平台';
+        </sql>
+    </changeSet>
+    <changeSet id="addColumnParams4Product" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product" columnName="params"/>
+            </not>
+        </preConditions>
+        <comment>添加字段</comment>
+        <sql>
+            alter table product add column params JSONB;
+            alter table product add column shops JSONB;
+            comment on column product.params is '产品参数json数据';
+            comment on column product.shops is '商城json数据';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

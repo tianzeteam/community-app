@@ -37,6 +37,9 @@
     <result column="three_star_count" jdbcType="INTEGER" property="threeStarCount" />
     <result column="four_star_count" jdbcType="INTEGER" property="fourStarCount" />
     <result column="five_star_count" jdbcType="INTEGER" property="fiveStarCount" />
+    <result column="support_platform" jdbcType="VARCHAR" property="supportPlatform" />
+    <result column="params" jdbcType="VARCHAR" property="params" />
+    <result column="shops" jdbcType="VARCHAR" property="shops" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -101,7 +104,8 @@
     brand_id, brand_name, online_flag, recommend_flag, details, category_one_id, category_one_name, 
     category_two_id, category_two_name, category_three_id, category_three_name, average_score, 
     praise_rate, comment_count, test_count, hot_rate, tag, revision, created_by, created_time, 
-    updated_by, updated_time,collect_count,one_star_count,two_star_count,three_star_count,four_star_count,five_star_count
+    updated_by, updated_time,collect_count,one_star_count,two_star_count,
+    three_star_count,four_star_count,five_star_count,support_platform,params,shops
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.product.entity.ProductExample" resultMap="BaseResultMap">
     select
@@ -163,7 +167,8 @@
       #{revision,jdbcType=INTEGER}, #{createdBy,jdbcType=BIGINT}, #{createdTime,jdbcType=TIMESTAMP}, 
       #{updatedBy,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.smart.home.modules.product.entity.Product">
+  <insert id="insertSelective" parameterType="com.smart.home.modules.product.entity.Product"
+          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into product
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -253,6 +258,27 @@
       <if test="updatedTime != null">
         updated_time,
       </if>
+      <if test="collectCount != null">
+        collect_count,
+      </if>
+      <if test="oneStarCount != null">
+        one_star_count,
+      </if>
+      <if test="twoStarCount != null">
+        two_star_count,
+      </if>
+      <if test="threeStarCount != null">
+        three_star_count,
+      </if>
+      <if test="fourStarCount != null">
+        four_star_count,
+      </if>
+      <if test="fiveStarCount != null">
+        five_star_count,
+      </if>
+      <if test="supportPlatform != null">
+        support_flatform,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -341,6 +367,27 @@
       </if>
       <if test="updatedTime != null">
         #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="collectCount != null">
+        #{collectCount,jdbcType=INTEGER},
+      </if>
+      <if test="oneStarCount != null">
+        #{oneStarCount,jdbcType=INTEGER},
+      </if>
+      <if test="twoStarCount != null">
+        #{twoStarCount,jdbcType=INTEGER},
+      </if>
+      <if test="threeStarCount != null">
+        #{threeStarCount,jdbcType=INTEGER},
+      </if>
+      <if test="fourStarCount != null">
+        #{fourStarCount,jdbcType=INTEGER},
+      </if>
+      <if test="fiveStarCount != null">
+        #{fiveStarCount,jdbcType=INTEGER},
+      </if>
+      <if test="supportPlatform != null">
+        #{supportPlatform,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -653,4 +700,12 @@
   <select id="countByShopId" resultType="long">
     select count(1) from product_shop_mapping where shop_id = #{shopId}
   </select>
+
+  <update id="saveParams">
+    update product set params = '${paramsJson}' where id = #{productId}
+  </update>
+
+  <update id="saveShops">
+    update product set shops = '${shopsJson}' where id = #{productId}
+  </update>
 </mapper>
