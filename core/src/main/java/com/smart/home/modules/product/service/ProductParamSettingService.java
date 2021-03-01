@@ -74,8 +74,8 @@ public class ProductParamSettingService {
         return productParamSettingMapper.selectByExample(example);
     }
 
-    public ProductParamSetting findById(Long id) {
-        ProductParamSetting productParamSetting = productParamSettingMapper.selectByPrimaryKey(id.intValue());
+    public ProductParamSetting findById(Integer id) {
+        ProductParamSetting productParamSetting = productParamSettingMapper.selectByPrimaryKey(id);
         return productParamSetting;
     }
 

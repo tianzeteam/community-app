@@ -1,6 +1,7 @@
 package com.smart.home.modules.message.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.enums.MessageTypeEnum;
 import com.smart.home.modules.message.dao.MessageContentMapper;
 import com.smart.home.modules.message.entity.MessageContent;
@@ -24,9 +25,12 @@ public class MessageContentService {
     @Resource
     MessageReadHistoryService messageReadHistoryService;
 
-    public int create(MessageContent messageContent) {
+    public int createNotifyMessage(MessageContent messageContent) {
+        messageContent.setReadFlag(YesNoEnum.NO.getCode());
         messageContent.setCreatedTime(new Date());
-        return messageContentMapper.insertSelective(messageContent);
+        messageContent.setDeleteFlag(YesNoEnum.NO.getCode());
+        messageContent.setMessageType(MessageTypeEnum.NOTIFY.getType());
+        return this.messageContentMapper.insertSelective(messageContent);
     }
 
     public int update(MessageContent messageContent) {
@@ -48,7 +52,9 @@ public class MessageContentService {
         PageHelper.startPage(pageNum, pageSize);
         MessageContentExample example = new MessageContentExample();
         MessageContentExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
+        if (messageContent.getMessageType() != null) {
+            criteria.andMessageTypeEqualTo(messageContent.getMessageType());
+        }
         return messageContentMapper.selectByExample(example);
     }
 
@@ -91,4 +97,5 @@ public class MessageContentService {
             messageReadHistoryService.create(messageReadHistory);
         }
     }
+
 }

@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-
+import java.util.List;
 public class ProductCategory implements Serializable {
 
+    private List<Integer> paramIdList;
+///////////////////////////////////////////
     private Integer id;
 
     private Integer pid;
@@ -282,6 +284,14 @@ public class ProductCategory implements Serializable {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    public List<Integer> getParamIdList() {
+        return paramIdList;
+    }
+
+    public void setParamIdList(List<Integer> paramIdList) {
+        this.paramIdList = paramIdList;
     }
 
     /**

@@ -4,11 +4,15 @@ import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.product.ProductCategoryCreateDTO;
 import com.smart.home.controller.pc.response.product.ProductCategorySelectVO;
 import com.smart.home.controller.pc.request.product.ProductCategoryUpdateDTO;
+import com.smart.home.controller.pc.response.product.ProductCategoryVO;
+import com.smart.home.controller.pc.response.product.ProductParamSettingSelectVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.modules.product.entity.ProductCategory;
+import com.smart.home.modules.product.entity.ProductParamSetting;
 import com.smart.home.modules.product.service.ProductCategoryService;
+import com.smart.home.modules.product.service.ProductParamSettingService;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -16,10 +20,12 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +38,8 @@ public class ProductCategoryController {
 
     @Autowired
     private ProductCategoryService productCategoryService;
+    @Autowired
+    private ProductParamSettingService productParamSettingService;
 
     @ApiOperation("创建产品类目")
     @PostMapping("/create")
@@ -80,7 +88,20 @@ public class ProductCategoryController {
     @ApiOperation("按主键ID查询产品类目")
     @GetMapping("/selectById")
     public APIResponse<ProductCategory> selectById(Long id) {
-        return APIResponse.OK(productCategoryService.findById(id));
+        ProductCategory productCategory = productCategoryService.findById(id);
+        ProductCategoryVO vo = new ProductCategoryVO();
+        BeanUtils.copyProperties(productCategory, vo);
+        if (!CollectionUtils.isEmpty(productCategory.getParamIdList())) {
+            List<ProductParamSettingSelectVO> paramList = new ArrayList<>();
+            for (Integer paramId : productCategory.getParamIdList()) {
+                ProductParamSetting productParamSetting = productParamSettingService.findById(paramId);
+                ProductParamSettingSelectVO productParamSettingSelectVO = new ProductParamSettingSelectVO();
+                BeanUtils.copyProperties(productParamSetting, productParamSettingSelectVO);
+                paramList.add(productParamSettingSelectVO);
+            }
+            vo.setParamList(paramList);
+        }
+        return APIResponse.OK();
     }
 
     @ApiOperation("下拉选择类目")

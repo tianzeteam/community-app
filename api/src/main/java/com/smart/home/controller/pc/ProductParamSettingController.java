@@ -82,7 +82,7 @@ public class ProductParamSettingController {
 
     @ApiOperation("按主键ID查询产品参数库")
     @GetMapping("/selectById")
-    public APIResponse<ProductParamSetting> selectById(Long id) {
+    public APIResponse<ProductParamSetting> selectById(Integer id) {
         return APIResponse.OK(productParamSettingService.findById(id));
     }
 

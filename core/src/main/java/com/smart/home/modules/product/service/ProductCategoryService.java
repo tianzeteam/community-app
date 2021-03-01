@@ -6,6 +6,7 @@ import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.modules.product.dao.ProductCategoryMapper;
 import com.smart.home.modules.product.dao.ProductMapper;
+import com.smart.home.modules.product.dao.ProductParamSettingMapper;
 import com.smart.home.modules.product.entity.ProductCategory;
 import com.smart.home.modules.product.entity.ProductCategoryExample;
 import org.apache.commons.lang3.StringUtils;
@@ -138,6 +139,9 @@ public class ProductCategoryService {
 
     public ProductCategory findById(Long id) {
         ProductCategory productCategory = productCategoryMapper.selectByPrimaryKey(id.intValue());
+        // 查询挂钩的产品参数
+        List<Integer> paramIdList = productCategoryParamService.findParamIdListByCategoryId(id.intValue());
+        productCategory.setParamIdList(paramIdList);
         return productCategory;
     }
 

@@ -67,4 +67,8 @@ public class ProductCategoryParamService {
         example.createCriteria().andProductCategoryIdEqualTo(productCategoryId);
         this.productCategoryParamMapper.deleteByExample(example);
     }
+
+    public List<Integer> findParamIdListByCategoryId(int categoryId) {
+        return this.productCategoryParamMapper.findParamIdListByCategoryId(categoryId);
+    }
 }

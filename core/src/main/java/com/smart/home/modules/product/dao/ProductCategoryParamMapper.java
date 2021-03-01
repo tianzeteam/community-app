@@ -29,4 +29,6 @@ public interface ProductCategoryParamMapper {
     int updateByPrimaryKeySelective(ProductCategoryParam record);
 
     int updateByPrimaryKey(ProductCategoryParam record);
+
+    List<Integer> findParamIdListByCategoryId(@Param("categoryId") int categoryId);
 }

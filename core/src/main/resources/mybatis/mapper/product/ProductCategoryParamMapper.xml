@@ -216,4 +216,8 @@
       sort = #{sort,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="findParamIdListByCategoryId" resultType="java.lang.Integer">
+    select product_param_id from product_category_param where product_category_id = #{categoryId}
+  </select>
 </mapper>
