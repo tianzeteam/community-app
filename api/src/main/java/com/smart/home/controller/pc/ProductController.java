@@ -2,12 +2,10 @@ package com.smart.home.controller.pc;
 
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.product.*;
-import com.smart.home.controller.pc.response.product.ProductBrandSelectVO;
-import com.smart.home.controller.pc.response.product.ProductCategorySelectVO;
-import com.smart.home.controller.pc.response.product.ProductParamSettingSelectVO;
-import com.smart.home.controller.pc.response.product.ProductShopSelectVO;
+import com.smart.home.controller.pc.response.product.*;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
@@ -16,6 +14,7 @@ import com.smart.home.modules.product.entity.*;
 import com.smart.home.modules.product.service.*;
 import com.smart.home.modules.system.entity.SysDict;
 import com.smart.home.modules.system.service.SysDictService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
@@ -70,12 +69,12 @@ public class ProductController {
         return APIResponse.OK(resultList);
     }
 
-    @ApiOperation("/选择二级类目")
+    @ApiOperation("选择二级类目")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pid", value = "上级类目主键id", required = true)
     })
     @RoleAccess(RoleConsts.ADMIN)
-    @GetMapping("queryCategoryTwo")
+    @GetMapping("/queryCategoryTwo")
     public APIResponse<List<ProductCategorySelectVO>> queryCategoryTwo(Integer pid) {
         List<ProductCategory> list = productCategoryService.queryAllValidByPid(pid);
         List<ProductCategorySelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductCategorySelectVO::new);
@@ -121,7 +120,7 @@ public class ProductController {
         return APIResponse.OK(resutList);
     }
 
-    @ApiModelProperty("查询所有支持平台")
+    @ApiOperation("查询所有支持平台")
     @RoleAccess(RoleConsts.ADMIN)
     @GetMapping("/queryAllSupportPlatform")
     public APIResponse<String> queryAllSupportPlatform() {
@@ -242,22 +241,6 @@ public class ProductController {
         return APIResponse.OK(productService.update(product));
     }
 
-    @ApiOperation("删除产品")
-    @RoleAccess(RoleConsts.ADMIN)
-    @PostMapping("/delete")
-    public APIResponse delete(@RequestBody IdListBean idListBean) {
-        productService.delete(idListBean.getIdList());
-        return APIResponse.OK();
-    }
-
-    @ApiOperation("分页查询产品")
-    @RoleAccess(RoleConsts.ADMIN)
-    @PostMapping("/selectByPage")
-    public APIResponse<ResponsePageBean<Product>> selectByPage(Product product, int pageNum, int pageSize) {
-        List<Product> list = productService.selectByPage(product, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
-    }
-
     @ApiOperation("按主键ID查询产品出来更新")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "产品主键id", required = true)
@@ -285,6 +268,47 @@ public class ProductController {
             productUpdateDTO.setBuyLinkDTOList(JSON.parseArray(product.getShops(), ProductShopBuyLinkDTO.class));
         }
         return APIResponse.OK(productUpdateDTO);
+    }
+
+    @ApiOperation("删除产品")
+    @RoleAccess(RoleConsts.ADMIN)
+    @PostMapping("/delete")
+    public APIResponse delete(@RequestBody IdListBean idListBean) {
+        productService.delete(idListBean.getIdList());
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("隐藏产品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "productId", value = "产品主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.ADMIN)
+    @PostMapping("/hide")
+    public APIResponse hide(Integer productId) {
+        productService.updateOnlineStatus(productId, YesNoEnum.NO.getCode());
+        return APIResponse.OK();
+    }
+    @ApiOperation("恢复正常产品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "productId", value = "产品主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.ADMIN)
+    @PostMapping("/restore")
+    public APIResponse restore(Integer productId) {
+        productService.updateOnlineStatus(productId, YesNoEnum.YES.getCode());
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("管理后台-产品库-分页查询")
+    @RoleAccess(RoleConsts.ADMIN)
+    @PostMapping("/selectByPage")
+    public APIResponse<ResponsePageBean<ProductPageVO>> selectByPage(@RequestBody ProductPageSearchDTO productPageSearchDTO) {
+        Product product = new Product();
+        BeanUtils.copyProperties(productPageSearchDTO, product);
+        product.setTagList(productPageSearchDTO.getTagList());
+        List<Product> list = productService.selectByPage(product, productPageSearchDTO.getPageNum(), productPageSearchDTO.getPageSize());
+        List<ProductPageVO> resultList = BeanCopyUtils.convertListTo(list, ProductPageVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
 
 }

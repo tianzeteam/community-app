@@ -708,4 +708,50 @@
   <update id="saveShops">
     update product set shops = '${shopsJson}' where id = #{productId}
   </update>
+
+  <update id="softDelete">
+    update product set delete_flag = 1 where id = #{id}
+  </update>
+
+  <update id="updateOnlineStatus">
+    update product set online_flag = #{status} where id = #{id}
+  </update>
+
+  <select id="selectByPage" resultType="com.smart.home.modules.product.entity.Product"
+          parameterType="com.smart.home.modules.product.entity.Product">
+    select id,
+           product_name as productName,
+           tag,
+           category_one_name as categoryOneName,
+           category_two_name as categoryTwoName,
+           category_three_name as categoryThreeName,
+           online_flag as onlineFlag,
+           created_time as createdTime
+    from product
+    where 1 = 1
+      <if test="id != null">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+    <if test="productName != null and productName != ''">
+      and product_name like concat('%',#{productName},'%')
+    </if>
+    <if test="onlineFlag != null">
+      and online_flag = #{onlineFlag,jdbcType=INTEGER}
+    </if>
+    <if test="categoryOneId != null">
+      and category_one_id = #{categoryOneId,jdbcType=INTEGER}
+    </if>
+    <if test="categoryTwoId != null">
+      and category_two_id = #{categoryTwoId,jdbcType=INTEGER}
+    </if>
+    <if test="categoryThreeId != null">
+      and category_three_id = #{categoryThreeId,jdbcType=INTEGER}
+    </if>
+    <if test="tagList != null">
+      and
+      <foreach collection="tagList" item="tag" open="(" separator="or" close=")">
+        tag like concat('%',#{tag},'%')
+      </foreach>
+    </if>
+  </select>
 </mapper>

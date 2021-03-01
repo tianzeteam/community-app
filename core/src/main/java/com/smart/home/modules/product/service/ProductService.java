@@ -12,6 +12,7 @@ import com.smart.home.modules.product.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -146,16 +147,16 @@ public class ProductService {
     @Transactional(rollbackFor = RuntimeException.class)
     public void delete(List<Long> idList) {
         for (Long id : idList) {
-            productMapper.deleteByPrimaryKey(id.intValue());
+            productMapper.softDelete(id.intValue());
         }
     }
 
     public List<Product> selectByPage(Product product, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        ProductExample example = new ProductExample();
-        ProductExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
-        return productMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(product.getTagList())) {
+            product.setTagList(null);
+        }
+        return productMapper.selectByPage(product);
     }
 
     public Product findById(Integer id) {
@@ -173,5 +174,9 @@ public class ProductService {
 
     public Product queryProductCommentCountInfo(Integer productId) {
         return productMapper.queryProductCommentCountInfo(productId);
+    }
+
+    public void updateOnlineStatus(Integer productId, int status) {
+        productMapper.updateOnlineStatus(productId, status);
     }
 }

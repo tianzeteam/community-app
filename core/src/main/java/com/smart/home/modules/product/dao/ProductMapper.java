@@ -47,4 +47,10 @@ public interface ProductMapper {
     int saveParams(@Param("productId") Integer productId,@Param("paramsJson") String paramsJson);
 
     int saveShops(@Param("productId") Integer productId,@Param("shopsJson") String shopsJson);
+
+    int softDelete(@Param("id") Integer id);
+
+    int updateOnlineStatus(@Param("id") Integer id,@Param("status") int status);
+
+    List<Product> selectByPage(Product product);
 }

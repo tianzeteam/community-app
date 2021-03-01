@@ -10,6 +10,7 @@ public class Product implements Serializable {
 
     private List<ProductShopMapping> productShopMappingList;
     private List<ProductParamValue> productParamValueList;
+    private List<String> tagList;
 
     private Integer id;
 
@@ -88,6 +89,10 @@ public class Product implements Serializable {
      * 商店json
      */
     private String shops;
+    /**
+     * 删除标记：0未删除1已删除
+     */
+    private Integer deleteFlag;
 
     private static final long serialVersionUID = 1L;
 
@@ -672,6 +677,22 @@ public class Product implements Serializable {
 
     public void setShops(String shops) {
         this.shops = shops;
+    }
+
+    public List<String> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<String> tagList) {
+        this.tagList = tagList;
+    }
+
+    public Integer getDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(Integer deleteFlag) {
+        this.deleteFlag = deleteFlag;
     }
 
     /**

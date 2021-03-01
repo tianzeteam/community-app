@@ -141,4 +141,16 @@
             comment on column product.shops is '商城json数据';
         </sql>
     </changeSet>
+    <changeSet id="addColumnDeleteFlag4Product" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product" columnName="delete_flag"/>
+            </not>
+        </preConditions>
+        <comment>添加字段</comment>
+        <sql>
+            alter table product add column delete_flag int default 0;
+            comment on column product.delete_flag is '是否删除：0否1是';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
