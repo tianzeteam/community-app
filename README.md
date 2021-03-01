@@ -84,6 +84,7 @@ java -version
 ```
 
 # es 安装(centos7)
+```
 cd /home/app/community/server/es
 解压：tar -xzvf elasticsearch-6.8.3.tar.gz
 cd /elasticsearch-6.8.3/bin
@@ -95,3 +96,4 @@ su esuser
 ./bin/elasticsearch
 后台运行：./bin/elasticsearch -d
 测试连接：curl 127.0.0.1:9200
+```
