@@ -1,6 +1,7 @@
 package com.smart.home.modules.product.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.modules.product.dao.ProductParamSettingMapper;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -34,6 +36,9 @@ public class ProductParamSettingService {
         }
         productParamSetting.setRevision(0);
         productParamSetting.setCreatedTime(new Date());
+        if (Objects.isNull(productParamSetting.getEnableAll())) {
+            productParamSetting.setEnableAll(YesNoEnum.NO.getCode());
+        }
         return productParamSettingMapper.insertSelective(productParamSetting);
     }
 
@@ -44,6 +49,9 @@ public class ProductParamSettingService {
                 .andIdNotEqualTo(productParamSetting.getId());
         if (productParamSettingMapper.countByExample(example) > 0) {
             throw new DuplicateDataException("该参数已经存在");
+        }
+        if (Objects.isNull(productParamSetting.getEnableAll())) {
+            productParamSetting.setEnableAll(YesNoEnum.NO.getCode());
         }
         productParamSetting.setUpdatedTime(new Date());
         return productParamSettingMapper.updateByPrimaryKeySelective(productParamSetting);
@@ -81,6 +89,12 @@ public class ProductParamSettingService {
 
     public List<ProductParamSetting> queryAllValid() {
         ProductParamSettingExample example = new ProductParamSettingExample();
+        return productParamSettingMapper.selectByExample(example);
+    }
+
+    public List<ProductParamSetting> queryAllValidExceptEnableAll() {
+        ProductParamSettingExample example = new ProductParamSettingExample();
+        example.createCriteria().andEnableAllEqualTo(YesNoEnum.NO.getCode());
         return productParamSettingMapper.selectByExample(example);
     }
 }

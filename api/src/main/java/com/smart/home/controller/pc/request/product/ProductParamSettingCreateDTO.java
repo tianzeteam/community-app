@@ -32,4 +32,7 @@ public class ProductParamSettingCreateDTO {
     @ApiModelProperty("枚举值列表")
     private List<String> enumValueList;
 
+    @ApiModelProperty("应用给所有的产品:0否1是")
+    private Integer enableAll;
+
 }

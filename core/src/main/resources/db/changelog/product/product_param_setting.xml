@@ -51,4 +51,16 @@
             COMMENT ON COLUMN product_param_setting.ENUM_VALUES IS '枚举值';
         </sql>
     </changeSet>
+    <changeSet id="addColumn4ProductParamSetting2" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_param_setting" columnName="ENABLE_ALL"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_param_setting add column ENABLE_ALL int;
+            COMMENT ON COLUMN product_param_setting.ENABLE_ALL IS '应用给所有产品：0否1是';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

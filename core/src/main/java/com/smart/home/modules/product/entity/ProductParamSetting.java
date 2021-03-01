@@ -29,6 +29,10 @@ public class ProductParamSetting implements Serializable {
      * 枚举值
      */
     private String enumValues;
+    /**
+     * 应用给所有产品
+     */
+    private Integer enableAll;
 
     private static final long serialVersionUID = 1L;
 
@@ -229,6 +233,14 @@ public class ProductParamSetting implements Serializable {
 
     public void setEnumValues(String enumValues) {
         this.enumValues = enumValues;
+    }
+
+    public Integer getEnableAll() {
+        return enableAll;
+    }
+
+    public void setEnableAll(Integer enableAll) {
+        this.enableAll = enableAll;
     }
 
     /**

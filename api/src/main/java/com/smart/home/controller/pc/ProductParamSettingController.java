@@ -89,7 +89,7 @@ public class ProductParamSettingController {
     @ApiOperation("下拉选择参数库")
     @GetMapping("selectSelectItems")
     public APIResponse<List<ProductParamSettingSelectVO>> selectSelectItems() {
-        List<ProductParamSetting> list = productParamSettingService.queryAllValid();
+        List<ProductParamSetting> list = productParamSettingService.queryAllValidExceptEnableAll();
         List<ProductParamSettingSelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductParamSettingSelectVO::new);
         return APIResponse.OK(resultList);
     }
