@@ -1,9 +1,14 @@
 package com.smart.home.modules.product.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.enums.RecordStatusEnum;
+import com.smart.home.common.exception.DuplicateDataException;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.modules.product.dao.ProductBrandMapper;
+import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.entity.ProductBrand;
 import com.smart.home.modules.product.entity.ProductBrandExample;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +24,28 @@ public class ProductBrandService {
 
     @Resource
     ProductBrandMapper productBrandMapper;
+    @Resource
+    ProductMapper productMapper;
 
     public int create(ProductBrand productBrand) {
+        // 检查是否存在
+        ProductBrandExample example = new ProductBrandExample();
+        example.createCriteria().andBrandNameEqualTo(productBrand.getBrandName());
+        if (productBrandMapper.countByExample(example) > 0) {
+            throw new DuplicateDataException("该品牌已经存在");
+        }
         productBrand.setCreatedTime(new Date());
+        productBrand.setState(RecordStatusEnum.NORMAL.getStatus());
+        productBrand.setRevision(0);
         return productBrandMapper.insertSelective(productBrand);
     }
 
     public int update(ProductBrand productBrand) {
+        ProductBrandExample example = new ProductBrandExample();
+        example.createCriteria().andBrandNameEqualTo(productBrand.getBrandName()).andIdNotEqualTo(productBrand.getId());
+        if (productBrandMapper.countByExample(example) > 0) {
+            throw new DuplicateDataException("该品牌已经存在");
+        }
         productBrand.setUpdatedTime(new Date());
         return productBrandMapper.updateByPrimaryKeySelective(productBrand);
     }
@@ -37,6 +57,10 @@ public class ProductBrandService {
     @Transactional(rollbackFor = RuntimeException.class)
     public void delete(List<Long> idList) {
         for (Long id : idList) {
+            // 检查是否关联产品了
+            if (productMapper.countByBrandId(id.intValue()) > 0) {
+                throw new ServiceException("该品牌已经关联产品，不能进行删除");
+            }
             productBrandMapper.deleteByPrimaryKey(id.intValue());
         }
     }
@@ -45,7 +69,10 @@ public class ProductBrandService {
         PageHelper.startPage(pageNum, pageSize);
         ProductBrandExample example = new ProductBrandExample();
         ProductBrandExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
+        if (StringUtils.isNotBlank(productBrand.getBrandName())) {
+            criteria.andBrandNameLike(productBrand.getBrandName());
+        }
+        example.setOrderByClause("sort desc");
         return productBrandMapper.selectByExample(example);
     }
 
@@ -54,4 +81,11 @@ public class ProductBrandService {
         return productBrand;
     }
 
+    public List<ProductBrand> queryAllValid() {
+        ProductBrandExample example = new ProductBrandExample();
+        ProductBrandExample.Criteria criteria = example.createCriteria();
+        criteria.andStateEqualTo(RecordStatusEnum.NORMAL.getStatus());
+        example.setOrderByClause("sort desc");
+        return productBrandMapper.selectByExample(example);
+    }
 }

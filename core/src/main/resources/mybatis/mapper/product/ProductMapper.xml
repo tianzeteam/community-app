@@ -645,4 +645,8 @@
   <select id="countByCategoryThree" resultType="long">
     select count(1) from product where category_three_id = #{categoryId}
   </select>
+
+  <select id="countByBrandId" resultType="long">
+    select count(1) from product where brand_id = #{brandId}
+  </select>
 </mapper>

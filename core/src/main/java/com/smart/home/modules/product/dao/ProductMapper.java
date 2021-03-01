@@ -39,4 +39,6 @@ public interface ProductMapper {
     long countByCategoryOne(@Param("categoryId") Integer categoryId);
     long countByCategoryTwo(@Param("categoryId") Integer categoryId);
     long countByCategoryThree(@Param("categoryId") Integer categoryId);
+
+    long countByBrandId(@Param("brandId") Integer brandId);
 }
