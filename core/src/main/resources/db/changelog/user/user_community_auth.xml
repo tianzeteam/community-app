@@ -68,4 +68,16 @@
             COMMENT ON COLUMN user_community_auth.created_by IS '创建人';
         </sql>
     </changeSet>
+    <changeSet id="addColumn4UserCommunityAuth3" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user_community_auth" columnName="admin_flag"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table user_community_auth add column admin_flag int default 0;
+            COMMENT ON COLUMN user_community_auth.admin_flag IS '是否有版务权限:0没有1有';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

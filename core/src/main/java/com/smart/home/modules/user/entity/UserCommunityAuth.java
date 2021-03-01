@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class UserCommunityAuth implements Serializable {
+    private String nickName;
+    //////////////////////////
     private Long id;
 
     private Long userId;
@@ -19,6 +21,10 @@ public class UserCommunityAuth implements Serializable {
     private Date effectiveEndDate;
     private Date createdTime;
     private Long createdBy;
+    /**
+     * 是否有版务权限：0没有1有
+     */
+    private Integer adminFlag;
 
     private static final long serialVersionUID = 1L;
 
@@ -43,6 +49,11 @@ public class UserCommunityAuth implements Serializable {
         this.setUserId(userId);
         return this;
     }
+    public UserCommunityAuth withAdminFlag(Integer adminFlag) {
+        this.setAdminFlag(adminFlag);
+        return this;
+    }
+
 
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -155,6 +166,22 @@ public class UserCommunityAuth implements Serializable {
 
     public void setCreatedBy(Long createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public Integer getAdminFlag() {
+        return adminFlag;
+    }
+
+    public void setAdminFlag(Integer adminFlag) {
+        this.adminFlag = adminFlag;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     /**

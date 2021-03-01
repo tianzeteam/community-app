@@ -66,28 +66,50 @@ public class UserCommunityAuthService {
         return userCommunityAuthMapper.updateByPrimaryKeySelective(userCommunityAuth);
     }
 
-    public int deleteById(Long id) {
-        return userCommunityAuthMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            userCommunityAuthMapper.deleteByPrimaryKey(id);
-        }
-    }
-
-    public List<UserCommunityAuth> selectByPage(UserCommunityAuth userCommunityAuth, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        UserCommunityAuthExample example = new UserCommunityAuthExample();
-        UserCommunityAuthExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
-        return userCommunityAuthMapper.selectByExample(example);
-    }
-
     public UserCommunityAuth findById(Long id) {
         UserCommunityAuth userCommunityAuth = userCommunityAuthMapper.selectByPrimaryKey(id);
         return userCommunityAuth;
     }
 
+    public void setAsAdmin(List<Long> idList, Long loginUserId) {
+        for (Long userId : idList) {
+            UserCommunityAuth userCommunityAuth = findByUserId(userId);
+            if (Objects.isNull(userCommunityAuth)) {
+                initDataWithAdminFlag(userId, 0, loginUserId);
+            } else {
+                userCommunityAuthMapper.updateAdminFlag(userId, 1);
+            }
+        }
+    }
+
+    public void cancelAdmin(List<Long> idList) {
+        for (Long userId : idList) {
+            userCommunityAuthMapper.updateAdminFlag(userId, 0);
+        }
+    }
+
+    public List<UserCommunityAuth> queryAllAdminUser() {
+        return userCommunityAuthMapper.queryAllAdminUser();
+    }
+
+    private UserCommunityAuth findByUserId(Long userId) {
+        UserCommunityAuthExample example = new UserCommunityAuthExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<UserCommunityAuth> list = this.userCommunityAuthMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    private void initDataWithAdminFlag(Long userId, int adminFlag, Long loginUserId) {
+        UserCommunityAuth userCommunityAuth = new UserCommunityAuth();
+        userCommunityAuth.setCreatedTime(new Date());
+        userCommunityAuth.setCreatedBy(loginUserId);
+        userCommunityAuth.withBlackFlag(YesNoEnum.NO.getCode())
+                .withSpeakFlag(YesNoEnum.NO.getCode())
+                .withUserId(userId)
+                .withAdminFlag(adminFlag);
+        this.userCommunityAuthMapper.insertSelective(userCommunityAuth);
+    }
 }

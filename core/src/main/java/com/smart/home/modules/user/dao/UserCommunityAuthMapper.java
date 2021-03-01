@@ -29,4 +29,8 @@ public interface UserCommunityAuthMapper {
     int updateByPrimaryKeySelective(UserCommunityAuth record);
 
     int updateByPrimaryKey(UserCommunityAuth record);
+
+    int updateAdminFlag(@Param("userId") Long userId,@Param("flag") int flag);
+
+    List<UserCommunityAuth> queryAllAdminUser();
 }
