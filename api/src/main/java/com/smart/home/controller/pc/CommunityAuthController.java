@@ -10,6 +10,8 @@ import com.smart.home.modules.user.entity.UserCommunityAuth;
 import com.smart.home.modules.user.service.UserCommunityAuthService;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,10 +45,14 @@ public class CommunityAuthController {
     }
 
     @ApiOperation("查询所有拥有版务权限的用户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId",value = "用户主键id"),
+            @ApiImplicitParam(name = "nickName",value = "用户昵称")
+    })
     @RoleAccess(RoleConsts.ADMIN)
     @GetMapping("/queryAllAdminUser")
-    public APIResponse<List<CommunityAdminUserVO>> queryAllAdminUser() {
-        List<UserCommunityAuth> list = userCommunityAuthService.queryAllAdminUser();
+    public APIResponse<List<CommunityAdminUserVO>> queryAllAdminUser(Long userId, String nickName) {
+        List<UserCommunityAuth> list = userCommunityAuthService.queryAllAdminUser(userId, nickName);
         List<CommunityAdminUserVO> resultList = BeanCopyUtils.convertListTo(list, CommunityAdminUserVO::new);
         return APIResponse.OK(resultList);
     }

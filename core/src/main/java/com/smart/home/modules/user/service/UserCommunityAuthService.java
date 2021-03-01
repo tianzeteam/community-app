@@ -88,8 +88,8 @@ public class UserCommunityAuthService {
         }
     }
 
-    public List<UserCommunityAuth> queryAllAdminUser() {
-        return userCommunityAuthMapper.queryAllAdminUser();
+    public List<UserCommunityAuth> queryAllAdminUser(Long userId, String nickName) {
+        return userCommunityAuthMapper.queryAllAdminUser(userId, nickName);
     }
 
     private UserCommunityAuth findByUserId(Long userId) {
