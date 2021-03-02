@@ -184,4 +184,8 @@ public class ProductService {
         PageHelper.startPage(pageNum, pageSize);
         return productMapper.queryByCategory(product);
     }
+
+    public Product queryDetailById(Integer productId, Long loginUserId) {
+        return productMapper.queryDetailById(productId, loginUserId);
+    }
 }

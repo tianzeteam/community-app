@@ -16,6 +16,8 @@ import java.util.List;
 @ToString
 public class ProductDetailVO {
 
+    @ApiModelProperty("产品主键id")
+    private Integer id;
     @ApiModelProperty("轮播图")
     private String bannerImages;
     @ApiModelProperty("产品名称")
@@ -32,10 +34,12 @@ public class ProductDetailVO {
     private Integer commentCount;
     @ApiModelProperty("评测数量")
     private Integer testCount;
+    @ApiModelProperty("我有没有收藏过了：0没有1有")
+    private Integer collectFlag;
     @ApiModelProperty("产品参数")
-    private List<KeyValueBean> productParams;
+    private String params;
     @ApiModelProperty("商城列表")
-    private List<ProductShopVO> productShop;
+    private String shops;
 
 
 }

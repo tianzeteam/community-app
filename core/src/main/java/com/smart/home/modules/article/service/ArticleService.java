@@ -300,4 +300,9 @@ public class ArticleService {
         PageHelper.startPage(pageNum, pageSize);
         return articleMapper.selectArticleCardByPage(channelId);
     }
+
+    public List<Article> queryViaProductIdByPage(Integer productId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleMapper.queryViaProductIdByPage(productId);
+    }
 }

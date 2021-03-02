@@ -67,4 +67,6 @@ public interface ArticleMapper {
     int updateRecommendType(@Param("id") Long id,@Param("flag") int type);
 
     List<Article> selectArticleCardByPage(@Param("channelId") Integer channelId);
+
+    List<Article> queryViaProductIdByPage(@Param("productId") Integer productId);
 }

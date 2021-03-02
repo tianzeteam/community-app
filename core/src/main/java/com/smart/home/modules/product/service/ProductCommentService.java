@@ -137,4 +137,8 @@ public class ProductCommentService {
         productService.update(product);
     }
 
+    public List<ProductComment> queryViaProductIdByPage(Integer productId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return productCommentMapper.queryViaProductIdByPage(productId);
+    }
 }

@@ -361,4 +361,16 @@
                  left join product_comment_stamp_history pcsh on pcsh.source_id = pc.id and pcsh.user_id = #{loginUserId} and pcsh.category = 0
     where pc.id = #{productCommentId}
   </select>
+
+  <select id="queryViaProductIdByPage" resultType="com.smart.home.modules.product.entity.ProductComment">
+    select ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           pc.star_count as starCount,
+           pc.created_time as createdTime,
+           pc.details as details
+    from product_comment pc
+                 left join user_account ua on ua.id = pc.user_id
+    where pc.product_id = #{productId,jdbcType=INTEGER}
+    order by pc.created_time desc
+    </select>
 </mapper>

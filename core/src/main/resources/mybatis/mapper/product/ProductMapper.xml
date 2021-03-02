@@ -788,4 +788,22 @@
         order by average_score,comment_count ${sortType}
     </if>
   </select>
+
+  <select id="queryDetailById" resultType="com.smart.home.modules.product.entity.Product">
+    select product.id,
+           product.banner_images as bannerImages,
+           product.product_name as productName,
+           product.brand_name as brandName,
+           product.remark,
+           product.tag,
+           product.comment_count as commentCount,
+           product.test_count as testCount,
+           product.average_score as averageScore,
+           product.params,
+           product.shops,
+           case when user_collect.id is null then 0 else 1 end as collectFlag
+    from product
+                 left join user_collect on product.id = user_collect.primary_key and user_collect.collect_type=2 and user_collect.user_id = #{loginUserId,jdbcType=BIGINT}
+    where product.id = #{productId,jdbcType=INTEGER}
+  </select>
 </mapper>

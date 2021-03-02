@@ -45,4 +45,6 @@ public interface ProductCommentMapper {
     List<ProductComment> queryCommentByPage(@Param("loginUserId") Long loginUserId,@Param("productId") int productId);
 
     ProductComment queryCommentDetailHead(@Param("loginUserId") Long userId,@Param("productCommentId") Long productCommentId);
+
+    List<ProductComment> queryViaProductIdByPage(@Param("productId") Integer productId);
 }
