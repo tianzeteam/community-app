@@ -92,4 +92,13 @@
             comment on column user_account.permits is '用户后台权限json数据';
         </sql>
     </changeSet>
+    <changeSet id="insertSuperAdmin4UserAccount" author="jason">
+        <comment>初始化一个超级管理员</comment>
+        <sql>
+            INSERT INTO user_account (username,mobile,name,nick_name,"password",salt,revision,state,permits) VALUES
+            ('13888888888','13888888888','超级管理员','超级管理员','ce2c22d6b3b76b8d899db5e3936436f7','ea04a30cf4004c0ba3bea4a3640f3d80',0,0,'{"permits": {"dashboard": 1, "userManage": 0, "auditManage": 0, "configCenter": 0, "staticManage": 0, "articleManage": 0, "communityManage": 0, "productMaintain": 0, "permissionManage": 0}}');
+            INSERT INTO user_role_mapping (user_id,role_id,role_code)
+            select id,1,'superadmin' from user_account where username='13888888888'
+        </sql>
+    </changeSet>
 </databaseChangeLog>
