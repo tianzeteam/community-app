@@ -5,7 +5,8 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
-
+import java.util.Map;
+import java.util.List;
 /**
  * 用户
  */
@@ -30,5 +31,14 @@ public class User implements Serializable {
 
     @ApiModelProperty("访问令牌，后续访问需要放在header中的Authorization参数中")
     private String accessToken;
+
+    @ApiModelProperty("后台权限")
+    private Map<String, Map<String, Integer>> permissions;
+
+    @ApiModelProperty("用户拥有的角色列表")
+    private List<String> roleCodeList;
+
+    @ApiModelProperty("用户社区权限")
+    private UserCommunityPermits userCommunityPermits;
 
 }

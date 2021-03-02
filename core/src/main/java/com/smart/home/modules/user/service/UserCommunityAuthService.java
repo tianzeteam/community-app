@@ -92,7 +92,7 @@ public class UserCommunityAuthService {
         return userCommunityAuthMapper.queryAllAdminUser(userId, nickName);
     }
 
-    private UserCommunityAuth findByUserId(Long userId) {
+    public UserCommunityAuth findByUserId(Long userId) {
         UserCommunityAuthExample example = new UserCommunityAuthExample();
         example.createCriteria().andUserIdEqualTo(userId);
         List<UserCommunityAuth> list = this.userCommunityAuthMapper.selectByExample(example);

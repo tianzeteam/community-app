@@ -48,6 +48,8 @@ public class UserAccountService {
     private UserDataService userDataService;
     @Autowired
     private SysMenuService sysMenuService;
+    @Autowired
+    private UserCommunityAuthService userCommunityAuthService;
 
     @Transactional(rollbackFor = Exception.class)
     public int insert(UserAccount entity, List<Integer> roleIdList) {
@@ -194,6 +196,8 @@ public class UserAccountService {
                 userAccount.setAccessToken(token);
                 userAccount.setRoleCodeList(findUserRoleCodeList(userAccount.getId()));
                 UserTokenCache.put(token, userAccount);
+                // 加载社区权限
+                userAccount.setUserCommunityAuth(userCommunityAuthService.findByUserId(userAccount.getId()));
                 return userAccount;
             }
         }
@@ -382,4 +386,5 @@ public class UserAccountService {
             mapper.savePermits(userId, permits);
         });
     }
+
 }

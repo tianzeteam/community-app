@@ -49,4 +49,7 @@ public class ArticleDetailVO {
     @ApiModelProperty("我有没有收藏过了：0否1是")
     private Integer collectFlag;
 
+    // 本文由{{app名称}}作者：{{xxx}}原创，转载请注明出处 TODO
+    // 笨视频转载自：{{xxx}}， 原作者：{{xxx}}， 转载已获得授权 TODO
+
 }

@@ -80,7 +80,7 @@ public class JwtUtil {
         /**
          * token加密密钥
          */
-        private static String secretKey = "secret";
+        private static String secretKey = "bb4432e34292080c598e6a6e90c07ae8";
 
         public static String getSecretKey() {
             return secretKey;

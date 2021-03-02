@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -91,6 +92,7 @@ public class LoginController {
         return APIResponse.ERROR("验证码错误");
     }
 
+    @ApiIgnore
     @AnonAccess
     @ApiOperation(value = "获取图形验证码")
     @GetMapping("/captcha")
@@ -98,6 +100,7 @@ public class LoginController {
         CaptchaUtil.out(request, response);
     }
 
+    @ApiIgnore
     @AnonAccess
     @ApiOperation(value = "校验图形验证码")
     @GetMapping("/captchaVerify")

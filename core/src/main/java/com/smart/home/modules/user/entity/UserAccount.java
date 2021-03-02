@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.*;
 
 public class UserAccount implements Serializable {
+
+    private UserCommunityAuth userCommunityAuth;
+    //////////////////////////////////////////////
     private Long id;
 
     private String headUrl;
@@ -330,6 +333,14 @@ public class UserAccount implements Serializable {
 
     public void setPermits(String permits) {
         this.permits = permits;
+    }
+
+    public UserCommunityAuth getUserCommunityAuth() {
+        return userCommunityAuth;
+    }
+
+    public void setUserCommunityAuth(UserCommunityAuth userCommunityAuth) {
+        this.userCommunityAuth = userCommunityAuth;
     }
 
     /**
