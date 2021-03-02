@@ -105,6 +105,10 @@ public class Article implements Serializable {
      * 推荐时间
      */
     private Date recommendTime;
+    /**
+     * 原作者或者媒体
+     */
+    private String sourceFrom;
 
     private static final long serialVersionUID = 1L;
 

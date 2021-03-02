@@ -171,4 +171,16 @@
             COMMENT ON COLUMN article.audit_time IS '过审时间';
         </sql>
     </changeSet>
+    <changeSet id="addColumnSourceFrom4Article" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article" columnName="source_from"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article add column source_from varchar(32);
+            COMMENT ON COLUMN article.source_from IS '原作者或者媒体';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

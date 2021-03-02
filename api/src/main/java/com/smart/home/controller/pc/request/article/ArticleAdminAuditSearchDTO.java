@@ -1,4 +1,4 @@
-package com.smart.home.controller.pc.response.article;
+package com.smart.home.controller.pc.request.article;
 
 import com.smart.home.dto.RequestPageBean;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,11 +11,11 @@ import lombok.ToString;
  **/
 @Data
 @ToString
-public class ArticleAdminRcommendSearchDTO extends RequestPageBean {
+public class ArticleAdminAuditSearchDTO extends RequestPageBean {
 
     @ApiModelProperty("排序规则：desc 或者 asc")
     private String sortType;
-    @ApiModelProperty("排序字段:created_time,audit_time,recommend_time")
+    @ApiModelProperty("排序字段:created_time")
     private String sortField;
 
 }

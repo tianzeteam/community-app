@@ -47,4 +47,7 @@ public class ArticleCreateDTO {
 
     @ApiModelProperty("转载授权")
     private String originalAuth;
+
+    @ApiModelProperty("原作者或者媒体名称")
+    private String sourceFrom;
 }

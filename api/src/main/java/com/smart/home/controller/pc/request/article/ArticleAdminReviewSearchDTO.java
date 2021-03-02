@@ -1,4 +1,4 @@
-package com.smart.home.controller.pc.response.article;
+package com.smart.home.controller.pc.request.article;
 
 import com.smart.home.dto.RequestPageBean;
 import io.swagger.annotations.ApiModelProperty;

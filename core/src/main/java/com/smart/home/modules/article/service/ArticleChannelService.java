@@ -2,6 +2,7 @@ package com.smart.home.modules.article.service;
 
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.RecordStatusEnum;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.modules.article.dao.ArticleChannelMapper;
@@ -88,4 +89,11 @@ public class ArticleChannelService {
         return articleChannelMapper.selectByExample(example);
     }
 
+    public List<ArticleChannel> selectAllIndexValid() {
+        ArticleChannelExample example = new ArticleChannelExample();
+        example.createCriteria().andStateEqualTo(RecordStatusEnum.NORMAL.getStatus())
+                    .andIndexFlagEqualTo(YesNoEnum.YES.getCode());
+        example.setOrderByClause("sort desc");
+        return articleChannelMapper.selectByExample(example);
+    }
 }

@@ -65,4 +65,6 @@ public interface ArticleMapper {
     int updateTopFlag(@Param("id") Long id,@Param("flag") int flag);
 
     int updateRecommendType(@Param("id") Long id,@Param("flag") int type);
+
+    List<Article> selectArticleCardByPage(@Param("channelId") Integer channelId);
 }

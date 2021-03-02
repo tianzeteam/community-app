@@ -5,7 +5,7 @@ import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.SubjectCardCreateDTO;
-import com.smart.home.controller.pc.response.article.ArticleAdminRcommendSearchDTO;
+import com.smart.home.controller.pc.request.article.ArticleAdminRcommendSearchDTO;
 import com.smart.home.controller.pc.response.article.ArticleAdminRecommendPageVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;

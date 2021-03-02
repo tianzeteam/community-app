@@ -295,4 +295,9 @@ public class ArticleService {
     public void setAsArticle(Long articleId) {
         articleMapper.updateRecommendType(articleId, ArticleRecommendTypeEnum.ARTCILE_CARD.getCode());
     }
+
+    public List<Article> selectArticleCardByPage(Integer channelId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleMapper.selectArticleCardByPage(channelId);
+    }
 }
