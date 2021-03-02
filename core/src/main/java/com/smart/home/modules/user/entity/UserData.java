@@ -6,6 +6,13 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class UserData implements Serializable {
+
+    private String username;
+    private String headUrl;
+    private Integer blackFlag;
+    private Integer speakFlag;
+    private Date effectiveEndDate;
+    //////////////////////////
     private Long id;
 
     private Long userId;
@@ -45,6 +52,14 @@ public class UserData implements Serializable {
     private Long updatedBy;
 
     private Date updatedTime;
+
+    private Integer hitSensitiveCount;
+    private Integer byReportCount;
+    private String reportReasonRate;
+    private Integer textExceptionCount;
+    private Integer imageExceptionCount;
+    private Integer userAuditExceptionCount;
+    private Integer blackCount;
 
     private static final long serialVersionUID = 1L;
 
@@ -397,6 +412,102 @@ public class UserData implements Serializable {
         result = prime * result + ((getUpdatedBy() == null) ? 0 : getUpdatedBy().hashCode());
         result = prime * result + ((getUpdatedTime() == null) ? 0 : getUpdatedTime().hashCode());
         return result;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
+    public Integer getHitSensitiveCount() {
+        return hitSensitiveCount;
+    }
+
+    public void setHitSensitiveCount(Integer hitSensitiveCount) {
+        this.hitSensitiveCount = hitSensitiveCount;
+    }
+
+    public Integer getByReportCount() {
+        return byReportCount;
+    }
+
+    public void setByReportCount(Integer byReportCount) {
+        this.byReportCount = byReportCount;
+    }
+
+    public String getReportReasonRate() {
+        return reportReasonRate;
+    }
+
+    public void setReportReasonRate(String reportReasonRate) {
+        this.reportReasonRate = reportReasonRate;
+    }
+
+    public Integer getTextExceptionCount() {
+        return textExceptionCount;
+    }
+
+    public void setTextExceptionCount(Integer textExceptionCount) {
+        this.textExceptionCount = textExceptionCount;
+    }
+
+    public Integer getImageExceptionCount() {
+        return imageExceptionCount;
+    }
+
+    public void setImageExceptionCount(Integer imageExceptionCount) {
+        this.imageExceptionCount = imageExceptionCount;
+    }
+
+    public Integer getUserAuditExceptionCount() {
+        return userAuditExceptionCount;
+    }
+
+    public void setUserAuditExceptionCount(Integer userAuditExceptionCount) {
+        this.userAuditExceptionCount = userAuditExceptionCount;
+    }
+
+    public Integer getBlackCount() {
+        return blackCount;
+    }
+
+    public void setBlackCount(Integer blackCount) {
+        this.blackCount = blackCount;
+    }
+
+    public Integer getBlackFlag() {
+        return blackFlag;
+    }
+
+    public void setBlackFlag(Integer blackFlag) {
+        this.blackFlag = blackFlag;
+    }
+
+    public Integer getSpeakFlag() {
+        return speakFlag;
+    }
+
+    public void setSpeakFlag(Integer speakFlag) {
+        this.speakFlag = speakFlag;
+    }
+
+    public Date getEffectiveEndDate() {
+        return effectiveEndDate;
+    }
+
+    public void setEffectiveEndDate(Date effectiveEndDate) {
+        this.effectiveEndDate = effectiveEndDate;
     }
 
     /**

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author jason
  * @date 2021/2/18
  **/
-@Api(tags = "system数据字典接口")
+@Api(tags = "配置中心-数据字典")
 @RestController
 @RequestMapping("/api/pc/sysDict")
 public class SysDictController {

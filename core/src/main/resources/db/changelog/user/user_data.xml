@@ -70,4 +70,43 @@
             create index idx_user_data_user_id on user_data using btree (user_id);
         </sql>
     </changeSet>
+    <changeSet id="addColumns4UserData" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user_data" columnName="hit_sensitive_count"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table user_data add column hit_sensitive_count int default 0;
+            COMMENT ON COLUMN user_data.hit_sensitive_count IS '命中敏感词数量';
+
+            alter table user_data add column by_report_count int default 0;
+            COMMENT ON COLUMN user_data.by_report_count IS '被投诉数量';
+
+            alter table user_data add column text_exception_count int default 0;
+            COMMENT ON COLUMN user_data.text_exception_count IS '机审文本异常数量';
+
+            alter table user_data add column image_exception_count int default 0;
+            COMMENT ON COLUMN user_data.image_exception_count IS '机审图片异常数量';
+
+            alter table user_data add column user_audit_exception_count int default 0;
+            COMMENT ON COLUMN user_data.user_audit_exception_count IS '人工认定异常';
+
+            alter table user_data add column black_count int default 0;
+            COMMENT ON COLUMN user_data.black_count IS '被封禁次数';
+        </sql>
+    </changeSet>
+    <changeSet id="addColumns4UserData2" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user_data" columnName="report_reason_rate"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table user_data add column report_reason_rate jsonb;
+            COMMENT ON COLUMN user_data.report_reason_rate IS '投诉原因分布';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

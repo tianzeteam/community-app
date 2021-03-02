@@ -464,4 +464,36 @@
   <update id="decreaseLikeCount">
     update user_data set like_count = like_count - 1 where user_id = #{userId,jdbcType=BIGINT}
   </update>
+
+  <select id="selectByIdOrNickname" resultType="com.smart.home.modules.user.entity.UserData">
+    select ua.id as userId,
+           ua.username as username,
+           ua.head_url as headUrl,
+           ua.created_time as createdTime,
+           ud.remark as remark,
+           ud.hit_sensitive_count as hitSensitiveCount,
+           ud.by_report_count as byReportCount,
+           ud.report_reason_rate as reportReasonRate,
+           ud.text_exception_count as textExceptionCount,
+           ud.image_exception_count as imageExceptionCount,
+           ud.user_audit_exception_count as userAuditExceptionCount,
+           ud.black_count as blackCount,
+           uca.black_flag as blackFlag,
+           uca.speak_flag as speakFlag,
+           uca.effective_end_date as effectiveEndDate
+    from user_data ud
+                 left join user_account ua on ud.user_id = ua.id
+                 left join user_community_auth uca on uca.user_id = ua.id
+    where 1=1
+    <if test="userId != null and nickName == null">
+      and ud.user_id = #{userId,jdbcType=BIGINT}
+    </if>
+    <if test="userId == null and nickName != null">
+      and ua.nick_name = #{nickName,jdbcType=VARCHAR}
+    </if>
+    <if test="userId != null and nickName != null">
+      and (ud.user_id = #{userId,jdbcType=BIGINT} or ua.nick_name = #{nickName,jdbcType=VARCHAR})
+    </if>
+    limit 1
+    </select>
 </mapper>

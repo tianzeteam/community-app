@@ -109,4 +109,8 @@ public class UserDataService {
     public void decreaseLikeCount(Long userId) {
         userDataMapper.decreaseLikeCount(userId);
     }
+
+    public UserData selectByIdOrNickname(Long userId, String nickName) {
+        return userDataMapper.selectByIdOrNickname(userId, nickName);
+    }
 }

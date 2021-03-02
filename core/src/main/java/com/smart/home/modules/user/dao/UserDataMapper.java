@@ -36,4 +36,5 @@ public interface UserDataMapper {
 
     int decreaseLikeCount(@Param("userId") Long userId);
 
+    UserData selectByIdOrNickname(@Param("userId") Long userId,@Param("nickName") String nickName);
 }
