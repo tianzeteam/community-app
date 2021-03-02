@@ -101,4 +101,10 @@
             select id,1,'superadmin' from user_account where username='13888888888'
         </sql>
     </changeSet>
+    <changeSet id="updateSuperAdmin4UserAccount" author="jason">
+        <comment>更新超级管理员权限</comment>
+        <sql>
+            update user_account set permits = '{"permits": {"dashboard": 1, "userManage": 1, "auditManage": 1, "configCenter": 1, "staticManage": 1, "articleManage": 1, "communityManage": 1, "productMaintain": 1, "permissionManage": 1}}' where username = '13888888888';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
