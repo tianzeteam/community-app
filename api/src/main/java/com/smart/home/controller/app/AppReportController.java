@@ -38,7 +38,9 @@ public class AppReportController {
         Long userId = UserUtils.getLoginUserId();
         String contents = reportCreateDTO.getContents();
         String images = reportCreateDTO.getImages();
-        reportHistoryService.create(ReportCategoryEnum.ARTICLE, id, userId, contents, images);
+        Long authorUserId = reportCreateDTO.getAuthorUserId();
+        String reason = reportCreateDTO.getReason();
+        reportHistoryService.create(ReportCategoryEnum.ARTICLE, id, userId, contents, images, authorUserId, reason);
         return APIResponse.OK();
     }
 
@@ -50,7 +52,9 @@ public class AppReportController {
         Long userId = UserUtils.getLoginUserId();
         String contents = reportCreateDTO.getContents();
         String images = reportCreateDTO.getImages();
-        reportHistoryService.create(ReportCategoryEnum.POST, id, userId, contents, images);
+        Long authorUserId = reportCreateDTO.getAuthorUserId();
+        String reason = reportCreateDTO.getReason();
+        reportHistoryService.create(ReportCategoryEnum.POST, id, userId, contents, images, authorUserId, reason);
         return APIResponse.OK();
     }
 

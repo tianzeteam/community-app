@@ -1,5 +1,6 @@
 package com.smart.home.modules.other.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.enums.ReportCategoryEnum;
@@ -8,12 +9,13 @@ import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.other.dao.ReportHistoryMapper;
 import com.smart.home.modules.other.entity.ReportHistory;
 import com.smart.home.modules.other.entity.ReportHistoryExample;
+import com.smart.home.modules.user.dao.UserDataMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
 
 /**
  * @author jason
@@ -27,6 +29,8 @@ public class ReportHistoryService {
     ArticleMapper articleMapper;
     @Resource
     CommunityPostMapper communityPostMapper;
+    @Resource
+    UserDataMapper userDataMapper;
 
     /**
      * 举报文章/帖子
@@ -35,9 +39,12 @@ public class ReportHistoryService {
      * @param userId 举报人
      * @param contents 举报内容描述
      * @param images 看是否有截图证明，存图片路径
+     * @param authorUserId 作者用户主键id
+     * @param reason 举报原因
      * @return
      */
-    public int create(ReportCategoryEnum reportCategoryEnum,Long primaryKey, Long userId, String contents, String images) {
+    public int create(ReportCategoryEnum reportCategoryEnum,Long primaryKey, Long userId,
+                      String contents, String images, Long authorUserId, String reason) {
         // 检查该用户有没有举报过了
         ReportHistoryExample example = new ReportHistoryExample();
         example.createCriteria()
@@ -58,6 +65,20 @@ public class ReportHistoryService {
                 .withCreatedTime(new Date());
         int affectRow = reportHistoryMapper.insertSelective(reportHistory);
         if (affectRow > 0) {
+            String reasonRate = userDataMapper.queryReportReasonRate(authorUserId);
+            Map<String, Integer> rateMap = null;
+            if(StringUtils.isBlank(reasonRate)) {
+                rateMap = new HashMap<>();
+            } else {
+                rateMap = JSON.parseObject(reasonRate, Map.class);
+            }
+            Integer rate = rateMap.get(reason);
+            if (Objects.isNull(rate)) {
+                rateMap.put(reason, 1);
+            } else {
+                rateMap.put(reason, rate+1);
+            }
+            userDataMapper.increaseByReportCount(authorUserId, JSON.toJSONString(rateMap));
             switch (reportCategoryEnum) {
                 case ARTICLE:
                     articleMapper.increaseReportCount(primaryKey);

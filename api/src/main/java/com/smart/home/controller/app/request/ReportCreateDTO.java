@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -21,5 +22,10 @@ public class ReportCreateDTO {
     private String contents;
     @ApiModelProperty("截图为证-如果有的话")
     private String images;
-
+    @ApiModelProperty("作者用户主键id")
+    @NotNull(message = "作者用户主键id不能为空")
+    private Long authorUserId;
+    @ApiModelProperty("举报原因：这个应该是枚举，从report.reason字典取")
+    @NotBlank(message = "举报原因不能为空")
+    private String reason;
 }

@@ -496,4 +496,15 @@
     </if>
     limit 1
     </select>
+
+  <update id="increaseByReportCount">
+    update user_data
+    set by_report_count = by_report_count + 1,
+        report_reason_rate = '${reasonRate}'
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+
+  <select id="queryReportReasonRate" resultType="java.lang.String">
+    select report_reason_rate from user_data where user_id = #{userId,jdbcType=BIGINT}
+  </select>
 </mapper>
