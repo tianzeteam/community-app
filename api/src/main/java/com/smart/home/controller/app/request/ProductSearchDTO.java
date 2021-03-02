@@ -13,8 +13,10 @@ import lombok.ToString;
 @ToString
 public class ProductSearchDTO extends RequestPageBean {
 
-    @ApiModelProperty("查询类型：0综合1热度2好评3上市时间")
-    private Integer sortType;
+    @ApiModelProperty("查询类型：0综合1新品排序2口碑排序")
+    private Integer queryType;
+    @ApiModelProperty("排序方式：desc，asc")
+    private String sortType;
     @ApiModelProperty("筛选条件-一级类目主键ID")
     private Integer categoryOneId;
     @ApiModelProperty("筛选条件-二级类目主键ID")
@@ -22,6 +24,6 @@ public class ProductSearchDTO extends RequestPageBean {
     @ApiModelProperty("筛选条件-三级类目主键ID")
     private Integer categoryThreeId;
     @ApiModelProperty("筛选条件-平台")
-    private String platform;
+    private String supportPlatform;
 
 }

@@ -1,10 +1,12 @@
 package com.smart.home.controller.app.response.product;
 
+import com.smart.home.common.bean.KeyValueBean;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author jason
@@ -30,6 +32,10 @@ public class ProductDetailVO {
     private Integer commentCount;
     @ApiModelProperty("评测数量")
     private Integer testCount;
+    @ApiModelProperty("产品参数")
+    private List<KeyValueBean> productParams;
+    @ApiModelProperty("商城列表")
+    private List<ProductShopVO> productShop;
 
 
 }

@@ -53,4 +53,6 @@ public interface ProductMapper {
     int updateOnlineStatus(@Param("id") Integer id,@Param("status") int status);
 
     List<Product> selectByPage(Product product);
+
+    List<Product> queryByCategory(Product product);
 }

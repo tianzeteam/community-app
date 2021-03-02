@@ -179,4 +179,9 @@ public class ProductService {
     public void updateOnlineStatus(Integer productId, int status) {
         productMapper.updateOnlineStatus(productId, status);
     }
+
+    public List<Product> queryByCategory(Product product, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return productMapper.queryByCategory(product);
+    }
 }

@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 public class Product implements Serializable {
 
+    private Integer queryType;
+    private String sortType;
     private List<ProductShopMapping> productShopMappingList;
     private List<ProductParamValue> productParamValueList;
     private List<String> tagList;
@@ -693,6 +695,22 @@ public class Product implements Serializable {
 
     public void setDeleteFlag(Integer deleteFlag) {
         this.deleteFlag = deleteFlag;
+    }
+
+    public String getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
+    }
+
+    public Integer getQueryType() {
+        return queryType;
+    }
+
+    public void setQueryType(Integer queryType) {
+        this.queryType = queryType;
     }
 
     /**

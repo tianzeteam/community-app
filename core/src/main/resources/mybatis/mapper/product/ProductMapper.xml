@@ -754,4 +754,38 @@
       </foreach>
     </if>
   </select>
+
+  <select id="queryByCategory" resultType="com.smart.home.modules.product.entity.Product"
+          parameterType="com.smart.home.modules.product.entity.Product">
+    select id,
+           cover_image as coverImage,
+           product_name as productName,
+           remark,
+           tag,
+           comment_count as commentCount,
+           average_score as averageScore
+    from product
+    where 1 = 1
+    <if test="categoryOneId != null">
+      and category_one_id = #{categoryOneId,jdbcType=INTEGER}
+    </if>
+    <if test="categoryTwoId != null">
+      and category_two_id = #{categoryTwoId,jdbcType=INTEGER}
+    </if>
+    <if test="categoryThreeId != null">
+      and category_three_id = #{categoryThreeId,jdbcType=INTEGER}
+    </if>
+    <if test="supportPlatform != null and supportPlatform != ''">
+      and support_platform = #{supportPlatform,jdbcType=VARCHAR}
+    </if>
+    <if test="queryType == 0">
+      order by created_time,comment_count,test_count,collect_count,average_score,hot_rate ${sortType}
+    </if>
+    <if test="queryType == 1">
+        order by created_time desc
+    </if>
+    <if test="queryType == 2">
+        order by average_score,comment_count ${sortType}
+    </if>
+  </select>
 </mapper>

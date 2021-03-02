@@ -30,11 +30,5 @@ public class ProductSearchResultVO {
     private Integer commentCount;
     @ApiModelProperty("综合评分")
     private BigDecimal averageScore;
-    @ApiModelProperty("是否收藏过了：0否1是")
-    private Integer collectFlag;
-    @ApiModelProperty("产品参数")
-    private List<KeyValueBean> productParams;
-    @ApiModelProperty("商城列表")
-    private List<ProductShopVO> productShop;
 
 }
