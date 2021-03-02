@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.smart.home.modules.user.entity.UserAccount;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author jason
@@ -12,7 +13,10 @@ import java.util.Objects;
  **/
 public class UserTokenCache {
 
-    private static Cache<String, UserAccount> cache = CacheBuilder.newBuilder().build();
+    private static Cache<String, UserAccount> cache = CacheBuilder
+            .newBuilder()
+            .expireAfterAccess(2, TimeUnit.HOURS)
+            .build();
 
     public static void put(String key, UserAccount value) {
         if (!Objects.isNull(value)) {
