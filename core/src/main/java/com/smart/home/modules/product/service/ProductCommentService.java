@@ -5,6 +5,7 @@ import com.smart.home.modules.product.dao.ProductCommentMapper;
 import com.smart.home.modules.product.entity.Product;
 import com.smart.home.modules.product.entity.ProductComment;
 import com.smart.home.modules.product.entity.ProductCommentExample;
+import com.smart.home.modules.user.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,8 @@ public class ProductCommentService {
     ProductCommentMapper productCommentMapper;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private UserAccountService userAccountService;
 
     public int create(ProductComment productComment) {
         productComment.setCreatedTime(new Date());
@@ -51,8 +54,15 @@ public class ProductCommentService {
         PageHelper.startPage(pageNum, pageSize);
         ProductCommentExample example = new ProductCommentExample();
         ProductCommentExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
-        return productCommentMapper.selectByExample(example);
+        if (productComment.getUserId() != null) {
+            criteria.andUserIdEqualTo(productComment.getUserId());
+        }
+        example.setOrderByClause("created_time desc");
+        List<ProductComment> list = productCommentMapper.selectByExample(example);
+        for (ProductComment comment : list) {
+            comment.setNickName(userAccountService.findNicknameByUserId(comment.getUserId()));
+        }
+        return list;
     }
 
     public ProductComment findById(Long id) {

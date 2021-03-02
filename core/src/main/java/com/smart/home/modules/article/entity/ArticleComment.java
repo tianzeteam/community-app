@@ -1,5 +1,7 @@
 package com.smart.home.modules.article.entity;
 
+import com.smart.home.modules.user.entity.UserAccount;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;

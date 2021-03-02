@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class CommunityPostReply implements Serializable {
+
+    private String nickName;
+    ////////////////////////
     private Long id;
 
     private Long userId;
@@ -199,6 +202,14 @@ public class CommunityPostReply implements Serializable {
         result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
         result = prime * result + ((getStampCount() == null) ? 0 : getStampCount().hashCode());
         return result;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     /**

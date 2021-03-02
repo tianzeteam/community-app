@@ -387,4 +387,7 @@ public class UserAccountService {
         });
     }
 
+    public String findNicknameByUserId(Long userId) {
+        return mapper.findNicknameByUserId(userId);
+    }
 }

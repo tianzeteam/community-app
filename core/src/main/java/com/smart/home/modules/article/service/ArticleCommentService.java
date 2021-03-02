@@ -7,6 +7,8 @@ import com.smart.home.modules.article.dao.ArticleMapper;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.entity.ArticleCommentExample;
+import com.smart.home.modules.user.service.UserAccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,8 @@ public class ArticleCommentService {
     ArticleCommentMapper articleCommentMapper;
     @Resource
     private ArticleMapper articleMapper;
+    @Autowired
+    private UserAccountService userAccountService;
 
     @Transactional(rollbackFor = RuntimeException.class)
     public void create(Long loginUserId, Long articleId, String contents) {
@@ -64,8 +68,15 @@ public class ArticleCommentService {
         PageHelper.startPage(pageNum, pageSize);
         ArticleCommentExample example = new ArticleCommentExample();
         ArticleCommentExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
-        return articleCommentMapper.selectByExample(example);
+        if (articleComment.getUserId() != null) {
+            criteria.andUserIdEqualTo(articleComment.getUserId());
+        }
+        example.setOrderByClause("created_time desc");
+        List<ArticleComment> list = articleCommentMapper.selectByExample(example);
+        for (ArticleComment comment : list) {
+            comment.setNickName(userAccountService.findNicknameByUserId(comment.getUserId()));
+        }
+        return list;
     }
 
     public ArticleComment findById(Long id) {

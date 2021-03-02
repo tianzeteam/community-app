@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class CommunityPost implements Serializable {
+
+    private String nickName;
+    ///////////////////////////
     private Long id;
 
     private Integer community;
@@ -363,6 +366,14 @@ public class CommunityPost implements Serializable {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     /**

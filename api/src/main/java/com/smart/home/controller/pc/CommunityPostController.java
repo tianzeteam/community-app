@@ -58,13 +58,6 @@ public class CommunityPostController {
         return APIResponse.OK();
     }
 
-    @ApiOperation("分页查询社区帖子")
-    @PostMapping("/selectByPage")
-    public APIResponse<ResponsePageBean<CommunityPost>> selectByPage(CommunityPost communityPost, int pageNum, int pageSize) {
-        List<CommunityPost> list = communityPostService.selectByPage(communityPost, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
-    }
-
     @ApiOperation("按主键ID查询社区帖子")
     @GetMapping("/selectById")
     public APIResponse<CommunityPost> selectById(Long id) {

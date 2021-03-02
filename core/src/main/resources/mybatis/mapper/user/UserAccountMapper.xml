@@ -402,4 +402,8 @@
       and (permits::json -> 'permits' ->> '${permitCode}')::int = 1
     </if>
   </select>
+
+  <select id="findNicknameByUserId" resultType="java.lang.String">
+    select nick_name from user_account where id = #{userId,jdbcType=BIGINT}
+  </select>
 </mapper>

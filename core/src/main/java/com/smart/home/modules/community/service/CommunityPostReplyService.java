@@ -4,6 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
 import com.smart.home.modules.community.entity.CommunityPostReply;
 import com.smart.home.modules.community.entity.CommunityPostReplyExample;
+import com.smart.home.modules.user.service.UserAccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ public class CommunityPostReplyService {
 
     @Resource
     CommunityPostReplyMapper communityPostReplyMapper;
+    @Autowired
+    private UserAccountService userAccountService;
 
     public int create(CommunityPostReply communityPostReply) {
         communityPostReply.setCreatedTime(new Date());
@@ -44,8 +48,15 @@ public class CommunityPostReplyService {
         PageHelper.startPage(pageNum, pageSize);
         CommunityPostReplyExample example = new CommunityPostReplyExample();
         CommunityPostReplyExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
-        return communityPostReplyMapper.selectByExample(example);
+        if (communityPostReply.getUserId() != null) {
+            criteria.andUserIdEqualTo(communityPostReply.getUserId());
+        }
+        example.setOrderByClause("created_time desc");
+        List<CommunityPostReply> list = communityPostReplyMapper.selectByExample(example);
+        for (CommunityPostReply postReply : list) {
+            postReply.setNickName(userAccountService.findNicknameByUserId(postReply.getUserId()));
+        }
+        return list;
     }
 
     public CommunityPostReply findById(Long id) {

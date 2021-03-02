@@ -7,6 +7,8 @@ import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
+import com.smart.home.modules.user.service.UserAccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,8 @@ public class CommunityPostService {
 
     @Resource
     CommunityPostMapper communityPostMapper;
+    @Autowired
+    private UserAccountService userAccountService;
 
     public int create(CommunityPost communityPost) {
         communityPost.setTopFlag(YesNoEnum.NO.getCode());
@@ -57,8 +61,15 @@ public class CommunityPostService {
         PageHelper.startPage(pageNum, pageSize);
         CommunityPostExample example = new CommunityPostExample();
         CommunityPostExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
-        return communityPostMapper.selectByExample(example);
+        if (communityPost.getUserId() != null) {
+            criteria.andUserIdEqualTo(communityPost.getUserId());
+        }
+        example.setOrderByClause("created_time desc");
+        List<CommunityPost> list = communityPostMapper.selectByExample(example);
+        for (CommunityPost post : list) {
+            post.setNickName(userAccountService.findNicknameByUserId(post.getUserId()));
+        }
+        return list;
     }
 
     public CommunityPost findById(Long id) {

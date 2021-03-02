@@ -41,4 +41,6 @@ public interface UserAccountMapper {
     void savePermits(@Param("id") Long id,@Param("permitJson") String permitJson);
 
     List<UserAccount> selectByIdAndNicknameAndPermit(@Param("idList") List<Long> idList,@Param("nickName") String nickName,@Param("permitCode") String permitCode);
+
+    String findNicknameByUserId(@Param("userId") Long userId);
 }
