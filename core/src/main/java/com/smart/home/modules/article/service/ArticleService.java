@@ -317,4 +317,39 @@ public class ArticleService {
         return articleMapper.queryDraftViaUserIdByPage(loginUserId);
     }
 
+    /**
+     * 获取推荐下面的置顶的大图
+     * topFlag = 1
+     * recommendFlag = 1
+     * @return
+     */
+    public Article queryIndexTopBigImageCard() {
+        // 1 是推荐的频道id
+        return articleMapper.queryBigImageCard(YesNoEnum.YES.getCode(), ArticleRecommendTypeEnum.BIG_IMAGE_TOP.getCode(), null, YesNoEnum.YES.getCode());
+    }
+
+    /**
+     * 获取其他频道下的置顶大图
+     * topFlag = 1
+     * recommendFlag = 0
+     * @param articleChannelId
+     * @return
+     */
+    public Article queryBigImageCardByChannelId(Integer articleChannelId) {
+        return articleMapper.queryBigImageCard(YesNoEnum.YES.getCode(), ArticleRecommendTypeEnum.BIG_IMAGE_CARD.getCode(), articleChannelId, YesNoEnum.NO.getCode());
+    }
+
+    /**
+     * 获取推荐下面的文章卡片
+     * topFlag = 1
+     * recommendFlag = 1
+     * @return
+     */
+    public List<Article> queryIndexArticleCard() {
+        return articleMapper.queryIndexArticleCard(YesNoEnum.NO.getCode(), ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), null, YesNoEnum.YES.getCode());
+    }
+
+    public List<Article> queryArticleCardByChannelId(Integer articleChannelId) {
+        return articleMapper.queryIndexArticleCard(YesNoEnum.NO.getCode(), ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), articleChannelId, YesNoEnum.NO.getCode());
+    }
 }

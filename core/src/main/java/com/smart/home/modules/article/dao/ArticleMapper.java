@@ -73,4 +73,8 @@ public interface ArticleMapper {
     List<Article> queryViaUserIdByPage(@Param("userId") Long userId);
 
     List<Article> queryDraftViaUserIdByPage(@Param("userId") Long userId);
+
+    Article queryBigImageCard(@Param("topFlag") Integer topFlag, @Param("recommendType") Integer recommendType, @Param("channelId") Integer channelId, @Param("recommendFlag") Integer recommendFlag);
+
+    List<Article> queryIndexArticleCard(@Param("topFlag") Integer topFlag, @Param("recommendType") Integer recommendType, @Param("channelId") Integer channelId, @Param("recommendFlag") Integer recommendFlag);
 }

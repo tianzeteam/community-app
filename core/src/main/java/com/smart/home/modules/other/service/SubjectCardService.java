@@ -6,6 +6,7 @@ import com.smart.home.modules.other.entity.SubjectCard;
 import com.smart.home.modules.other.entity.SubjectCardExample;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -55,4 +56,15 @@ public class SubjectCardService {
         return subjectCard;
     }
 
+    public SubjectCard queryLatestSubjectCard() {
+        PageHelper.startPage(1, 1);
+        SubjectCardExample example = new SubjectCardExample();
+        example.createCriteria().andRevisionEqualTo(0);
+        example.setOrderByClause("created_time desc");
+        List<SubjectCard> list = this.subjectCardMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

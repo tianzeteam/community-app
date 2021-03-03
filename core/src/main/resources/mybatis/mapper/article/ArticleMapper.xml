@@ -812,4 +812,39 @@
     from article
     where user_id = #{userId,jdbcType=BIGINT} and state = 0
   </select>
+
+  <select id="queryBigImageCard" resultType="com.smart.home.modules.article.entity.Article">
+    select cover_image as coverImage,
+           title,
+            id
+    from article
+    where  state = 1 and audit_state = 1
+    <if test="recommendFlag != null">
+      and recommend_flag = #{recommendFlag,jdbcType=INTEGER}
+    </if>
+      <if test="channelId != null">
+        and channel_id = #{channelId,jdbcType=INTEGER}
+      </if>
+      and top_flag = #{topFlag,jdbcType=INTEGER}
+      and recommend_type = #{recommendType,jdbcType=INTEGER}
+    limit 1
+  </select>
+
+  <select id="queryIndexArticleCard" resultType="com.smart.home.modules.article.entity.Article">
+    select cover_image as coverImage,
+            title,
+            id,
+            source_from as sourceFrom,
+            created_time as createdTime
+    from article
+    where  state = 1 and audit_state = 1
+    <if test="recommendFlag != null">
+      and recommend_flag = #{recommendFlag,jdbcType=INTEGER}
+    </if>
+    <if test="channelId != null">
+      and channel_id = #{channelId,jdbcType=INTEGER}
+    </if>
+    and top_flag = #{topFlag,jdbcType=INTEGER}
+    and recommend_type = #{recommendType,jdbcType=INTEGER}
+  </select>
 </mapper>
