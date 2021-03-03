@@ -75,13 +75,9 @@ public class PermissionAdminController {
     @RoleAccess(RoleConsts.ADMIN)
     @PostMapping("/updateUserAdminPermit")
     public APIResponse updateUserAdminPermit(@RequestBody List<UserAdminPermitUpdateDTO> userAdminPermitUpdateDTOList) {
-        Map<Long, String> userPermitMap = new HashMap<>();
         for (UserAdminPermitUpdateDTO userAdminPermitUpdateDTO : userAdminPermitUpdateDTOList) {
-            Map<String, Map<String, Integer>> map = new HashMap<>();
-            map.put("permits", userAdminPermitUpdateDTO.getPermits());
-            userPermitMap.put(userAdminPermitUpdateDTO.getId(), JSON.toJSONString(map));
+            userAccountService.updateUserAdminPermit(userAdminPermitUpdateDTO.getId(), userAdminPermitUpdateDTO.getPermits());
         }
-        userAccountService.updateUserAdminPermit(userPermitMap);
         return APIResponse.OK();
     }
 

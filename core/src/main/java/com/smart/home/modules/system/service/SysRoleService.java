@@ -5,6 +5,9 @@ import com.smart.home.common.enums.APIResponseCodeEnum;
 import com.smart.home.modules.system.dao.SysRoleMapper;
 import com.smart.home.modules.system.dao.SysRoleMenuMappingMapper;
 import com.smart.home.modules.system.entity.*;
+import com.smart.home.modules.user.dao.UserRoleMappingMapper;
+import com.smart.home.modules.user.entity.UserRoleMapping;
+import com.smart.home.modules.user.entity.UserRoleMappingExample;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,8 @@ public class SysRoleService {
     private SysRoleMapper mapper;
     @Resource
     private SysRoleMenuMappingMapper sysRoleMenuMappingMapper;
+    @Resource
+    private UserRoleMappingMapper userRoleMappingMapper;
     @Autowired
     private SysMenuService sysMenuService;
 
@@ -105,4 +110,16 @@ public class SysRoleService {
         return new ArrayList<>();
     }
 
+    public void assignRole(String roleCode, Long userId) {
+        Integer roleId = findRoleIdByCode(roleCode);
+        UserRoleMapping userRoleMapping = new UserRoleMapping();
+        userRoleMapping.withRoleCode(roleCode).withRoleId(roleId).withUserId(userId);
+        userRoleMappingMapper.insertSelective(userRoleMapping);
+    }
+
+    public void removeRole(String roleCode, Long userId) {
+        UserRoleMappingExample example = new UserRoleMappingExample();
+        example.createCriteria().andUserIdEqualTo(userId).andRoleCodeEqualTo(roleCode);
+        userRoleMappingMapper.deleteByExample(example);
+    }
 }

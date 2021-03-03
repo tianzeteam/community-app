@@ -381,10 +381,28 @@ public class UserAccountService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void updateUserAdminPermit(Map<Long, String> userPermitMap) {
-        userPermitMap.forEach((userId, permits)->{
-            mapper.savePermits(userId, permits);
-        });
+    public void updateUserAdminPermit(Long userId, Map<String, Integer> permits) {
+        Map<String, Map<String, Integer>> map = new HashMap<>();
+        map.put("permits", permits);
+        mapper.savePermits(userId, JSON.toJSONString(permits));
+        // 动态赋角色
+        boolean hasAdminRole = false;
+        if (new Integer(1).equals(permits.get("configCenter"))
+                || new Integer(1).equals(permits.get("dashboard"))
+                || new Integer(1).equals(permits.get("configCenter"))
+                || new Integer(1).equals(permits.get("userManage"))
+                || new Integer(1).equals(permits.get("auditManage"))
+                || new Integer(1).equals(permits.get("staticManage"))
+                || new Integer(1).equals(permits.get("communityManage"))
+                || new Integer(1).equals(permits.get("productMaintain"))
+                || new Integer(1).equals("permissionManage")) {
+            hasAdminRole = true;
+        }
+        if (hasAdminRole) {
+            sysRoleService.assignRole(RoleConsts.ADMIN, userId);
+        } else {
+            sysRoleService.removeRole(RoleConsts.ADMIN, userId);
+        }
     }
 
     public String findNicknameByUserId(Long userId) {
