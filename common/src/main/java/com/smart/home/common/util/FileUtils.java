@@ -27,6 +27,11 @@ public class FileUtils {
         return "";
     }
 
+    public static String getFileNameFromUrl(String url) {
+        int lastIndexOf = url.lastIndexOf("/");
+        return url.substring(lastIndexOf+1);
+    }
+
     /**
      * 把内容写到目标文件
      * @param targetFile 目标文件
@@ -210,4 +215,5 @@ public class FileUtils {
         out.close();
         in.close();
     }
+
 }
