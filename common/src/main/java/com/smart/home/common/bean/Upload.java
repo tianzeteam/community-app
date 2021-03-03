@@ -30,4 +30,6 @@ public class Upload {
 
     private String url;
 
+    private String category;
+
 }

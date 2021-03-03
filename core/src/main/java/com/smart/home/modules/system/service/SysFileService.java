@@ -74,7 +74,6 @@ public class SysFileService {
         sysFile.setCreatedTime(new Date());
         sysFile.setSyncFlag(YesNoEnum.NO.getCode());
         sysFile.setRevision(0);
-        sysFile.setCategory("default");
         upload.setUrl(sysFile.getUrl());
         sysFileMapper.insertSelective(sysFile);
     }

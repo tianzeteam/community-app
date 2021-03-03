@@ -50,6 +50,11 @@ com.smart.home.service.CollectService
 ```
 com.smart.home.modules.other.service.ReportHistoryService.create
 ```
+- 图片审核公众方法
+```
+com.smart.home.cloud.qcloud.auditor.ImageAuditor.auditorResult
+```
+
 # postgresql数据库安装(centos7)
 ```
 # Install the repository RPM:

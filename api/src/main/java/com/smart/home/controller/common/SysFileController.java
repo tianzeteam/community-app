@@ -1,6 +1,7 @@
 package com.smart.home.controller.common;
 
 import com.smart.home.common.contants.FileStoreType;
+import com.smart.home.common.contants.FileType;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.util.UserUtils;
@@ -40,6 +41,7 @@ public class SysFileController {
         }
         upload.setBucketName("image");
         upload.setStoreType(FileStoreType.COS);
+        upload.setCategory(FileType.IMAGE);
         return processUpload(multipartFile, upload);
     }
 
@@ -60,6 +62,7 @@ public class SysFileController {
         }
         upload.setBucketName("video");
         upload.setStoreType(FileStoreType.COS);
+        upload.setCategory(FileType.VIDEO);
         return processUpload(multipartFile, upload);
     }
 
