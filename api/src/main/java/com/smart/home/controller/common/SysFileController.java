@@ -2,7 +2,9 @@ package com.smart.home.controller.common;
 
 import com.smart.home.common.contants.FileStoreType;
 import com.smart.home.common.contants.FileType;
+import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.dto.APIResponse;
+import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.util.UserUtils;
 import com.smart.home.util.upload.EnumFileUploadError;
@@ -27,6 +29,7 @@ public class SysFileController {
     SysFileService sysFileService;
 
     @ApiOperation(value = "上传图片")
+    @RoleAccess({RoleConsts.REGISTER,RoleConsts.CREATOR,RoleConsts.ADMIN})
     @PostMapping("/uploadImage")
     public APIResponse addSingleImage(@RequestParam("file") MultipartFile multipartFile) {
         Upload upload = FileUpload.getFile(multipartFile);
@@ -46,6 +49,7 @@ public class SysFileController {
     }
 
     @ApiOperation(value = "上传视频")
+    @RoleAccess({RoleConsts.REGISTER,RoleConsts.CREATOR,RoleConsts.ADMIN})
     @PostMapping("/uploadVideo")
     public APIResponse addVideo(@RequestParam("file") MultipartFile multipartFile) {
         Upload upload = FileUpload.getFile(multipartFile);
