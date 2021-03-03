@@ -51,4 +51,6 @@ public interface CommunityPostMapper {
     int updateBoutiqueFlag(@Param("id") Long id,@Param("flag") int flag);
 
     int updateTopFlag(@Param("id") Long id,@Param("flag") int flag);
+
+    List<CommunityPost> queryViaUserIdByPage(@Param("userId") Long userId);
 }

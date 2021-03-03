@@ -21,6 +21,7 @@
     <result column="stamp_count" jdbcType="INTEGER" property="stampCount" />
     <result column="collect_count" jdbcType="INTEGER" property="collectCount" />
     <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="reply_count" jdbcType="INTEGER" property="replyCount" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -83,7 +84,7 @@
   <sql id="Base_Column_List">
     id, community, user_id, title, contents, images, top_flag, boutique_flag, like_count, 
     comment_flag, report_count, audit_status, revision, created_time, updated_by, updated_time, 
-    stamp_count,collect_count,state
+    stamp_count,collect_count,state,reply_count
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostExample" resultMap="BaseResultMap">
     select
@@ -454,4 +455,20 @@
   <update id="updateTopFlag">
     update community_post set top_flag = #{flag} where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryViaUserIdByPage" resultType="com.smart.home.modules.community.entity.CommunityPost">
+    select ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel,
+           cp.title,
+           cp.contents,
+           cp.images,
+           cp.like_count as likeCount,
+           cp.reply_count as replyCount,
+           cp.created_time as createdTime
+    from community_post cp
+                 left join user_account ua on ua.id = cp.user_id
+                 left join user_data ud on ud.user_id = ua.id
+    where cp.user_id = #{userId,jdbcType=BIGINT}
+  </select>
 </mapper>

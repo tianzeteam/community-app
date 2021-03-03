@@ -5,15 +5,23 @@ import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.MyFocusVO;
 import com.smart.home.controller.app.response.MyFollowerVO;
 import com.smart.home.controller.app.response.MyProfileVO;
+import com.smart.home.controller.app.response.community.MyCollectArticleVO;
+import com.smart.home.controller.app.response.community.MyDraftArticleVO;
+import com.smart.home.controller.app.response.community.MyRootProfilePostVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.RoleAccess;
+import com.smart.home.modules.article.entity.Article;
+import com.smart.home.modules.article.service.ArticleService;
+import com.smart.home.modules.community.entity.CommunityPost;
+import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.modules.user.dto.MyFocusDTO;
 import com.smart.home.modules.user.dto.MyFollowerDTO;
 import com.smart.home.modules.user.entity.UserAccount;
 import com.smart.home.modules.user.entity.UserData;
 import com.smart.home.modules.user.entity.UserTag;
 import com.smart.home.modules.user.service.*;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -47,6 +55,10 @@ public class AppUserProfileController {
     private UserFocusService userFocusService;
     @Autowired
     private UserFollowerService userFollowerService;
+    @Autowired
+    private CommunityPostService communityPostService;
+    @Autowired
+    private ArticleService articleService;
 
     @ApiOperation("基本用户信息")
     @ApiImplicitParams({
@@ -72,7 +84,7 @@ public class AppUserProfileController {
         return APIResponse.OK(myProfileVO);
     }
 
-    @ApiOperation("发帖数据")
+    @ApiOperation("发帖数据-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
@@ -80,12 +92,13 @@ public class AppUserProfileController {
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfilePost")
-    public APIResponse queryMyRootProfileData(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
+    public APIResponse<ResponsePageBean<MyRootProfilePostVO>> queryMyRootProfileData(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
-        // TODO
-        return null;
+        List<CommunityPost> list = communityPostService.queryViaUserIdByPage(userId, pageNum, pageSize);
+        List<MyRootProfilePostVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfilePostVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
     @ApiOperation("评论数据")
     @ApiImplicitParams({
@@ -198,16 +211,38 @@ public class AppUserProfileController {
         return APIResponse.OK(ResponsePageBean.restPage(resultList));
     }
 
-    @ApiOperation("收藏-分页查询我的收藏")
+    @ApiOperation("收藏-分页查询我的收藏投稿")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true),
-            @ApiImplicitParam(name = "collectType", value = "收藏类型：0投稿1帖子2产品", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
-    @GetMapping("/myCollectByPage")
-    public APIResponse myCollectByPage() {
-        // TODO
+    @GetMapping("/myCollectArticleByPage")
+    public APIResponse<ResponsePageBean<MyCollectArticleVO>> myCollectArticleByPage(int pageNum, int pageSize) {
+        List<Article> list = articleService.queryViaUserIdByPage(UserUtils.getLoginUserId(), pageNum, pageSize);
+        List<MyCollectArticleVO> resultList = BeanCopyUtils.convertListTo(list, MyCollectArticleVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+    }
+    @ApiOperation("收藏-分页查询我的收藏帖子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true),
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @GetMapping("/myCollectPostByPage")
+    public APIResponse myCollectPostByPage(int pageNum, int pageSize) {
+        // TODO 没原型
+        return APIResponse.OK();
+    }
+    @ApiOperation("收藏-分页查询我的收藏产品")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true),
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @GetMapping("/myCollectProductByPage")
+    public APIResponse myCollectProductByPage(int pageNum, int pageSize) {
+        // TODO 没原型
         return APIResponse.OK();
     }
 
@@ -218,9 +253,22 @@ public class AppUserProfileController {
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/myDraftArticleByPage")
-    public APIResponse myDraftArticleByPage() {
-        // TODO
+    public APIResponse<ResponsePageBean<MyDraftArticleVO>> myDraftArticleByPage(int pageNum, int pageSize) {
+        List<Article> list = articleService.queryDraftViaUserIdByPage(UserUtils.getLoginUserId(), pageNum, pageSize);
+        List<MyDraftArticleVO> resultList = BeanCopyUtils.convertListTo(list, MyDraftArticleVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+    }
+
+    @ApiOperation("删除草稿")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/deleteDraftArticle")
+    public APIResponse deleteDraftArticle(Long articleId) {
+        articleService.deleteDraftById(articleId);
         return APIResponse.OK();
     }
+
 
 }

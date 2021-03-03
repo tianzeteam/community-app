@@ -108,4 +108,9 @@ public class CommunityPostService {
     public void updateTopFlag(Long postId, int flag) {
         communityPostMapper.updateTopFlag(postId, flag);
     }
+
+    public List<CommunityPost> queryViaUserIdByPage(Long userId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return communityPostMapper.queryViaUserIdByPage(userId);
+    }
 }

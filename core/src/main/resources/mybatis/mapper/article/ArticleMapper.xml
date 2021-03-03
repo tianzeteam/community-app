@@ -784,4 +784,32 @@
     where apm.product_id = #{productId,jdbcType=INTEGER}
     order by a.created_time desc
   </select>
+
+  <select id="queryViaUserIdByPage" resultType="com.smart.home.modules.article.entity.Article">
+    select ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel,
+           article.title,
+           article.details,
+           article.banner_images as bannerImages,
+           article.created_time as createdTime,
+           article.like_count as likeCount,
+           article.comment_count as commentCount,
+           article.tag
+    from user_collect uc
+                 left join article on uc.primary_key = article.id and uc.collect_type=0
+                 left join user_account ua on ua.id = uc.user_id
+                 left join user_data ud on ud.user_id = ua.id
+    where uc.user_id = #{userId,jdbcType=BIGINT}
+    order by uc.created_time desc
+  </select>
+
+  <select id="queryDraftViaUserIdByPage" resultType="com.smart.home.modules.article.entity.Article">
+    select title,
+           details,
+           banner_images as bannerImages,
+           updated_time as updatedTime
+    from article
+    where user_id = #{userId,jdbcType=BIGINT} and state = 0
+  </select>
 </mapper>

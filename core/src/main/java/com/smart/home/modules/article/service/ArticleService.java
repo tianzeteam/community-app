@@ -55,8 +55,9 @@ public class ArticleService {
         return articleMapper.updateByPrimaryKeySelective(article);
     }
 
-    public int deleteById(Long id) {
-        return articleMapper.deleteByPrimaryKey(id);
+    public int deleteDraftById(Long articleId) {
+        // TODO 看下对应的图片要删除么
+        return articleMapper.deleteByPrimaryKey(articleId);
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
@@ -305,4 +306,15 @@ public class ArticleService {
         PageHelper.startPage(pageNum, pageSize);
         return articleMapper.queryViaProductIdByPage(productId);
     }
+
+    public List<Article> queryViaUserIdByPage(Long loginUserId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleMapper.queryViaUserIdByPage(loginUserId);
+    }
+
+    public List<Article> queryDraftViaUserIdByPage(Long loginUserId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleMapper.queryDraftViaUserIdByPage(loginUserId);
+    }
+
 }

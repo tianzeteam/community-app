@@ -69,4 +69,8 @@ public interface ArticleMapper {
     List<Article> selectArticleCardByPage(@Param("channelId") Integer channelId);
 
     List<Article> queryViaProductIdByPage(@Param("productId") Integer productId);
+
+    List<Article> queryViaUserIdByPage(@Param("userId") Long userId);
+
+    List<Article> queryDraftViaUserIdByPage(@Param("userId") Long userId);
 }
