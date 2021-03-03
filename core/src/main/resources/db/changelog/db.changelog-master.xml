@@ -41,6 +41,7 @@
     <include file="classpath:/db/changelog/system/sys_role_menu_mapping.xml"/>
     <include file="classpath:/db/changelog/system/sys_agreement.xml"/>
     <include file="classpath:/db/changelog/system/sys_help.xml"/>
+    <include file="classpath:/db/changelog/system/sys_file.xml"/>
     <include file="classpath:/db/changelog/system/sys_trace_log.xml"/>
     <include file="classpath:/db/changelog/user/user_account.xml"/>
     <include file="classpath:/db/changelog/user/user_data.xml"/>

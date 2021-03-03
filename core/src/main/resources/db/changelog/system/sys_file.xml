@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableSysFile" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_file"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建上传文件表</comment>
+        <sql>
+            CREATE TABLE sys_file(
+            ID BIGINT NOT NULL,
+            ORIGINAL_NAME VARCHAR(255),
+            NEW_NAME VARCHAR(40),
+            URL VARCHAR(255),
+            LOCATION VARCHAR(255),
+            MIME VARCHAR(32),
+            SIZE BIGINT,
+            CATEGORY VARCHAR(32),
+            MD5 VARCHAR(32),
+            SHA1 VARCHAR(128),
+            STORE_TYPE VARCHAR(32),
+            REVISION INT DEFAULT 0,
+            CREATED_BY BIGINT,
+            CREATED_TIME DATE,
+            UPDATED_BY BIGINT,
+            UPDATED_TIME DATE,
+            SYNC_FLAG INT DEFAULT 0,
+            AUDIT_STATE INT DEFAULT 0,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON COLUMN sys_file.ID IS '主键ID';
+            COMMENT ON COLUMN sys_file.ORIGINAL_NAME IS '原始文件名';
+            COMMENT ON COLUMN sys_file.NEW_NAME IS '新文件名';
+            COMMENT ON COLUMN sys_file.URL IS '访问地址';
+            COMMENT ON COLUMN sys_file.LOCATION IS '实际地址';
+            COMMENT ON COLUMN sys_file.MIME IS '文件类型';
+            COMMENT ON COLUMN sys_file.SIZE IS '文件大小';
+            COMMENT ON COLUMN sys_file.CATEGORY IS '分类';
+            COMMENT ON COLUMN sys_file.MD5 IS 'MD5';
+            COMMENT ON COLUMN sys_file.SHA1 IS 'SHA1';
+            COMMENT ON COLUMN sys_file.STORE_TYPE IS '存储类型';
+            COMMENT ON COLUMN sys_file.REVISION IS '乐观锁';
+            COMMENT ON COLUMN sys_file.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN sys_file.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN sys_file.UPDATED_BY IS '更新人';
+            COMMENT ON COLUMN sys_file.UPDATED_TIME IS '更新时间';
+            COMMENT ON COLUMN sys_file.SYNC_FLAG IS '是否同步:0否1是';
+            COMMENT ON COLUMN sys_file.AUDIT_STATE IS '审核状态:0待审核1审核通过2审核失败';
+
+            CREATE SEQUENCE sys_file_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "sys_file" alter column ID set default nextval('sys_file_id_seq');
+
+            CREATE INDEX idx_file_new_name ON sys_file USING btree (NEW_NAME);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
