@@ -51,4 +51,16 @@
             COMMENT ON COLUMN article_channel.index_flag IS '是否显示在首页0否1是';
         </sql>
     </changeSet>
+    <changeSet id="initData4ArticleChannel" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from article_channel where title = '推荐';
+            </sqlCheck>
+        </preConditions>
+        <comment>初始化推荐频道</comment>
+        <sql>
+            insert into article_channel(title,sort,state,revision,index_flag)
+            values ('推荐',999999,0,0,1);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
