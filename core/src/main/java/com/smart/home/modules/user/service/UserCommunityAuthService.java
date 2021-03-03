@@ -1,15 +1,15 @@
 package com.smart.home.modules.user.service;
 
-import com.github.pagehelper.PageHelper;
+import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.enums.AuditCategoryEnum;
 import com.smart.home.modules.other.service.AuditHistoryService;
+import com.smart.home.modules.system.service.SysRoleService;
 import com.smart.home.modules.user.dao.UserCommunityAuthMapper;
 import com.smart.home.modules.user.entity.UserCommunityAuth;
 import com.smart.home.modules.user.entity.UserCommunityAuthExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -27,6 +27,8 @@ public class UserCommunityAuthService {
     UserCommunityAuthMapper userCommunityAuthMapper;
     @Autowired
     private AuditHistoryService auditHistoryService;
+    @Autowired
+    private SysRoleService sysRoleService;
 
     public int createOrUpdate(UserCommunityAuth userCommunityAuth) {
         Long createdBy = userCommunityAuth.getCreatedBy();
@@ -79,12 +81,15 @@ public class UserCommunityAuthService {
             } else {
                 userCommunityAuthMapper.updateAdminFlag(userId, 1);
             }
+            // 动态赋角色
+            sysRoleService.assignRole(RoleConsts.AUDITOR, userId);
         }
     }
 
     public void cancelAdmin(List<Long> idList) {
         for (Long userId : idList) {
             userCommunityAuthMapper.updateAdminFlag(userId, 0);
+            sysRoleService.removeRole(RoleConsts.AUDITOR, userId);
         }
     }
 
