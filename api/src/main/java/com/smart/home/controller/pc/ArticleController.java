@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.controller.pc.request.article.ArticleCreateDTO;
@@ -20,6 +21,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,21 +66,24 @@ public class ArticleController {
     }
 
     @ApiOperation("投稿/保存草稿文章")
-    @RoleAccess({RoleConsts.CREATOR})
+    @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @PostMapping("/create")
-    public APIResponse create(@Valid ArticleCreateDTO articleCreateDTO, BindingResult bindingResult) {
+    public APIResponse create(@Valid @RequestBody ArticleCreateDTO articleCreateDTO, BindingResult bindingResult) {
         Article article = new Article();
         BeanUtils.copyProperties(articleCreateDTO, article);
         article.setUserId(UserUtils.getLoginUserId());
         article.setCreatedBy(UserUtils.getLoginUserId());
         article.setCategory(ArticleCategoryEnum.CONTENT.getCode());
+        if (!CollectionUtils.isEmpty(articleCreateDTO.getBannerImagesList())) {
+            article.setBannerImages(JSON.toJSONString(articleCreateDTO.getBannerImagesList()));
+        }
         return APIResponse.OK(articleService.create(article));
     }
 
     @ApiOperation("投稿/保存草稿视频")
-    @RoleAccess({RoleConsts.CREATOR})
+    @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @PostMapping("/createVideo")
-    public APIResponse createVideo(@Valid ArticleCreateDTO articleCreateDTO, BindingResult bindingResult) {
+    public APIResponse createVideo(@Valid @RequestBody ArticleCreateDTO articleCreateDTO, BindingResult bindingResult) {
         Article article = new Article();
         BeanUtils.copyProperties(articleCreateDTO, article);
         article.setUserId(UserUtils.getLoginUserId());
@@ -88,18 +93,18 @@ public class ArticleController {
     }
 
     @ApiOperation("更新文章")
-    @RoleAccess({RoleConsts.CREATOR})
+    @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @PostMapping("/update")
-    public APIResponse update(@Valid ArticleUpdateDTO articleUpdateDTO, BindingResult bindingResult) {
+    public APIResponse update(@Valid @RequestBody ArticleUpdateDTO articleUpdateDTO, BindingResult bindingResult) {
         Article article = new Article();
         BeanUtils.copyProperties(articleUpdateDTO, article);
         article.setCreatedBy(UserUtils.getLoginUserId());
         return APIResponse.OK(articleService.update(article));
     }
     @ApiOperation("更新视频文章")
-    @RoleAccess({RoleConsts.CREATOR})
+    @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @PostMapping("/updateVideo")
-    public APIResponse updateVideo(@Valid ArticleUpdateDTO articleUpdateDTO, BindingResult bindingResult) {
+    public APIResponse updateVideo(@Valid @RequestBody ArticleUpdateDTO articleUpdateDTO, BindingResult bindingResult) {
         Article article = new Article();
         BeanUtils.copyProperties(articleUpdateDTO, article);
         article.setCreatedBy(UserUtils.getLoginUserId());
@@ -107,7 +112,7 @@ public class ArticleController {
     }
 
     @ApiOperation("按主键id查询文章")
-    @RoleAccess({RoleConsts.CREATOR})
+    @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @GetMapping("/selectById")
     public APIResponse<ArticleEditVO> selectById(Long id) {
         Article article = articleService.findById(id);
@@ -117,7 +122,7 @@ public class ArticleController {
     }
 
     @ApiOperation("按主键id查询视频文章")
-    @RoleAccess({RoleConsts.CREATOR})
+    @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @GetMapping("/selectVideoById")
     public APIResponse<ArticleEditVideoVO> selectVideoById(Long id) {
         Article article = articleService.findById(id);

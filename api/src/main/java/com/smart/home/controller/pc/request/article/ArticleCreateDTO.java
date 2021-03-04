@@ -8,7 +8,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+import java.util.List;
 /**
  * @author jason
  * @date 2021/2/26
@@ -33,6 +33,9 @@ public class ArticleCreateDTO {
     @ApiModelProperty("封面图片")
     private String coverImage;
 
+    @ApiModelProperty("轮播图片列表")
+    private List<String> bannerImagesList;
+
     @ApiModelProperty("下拉选择的频道主键id")
     @NotNull(message = "请选择频道")
     private Long channelId;
@@ -46,8 +49,8 @@ public class ArticleCreateDTO {
     @ApiModelProperty("转载来源")
     private String originalUrl;
 
-    @ApiModelProperty("转载授权")
-    private String originalAuth;
+    @ApiModelProperty("转载授权0未授权1已授权")
+    private Integer originalAuth;
 
     @ApiModelProperty("原作者或者媒体名称")
     private String sourceFrom;

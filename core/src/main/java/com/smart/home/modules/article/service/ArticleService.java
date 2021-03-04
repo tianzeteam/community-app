@@ -1,9 +1,11 @@
 package com.smart.home.modules.article.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.util.FileUtils;
 import com.smart.home.enums.ArticleRecommendTypeEnum;
 import com.smart.home.enums.ArticleStateEnum;
 import com.smart.home.enums.AuditCategoryEnum;
@@ -11,13 +13,14 @@ import com.smart.home.modules.article.dao.ArticleMapper;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleExample;
 import com.smart.home.modules.other.service.AuditHistoryService;
+import com.smart.home.modules.system.service.SysFileService;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 import java.util.Map;
@@ -32,6 +35,8 @@ public class ArticleService {
     ArticleMapper articleMapper;
     @Autowired
     private AuditHistoryService auditHistoryService;
+    @Autowired
+    private SysFileService sysFileService;
 
     public int create(Article article) {
         article.setCreatedTime(new Date());
@@ -47,12 +52,16 @@ public class ArticleService {
         article.setRevision(0);
         article.setCollectCount(0);
         article.setOnlineStatus(RecordStatusEnum.NORMAL.getStatus());
-        return articleMapper.insertSelective(article);
+        int affectRow = articleMapper.insertSelective(article);
+        syncUploadFiles(article.getCoverImage(), article.getBannerImages());
+        return affectRow;
     }
 
     public int update(Article article) {
         article.setUpdatedTime(new Date());
-        return articleMapper.updateByPrimaryKeySelective(article);
+        int affectRow = articleMapper.updateByPrimaryKeySelective(article);
+        syncUploadFiles(article.getCoverImage(), article.getBannerImages());
+        return affectRow;
     }
 
     public int deleteDraftById(Long articleId) {
@@ -351,5 +360,18 @@ public class ArticleService {
 
     public List<Article> queryArticleCardByChannelId(Integer articleChannelId) {
         return articleMapper.queryIndexArticleCard(YesNoEnum.NO.getCode(), ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), articleChannelId, YesNoEnum.NO.getCode());
+    }
+
+    private void syncUploadFiles(String coverImage, String bannerImages) {
+        List<String> list = new ArrayList<>();
+        if (StringUtils.isNotBlank(coverImage)) {
+            list.add(FileUtils.getFileNameFromUrl(coverImage));
+        }
+        if (StringUtils.isNotBlank(bannerImages)) {
+            for (String s : JSON.parseArray(bannerImages, String.class)) {
+                list.add(FileUtils.getFileNameFromUrl(s));
+            }
+        }
+        sysFileService.syncList(list);
     }
 }
