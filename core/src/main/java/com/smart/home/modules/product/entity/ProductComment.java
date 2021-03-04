@@ -35,6 +35,11 @@ public class ProductComment implements Serializable {
 
     private Date createdTime;
 
+    private Integer autoAuditFlag;
+    private Integer auditFlag;
+    private Integer reportCount;
+    private Integer hitSensitiveCount;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -274,6 +279,38 @@ public class ProductComment implements Serializable {
 
     public void setUserLevel(Integer userLevel) {
         this.userLevel = userLevel;
+    }
+
+    public Integer getAutoAuditFlag() {
+        return autoAuditFlag;
+    }
+
+    public void setAutoAuditFlag(Integer autoAuditFlag) {
+        this.autoAuditFlag = autoAuditFlag;
+    }
+
+    public Integer getAuditFlag() {
+        return auditFlag;
+    }
+
+    public void setAuditFlag(Integer auditFlag) {
+        this.auditFlag = auditFlag;
+    }
+
+    public Integer getReportCount() {
+        return reportCount;
+    }
+
+    public void setReportCount(Integer reportCount) {
+        this.reportCount = reportCount;
+    }
+
+    public Integer getHitSensitiveCount() {
+        return hitSensitiveCount;
+    }
+
+    public void setHitSensitiveCount(Integer hitSensitiveCount) {
+        this.hitSensitiveCount = hitSensitiveCount;
     }
 
     /**

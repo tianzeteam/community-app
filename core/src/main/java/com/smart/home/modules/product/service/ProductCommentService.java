@@ -21,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -206,5 +207,45 @@ public class ProductCommentService {
         productService.updateCommentScore(productId, averageScore,
                 product.getFiveStarCount(), product.getFourStarCount(),product.getThreeStarCount(),
                 product.getTwoStarCount(), product.getOneStarCount());
+    }
+
+    public Long countWaitAudit() {
+        ProductCommentExample example = new ProductCommentExample();
+        example.createCriteria().andAuditFlagEqualTo(AuditStatusEnum.WAIT_AUDIT.getCode())
+                .andAutoAuditFlagEqualTo(AutoAuditFlagEnum.WAIT_AUDIT.getCode());
+        return productCommentMapper.countByExample(example);
+    }
+
+    public Long countTextException() {
+        ProductCommentExample example = new ProductCommentExample();
+        example.createCriteria()
+                .andAutoAuditFlagIn(Arrays.asList(AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode(), AutoAuditFlagEnum.IMAGE_AND_CONTENT_EXCEPTION.getCode()));
+        return productCommentMapper.countByExample(example);
+    }
+
+    public Long countImageException() {
+        ProductCommentExample example = new ProductCommentExample();
+        example.createCriteria()
+                .andAutoAuditFlagIn(Arrays.asList(AutoAuditFlagEnum.IMAGE_EXCEPTION.getCode(), AutoAuditFlagEnum.IMAGE_AND_CONTENT_EXCEPTION.getCode()));
+        return productCommentMapper.countByExample(example);
+    }
+
+    public Long countHasReport() {
+        ProductCommentExample example = new ProductCommentExample();
+        example.createCriteria().andReportCountGreaterThan(0);
+        return productCommentMapper.countByExample(example);
+    }
+
+    public Long countHitSensitive() {
+        ProductCommentExample example = new ProductCommentExample();
+        example.createCriteria().andHitSensitiveCountGreaterThan(0);
+        return productCommentMapper.countByExample(example);
+    }
+
+    public Long countTotalNormal() {
+        ProductCommentExample example = new ProductCommentExample();
+        example.createCriteria().andAuditFlagEqualTo(AuditStatusEnum.APPROVED.getCode())
+                .andAutoAuditFlagEqualTo(AutoAuditFlagEnum.APPROVE.getCode());
+        return productCommentMapper.countByExample(example);
     }
 }
