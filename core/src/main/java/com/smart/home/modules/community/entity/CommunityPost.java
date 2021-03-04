@@ -52,6 +52,8 @@ public class CommunityPost implements Serializable {
      * 回复数量
      */
     private Integer replyCount;
+    private Integer autoAuditFlag;
+    private Integer hitSensitiveCount;
 
     private static final long serialVersionUID = 1L;
 
@@ -396,6 +398,30 @@ public class CommunityPost implements Serializable {
 
     public void setUserLevel(String userLevel) {
         this.userLevel = userLevel;
+    }
+
+    public Integer getReplyCount() {
+        return replyCount;
+    }
+
+    public void setReplyCount(Integer replyCount) {
+        this.replyCount = replyCount;
+    }
+
+    public Integer getAutoAuditFlag() {
+        return autoAuditFlag;
+    }
+
+    public void setAutoAuditFlag(Integer autoAuditFlag) {
+        this.autoAuditFlag = autoAuditFlag;
+    }
+
+    public Integer getHitSensitiveCount() {
+        return hitSensitiveCount;
+    }
+
+    public void setHitSensitiveCount(Integer hitSensitiveCount) {
+        this.hitSensitiveCount = hitSensitiveCount;
     }
 
     /**

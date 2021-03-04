@@ -1,7 +1,5 @@
 package com.smart.home.modules.article.entity;
 
-import com.smart.home.modules.user.entity.UserAccount;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +28,11 @@ public class ArticleComment implements Serializable {
     private Integer stampCount;
 
     private Date createdTime;
+
+    private Integer autoAuditFlag;
+    private Integer auditFlag;
+    private Integer hitSensitiveCount;
+    private Integer reportCount;
 
     private static final long serialVersionUID = 1L;
 
@@ -230,6 +233,38 @@ public class ArticleComment implements Serializable {
 
     public void setStampFlag(Integer stampFlag) {
         this.stampFlag = stampFlag;
+    }
+
+    public Integer getAutoAuditFlag() {
+        return autoAuditFlag;
+    }
+
+    public void setAutoAuditFlag(Integer autoAuditFlag) {
+        this.autoAuditFlag = autoAuditFlag;
+    }
+
+    public Integer getAuditFlag() {
+        return auditFlag;
+    }
+
+    public void setAuditFlag(Integer auditFlag) {
+        this.auditFlag = auditFlag;
+    }
+
+    public Integer getHitSensitiveCount() {
+        return hitSensitiveCount;
+    }
+
+    public void setHitSensitiveCount(Integer hitSensitiveCount) {
+        this.hitSensitiveCount = hitSensitiveCount;
+    }
+
+    public Integer getReportCount() {
+        return reportCount;
+    }
+
+    public void setReportCount(Integer reportCount) {
+        this.reportCount = reportCount;
     }
 
     /**

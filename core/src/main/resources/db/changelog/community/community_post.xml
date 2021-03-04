@@ -125,4 +125,16 @@
             COMMENT ON COLUMN community_post.auto_audit_flag IS '机审标记:0还未机审1机审通过2机审图片异常3机审文本异常';
         </sql>
     </changeSet>
+    <changeSet id="addColumnHitSensitiveCount4CommunityPost" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post" columnName="hit_sensitive_count"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table community_post add column hit_sensitive_count int default 0;
+            COMMENT ON COLUMN community_post.hit_sensitive_count IS '命中敏感词数量';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

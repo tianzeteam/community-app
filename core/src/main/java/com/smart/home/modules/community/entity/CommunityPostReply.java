@@ -27,6 +27,11 @@ public class CommunityPostReply implements Serializable {
 
     private Integer stampCount;
 
+    private Integer autoAuditFlag;
+    private Integer auditFlag;
+    private Integer hitSensitiveCount;
+    private Integer reportCount;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -210,6 +215,38 @@ public class CommunityPostReply implements Serializable {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public Integer getAutoAuditFlag() {
+        return autoAuditFlag;
+    }
+
+    public void setAutoAuditFlag(Integer autoAuditFlag) {
+        this.autoAuditFlag = autoAuditFlag;
+    }
+
+    public Integer getAuditFlag() {
+        return auditFlag;
+    }
+
+    public void setAuditFlag(Integer auditFlag) {
+        this.auditFlag = auditFlag;
+    }
+
+    public Integer getHitSensitiveCount() {
+        return hitSensitiveCount;
+    }
+
+    public void setHitSensitiveCount(Integer hitSensitiveCount) {
+        this.hitSensitiveCount = hitSensitiveCount;
+    }
+
+    public Integer getReportCount() {
+        return reportCount;
+    }
+
+    public void setReportCount(Integer reportCount) {
+        this.reportCount = reportCount;
     }
 
     /**
