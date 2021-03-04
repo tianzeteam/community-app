@@ -1,20 +1,28 @@
 package com.smart.home.modules.article.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.cloud.qcloud.auditor.ContentAuditor;
+import com.smart.home.cloud.qcloud.auditor.ContentAuditorResult;
+import com.smart.home.cloud.qcloud.enums.ContentAuditorEvilEnum;
+import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
+import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.article.dao.ArticleCommentMapper;
 import com.smart.home.modules.article.dao.ArticleMapper;
-import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.entity.ArticleCommentExample;
 import com.smart.home.modules.user.service.UserAccountService;
+import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -28,6 +36,8 @@ public class ArticleCommentService {
     private ArticleMapper articleMapper;
     @Autowired
     private UserAccountService userAccountService;
+    @Autowired
+    private UserDataService userDataService;
 
     @Transactional(rollbackFor = RuntimeException.class)
     public void create(Long loginUserId, Long articleId, String contents) {
@@ -45,8 +55,51 @@ public class ArticleCommentService {
             articleComment.setAuthorFlag(YesNoEnum.NO.getCode());
         }
         articleCommentMapper.insertSelective(articleComment);
-        // 文章增加一次评论数量
-        articleMapper.increaseCommentCount(articleId);
+        final long id = articleComment.getId();
+        processAutoAudit(id, articleId, contents, loginUserId);
+
+    }
+
+    private void processAutoAudit(long id, Long articleId, String contents, Long loginUserId) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ContentAuditorResult contentAuditorResult = ContentAuditor.auditorResult(contents);
+                if (contentAuditorResult == null) {
+                    // 机审失败，进入人工审核
+                    articleCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode());
+                    return;
+                }
+                if (contentAuditorResult.getContentAuditorEvilEnum() == ContentAuditorEvilEnum.NORMAL) {
+                    // 机审成功， 直接通过
+                    articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                    // 文章增加一次评论数量
+                    articleMapper.increaseCommentCount(articleId);
+                    return;
+                }
+                // 机器审核不通过，文本异常
+                // 先看看建议通过不通过
+                ContentAuditorSuggestionEnum contentAuditorSuggestionEnum = contentAuditorResult.getContentAuditorSuggestionEnum();
+                if (contentAuditorSuggestionEnum == null
+                        || ContentAuditorSuggestionEnum.Block == contentAuditorSuggestionEnum
+                        || ContentAuditorSuggestionEnum.Review == contentAuditorSuggestionEnum) {
+                    articleCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode());
+                    List<String> keywordsList = contentAuditorResult.getKeywordsList();
+                    if (!CollectionUtils.isEmpty(keywordsList)) {
+                        articleCommentMapper.updateHitSensitiveCount(id, keywordsList.size());
+                        // 增加用户的总敏感词数量
+                        userDataService.increaseHitSensitiveCount(loginUserId, keywordsList.size());
+                    }
+                    return;
+                }
+                if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
+                    // 正常，视为通过
+                    articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                    // 文章增加一次评论数量
+                    articleMapper.increaseCommentCount(articleId);
+                }
+            }
+        }).start();
     }
 
     public int update(ArticleComment articleComment) {
@@ -108,5 +161,45 @@ public class ArticleCommentService {
     public List<ArticleComment> queryCommentByPageWhenLogin(Long userId, Long articleId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         return articleCommentMapper.queryCommentByPageWhenLogin(userId, articleId);
+    }
+
+    public Long countWaitAudit() {
+        ArticleCommentExample example = new ArticleCommentExample();
+        example.createCriteria().andAuditFlagEqualTo(AuditStatusEnum.WAIT_AUDIT.getCode())
+                .andAutoAuditFlagEqualTo(AutoAuditFlagEnum.WAIT_AUDIT.getCode());
+        return articleCommentMapper.countByExample(example);
+    }
+
+    public Long countTextException() {
+        ArticleCommentExample example = new ArticleCommentExample();
+        example.createCriteria()
+                .andAutoAuditFlagIn(Arrays.asList(AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode(), AutoAuditFlagEnum.IMAGE_AND_CONTENT_EXCEPTION.getCode()));
+        return articleCommentMapper.countByExample(example);
+    }
+
+    public Long countImageException() {
+        ArticleCommentExample example = new ArticleCommentExample();
+        example.createCriteria()
+                .andAutoAuditFlagIn(Arrays.asList(AutoAuditFlagEnum.IMAGE_EXCEPTION.getCode(), AutoAuditFlagEnum.IMAGE_AND_CONTENT_EXCEPTION.getCode()));
+        return articleCommentMapper.countByExample(example);
+    }
+
+    public Long countHasReport() {
+        ArticleCommentExample example = new ArticleCommentExample();
+        example.createCriteria().andReportCountGreaterThan(0);
+        return articleCommentMapper.countByExample(example);
+    }
+
+    public Long countHitSensitive() {
+        ArticleCommentExample example = new ArticleCommentExample();
+        example.createCriteria().andHitSensitiveCountGreaterThan(0);
+        return articleCommentMapper.countByExample(example);
+    }
+
+    public Long countTotalNormal() {
+        ArticleCommentExample example = new ArticleCommentExample();
+        example.createCriteria().andAuditFlagEqualTo(AuditStatusEnum.APPROVED.getCode())
+                .andAutoAuditFlagEqualTo(AutoAuditFlagEnum.APPROVE.getCode());
+        return articleCommentMapper.countByExample(example);
     }
 }

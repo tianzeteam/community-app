@@ -4,6 +4,7 @@ import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.controller.pc.response.ContentAuditResultHeadVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.RoleAccess;
+import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.product.service.ProductCommentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,8 +24,24 @@ public class ContentAdminAuditController {
 
     @Autowired
     private ProductCommentService productCommentService;
+    @Autowired
+    private ArticleCommentService articleCommentService;
 
     // TODO
+
+    @ApiOperation("头部信息-文章评论")
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @GetMapping("queryArticleCommentHeadInfo")
+    public APIResponse<ContentAuditResultHeadVO> queryArticleCommentHeadInfo() {
+        ContentAuditResultHeadVO vo = new ContentAuditResultHeadVO();
+        vo.setWaitAuditCount(articleCommentService.countWaitAudit());
+        vo.setAutoTextExceptionCount(articleCommentService.countTextException());
+        vo.setAutoImageExceptionCount(articleCommentService.countImageException());
+        vo.setHasReportCount(articleCommentService.countHasReport());
+        vo.setHitSensitiveCount(articleCommentService.countHitSensitive());
+        vo.setTotalNormalCount(articleCommentService.countTotalNormal());
+        return APIResponse.OK(vo);
+    }
 
     @ApiOperation("头部信息-产品评价")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})

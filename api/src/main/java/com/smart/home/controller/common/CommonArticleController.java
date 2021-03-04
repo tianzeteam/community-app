@@ -28,6 +28,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.Objects;
+
 /**
  * @author jason
  * @date 2021/2/27
@@ -193,6 +196,14 @@ public class CommonArticleController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/addComment")
     public APIResponse addComment(Long articleId, String contents) {
+        if (Objects.isNull(articleId)) {
+            return APIResponse.ERROR("文章主键id不能为空");
+        }
+        if (StringUtils.isBlank(contents)) {
+            return APIResponse.ERROR("评论内容不能为空");
+        } else if (contents.length() > 200) {
+            return APIResponse.ERROR("评论内容不能超过200字");
+        }
         articleCommentService.create(UserUtils.getLoginUserId(), articleId, contents);
         return APIResponse.OK();
     }

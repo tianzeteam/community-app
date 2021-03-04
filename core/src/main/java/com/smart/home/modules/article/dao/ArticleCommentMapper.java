@@ -41,4 +41,10 @@ public interface ArticleCommentMapper {
     List<ArticleComment> queryCommentByPageNoLogin(@Param("articleId") Long articleId);
 
     List<ArticleComment> queryCommentByPageWhenLogin(@Param("userId") Long userId,@Param("articleId") Long articleId);
+
+    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag);
+
+    int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
+
+    int updateHitSensitiveCount(@Param("id") long id,@Param("count") int count);
 }
