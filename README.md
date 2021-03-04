@@ -50,9 +50,13 @@ com.smart.home.service.CollectService
 ```
 com.smart.home.modules.other.service.ReportHistoryService.create
 ```
-- 图片审核公众方法
+- 图片审核公共方法
 ```
 com.smart.home.cloud.qcloud.auditor.ImageAuditor.auditorResult
+```
+- 文本审核公共方法
+```
+com.smart.home.cloud.qcloud.auditor.ContentAuditor.auditorResult
 ```
 
 # postgresql数据库安装(centos7)

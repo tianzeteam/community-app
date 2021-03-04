@@ -1,5 +1,6 @@
 package com.smart.home.cloud.qcloud.auditor;
 
+import com.smart.home.cloud.qcloud.QcloudProperties;
 import com.smart.home.cloud.qcloud.enums.ImageAuditorLabelEnum;
 import com.smart.home.cloud.qcloud.enums.ImageAuditorSuggestionEnum;
 import com.tencentcloudapi.common.Credential;
@@ -20,20 +21,16 @@ import lombok.extern.log4j.Log4j2;
 public class ImageAuditor {
 
     public static ImageAuditorResult auditorResult(String imageUrl) {
-        String secretId = "AKIDwKTFnCEYWHrEOKuIZbO1TfdhZDk7g5g2";
-        String secretKey = "84qNf5GApJ8j31mxtYziCPM7XicBW7TZ";
-        String endpoint = "ims.tencentcloudapi.com";
-        String region = "ap-shanghai";
         try {
-            Credential cred = new Credential(secretId, secretKey);
+            Credential cred = new Credential(QcloudProperties.secretId, QcloudProperties.secretKey);
 
             HttpProfile httpProfile = new HttpProfile();
-            httpProfile.setEndpoint(endpoint);
+            httpProfile.setEndpoint(QcloudProperties.auditorEndpoint);
 
             ClientProfile clientProfile = new ClientProfile();
             clientProfile.setHttpProfile(httpProfile);
 
-            ImsClient client = new ImsClient(cred, region, clientProfile);
+            ImsClient client = new ImsClient(cred, QcloudProperties.region, clientProfile);
 
             ImageModerationRequest req = new ImageModerationRequest();
             req.setFileUrl(imageUrl);
