@@ -426,4 +426,11 @@
   <update id="updateSyncFlag">
     update sys_file set sync_flag = #{flag},audit_state=1 where new_name = #{fileName}
   </update>
+
+  <update id="updateSyncFlagList">
+    update sys_file set sync_flag = #{flag},audit_state=1 where new_name in
+    <foreach collection="fileNameList" item="fileName" open="(" separator="," close=")">
+      #{fileName}
+    </foreach>
+  </update>
 </mapper>

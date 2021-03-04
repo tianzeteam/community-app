@@ -3,10 +3,12 @@ package com.smart.home.modules.product.service;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
+import com.smart.home.common.util.FileUtils;
 import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.dao.ProductShopMapper;
 import com.smart.home.modules.product.entity.ProductShop;
 import com.smart.home.modules.product.entity.ProductShopExample;
+import com.smart.home.modules.system.service.SysFileService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,8 @@ public class ProductShopService {
     ProductShopMapper productShopMapper;
     @Resource
     ProductMapper productMapper;
+    @Resource
+    private SysFileService sysFileService;
 
     public int create(ProductShop productShop) {
         // 检查唯一性
@@ -35,7 +39,13 @@ public class ProductShopService {
         }
         productShop.setCreatedTime(new Date());
         productShop.setRevision(0);
-        return productShopMapper.insertSelective(productShop);
+        int affectRow = productShopMapper.insertSelective(productShop);
+        String coverImage = productShop.getCoverImage();
+        if (StringUtils.isNotBlank(coverImage)) {
+            String fileName = FileUtils.getFileNameFromUrl(coverImage);
+            sysFileService.sync(fileName);
+        }
+        return affectRow;
     }
 
     public int update(ProductShop productShop) {
@@ -46,7 +56,13 @@ public class ProductShopService {
             throw new DuplicateDataException("该商城已经存在");
         }
         productShop.setUpdatedTime(new Date());
-        return productShopMapper.updateByPrimaryKeySelective(productShop);
+        int affectRow = productShopMapper.updateByPrimaryKeySelective(productShop);
+        String coverImage = productShop.getCoverImage();
+        if (StringUtils.isNotBlank(coverImage)) {
+            String fileName = FileUtils.getFileNameFromUrl(coverImage);
+            sysFileService.sync(fileName);
+        }
+        return affectRow;
     }
 
     public int deleteById(Long id) {

@@ -277,7 +277,7 @@
         five_star_count,
       </if>
       <if test="supportPlatform != null">
-        support_flatform,
+        support_platform,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -806,4 +806,15 @@
                  left join user_collect on product.id = user_collect.primary_key and user_collect.collect_type=2 and user_collect.user_id = #{loginUserId,jdbcType=BIGINT}
     where product.id = #{productId,jdbcType=INTEGER}
   </select>
+
+  <update id="updateCommentScore">
+    update product
+    set average_score = #{averageScore},
+        five_star_count=#{fiveStarCount},
+        four_star_count=#{fourStarCount},
+        three_star_count=#{threeStarCount},
+        two_star_count=#{twoStarCount},
+        one_star_count=#{oneStarCount}
+    where id = #{productId}
+  </update>
 </mapper>

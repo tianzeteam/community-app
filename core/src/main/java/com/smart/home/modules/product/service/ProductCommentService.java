@@ -203,6 +203,8 @@ public class ProductCommentService {
             product.setOneStarCount(product.getOneStarCount() + 1);
         }
         product.setAverageScore(averageScore);
-        productService.update(product);
+        productService.updateCommentScore(productId, averageScore,
+                product.getFiveStarCount(), product.getFourStarCount(),product.getThreeStarCount(),
+                product.getTwoStarCount(), product.getOneStarCount());
     }
 }

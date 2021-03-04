@@ -7,6 +7,7 @@ import lombok.ToString;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author jason
@@ -18,7 +19,7 @@ public class ArticleCreateVideoDTO {
 
     @ApiModelProperty("标题")
     @NotBlank(message = "标题不能为空")
-    @Max(40)
+    @Size(max = 40)
     private String title;
 
     @ApiModelProperty("视频地址")
@@ -26,7 +27,7 @@ public class ArticleCreateVideoDTO {
     private String remark;
 
     @ApiModelProperty("视频简介")
-    @Max(1000)
+    @Size(max = 1000)
     private String details;
 
     @ApiModelProperty("状态：0保存草稿1投稿")

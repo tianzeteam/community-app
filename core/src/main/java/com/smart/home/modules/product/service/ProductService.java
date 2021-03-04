@@ -4,19 +4,23 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.exception.DuplicateDataException;
-import com.smart.home.enums.AutoAuditFlagEnum;
+import com.smart.home.common.util.FileUtils;
 import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.dao.ProductParamSettingMapper;
 import com.smart.home.modules.product.dao.ProductParamValueMapper;
 import com.smart.home.modules.product.dao.ProductShopMappingMapper;
 import com.smart.home.modules.product.entity.*;
+import com.smart.home.modules.system.entity.SysFile;
+import com.smart.home.modules.system.service.SysFileService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -34,6 +38,8 @@ public class ProductService {
     ProductShopMappingMapper productShopMappingMapper;
     @Resource
     ProductParamSettingMapper productParamSettingMapper;
+    @Autowired
+    private SysFileService sysFileService;
 
     @Transactional(rollbackFor = RuntimeException.class)
     public int create(Product product) {
@@ -101,6 +107,7 @@ public class ProductService {
                 productMapper.saveShops(productId, JSON.toJSONString(product.getProductShopMappingList()));
             }
         }
+        syncImages(product);
         return affectRow;
     }
 
@@ -138,7 +145,22 @@ public class ProductService {
                 productMapper.saveShops(productId, "");
             }
         }
+        syncImages(product);
         return affectRow;
+    }
+
+    private void syncImages(Product product) {
+        List<String> needSyncFileNameList = new ArrayList<>();
+        if (StringUtils.isNotBlank(product.getCoverImage())) {
+            needSyncFileNameList.add(FileUtils.getFileNameFromUrl(product.getCoverImage()));
+        }
+        if (StringUtils.isNotBlank(product.getBannerImages())) {
+            List<String> list = JSON.parseArray(product.getBannerImages(), String.class);
+            for (String s : list) {
+                needSyncFileNameList.add(FileUtils.getFileNameFromUrl(s));
+            }
+        }
+        sysFileService.syncList(needSyncFileNameList);
     }
 
     public int deleteById(Long id) {
@@ -190,4 +212,7 @@ public class ProductService {
         return productMapper.queryDetailById(productId, loginUserId);
     }
 
+    public void updateCommentScore(Integer productId, BigDecimal averageScore, Integer fiveStarCount, Integer fourStarCount, Integer threeStarCount, Integer twoStarCount, Integer oneStarCount) {
+        productMapper.updateCommentScore(productId, averageScore, fiveStarCount, fourStarCount, threeStarCount, twoStarCount, oneStarCount);
+    }
 }

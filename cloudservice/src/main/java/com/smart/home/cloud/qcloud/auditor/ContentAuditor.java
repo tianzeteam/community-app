@@ -13,7 +13,8 @@ import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.cms.v20190321.CmsClient;
 import com.tencentcloudapi.cms.v20190321.models.*;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.StringUtils;;import java.util.Arrays;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.Base64Utils;;import java.util.Arrays;
 import java.util.List;
 /**
  * @author jason
@@ -24,6 +25,10 @@ import java.util.List;
 public class ContentAuditor {
 
     public static ContentAuditorResult auditorResult(String content) {
+        if (StringUtils.isBlank(content)) {
+            throw new RuntimeException("文本内容不能为空");
+        }
+        content = Base64Utils.encodeToString(content.getBytes());
         try{
             Credential cred = new Credential(QcloudProperties.secretId, QcloudProperties.secretKey);
             HttpProfile httpProfile = new HttpProfile();

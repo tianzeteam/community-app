@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -17,16 +18,16 @@ import java.util.List;
 public class ProductParamSettingCreateDTO {
 
     @ApiModelProperty("参数名称")
-    @Max(32)
+    @Size(max = 32)
     @NotBlank(message = "参数名称不能为空")
     private String paramName;
 
     @ApiModelProperty("默认值")
-    @Max(32)
+    @Size(max = 32)
     private String defaultValue;
 
     @ApiModelProperty("参数简介")
-    @Max(64)
+    @Size(max = 64)
     private String remark;
 
     @ApiModelProperty("枚举值列表")

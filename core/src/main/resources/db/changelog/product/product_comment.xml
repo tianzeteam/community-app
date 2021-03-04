@@ -106,4 +106,10 @@
             COMMENT ON COLUMN product_comment.report_count IS '用户投诉数量';
         </sql>
     </changeSet>
+    <changeSet id="modifyColumnCreatedTime4ProductComment" author="jason">
+        <comment>修改字段</comment>
+        <sql>
+            alter table product_comment alter column created_time type timestamp;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

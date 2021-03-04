@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
@@ -81,5 +82,12 @@ public class SysFileService {
     public void sync(String fileName) {
         // 1 代表同步了
         sysFileMapper.updateSyncFlag(fileName, 1);
+    }
+
+    public void syncList(List<String> needSyncFileNameList) {
+        if (CollectionUtils.isEmpty(needSyncFileNameList)) {
+            return;
+        }
+        sysFileMapper.updateSyncFlagList(needSyncFileNameList, 1);
     }
 }

@@ -4,10 +4,12 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
+import com.smart.home.common.util.FileUtils;
 import com.smart.home.modules.product.dao.ProductBrandMapper;
 import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.entity.ProductBrand;
 import com.smart.home.modules.product.entity.ProductBrandExample;
+import com.smart.home.modules.system.service.SysFileService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,8 @@ public class ProductBrandService {
     ProductBrandMapper productBrandMapper;
     @Resource
     ProductMapper productMapper;
+    @Resource
+    private SysFileService sysFileService;
 
     public int create(ProductBrand productBrand) {
         // 检查是否存在
@@ -37,7 +41,13 @@ public class ProductBrandService {
         productBrand.setCreatedTime(new Date());
         productBrand.setState(RecordStatusEnum.NORMAL.getStatus());
         productBrand.setRevision(0);
-        return productBrandMapper.insertSelective(productBrand);
+        int affectRow = productBrandMapper.insertSelective(productBrand);
+        String logo = productBrand.getLogo();
+        if (StringUtils.isNotBlank(logo)) {
+            String fileName = FileUtils.getFileNameFromUrl(logo);
+            sysFileService.sync(fileName);
+        }
+        return affectRow;
     }
 
     public int update(ProductBrand productBrand) {
@@ -47,7 +57,13 @@ public class ProductBrandService {
             throw new DuplicateDataException("该品牌已经存在");
         }
         productBrand.setUpdatedTime(new Date());
-        return productBrandMapper.updateByPrimaryKeySelective(productBrand);
+        int affectRow = productBrandMapper.updateByPrimaryKeySelective(productBrand);
+        String logo = productBrand.getLogo();
+        if (StringUtils.isNotBlank(logo)) {
+            String fileName = FileUtils.getFileNameFromUrl(logo);
+            sysFileService.sync(fileName);
+        }
+        return affectRow;
     }
 
     public int deleteById(Long id) {

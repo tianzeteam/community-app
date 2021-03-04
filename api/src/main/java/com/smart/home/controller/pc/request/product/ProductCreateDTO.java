@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
 /**
@@ -18,11 +19,11 @@ public class ProductCreateDTO {
 
     @ApiModelProperty("产品名称")
     @NotBlank(message = "产品名称不能为空")
-    @Max(20)
+    @Size(max = 20, message = "产品名称长度不能超过20")
     private String productName;
 
     @ApiModelProperty("产品简介")
-    @Max(200)
+    @Size(max = 200, message = "产品简介长度不能超过200")
     private String remark;
 
     @ApiModelProperty("封面图片")

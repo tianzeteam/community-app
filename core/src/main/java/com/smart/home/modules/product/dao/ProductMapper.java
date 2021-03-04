@@ -2,9 +2,12 @@ package com.smart.home.modules.product.dao;
 
 import com.smart.home.modules.product.entity.Product;
 import com.smart.home.modules.product.entity.ProductExample;
+
+import java.math.BigDecimal;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface ProductMapper {
@@ -58,4 +61,5 @@ public interface ProductMapper {
 
     Product queryDetailById(@Param("productId") Integer productId,@Param("loginUserId") Long loginUserId);
 
+    int updateCommentScore(Integer productId, BigDecimal averageScore, Integer fiveStarCount, Integer fourStarCount, Integer threeStarCount, Integer twoStarCount, Integer oneStarCount);
 }

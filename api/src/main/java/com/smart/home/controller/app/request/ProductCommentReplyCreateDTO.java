@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 
@@ -23,7 +24,7 @@ public class ProductCommentReplyCreateDTO {
     private Long pid;
     @ApiModelProperty("评价内容")
     @NotBlank(message = "评价内容不能为空")
-    @Max(value = 100, message = "评价内容不得超过100字")
+    @Size(max = 100, message = "评价内容不得超过100字")
     private String details;
 
 }
