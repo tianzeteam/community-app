@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.exception.DuplicateDataException;
+import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.dao.ProductParamSettingMapper;
 import com.smart.home.modules.product.dao.ProductParamValueMapper;
@@ -188,4 +189,5 @@ public class ProductService {
     public Product queryDetailById(Integer productId, Long loginUserId) {
         return productMapper.queryDetailById(productId, loginUserId);
     }
+
 }

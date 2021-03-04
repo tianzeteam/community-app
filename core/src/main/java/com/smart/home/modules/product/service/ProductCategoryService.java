@@ -4,11 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
+import com.smart.home.common.util.FileUtils;
 import com.smart.home.modules.product.dao.ProductCategoryMapper;
 import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.dao.ProductParamSettingMapper;
 import com.smart.home.modules.product.entity.ProductCategory;
 import com.smart.home.modules.product.entity.ProductCategoryExample;
+import com.smart.home.modules.system.service.SysFileService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,8 @@ public class ProductCategoryService {
     ProductMapper productMapper;
     @Autowired
     private ProductCategoryParamService productCategoryParamService;
+    @Autowired
+    private SysFileService sysFileService;
 
     @Transactional(rollbackFor = RuntimeException.class)
     public int create(ProductCategory productCategory, List<Integer> paramIdList) {
@@ -50,7 +54,7 @@ public class ProductCategoryService {
             productCategory.setLevel(1);
         } else {
             // 找出上级目录的level+1
-            Integer level = productCategoryMapper.findParentLevel(productCategory.getPid());
+            Integer level = productCategoryMapper.findLevelById(productCategory.getPid());
             if (Objects.isNull(level)) {
                 throw new ServiceException("父级类目不存在");
             }
@@ -64,6 +68,11 @@ public class ProductCategoryService {
                 productCategoryParamService.create(productCategoryId, productParamId, sort);
                 sort ++;
             }
+        }
+        String icon = productCategory.getIcon();
+        if (StringUtils.isNotBlank(icon)) {
+            String fileName = FileUtils.getFileNameFromUrl(icon);
+            sysFileService.sync(fileName);
         }
         return affectRow;
     }
@@ -82,7 +91,7 @@ public class ProductCategoryService {
             productCategory.setLevel(1);
         } else {
             // 找出上级目录的level+1
-            Integer level = productCategoryMapper.findParentLevel(productCategory.getPid());
+            Integer level = productCategoryMapper.findLevelById(productCategory.getPid());
             if (Objects.isNull(level)) {
                 throw new ServiceException("父级类目不存在");
             }
@@ -91,7 +100,13 @@ public class ProductCategoryService {
         if (paramIdList != null && paramIdList.isEmpty()) {
             productCategoryParamService.deleteByProductCategoryId(productCategory.getId());
         }
-        return productCategoryMapper.updateByPrimaryKeySelective(productCategory);
+        int affectRow = productCategoryMapper.updateByPrimaryKeySelective(productCategory);
+        String icon = productCategory.getIcon();
+        if (StringUtils.isNotBlank(icon)) {
+            String fileName = FileUtils.getFileNameFromUrl(icon);
+            sysFileService.sync(fileName);
+        }
+        return affectRow;
     }
 
     public int deleteById(Long id) {

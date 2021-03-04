@@ -113,4 +113,14 @@ public class UserDataService {
     public UserData selectByIdOrNickname(Long userId, String nickName) {
         return userDataMapper.selectByIdOrNickname(userId, nickName);
     }
+
+    /**
+     * 累积用户的命中敏感词数量
+     * @param loginUserId
+     * @param size
+     * @return
+     */
+    public int increaseHitSensitiveCount(Long loginUserId, int size) {
+        return userDataMapper.increaseHitSensitiveCount(loginUserId, size);
+    }
 }

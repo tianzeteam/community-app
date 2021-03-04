@@ -57,4 +57,5 @@ public interface ProductMapper {
     List<Product> queryByCategory(Product product);
 
     Product queryDetailById(@Param("productId") Integer productId,@Param("loginUserId") Long loginUserId);
+
 }

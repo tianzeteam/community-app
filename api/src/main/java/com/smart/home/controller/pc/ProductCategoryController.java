@@ -43,7 +43,7 @@ public class ProductCategoryController {
 
     @ApiOperation("创建产品类目")
     @PostMapping("/create")
-    public APIResponse create(@Valid ProductCategoryCreateDTO productCategoryCreateDTO, BindingResult bindingResult) {
+    public APIResponse create(@Valid @RequestBody ProductCategoryCreateDTO productCategoryCreateDTO, BindingResult bindingResult) {
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(productCategoryCreateDTO, productCategory);
         productCategory.setCreatedBy(UserUtils.getLoginUserId());
@@ -53,7 +53,7 @@ public class ProductCategoryController {
 
     @ApiOperation("更新产品类目")
     @PostMapping("/update")
-    public APIResponse update(@Valid ProductCategoryUpdateDTO productCategoryUpdateDTO, BindingResult bindingResult) {
+    public APIResponse update(@Valid @RequestBody ProductCategoryUpdateDTO productCategoryUpdateDTO, BindingResult bindingResult) {
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(productCategoryUpdateDTO, productCategory);
         productCategory.setUpdatedBy(UserUtils.getLoginUserId());

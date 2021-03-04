@@ -77,4 +77,9 @@ public class SysFileService {
         upload.setUrl(sysFile.getUrl());
         sysFileMapper.insertSelective(sysFile);
     }
+
+    public void sync(String fileName) {
+        // 1 代表同步了
+        sysFileMapper.updateSyncFlag(fileName, 1);
+    }
 }

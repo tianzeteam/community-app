@@ -352,10 +352,6 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="findParentLevel" resultType="java.lang.Integer">
-    select level from product_category where pid = #{pid}
-    </select>
-
   <select id="findLevelById" resultType="java.lang.Integer">
     select level from product_category where id = #{id}
   </select>

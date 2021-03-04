@@ -1,14 +1,22 @@
 package com.smart.home.modules.product.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.cloud.qcloud.auditor.ContentAuditor;
+import com.smart.home.cloud.qcloud.auditor.ContentAuditorResult;
+import com.smart.home.cloud.qcloud.enums.ContentAuditorEvilEnum;
+import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
+import com.smart.home.common.enums.AuditStatusEnum;
+import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.product.dao.ProductCommentMapper;
 import com.smart.home.modules.product.entity.Product;
 import com.smart.home.modules.product.entity.ProductComment;
 import com.smart.home.modules.product.entity.ProductCommentExample;
 import com.smart.home.modules.user.service.UserAccountService;
+import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -29,6 +37,8 @@ public class ProductCommentService {
     private ProductService productService;
     @Autowired
     private UserAccountService userAccountService;
+    @Autowired
+    private UserDataService userDataService;
 
     public int create(ProductComment productComment) {
         productComment.setCreatedTime(new Date());
@@ -116,29 +126,83 @@ public class ProductCommentService {
                 .withStarCount(startCount)
                 .withUserId(loginUserId);
         productCommentMapper.insertSelective(productComment);
-        // 超出产品，计算产品的平均分
-        Product product = productService.findById(productId);
-        BigDecimal averageScore = product.getAverageScore();
-        if (Objects.isNull(averageScore)) {
-            averageScore = new BigDecimal(10);
-        }
-        averageScore = startCount.multiply(new BigDecimal(2)).add(averageScore).divide(new BigDecimal(2), 1, RoundingMode.HALF_UP);
-        if (startCount.compareTo(new BigDecimal(4)) > 0) {
-            product.setFiveStarCount(product.getFiveStarCount() + 1);
-        } else if (startCount.compareTo(new BigDecimal(3)) > 0) {
-            product.setFourStarCount(product.getFourStarCount() + 1);
-        } else if (startCount.compareTo(new BigDecimal(2)) > 0) {
-            product.setThreeStarCount(product.getThreeStarCount() + 1);
-        } else if (startCount.compareTo(new BigDecimal(1)) > 0) {
-            product.setTwoStarCount(product.getTwoStarCount() + 1);
-        } else {
-            product.setOneStarCount(product.getOneStarCount() + 1);
-        }
-        productService.update(product);
+        final long id = productComment.getId();
+        // 对评论进行审核，审核通过后计算平均分
+        processAutoAudit(loginUserId, startCount, details, productId, id);
     }
 
     public List<ProductComment> queryViaProductIdByPage(Integer productId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         return productCommentMapper.queryViaProductIdByPage(productId);
+    }
+
+    private void processAutoAudit(Long loginUserId, BigDecimal startCount, String details, Integer productId, long id) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ContentAuditorResult contentAuditorResult = ContentAuditor.auditorResult(details);
+                if (contentAuditorResult == null) {
+                    // 机审失败，进入人工审核
+                    productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode());
+                    return;
+                }
+
+                if (contentAuditorResult.getContentAuditorEvilEnum() == ContentAuditorEvilEnum.NORMAL) {
+                    // 机审成功， 直接通过
+                    productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                    calculateProductAverageScore(productId, startCount);
+                    return;
+                }
+                // 机器审核不通过，文本异常
+                // 先看看建议通过不通过
+                ContentAuditorSuggestionEnum contentAuditorSuggestionEnum = contentAuditorResult.getContentAuditorSuggestionEnum();
+                if (contentAuditorSuggestionEnum == null
+                        ||ContentAuditorSuggestionEnum.Block == contentAuditorSuggestionEnum
+                        || ContentAuditorSuggestionEnum.Review == contentAuditorSuggestionEnum) {
+                    productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode());
+                    List<String> keywordsList = contentAuditorResult.getKeywordsList();
+                    if (!CollectionUtils.isEmpty(keywordsList)) {
+                        productCommentMapper.updateHitSensitiveCount(id, keywordsList.size());
+                        // 增加用户的总敏感词数量
+                        userDataService.increaseHitSensitiveCount(loginUserId, keywordsList.size());
+                    }
+                    return;
+                }
+                if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
+                    // 正常，视为通过
+                    productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                    calculateProductAverageScore(productId, startCount);
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 极端产品平均分数，并更新到数据库
+     * @param productId
+     * @param starCount
+     */
+    private void calculateProductAverageScore(Integer productId, BigDecimal starCount) {
+        // 如果评价合法，计算其他数据
+        Product product = productService.findById(productId);
+        // 超出产品，计算产品的平均分
+        BigDecimal averageScore = product.getAverageScore();
+        if (Objects.isNull(averageScore)) {
+            averageScore = new BigDecimal(10);
+        }
+        averageScore = starCount.multiply(new BigDecimal(2)).add(averageScore).divide(new BigDecimal(2), 1, RoundingMode.HALF_UP);
+        if (starCount.compareTo(new BigDecimal(4)) > 0) {
+            product.setFiveStarCount(product.getFiveStarCount() + 1);
+        } else if (starCount.compareTo(new BigDecimal(3)) > 0) {
+            product.setFourStarCount(product.getFourStarCount() + 1);
+        } else if (starCount.compareTo(new BigDecimal(2)) > 0) {
+            product.setThreeStarCount(product.getThreeStarCount() + 1);
+        } else if (starCount.compareTo(new BigDecimal(1)) > 0) {
+            product.setTwoStarCount(product.getTwoStarCount() + 1);
+        } else {
+            product.setOneStarCount(product.getOneStarCount() + 1);
+        }
+        product.setAverageScore(averageScore);
+        productService.update(product);
     }
 }

@@ -422,4 +422,8 @@
       audit_state = #{auditState,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="updateSyncFlag">
+    update sys_file set sync_flag = #{flag},audit_state=1 where new_name = #{fileName}
+  </update>
 </mapper>

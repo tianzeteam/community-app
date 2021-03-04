@@ -41,4 +41,6 @@ public interface UserDataMapper {
     int increaseByReportCount(@Param("userId") Long userId,@Param("reasonRate") String reasonRate);
 
     String queryReportReasonRate(@Param("userId") Long userId);
+
+    int increaseHitSensitiveCount(@Param("userId") Long userId,@Param("size") int size);
 }

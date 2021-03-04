@@ -82,4 +82,28 @@
             COMMENT ON COLUMN product_comment.audit_flag IS '审核标记：0待审核1审核通过2审核不通过';
         </sql>
     </changeSet>
+    <changeSet id="addColumnHitSensitiveCount4ProductComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_comment" columnName="hit_sensitive_count"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_comment add column hit_sensitive_count int default 0;
+            COMMENT ON COLUMN product_comment.hit_sensitive_count IS '命中敏感词数量';
+        </sql>
+    </changeSet>
+    <changeSet id="addColumnReportCount4ProductComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_comment" columnName="report_count"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_comment add column report_count int default 0;
+            COMMENT ON COLUMN product_comment.report_count IS '用户投诉数量';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

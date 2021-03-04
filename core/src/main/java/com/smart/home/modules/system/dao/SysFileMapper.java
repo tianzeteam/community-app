@@ -29,4 +29,6 @@ public interface SysFileMapper {
     int updateByPrimaryKeySelective(SysFile record);
 
     int updateByPrimaryKey(SysFile record);
+
+    int updateSyncFlag(@Param("fileName") String fileName,@Param("flag") int flag);
 }
