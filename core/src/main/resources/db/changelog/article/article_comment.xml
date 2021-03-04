@@ -48,4 +48,16 @@
 
         </sql>
     </changeSet>
+    <changeSet id="addColumnAutoAuditFlag4ArticleComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article_comment" columnName="auto_audit_flag"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article_comment add column auto_audit_flag int default 0;
+            COMMENT ON COLUMN article_comment.auto_audit_flag IS '机审标记:0还未机审1机审通过2机审图片异常3机审文本异常';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

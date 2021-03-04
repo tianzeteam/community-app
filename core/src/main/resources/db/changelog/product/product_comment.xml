@@ -58,4 +58,28 @@
             alter table product_comment alter column STAR_COUNT type decimal(4,2);
         </sql>
     </changeSet>
+    <changeSet id="addColumnAutoAuditFlag4ProductComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_comment" columnName="auto_audit_flag"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_comment add column auto_audit_flag int default 0;
+            COMMENT ON COLUMN product_comment.auto_audit_flag IS '机审标记:0还未机审1机审通过2机审图片异常3机审文本异常';
+        </sql>
+    </changeSet>
+    <changeSet id="addColumnAuditFlag4ProductComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_comment" columnName="audit_flag"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_comment add column audit_flag int default 0;
+            COMMENT ON COLUMN product_comment.audit_flag IS '审核标记：0待审核1审核通过2审核不通过';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

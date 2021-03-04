@@ -61,4 +61,16 @@
             alter table community_post_reply add column stamp_count int;
         </sql>
     </changeSet>
+    <changeSet id="addColumnAutoAuditFlag4PostReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post_reply" columnName="auto_audit_flag"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table community_post_reply add column auto_audit_flag int default 0;
+            COMMENT ON COLUMN community_post_reply.auto_audit_flag IS '机审标记:0还未机审1机审通过2机审图片异常3机审文本异常';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
