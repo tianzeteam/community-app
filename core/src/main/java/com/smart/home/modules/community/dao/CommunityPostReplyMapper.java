@@ -38,4 +38,10 @@ public interface CommunityPostReplyMapper {
 
     int decreaseStampCount(@Param("id") Long id);
 
+    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag);
+
+    int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
+
+    int updateHitSensitiveCount(@Param("id") long id,@Param("count") int count);
+
 }

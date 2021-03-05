@@ -137,4 +137,22 @@
             COMMENT ON COLUMN community_post.hit_sensitive_count IS '命中敏感词数量';
         </sql>
     </changeSet>
+    <changeSet id="addColumnReportCountRate4CommunityPost" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post" columnName="report_count_rate"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table community_post add column report_count_rate varchar(255);
+            COMMENT ON COLUMN community_post.report_count_rate IS '投诉分布';
+
+            alter table community_post add column text_exception_reason varchar(32);
+            COMMENT ON COLUMN community_post.text_exception_reason IS '机审文本异常原因';
+
+            alter table community_post add column image_exception_reason varchar(32);
+            COMMENT ON COLUMN community_post.image_exception_reason IS '机审图片异常原因';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

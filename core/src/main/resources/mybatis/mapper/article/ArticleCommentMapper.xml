@@ -326,7 +326,7 @@
   </update>
 
   <update id="updateAutoAuditFlagAndAuditFlag">
-    update article_comment set auto_audit_flag = #{autoAuditFlag},audit_flag=#{autoAuditFlag} where id = #{id,jdbcType=BIGINT}
+    update article_comment set auto_audit_flag = #{autoAuditFlag},audit_flag=#{auditFlag} where id = #{id,jdbcType=BIGINT}
   </update>
 
   <update id="updateHitSensitiveCount">

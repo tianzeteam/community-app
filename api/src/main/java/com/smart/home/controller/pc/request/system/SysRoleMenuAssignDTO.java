@@ -1,4 +1,4 @@
-package com.smart.home.controller.pc.request;
+package com.smart.home.controller.pc.request.system;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

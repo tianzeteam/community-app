@@ -471,4 +471,17 @@
                  left join user_data ud on ud.user_id = ua.id
     where cp.user_id = #{userId,jdbcType=BIGINT}
   </select>
+
+  <update id="updateAutoAuditFlag">
+    update community_post set auto_audit_flag = #{autoAuditFlag} where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateAutoAuditFlagAndAuditFlag">
+    update community_post set auto_audit_flag = #{autoAuditFlag},audit_status=#{auditFlag} where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateHitSensitiveCount">
+    update community_post set hit_sensitive_count = #{count} where id = #{id}
+  </update>
+
 </mapper>

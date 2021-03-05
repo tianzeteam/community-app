@@ -297,4 +297,16 @@
   <update id="decreaseStampCount">
     update community_post_reply set stamp_count = stamp_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="updateAutoAuditFlag">
+    update product_comment set auto_audit_flag = #{autoAuditFlag} where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateAutoAuditFlagAndAuditFlag">
+    update product_comment set auto_audit_flag = #{autoAuditFlag},audit_flag=#{auditFlag} where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateHitSensitiveCount">
+    update product_comment set hit_sensitive_count = #{count} where id = #{id}
+  </update>
 </mapper>

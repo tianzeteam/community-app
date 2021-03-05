@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
@@ -13,8 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -112,5 +114,45 @@ public class CommunityPostService {
     public List<CommunityPost> queryViaUserIdByPage(Long userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         return communityPostMapper.queryViaUserIdByPage(userId);
+    }
+
+    public Long countWaitAudit() {
+        CommunityPostExample example = new CommunityPostExample();
+        example.createCriteria().andAuditStatusEqualTo(AuditStatusEnum.WAIT_AUDIT.getCode())
+                .andAutoAuditFlagEqualTo(AutoAuditFlagEnum.WAIT_AUDIT.getCode());
+        return communityPostMapper.countByExample(example);
+    }
+
+    public Long countTextException() {
+        CommunityPostExample example = new CommunityPostExample();
+        example.createCriteria()
+                .andAutoAuditFlagIn(Arrays.asList(AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode(), AutoAuditFlagEnum.IMAGE_AND_CONTENT_EXCEPTION.getCode()));
+        return communityPostMapper.countByExample(example);
+    }
+
+    public Long countImageException() {
+        CommunityPostExample example = new CommunityPostExample();
+        example.createCriteria()
+                .andAutoAuditFlagIn(Arrays.asList(AutoAuditFlagEnum.IMAGE_EXCEPTION.getCode(), AutoAuditFlagEnum.IMAGE_AND_CONTENT_EXCEPTION.getCode()));
+        return communityPostMapper.countByExample(example);
+    }
+
+    public Long countHasReport() {
+        CommunityPostExample example = new CommunityPostExample();
+        example.createCriteria().andReportCountGreaterThan(0);
+        return communityPostMapper.countByExample(example);
+    }
+
+    public Long countHitSensitive() {
+        CommunityPostExample example = new CommunityPostExample();
+        example.createCriteria().andHitSensitiveCountGreaterThan(0);
+        return communityPostMapper.countByExample(example);
+    }
+
+    public Long countTotalNormal() {
+        CommunityPostExample example = new CommunityPostExample();
+        example.createCriteria().andAuditStatusEqualTo(AuditStatusEnum.APPROVED.getCode())
+                .andAutoAuditFlagEqualTo(AutoAuditFlagEnum.APPROVE.getCode());
+        return communityPostMapper.countByExample(example);
     }
 }

@@ -78,4 +78,34 @@
             COMMENT ON COLUMN article_comment.report_count IS '用户投诉数量';
         </sql>
     </changeSet>
+    <changeSet id="addColumnReplyCount4ArticleComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article_comment" columnName="reply_count"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article_comment add column reply_count int default 0;
+            COMMENT ON COLUMN article_comment.reply_count IS '回复数量';
+        </sql>
+    </changeSet>
+    <changeSet id="addColumnReportCountRate4ArticleComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article_comment" columnName="report_count_rate"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article_comment add column report_count_rate varchar(255);
+            COMMENT ON COLUMN article_comment.report_count_rate IS '投诉分布';
+
+            alter table article_comment add column text_exception_reason varchar(32);
+            COMMENT ON COLUMN article_comment.text_exception_reason IS '机审文本异常原因';
+
+            alter table article_comment add column image_exception_reason varchar(32);
+            COMMENT ON COLUMN article_comment.image_exception_reason IS '机审图片异常原因';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

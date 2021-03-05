@@ -53,4 +53,10 @@ public interface CommunityPostMapper {
     int updateTopFlag(@Param("id") Long id,@Param("flag") int flag);
 
     List<CommunityPost> queryViaUserIdByPage(@Param("userId") Long userId);
+
+    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag);
+
+    int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
+
+    int updateHitSensitiveCount(@Param("id") long id,@Param("count") int count);
 }

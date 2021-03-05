@@ -5,6 +5,8 @@ import com.smart.home.controller.pc.response.ContentAuditResultHeadVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.article.service.ArticleCommentService;
+import com.smart.home.modules.community.service.CommunityPostReplyService;
+import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.modules.product.service.ProductCommentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +28,10 @@ public class ContentAdminAuditController {
     private ProductCommentService productCommentService;
     @Autowired
     private ArticleCommentService articleCommentService;
+    @Autowired
+    private CommunityPostService communityPostService;
+    @Autowired
+    private CommunityPostReplyService communityPostReplyService;
 
     // TODO
 
@@ -57,5 +63,32 @@ public class ContentAdminAuditController {
         return APIResponse.OK(vo);
     }
 
+    @ApiOperation("头部信息-帖子")
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @GetMapping("queryPostHeadInfo")
+    public APIResponse<ContentAuditResultHeadVO> queryPostHeadInfo() {
+        ContentAuditResultHeadVO vo = new ContentAuditResultHeadVO();
+        vo.setWaitAuditCount(communityPostService.countWaitAudit());
+        vo.setAutoTextExceptionCount(communityPostService.countTextException());
+        vo.setAutoImageExceptionCount(communityPostService.countImageException());
+        vo.setHasReportCount(communityPostService.countHasReport());
+        vo.setHitSensitiveCount(communityPostService.countHitSensitive());
+        vo.setTotalNormalCount(communityPostService.countTotalNormal());
+        return APIResponse.OK(vo);
+    }
+
+    @ApiOperation("头部信息-回帖")
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @GetMapping("queryPostReplyHeadInfo")
+    public APIResponse<ContentAuditResultHeadVO> queryPostReplyHeadInfo() {
+        ContentAuditResultHeadVO vo = new ContentAuditResultHeadVO();
+        vo.setWaitAuditCount(communityPostReplyService.countWaitAudit());
+        vo.setAutoTextExceptionCount(communityPostReplyService.countTextException());
+        vo.setAutoImageExceptionCount(communityPostReplyService.countImageException());
+        vo.setHasReportCount(communityPostReplyService.countHasReport());
+        vo.setHitSensitiveCount(communityPostReplyService.countHitSensitive());
+        vo.setTotalNormalCount(communityPostReplyService.countTotalNormal());
+        return APIResponse.OK(vo);
+    }
 
 }
