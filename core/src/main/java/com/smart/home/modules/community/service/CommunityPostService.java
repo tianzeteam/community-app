@@ -9,6 +9,7 @@ import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
 import com.smart.home.modules.user.service.UserAccountService;
+import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,8 @@ public class CommunityPostService {
     CommunityPostMapper communityPostMapper;
     @Autowired
     private UserAccountService userAccountService;
+    @Autowired
+    private UserDataService userDataService;
 
     public int create(CommunityPost communityPost) {
         communityPost.setTopFlag(YesNoEnum.NO.getCode());
@@ -154,5 +157,18 @@ public class CommunityPostService {
         example.createCriteria().andAuditStatusEqualTo(AuditStatusEnum.APPROVED.getCode())
                 .andAutoAuditFlagEqualTo(AutoAuditFlagEnum.APPROVE.getCode());
         return communityPostMapper.countByExample(example);
+    }
+
+    public void manuallyReject(Long id) {
+        communityPostMapper.updateAuditStatus(id, AuditStatusEnum.REJECT.getCode());
+    }
+
+    public void manuallyApprove(Long id) {
+        int affectRow = communityPostMapper.updateAuditStatus(id, AuditStatusEnum.APPROVED.getCode());
+        if (affectRow > 0) {
+            // 增加用户的发帖数量
+            Long userId = communityPostMapper.findUserIdById(id);
+            userDataService.increasePostCount(userId);
+        }
     }
 }

@@ -75,6 +75,7 @@ public class ArticleCommentService {
                     articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
                     // 文章增加一次评论数量
                     articleMapper.increaseCommentCount(articleId);
+                    userDataService.increaseCommentCount(loginUserId);
                     return;
                 }
                 // 机器审核不通过，文本异常
@@ -97,6 +98,7 @@ public class ArticleCommentService {
                     articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
                     // 文章增加一次评论数量
                     articleMapper.increaseCommentCount(articleId);
+                    userDataService.increaseCommentCount(loginUserId);
                 }
             }
         }).start();
@@ -201,5 +203,19 @@ public class ArticleCommentService {
         example.createCriteria().andAuditFlagEqualTo(AuditStatusEnum.APPROVED.getCode())
                 .andAutoAuditFlagEqualTo(AutoAuditFlagEnum.APPROVE.getCode());
         return articleCommentMapper.countByExample(example);
+    }
+
+    public void manuallyReject(Long id) {
+        articleCommentMapper.updateAuditFlag(id, AuditStatusEnum.REJECT.getCode());
+    }
+
+    public void manuallyApprove(Long id) {
+        int affectRow = articleCommentMapper.updateAuditFlag(id, AuditStatusEnum.APPROVED.getCode());
+        if (affectRow > 0) {
+            // 增加一次评论数量
+            articleMapper.increaseCommentCount(id);
+            Long userId = articleCommentMapper.findUserIdById(id);
+            userDataService.increaseCommentCount(userId);
+        }
     }
 }

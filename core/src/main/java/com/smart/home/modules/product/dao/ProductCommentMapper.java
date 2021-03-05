@@ -1,5 +1,6 @@
 package com.smart.home.modules.product.dao;
 
+import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.modules.product.entity.ProductComment;
 import com.smart.home.modules.product.entity.ProductCommentExample;
 import java.util.List;
@@ -53,4 +54,8 @@ public interface ProductCommentMapper {
     int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
 
     int updateHitSensitiveCount(@Param("id") long id,@Param("count") int count);
+
+    int updateAuditFlag(@Param("id") Long id, @Param("flag") int flag);
+
+    Long findUserIdById(@Param("id") Long id);
 }

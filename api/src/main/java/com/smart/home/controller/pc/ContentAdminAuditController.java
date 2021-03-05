@@ -1,19 +1,24 @@
 package com.smart.home.controller.pc;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.util.BeanCopyUtils;
+import com.smart.home.controller.pc.request.ContentAdminAuditApproveDTO;
+import com.smart.home.controller.pc.request.ContentAdminAuditSearchDTO;
+import com.smart.home.controller.pc.response.ContentAuditAdminRecordVO;
 import com.smart.home.controller.pc.response.ContentAuditResultHeadVO;
 import com.smart.home.dto.APIResponse;
+import com.smart.home.dto.ContentAdminAuditApproveTO;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.community.service.CommunityPostReplyService;
 import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.modules.product.service.ProductCommentService;
+import com.smart.home.service.ContentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 /**
  * @author jason
@@ -32,8 +37,8 @@ public class ContentAdminAuditController {
     private CommunityPostService communityPostService;
     @Autowired
     private CommunityPostReplyService communityPostReplyService;
-
-    // TODO
+    @Autowired
+    private ContentService contentService;
 
     @ApiOperation("头部信息-文章评论")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
@@ -89,6 +94,43 @@ public class ContentAdminAuditController {
         vo.setHitSensitiveCount(communityPostReplyService.countHitSensitive());
         vo.setTotalNormalCount(communityPostReplyService.countTotalNormal());
         return APIResponse.OK(vo);
+    }
+
+    @ApiOperation("加载待审核内容")
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @PostMapping("/selectNeedAuditContent")
+    public APIResponse<List<ContentAuditAdminRecordVO>> selectNeedAuditContent(@RequestBody ContentAdminAuditSearchDTO contentAdminAuditSearchDTO) {
+
+        // TODO
+        return null;
+    }
+
+    @ApiOperation("认证正常-支持批量")
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @PostMapping("/approveAuditContent")
+    public APIResponse approveAuditContent(@RequestBody List<ContentAdminAuditApproveDTO> contentAdminAuditApproveDTOList) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<ContentAdminAuditApproveTO> toList = BeanCopyUtils.convertListTo(contentAdminAuditApproveDTOList, ContentAdminAuditApproveTO::new);
+                contentService.manuallyApprove(toList);
+            }
+        }).start();
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("认证违规-支持批量")
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @PostMapping("/rejectAuditContent")
+    public APIResponse rejectAuditContent(@RequestBody List<ContentAdminAuditApproveDTO> contentAdminAuditApproveDTOList) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<ContentAdminAuditApproveTO> toList = BeanCopyUtils.convertListTo(contentAdminAuditApproveDTOList, ContentAdminAuditApproveTO::new);
+                contentService.manuallyReject(toList);
+            }
+        }).start();
+        return APIResponse.OK();
     }
 
 }

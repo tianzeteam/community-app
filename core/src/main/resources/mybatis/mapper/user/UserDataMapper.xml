@@ -511,4 +511,20 @@
   <update id="increaseHitSensitiveCount">
     update user_data set hit_sensitive_count = hit_sensitive_count + #{size} where user_id = #{userId,jdbcType=BIGINT}
   </update>
+
+  <update id="increasePostCount">
+    update user_data set post_count = post_count + 1 where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+
+  <update id="increaseCommentCount">
+    update user_data set comment_count = comment_count + 1 where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+
+  <update id="increaseEvaluateCount">
+    update user_data set evaluate_count = evaluate_count + 1 where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+
+  <update id="increaseReplyCount">
+    update user_data set reply_count = reply_count + 1 where user_id = #{userId,jdbcType=BIGINT}
+  </update>
 </mapper>

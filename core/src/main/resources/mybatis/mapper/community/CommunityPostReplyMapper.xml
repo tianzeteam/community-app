@@ -309,4 +309,8 @@
   <update id="updateHitSensitiveCount">
     update product_comment set hit_sensitive_count = #{count} where id = #{id}
   </update>
+
+  <update id="manuallyReject">
+    update product_comment set audit_flag = #{flag} where id = #{id} and audit_flag = 0
+  </update>
 </mapper>

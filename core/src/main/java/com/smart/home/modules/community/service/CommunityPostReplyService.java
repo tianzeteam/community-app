@@ -3,11 +3,14 @@ package com.smart.home.modules.community.service;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.enums.AutoAuditFlagEnum;
+import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
+import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostReply;
 import com.smart.home.modules.community.entity.CommunityPostReplyExample;
 import com.smart.home.modules.product.entity.ProductCommentExample;
 import com.smart.home.modules.user.service.UserAccountService;
+import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +28,12 @@ public class CommunityPostReplyService {
 
     @Resource
     CommunityPostReplyMapper communityPostReplyMapper;
+    @Resource
+    CommunityPostMapper communityPostMapper;
     @Autowired
     private UserAccountService userAccountService;
+    @Autowired
+    private UserDataService userDataService;
 
     public int create(CommunityPostReply communityPostReply) {
         communityPostReply.setCreatedTime(new Date());
@@ -122,5 +129,18 @@ public class CommunityPostReplyService {
         example.createCriteria().andAuditFlagEqualTo(AuditStatusEnum.APPROVED.getCode())
                 .andAutoAuditFlagEqualTo(AutoAuditFlagEnum.APPROVE.getCode());
         return communityPostReplyMapper.countByExample(example);
+    }
+
+    public void manuallyReject(Long id) {
+        communityPostReplyMapper.manuallyReject(id, AuditStatusEnum.REJECT.getCode());
+    }
+
+    public void manuallyApprove(Long id) {
+        int affectRow = communityPostReplyMapper.manuallyReject(id, AuditStatusEnum.APPROVED.getCode());
+        if (affectRow > 0) {
+            CommunityPostReply communityPostReply = findById(id);
+            communityPostMapper.increaseReplyCount(communityPostReply.getPostId());
+            userDataService.increaseReplyCount(communityPostReply.getUserId());
+        }
     }
 }

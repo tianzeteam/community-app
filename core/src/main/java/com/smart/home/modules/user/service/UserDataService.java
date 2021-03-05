@@ -123,4 +123,20 @@ public class UserDataService {
     public int increaseHitSensitiveCount(Long loginUserId, int size) {
         return userDataMapper.increaseHitSensitiveCount(loginUserId, size);
     }
+
+    public void increasePostCount(Long userId) {
+        userDataMapper.increasePostCount(userId);
+    }
+
+    public void increaseCommentCount(Long userId) {
+        userDataMapper.increaseCommentCount(userId);
+    }
+
+    public void increaseEvaluateCount(Long userId) {
+        userDataMapper.increaseEvaluateCount(userId);
+    }
+
+    public void increaseReplyCount(Long userId) {
+        userDataMapper.increaseReplyCount(userId);
+    }
 }

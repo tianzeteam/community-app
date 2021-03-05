@@ -43,4 +43,12 @@ public interface UserDataMapper {
     String queryReportReasonRate(@Param("userId") Long userId);
 
     int increaseHitSensitiveCount(@Param("userId") Long userId,@Param("size") int size);
+
+    int increasePostCount(@Param("userId") Long userId);
+
+    int increaseCommentCount(@Param("userId") Long userId);
+
+    int increaseEvaluateCount(@Param("userId") Long userId);
+
+    int increaseReplyCount(@Param("userId") Long userId);
 }

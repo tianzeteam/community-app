@@ -335,4 +335,12 @@
   <update id="updateHitSensitiveCount">
     update article_comment set hit_sensitive_count = #{count} where id = #{id}
   </update>
+
+  <update id="updateAuditFlag">
+    update article_comment set audit_flag = #{flag} where id = #{id} and audit_flag = 0
+  </update>
+
+  <select id="findUserIdById" resultType="java.lang.Long">
+    select user_id from article_comment where id = #{id}
+  </select>
 </mapper>

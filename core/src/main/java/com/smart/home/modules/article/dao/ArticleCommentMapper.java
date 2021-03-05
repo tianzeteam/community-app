@@ -47,4 +47,8 @@ public interface ArticleCommentMapper {
     int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
 
     int updateHitSensitiveCount(@Param("id") long id,@Param("count") int count);
+
+    int updateAuditFlag(@Param("id") long id,@Param("flag") int flag);
+
+    Long findUserIdById(@Param("id") Long id);
 }
