@@ -48,7 +48,7 @@ public interface ProductCommentMapper {
 
     List<ProductComment> queryViaProductIdByPage(@Param("productId") Integer productId);
 
-    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag);
+    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag, @Param("textExceptionReason") String textExceptionReason);
 
     int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
 

@@ -42,7 +42,7 @@ public interface ArticleCommentMapper {
 
     List<ArticleComment> queryCommentByPageWhenLogin(@Param("userId") Long userId,@Param("articleId") Long articleId);
 
-    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag);
+    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("textExceptionReason") String textExceptionReason);
 
     int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
 

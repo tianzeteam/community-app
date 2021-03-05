@@ -67,7 +67,7 @@ public class ArticleCommentService {
                 ContentAuditorResult contentAuditorResult = ContentAuditor.auditorResult(contents);
                 if (contentAuditorResult == null) {
                     // 机审失败，进入人工审核
-                    articleCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode());
+                    articleCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "请求云服务失败");
                     return;
                 }
                 if (contentAuditorResult.getContentAuditorEvilEnum() == ContentAuditorEvilEnum.NORMAL) {
@@ -83,7 +83,7 @@ public class ArticleCommentService {
                 if (contentAuditorSuggestionEnum == null
                         || ContentAuditorSuggestionEnum.Block == contentAuditorSuggestionEnum
                         || ContentAuditorSuggestionEnum.Review == contentAuditorSuggestionEnum) {
-                    articleCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode());
+                    articleCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode(), contentAuditorResult.getContentAuditorEvilTypeEnum().getDesc());
                     List<String> keywordsList = contentAuditorResult.getKeywordsList();
                     if (!CollectionUtils.isEmpty(keywordsList)) {
                         articleCommentMapper.updateHitSensitiveCount(id, keywordsList.size());

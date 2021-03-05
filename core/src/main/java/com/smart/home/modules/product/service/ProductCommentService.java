@@ -144,7 +144,7 @@ public class ProductCommentService {
                 ContentAuditorResult contentAuditorResult = ContentAuditor.auditorResult(details);
                 if (contentAuditorResult == null) {
                     // 机审失败，进入人工审核
-                    productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode());
+                    productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "请求云服务失败");
                     return;
                 }
 
@@ -160,7 +160,7 @@ public class ProductCommentService {
                 if (contentAuditorSuggestionEnum == null
                         ||ContentAuditorSuggestionEnum.Block == contentAuditorSuggestionEnum
                         || ContentAuditorSuggestionEnum.Review == contentAuditorSuggestionEnum) {
-                    productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode());
+                    productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode(), contentAuditorResult.getContentAuditorEvilTypeEnum().getDesc());
                     List<String> keywordsList = contentAuditorResult.getKeywordsList();
                     if (!CollectionUtils.isEmpty(keywordsList)) {
                         productCommentMapper.updateHitSensitiveCount(id, keywordsList.size());
