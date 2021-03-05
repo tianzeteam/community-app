@@ -6,6 +6,8 @@ import com.smart.home.cloud.qcloud.auditor.ContentAuditorResult;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorEvilEnum;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
 import com.smart.home.common.enums.AuditStatusEnum;
+import com.smart.home.dto.ContentAdminAuditSearchTO;
+import com.smart.home.dto.ContentAuditAdminRecordTO;
 import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.product.dao.ProductCommentMapper;
 import com.smart.home.modules.product.entity.Product;
@@ -242,5 +244,9 @@ public class ProductCommentService {
             // 计算平均分，并增加一次评论数量
             calculateProductAverageScore(productComment.getProductId(), productComment.getStarCount(), userId);
         }
+    }
+
+    public List<ContentAuditAdminRecordTO> selectAllNeedAuditContent(ContentAdminAuditSearchTO to) {
+        return productCommentMapper.selectAllNeedAuditContent(to);
     }
 }

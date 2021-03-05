@@ -1,6 +1,8 @@
 package com.smart.home.modules.product.dao;
 
 import com.smart.home.common.enums.AuditStatusEnum;
+import com.smart.home.dto.ContentAdminAuditSearchTO;
+import com.smart.home.dto.ContentAuditAdminRecordTO;
 import com.smart.home.modules.product.entity.ProductComment;
 import com.smart.home.modules.product.entity.ProductCommentExample;
 import java.util.List;
@@ -58,4 +60,6 @@ public interface ProductCommentMapper {
     int updateAuditFlag(@Param("id") Long id, @Param("flag") int flag);
 
     Long findUserIdById(@Param("id") Long id);
+
+    List<ContentAuditAdminRecordTO> selectAllNeedAuditContent(ContentAdminAuditSearchTO to);
 }

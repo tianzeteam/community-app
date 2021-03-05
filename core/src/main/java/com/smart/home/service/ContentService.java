@@ -1,6 +1,9 @@
 package com.smart.home.service;
 
+import com.github.pagehelper.PageHelper;
 import com.smart.home.dto.ContentAdminAuditApproveTO;
+import com.smart.home.dto.ContentAdminAuditSearchTO;
+import com.smart.home.dto.ContentAuditAdminRecordTO;
 import com.smart.home.enums.ContentTypeEnum;
 import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.community.service.CommunityPostReplyService;
@@ -9,8 +12,10 @@ import com.smart.home.modules.product.service.ProductCommentService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -80,5 +85,19 @@ public class ContentService {
                 log.error(e);
             }
         }
+    }
+
+    public List<ContentAuditAdminRecordTO> selectNeedAuditContent(ContentAdminAuditSearchTO to) {
+        Integer pageSize = to.getPageSize();
+        if (Objects.isNull(pageSize) || pageSize.intValue() == 0) {
+            pageSize = 10;
+        }
+        if (CollectionUtils.isEmpty(to.getContentTypeList())) {
+            to.setContentTypeList(null);
+        }
+        PageHelper.startPage(1, pageSize);
+        List<ContentAuditAdminRecordTO> list = productCommentService.selectAllNeedAuditContent(to);
+        PageHelper.clearPage();
+        return list;
     }
 }

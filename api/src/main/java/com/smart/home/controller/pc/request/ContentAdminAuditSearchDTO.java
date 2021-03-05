@@ -3,6 +3,9 @@ package com.smart.home.controller.pc.request;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 /**
  * @author jason
@@ -26,7 +29,8 @@ public class ContentAdminAuditSearchDTO {
     private Integer textExceptionFlag;
     @ApiModelProperty("机审图片异常：0未勾选1勾选")
     private Integer imageExceptionFlag;
-    @ApiModelProperty("排序字段：created_time, like_count, reply_count")
+    @ApiModelProperty("排序字段：createdTime, likeCount, replyCount")
+    @NotBlank(message = "排序字段不能为空")
     private String sortField;
     @ApiModelProperty("加载条目数量")
     private Integer pageSize;

@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.ContentAdminAuditApproveDTO;
@@ -8,6 +9,8 @@ import com.smart.home.controller.pc.response.ContentAuditAdminRecordVO;
 import com.smart.home.controller.pc.response.ContentAuditResultHeadVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ContentAdminAuditApproveTO;
+import com.smart.home.dto.ContentAdminAuditSearchTO;
+import com.smart.home.dto.ContentAuditAdminRecordTO;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.community.service.CommunityPostReplyService;
@@ -16,8 +19,12 @@ import com.smart.home.modules.product.service.ProductCommentService;
 import com.smart.home.service.ContentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -99,10 +106,17 @@ public class ContentAdminAuditController {
     @ApiOperation("加载待审核内容")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/selectNeedAuditContent")
-    public APIResponse<List<ContentAuditAdminRecordVO>> selectNeedAuditContent(@RequestBody ContentAdminAuditSearchDTO contentAdminAuditSearchDTO) {
-
-        // TODO
-        return null;
+    public APIResponse<List<ContentAuditAdminRecordVO>> selectNeedAuditContent(@Valid @RequestBody ContentAdminAuditSearchDTO contentAdminAuditSearchDTO, BindingResult bindingResult) {
+        ContentAdminAuditSearchTO to = BeanCopyUtils.convertTo(contentAdminAuditSearchDTO, ContentAdminAuditSearchTO::new,(s, t)->{
+           t.setContentTypeList(s.getContentType());
+        });
+        List<ContentAuditAdminRecordTO> list = contentService.selectNeedAuditContent(to);
+        List<ContentAuditAdminRecordVO> resultList = BeanCopyUtils.convertListTo(list, ContentAuditAdminRecordVO::new, (s,t)->{
+            if (StringUtils.isNotBlank(s.getImages())) {
+                t.setImageList(JSON.parseArray(s.getImages(), String.class));
+            }
+        });
+        return APIResponse.OK(resultList);
     }
 
     @ApiOperation("认证正常-支持批量")
