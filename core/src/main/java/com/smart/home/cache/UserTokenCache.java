@@ -32,4 +32,8 @@ public class UserTokenCache {
         cache.invalidate(key);
     }
 
+    public static long size() {
+        return cache.size();
+    }
+
 }

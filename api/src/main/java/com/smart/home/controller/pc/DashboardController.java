@@ -1,5 +1,7 @@
 package com.smart.home.controller.pc;
 
+import com.smart.home.cache.OnlineUserCache;
+import com.smart.home.cache.UserTokenCache;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.DateUtils;
 import com.smart.home.controller.common.UserHeartBeatController;
@@ -45,9 +47,16 @@ public class DashboardController {
 
     @ApiOperation("获取当前在线人数")
     @RoleAccess(RoleConsts.ADMIN)
-    @GetMapping("/onlineCount")
+    @GetMapping("/currentOnlineCount")
     public APIResponse onlineCount() {
-        return APIResponse.OK(UserHeartBeatController.atomicLong.get());
+        return APIResponse.OK(UserTokenCache.size());
+    }
+
+    @ApiOperation("日活")
+    @RoleAccess(RoleConsts.ADMIN)
+    @GetMapping("/todayOnlineCount")
+    public APIResponse todayOnlineCount() {
+        return APIResponse.OK(OnlineUserCache.countOnline());
     }
 
     @ApiOperation("当日文章投稿")
