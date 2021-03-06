@@ -5,6 +5,8 @@ import com.smart.home.enums.ArticleRecommendTypeEnum;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleExample;
 import java.util.List;
+
+import com.smart.home.modules.article.po.UserIdAndCategoryPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -77,4 +79,6 @@ public interface ArticleMapper {
     Article queryBigImageCard(@Param("topFlag") Integer topFlag, @Param("recommendType") Integer recommendType, @Param("channelId") Integer channelId, @Param("recommendFlag") Integer recommendFlag);
 
     List<Article> queryIndexArticleCard(@Param("topFlag") Integer topFlag, @Param("recommendType") Integer recommendType, @Param("channelId") Integer channelId, @Param("recommendFlag") Integer recommendFlag);
+
+    UserIdAndCategoryPO findUserIdAndCategory(@Param("id") Long id);
 }

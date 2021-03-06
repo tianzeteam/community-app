@@ -848,4 +848,8 @@
     and top_flag = #{topFlag,jdbcType=INTEGER}
     and recommend_type = #{recommendType,jdbcType=INTEGER}
   </select>
+
+  <select id="findUserIdAndCategory" resultType="com.smart.home.modules.article.po.UserIdAndCategoryPO">
+    select user_id as userId, category from article where id = #{id}
+  </select>
 </mapper>

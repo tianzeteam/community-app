@@ -13,6 +13,7 @@ import com.smart.home.modules.article.dao.ArticleCommentMapper;
 import com.smart.home.modules.article.dao.ArticleMapper;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.entity.ArticleCommentExample;
+import com.smart.home.modules.article.po.UserIdAndCategoryPO;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +50,15 @@ public class ArticleCommentService {
                 .withStampCount(0)
                 .withCreatedTime(new Date())
                 .withUserId(loginUserId);
-        Long authorId = articleMapper.findAuthorById(articleId);
+        UserIdAndCategoryPO userIdAndCategoryPO = articleMapper.findUserIdAndCategory(articleId);
+        Long authorId = userIdAndCategoryPO.getUserId();
+        Integer articleCategory = userIdAndCategoryPO.getCategory();
         if (authorId.equals(loginUserId)) {
             articleComment.setAuthorFlag(YesNoEnum.YES.getCode());
         } else {
             articleComment.setAuthorFlag(YesNoEnum.NO.getCode());
         }
+        articleComment.setArticleCategory(articleCategory);
         articleCommentMapper.insertSelective(articleComment);
         final long id = articleComment.getId();
         processAutoAudit(id, articleId, contents, loginUserId);
