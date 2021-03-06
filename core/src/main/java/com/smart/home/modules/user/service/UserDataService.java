@@ -124,6 +124,32 @@ public class UserDataService {
         return userDataMapper.increaseHitSensitiveCount(loginUserId, size);
     }
 
+    /**
+     * 累计文本异常数量
+     * @param userId
+     * @return
+     */
+    public int increaseTextExceptionCount(Long userId) {
+        return userDataMapper.increaseTextExceptionCount(userId);
+    }
+    /**
+     * 累计图片异常数量 TODO 对接
+     * @param userId
+     * @return
+     */
+    public int increaseImageExceptionCount(Long userId) {
+        return userDataMapper.increaseImageExceptionCount(userId);
+    }
+
+    /**
+     * 累计人工认定异常数量
+     * @param userId
+     * @return
+     */
+    public int increaseManuallyExceptionCount(Long userId) {
+        return userDataMapper.increaseManuallyExceptionCount(userId);
+    }
+
     public void increasePostCount(Long userId) {
         userDataMapper.increasePostCount(userId);
     }

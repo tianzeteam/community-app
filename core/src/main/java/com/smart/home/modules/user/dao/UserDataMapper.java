@@ -51,4 +51,10 @@ public interface UserDataMapper {
     int increaseEvaluateCount(@Param("userId") Long userId);
 
     int increaseReplyCount(@Param("userId") Long userId);
+
+    int increaseTextExceptionCount(@Param("userId") Long userId);
+
+    int increaseImageExceptionCount(@Param("userId") Long userId);
+
+    int increaseManuallyExceptionCount(@Param("userId") Long userId);
 }

@@ -91,6 +91,7 @@ public class ArticleCommentService {
                         // 增加用户的总敏感词数量
                         userDataService.increaseHitSensitiveCount(loginUserId, keywordsList.size());
                     }
+                    userDataService.increaseTextExceptionCount(loginUserId);
                     return;
                 }
                 if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
@@ -205,7 +206,10 @@ public class ArticleCommentService {
         return articleCommentMapper.countByExample(example);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public void manuallyReject(Long id) {
+        Long userId = articleCommentMapper.findUserIdById(id);
+        userDataService.increaseManuallyExceptionCount(userId);
         articleCommentMapper.updateAuditFlag(id, AuditStatusEnum.REJECT.getCode());
     }
 

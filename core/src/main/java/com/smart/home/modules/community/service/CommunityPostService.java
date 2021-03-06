@@ -159,7 +159,10 @@ public class CommunityPostService {
         return communityPostMapper.countByExample(example);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public void manuallyReject(Long id) {
+        Long userId = communityPostMapper.findUserIdById(id);
+        userDataService.increaseManuallyExceptionCount(userId);
         communityPostMapper.updateAuditStatus(id, AuditStatusEnum.REJECT.getCode());
     }
 

@@ -45,4 +45,6 @@ public interface CommunityPostReplyMapper {
     int updateHitSensitiveCount(@Param("id") long id,@Param("count") int count);
 
     int manuallyReject(@Param("id") Long id,@Param("flag") int flag);
+
+    Long findUserIdById(@Param("id") Long id);
 }

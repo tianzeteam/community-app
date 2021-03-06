@@ -527,4 +527,16 @@
   <update id="increaseReplyCount">
     update user_data set reply_count = reply_count + 1 where user_id = #{userId,jdbcType=BIGINT}
   </update>
+
+  <update id="increaseTextExceptionCount">
+    update user_data set text_exception_count = text_exception_count + 1 where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+
+  <update id="increaseImageExceptionCount">
+    update user_data set image_exception_count = image_exception_count + 1 where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+
+  <update id="increaseManuallyExceptionCount">
+    update user_data set user_audit_exception_count = user_audit_exception_count + 1 where user_id = #{userId,jdbcType=BIGINT}
+  </update>
 </mapper>

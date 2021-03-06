@@ -149,6 +149,7 @@ public class ProductCommentService {
                         // 增加用户的总敏感词数量
                         userDataService.increaseHitSensitiveCount(loginUserId, keywordsList.size());
                     }
+                    userDataService.increaseTextExceptionCount(loginUserId);
                     return;
                 }
                 if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
@@ -232,7 +233,10 @@ public class ProductCommentService {
         return productCommentMapper.countByExample(example);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public void manuallyReject(Long id) {
+        Long userId = productCommentMapper.findUserIdById(id);
+        userDataService.increaseManuallyExceptionCount(userId);
         productCommentMapper.updateAuditFlag(id, AuditStatusEnum.REJECT.getCode());
     }
 
