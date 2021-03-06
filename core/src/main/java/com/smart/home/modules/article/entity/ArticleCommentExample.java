@@ -190,6 +190,11 @@ public class ArticleCommentExample {
             return (Criteria) this;
         }
 
+        public Criteria andArticleCategoryEqualTo(Integer value) {
+            addCriterion("article_category =", value, "articleCategory");
+            return (Criteria) this;
+        }
+
         public Criteria andAutoAuditFlagEqualTo(Integer value) {
             addCriterion("auto_audit_flag =", value, "autoAuditFlag");
             return (Criteria) this;

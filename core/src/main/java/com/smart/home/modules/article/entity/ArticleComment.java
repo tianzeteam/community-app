@@ -33,6 +33,7 @@ public class ArticleComment implements Serializable {
     private Integer auditFlag;
     private Integer hitSensitiveCount;
     private Integer reportCount;
+    private Integer articleCategory;
 
     private static final long serialVersionUID = 1L;
 
@@ -265,6 +266,14 @@ public class ArticleComment implements Serializable {
 
     public void setReportCount(Integer reportCount) {
         this.reportCount = reportCount;
+    }
+
+    public Integer getArticleCategory() {
+        return articleCategory;
+    }
+
+    public void setArticleCategory(Integer articleCategory) {
+        this.articleCategory = articleCategory;
     }
 
     /**

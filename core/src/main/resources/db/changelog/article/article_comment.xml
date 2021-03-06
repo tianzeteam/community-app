@@ -108,4 +108,18 @@
             COMMENT ON COLUMN article_comment.image_exception_reason IS '机审图片异常原因';
         </sql>
     </changeSet>
+    <changeSet id="addIndexCreatedTime4ArticleComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="article_comment" indexName="idx_ac_created_time"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_ac_created_time on article_comment using btree(created_time);
+
+            alter table article_comment add column article_category int default 0;
+            COMMENT ON COLUMN article_comment.article_category IS '评论的文章类型：0文章1视频';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

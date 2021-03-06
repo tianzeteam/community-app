@@ -32,7 +32,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -161,7 +160,7 @@ public class UserController {
 
     @ApiOperation("解封用户-支持批量")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
-    @PostMapping("/banUser")
+    @PostMapping("/releaseUser")
     public APIResponse banUser(@RequestBody IdListBean idListBean) {
         userCommunityAuthService.releaseBlack(idListBean.getIdList());
         return APIResponse.OK();

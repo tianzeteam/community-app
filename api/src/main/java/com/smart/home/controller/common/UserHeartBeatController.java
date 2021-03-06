@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequestMapping("/api/common/heartBeat")
 public class UserHeartBeatController {
 
-    private static AtomicLong atomicLong = new AtomicLong(0);
+    public static AtomicLong atomicLong = new AtomicLong(0);
     private static Set<Long> tokenSet = new HashSet<>();
 
     @ApiOperation("发送心跳数据-一小时发一次？")

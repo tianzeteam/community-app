@@ -253,4 +253,10 @@ public class ProductCommentService {
     public List<ContentAuditAdminRecordTO> selectAllNeedAuditContent(ContentAdminAuditSearchTO to) {
         return productCommentMapper.selectAllNeedAuditContent(to);
     }
+
+    public Long countProductCommentByDate(Date startDate, Date endDate) {
+        ProductCommentExample example = new ProductCommentExample();
+        example.createCriteria().andCreatedTimeBetween(startDate, endDate);
+        return productCommentMapper.countByExample(example);
+    }
 }

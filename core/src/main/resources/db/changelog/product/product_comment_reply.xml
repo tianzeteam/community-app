@@ -63,4 +63,15 @@
             COMMENT ON COLUMN product_comment_reply.fun_count IS '有趣数量';
         </sql>
     </changeSet>
+    <changeSet id="addIndexCreatedTime4ProductCommentReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="product_comment_reply" indexName="idx_pcr_created_time"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_pcr_created_time on product_comment_reply using btree(created_time);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

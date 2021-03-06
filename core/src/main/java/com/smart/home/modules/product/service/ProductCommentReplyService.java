@@ -94,4 +94,10 @@ public class ProductCommentReplyService {
                 .withUserId(userId);
         productCommentReplyMapper.insertSelective(productCommentReply);
     }
+
+    public Long countReplyByDate(Date startDate, Date endDate) {
+        ProductCommentReplyExample example  = new ProductCommentReplyExample();
+        example.createCriteria().andCreatedTimeBetween(startDate, endDate);
+        return productCommentReplyMapper.countByExample(example);
+    }
 }

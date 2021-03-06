@@ -7,6 +7,7 @@ import com.smart.home.cloud.qcloud.enums.ContentAuditorEvilEnum;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.enums.ArticleCategoryEnum;
 import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.article.dao.ArticleCommentMapper;
 import com.smart.home.modules.article.dao.ArticleMapper;
@@ -221,5 +222,12 @@ public class ArticleCommentService {
             Long userId = articleCommentMapper.findUserIdById(id);
             userDataService.increaseCommentCount(userId);
         }
+    }
+
+    public Long countCommentByDateAndCategory(Date startDate, Date endDate, ArticleCategoryEnum categoryEnum) {
+        int category = categoryEnum.getCode();
+        ArticleCommentExample example = new ArticleCommentExample();
+        example.createCriteria().andCreatedTimeBetween(startDate, endDate).andArticleCategoryEqualTo(category);
+        return articleCommentMapper.countByExample(example);
     }
 }

@@ -174,4 +174,10 @@ public class CommunityPostService {
             userDataService.increasePostCount(userId);
         }
     }
+
+    public Long countPostByDate(Date startDate, Date endDate) {
+        CommunityPostExample example = new CommunityPostExample();
+        example.createCriteria().andCreatedTimeBetween(startDate, endDate);
+        return communityPostMapper.countByExample(example);
+    }
 }

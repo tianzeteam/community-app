@@ -6,6 +6,7 @@ import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.util.FileUtils;
+import com.smart.home.enums.ArticleCategoryEnum;
 import com.smart.home.enums.ArticleRecommendTypeEnum;
 import com.smart.home.enums.ArticleStateEnum;
 import com.smart.home.enums.AuditCategoryEnum;
@@ -373,5 +374,12 @@ public class ArticleService {
             }
         }
         sysFileService.syncList(list);
+    }
+
+    public Long countArticleByDateAndCategory(Date startDate, Date endDate, ArticleCategoryEnum categoryEnum) {
+        int category = categoryEnum.getCode();
+        ArticleExample example = new ArticleExample();
+        example.createCriteria().andCreatedTimeBetween(startDate, endDate).andCategoryEqualTo(category);
+        return articleMapper.countByExample(example);
     }
 }

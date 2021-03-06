@@ -146,4 +146,10 @@ public class CommunityPostReplyService {
             userDataService.increaseReplyCount(communityPostReply.getUserId());
         }
     }
+
+    public Long countReplyByDate(Date startDate, Date endDate) {
+        CommunityPostReplyExample example = new CommunityPostReplyExample();
+        example.createCriteria().andCreatedTimeBetween(startDate, endDate);
+        return communityPostReplyMapper.countByExample(example);
+    }
 }

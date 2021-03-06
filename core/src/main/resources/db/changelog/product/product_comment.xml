@@ -130,4 +130,15 @@
             COMMENT ON COLUMN product_comment.image_exception_reason IS '机审图片异常原因';
         </sql>
     </changeSet>
+    <changeSet id="addIndexCreatedTime4ProductComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="product_comment" indexName="idx_pc_created_time"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_pc_created_time on product_comment using btree(created_time);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
