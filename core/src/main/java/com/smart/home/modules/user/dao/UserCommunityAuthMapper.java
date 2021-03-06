@@ -33,4 +33,6 @@ public interface UserCommunityAuthMapper {
     int updateAdminFlag(@Param("userId") Long userId,@Param("flag") int flag);
 
     List<UserCommunityAuth> queryAllAdminUser(@Param("userId") Long userId, @Param("nickName") String nickName);
+
+    int releaseBlack(@Param("userId") Long userId);
 }

@@ -1,13 +1,16 @@
 package com.smart.home.controller.pc;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.base.Joiner;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.util.BeanCopyUtils;
+import com.smart.home.controller.app.request.CommunityUserBanDTO;
 import com.smart.home.controller.pc.response.user.UserAdminContentVO;
 import com.smart.home.controller.pc.response.user.UserAdminVO;
 import com.smart.home.controller.pc.response.user.UserDataAdminVO;
 import com.smart.home.dto.APIResponse;
+import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.article.entity.ArticleComment;
@@ -18,9 +21,12 @@ import com.smart.home.modules.community.service.CommunityPostReplyService;
 import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.modules.product.entity.ProductComment;
 import com.smart.home.modules.product.service.ProductCommentService;
+import com.smart.home.modules.user.entity.UserCommunityAuth;
 import com.smart.home.modules.user.entity.UserData;
+import com.smart.home.modules.user.service.UserCommunityAuthService;
 import com.smart.home.modules.user.service.UserDataService;
 import com.smart.home.util.ResponsePageUtil;
+import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -29,9 +35,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,6 +62,8 @@ public class UserController {
     private CommunityPostService communityPostService;
     @Autowired
     private CommunityPostReplyService communityPostReplyService;
+    @Autowired
+    private UserCommunityAuthService userCommunityAuthService;
 
     @ApiOperation("根据用户id或者昵称搜索用户")
     @ApiImplicitParams({
@@ -128,6 +138,33 @@ public class UserController {
             return APIResponse.OK(ResponsePageUtil.restPage(resultList));
         }
         return APIResponse.ERROR("非法的queryType");
+    }
+
+    @ApiOperation("封禁用户-支持批量")
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @PostMapping("/banUser")
+    public APIResponse banUser(@Valid @RequestBody List<CommunityUserBanDTO> communityUserBanDTOList, BindingResult bindingResult) {
+        Long createdBy = UserUtils.getLoginUserId();
+        for (CommunityUserBanDTO communityUserBanDTO : communityUserBanDTOList) {
+            UserCommunityAuth userCommunityAuth = new UserCommunityAuth();
+            userCommunityAuth.setCreatedBy(createdBy);
+            userCommunityAuth.setCreatedTime(new Date());
+            userCommunityAuth.setBlackFlag(YesNoEnum.YES.getCode());
+            userCommunityAuth.setEffectiveStartDate(communityUserBanDTO.getEffectiveStartDate());
+            userCommunityAuth.setEffectiveEndDate(communityUserBanDTO.getEffectiveEndDate());
+            userCommunityAuth.setUserId(communityUserBanDTO.getUserId());
+            userCommunityAuth.setRemark(Joiner.on(",").join(communityUserBanDTO.getReasonList()));
+            userCommunityAuthService.createOrUpdate(userCommunityAuth);
+        }
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("解封用户-支持批量")
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @PostMapping("/banUser")
+    public APIResponse banUser(@RequestBody IdListBean idListBean) {
+        userCommunityAuthService.releaseBlack(idListBean.getIdList());
+        return APIResponse.OK();
     }
 
 }

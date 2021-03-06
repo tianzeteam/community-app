@@ -10,6 +10,7 @@ import com.smart.home.modules.user.entity.UserCommunityAuth;
 import com.smart.home.modules.user.entity.UserCommunityAuthExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -116,5 +117,12 @@ public class UserCommunityAuthService {
                 .withUserId(userId)
                 .withAdminFlag(adminFlag);
         this.userCommunityAuthMapper.insertSelective(userCommunityAuth);
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void releaseBlack(List<Long> idList) {
+        for (Long userId : idList) {
+            userCommunityAuthMapper.releaseBlack(userId);
+        }
     }
 }

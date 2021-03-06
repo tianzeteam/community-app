@@ -271,4 +271,10 @@
       and ua.nick_name like concat('%',#{nickName},'%')
     </if>
   </select>
+
+  <update id="releaseBlack">
+    update user_community_auth
+    set black_flag = 0,effective_start_date = null, effective_end_date = null
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
 </mapper>
