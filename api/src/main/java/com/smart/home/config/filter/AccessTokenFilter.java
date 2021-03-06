@@ -1,13 +1,12 @@
 package com.smart.home.config.filter;
 
-import com.smart.home.assembler.UserAssembler;
+import com.smart.home.cache.OnlineUserCache;
 import com.smart.home.cache.UserTokenCache;
 import com.smart.home.common.contants.SecurityConsts;
 import com.smart.home.common.util.JwtUtil;
 import com.smart.home.common.util.SpringContextUtil;
 import com.smart.home.modules.user.entity.UserAccount;
 import com.smart.home.modules.user.service.UserAccountService;
-import com.smart.home.dto.auth.User;
 import com.smart.home.dto.auth.UserContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -51,6 +50,8 @@ public class AccessTokenFilter implements Filter {
                     return;
                 }
             }
+            // 用户计算日活着
+            OnlineUserCache.online(user.getId());
             // controller层或者service层直接用UserContext.getCurrentUser() 就能拿到用户信息了
             new UserContext(user);
         }
