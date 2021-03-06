@@ -62,4 +62,5 @@
     <include file="classpath:/db/changelog/other/report_history.xml"/>
     <include file="classpath:/db/changelog/other/statistic_page.xml"/>
     <include file="classpath:/db/changelog/other/subject_card.xml"/>
+    <include file="classpath:/db/changelog/report/rpt_dashboard.xml"/>
 </databaseChangeLog>

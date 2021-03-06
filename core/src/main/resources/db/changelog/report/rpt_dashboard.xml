@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableRptDashboard" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="rpt_dashboard"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建表</comment>
+        <sql>
+            CREATE TABLE rpt_dashboard(
+            ID serial NOT NULL,
+            CREATED_TIME DATE,
+            LIVE_COUNT INT,
+            ARTICLE_COUNT BIGINT,
+            VIDEO_COUNT BIGINT,
+            POST_COUNT BIGINT,
+            PRODUCT_COMMENT_COUNT BIGINT,
+            ARTICLE_COMMENT_COUNT BIGINT,
+            VIDEO_COMMENT_COUNT BIGINT,
+            POST_REPLY_COUNT BIGINT,
+            PRODUCT_COMMENT_REPLY_COUNT BIGINT,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE rpt_dashboard IS '数据看板报表T-1数据';
+            COMMENT ON COLUMN rpt_dashboard.ID IS '主键ID';
+            COMMENT ON COLUMN rpt_dashboard.CREATED_TIME IS '创建时间';
+            COMMENT ON COLUMN rpt_dashboard.LIVE_COUNT IS '日活';
+            COMMENT ON COLUMN rpt_dashboard.ARTICLE_COUNT IS '当日文章投稿';
+            COMMENT ON COLUMN rpt_dashboard.VIDEO_COUNT IS '当日视频投稿';
+            COMMENT ON COLUMN rpt_dashboard.POST_COUNT IS '当日发帖';
+            COMMENT ON COLUMN rpt_dashboard.PRODUCT_COMMENT_COUNT IS '当日产品评价';
+            COMMENT ON COLUMN rpt_dashboard.ARTICLE_COMMENT_COUNT IS '当日文章评论';
+            COMMENT ON COLUMN rpt_dashboard.VIDEO_COMMENT_COUNT IS '当日视频评论';
+            COMMENT ON COLUMN rpt_dashboard.POST_REPLY_COUNT IS '当日帖子回复';
+            COMMENT ON COLUMN rpt_dashboard.PRODUCT_COMMENT_REPLY_COUNT IS '当日评价评论';
+        </sql>
+    </changeSet>
+</databaseChangeLog>

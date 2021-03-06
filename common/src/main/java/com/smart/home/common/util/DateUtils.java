@@ -37,6 +37,13 @@ public class DateUtils {
 		return format.format(cal.getTime());
 	}
 
+	public static Date getPreDate() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		return cal.getTime();
+	}
+
 	public static long getDelayTimes(String expireTime) {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {

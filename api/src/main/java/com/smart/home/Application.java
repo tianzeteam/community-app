@@ -4,6 +4,7 @@ import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrap
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -12,6 +13,7 @@ import org.springframework.web.filter.CorsFilter;
  * @author jason
  * @date 2021/2/17
  **/
+@EnableScheduling
 @EnableSwaggerBootstrapUI
 @SpringBootApplication
 public class Application {
