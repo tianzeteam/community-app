@@ -192,6 +192,10 @@ public class UserAccountService {
         if (AccountStatusEnum.NORMAL.getStatus() == state) {
             password = encryptPassword(password, userAccount.getSalt());
             if (StringUtils.equals(password, userAccount.getPassword())) {
+                String oldToken = userAccount.getAccessToken();
+                if (StringUtils.isNotBlank(oldToken)) {
+                    UserTokenCache.remove(oldToken);
+                }
                 String token = generateNewAccessToken(userAccount.getId());
                 userAccount.setAccessToken(token);
                 userAccount.setRoleCodeList(findUserRoleCodeList(userAccount.getId()));
