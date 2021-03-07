@@ -1,5 +1,6 @@
 package com.smart.home.controller.common;
 
+import com.smart.home.cloud.qcloud.consts.BucketConsts;
 import com.smart.home.common.contants.FileStoreType;
 import com.smart.home.common.contants.FileType;
 import com.smart.home.common.contants.RoleConsts;
@@ -42,7 +43,7 @@ public class SysFileController {
         if(!FileUpload.isContentType(multipartFile, types)){
             throw new RuntimeException(EnumFileUploadError.INVALID_FILE_TYPE.getMessage());
         }
-        upload.setBucketName("image");
+        upload.setBucketName(BucketConsts.IMAGE);
         upload.setStoreType(FileStoreType.COS);
         upload.setCategory(FileType.IMAGE);
         return processUpload(multipartFile, upload);
@@ -64,7 +65,7 @@ public class SysFileController {
         if(!FileUpload.isContentType(multipartFile, types)){
             throw new RuntimeException(EnumFileUploadError.INVALID_FILE_TYPE.getMessage());
         }
-        upload.setBucketName("video");
+        upload.setBucketName(BucketConsts.VIDEO);
         upload.setStoreType(FileStoreType.COS);
         upload.setCategory(FileType.VIDEO);
         return processUpload(multipartFile, upload);

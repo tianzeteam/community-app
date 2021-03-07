@@ -10,10 +10,12 @@ import com.smart.home.common.enums.APIResponseCodeEnum;
 import com.smart.home.common.enums.AccountStatusEnum;
 import com.smart.home.common.exception.AuthorizationException;
 import com.smart.home.common.exception.ServiceException;
+import com.smart.home.common.util.FileUtils;
 import com.smart.home.common.util.JwtUtil;
 import com.smart.home.common.util.SummaryUtils;
 import com.smart.home.common.util.UUIDUtil;
 import com.smart.home.modules.system.entity.SysMenu;
+import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.system.service.SysMenuService;
 import com.smart.home.modules.system.service.SysRoleService;
 import com.smart.home.modules.user.dao.UserAccountMapper;
@@ -50,6 +52,8 @@ public class UserAccountService {
     private SysMenuService sysMenuService;
     @Autowired
     private UserCommunityAuthService userCommunityAuthService;
+    @Autowired
+    private SysFileService sysFileService;
 
     @Transactional(rollbackFor = Exception.class)
     public int insert(UserAccount entity, List<Integer> roleIdList) {
@@ -308,7 +312,14 @@ public class UserAccountService {
     }
 
     public void updateHeadUrl(Long userId, String headUrl) {
+        UserAccount userAccount = findUserByUserId(userId);
+        String oldHeadUrl = userAccount.getHeadUrl();
+        if(StringUtils.isNotBlank(oldHeadUrl) && !StringUtils.equals(oldHeadUrl, headUrl)) {
+            // 删除旧头像
+            sysFileService.deleteByNewName(FileUtils.getFileNameFromUrl(oldHeadUrl));
+        }
         mapper.updateHeadUrl(userId, headUrl);
+        sysFileService.sync(FileUtils.getFileNameFromUrl(headUrl));
     }
 
     public void updateNickName(Long userId, String nickName) {

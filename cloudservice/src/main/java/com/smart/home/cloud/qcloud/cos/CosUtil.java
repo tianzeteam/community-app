@@ -106,10 +106,8 @@ public class CosUtil {
         ObjectMetadata downObjectMeta = cosClient.getObject(getObjectRequest, downFile);
     }
 
-    public static void deleteFile() {
-        // Bucket的命名格式为 BucketName-APPID ，此处填写的存储桶名称必须为此格式
-        String bucketName = "examplebucket-1250000000";
-        String key = "exampleobject";
+    public static void deleteFile(String key, String bucketName) {
+        bucketName = Joiner.on("-").join(bucketName, APP_ID);
         cosClient.deleteObject(bucketName, key);
     }
 

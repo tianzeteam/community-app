@@ -1,6 +1,7 @@
 package com.smart.home.modules.system.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.cloud.qcloud.consts.BucketConsts;
 import com.smart.home.cloud.qcloud.cos.CosUtil;
 import com.smart.home.common.bean.Upload;
 import com.smart.home.common.contants.FileStoreType;
@@ -89,5 +90,24 @@ public class SysFileService {
             return;
         }
         sysFileMapper.updateSyncFlagList(needSyncFileNameList, 1);
+    }
+
+    public void deleteByNewName(String newFileName) {
+        SysFile sysFile = findByNewName(newFileName);
+        if (null != sysFile) {
+            CosUtil.intiClient();
+            CosUtil.deleteFile(newFileName, BucketConsts.IMAGE);
+            deleteById(sysFile.getId());
+        }
+    }
+
+    private SysFile findByNewName(String newFileName) {
+        SysFileExample example = new SysFileExample();
+        example.createCriteria().andNewNameEqualTo(newFileName);
+        List<SysFile> list = sysFileMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
     }
 }
