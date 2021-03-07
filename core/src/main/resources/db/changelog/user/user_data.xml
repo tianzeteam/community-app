@@ -109,4 +109,15 @@
             COMMENT ON COLUMN user_data.report_reason_rate IS '投诉原因分布';
         </sql>
     </changeSet>
+    <changeSet id="addIndexOpenid4UserData" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="user_data" indexName="idx_wx_openid"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_wx_openid on user_data using btree(wx_openid);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

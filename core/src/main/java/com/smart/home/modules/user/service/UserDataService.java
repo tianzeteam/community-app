@@ -165,4 +165,14 @@ public class UserDataService {
     public void increaseReplyCount(Long userId) {
         userDataMapper.increaseReplyCount(userId);
     }
+
+    public UserData findByWxOpenid(String wx) {
+        UserDataExample example = new UserDataExample();
+        example.createCriteria().andWxOpenidEqualTo(wx);
+        List<UserData> list = this.userDataMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
 }

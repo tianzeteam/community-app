@@ -9,8 +9,10 @@ import com.smart.home.dto.APIResponse;
 import com.smart.home.common.util.RandomUtils;
 import com.smart.home.dto.auth.User;
 import com.smart.home.modules.user.entity.UserAccount;
+import com.smart.home.modules.user.entity.UserData;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.dto.auth.annotation.AnonAccess;
+import com.smart.home.modules.user.service.UserDataService;
 import com.wf.captcha.utils.CaptchaUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +22,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -32,6 +35,8 @@ public class LoginController {
 
     @Autowired
     private UserAccountService userAccountService;
+    @Autowired
+    private UserDataService userDataService;
 
     @AnonAccess
     @ApiOperation(value = "用户名密码登陆")
@@ -70,14 +75,21 @@ public class LoginController {
      * @return
      */
     @AnonAccess
-    @ApiOperation("微信登陆")
+    @ApiOperation("微信登陆,返回0正常登陆，返回2需要进一步绑定手机")
     @PostMapping("/loginByWechat")
     public APIResponse loginByWechat(@RequestBody String data) {
         JSONObject jsonObject = JSON.parseObject(data);
         String wx = jsonObject.getString("openId");
-        String unionId = jsonObject.getString("unionId");
-        // TODO
-        return APIResponse.OK(wx);
+        UserData userData = userDataService.findByWxOpenid(wx);
+        if (Objects.isNull(userData)) {
+            // 说明还没微信登陆过，需要绑定手机
+            APIResponse apiResponse = APIResponse.ERROR(2, "需要进行手机绑定");
+            apiResponse.setData(wx);
+            return apiResponse;
+        }
+        UserAccount userAccount = userAccountService.findUserByUserId(userData.getUserId());
+        User user = UserAssembler.assemblerUser(userAccount);
+        return APIResponse.OK(user);
     }
 
     @AnonAccess
