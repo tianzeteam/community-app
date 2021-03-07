@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableRptOnlineCount" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="rpt_online_count"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建表</comment>
+        <sql>
+            CREATE TABLE rpt_online_count(
+            ID BIGINT NOT NULL,
+            ONLINE_COUNT INT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            CREATE SEQUENCE rpt_online_count_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "rpt_online_count" alter column ID set default nextval('rpt_online_count_id_seq');
+
+            COMMENT ON COLUMN rpt_online_count.ID IS '主键ID';
+            COMMENT ON COLUMN rpt_online_count.ONLINE_COUNT IS '在线人数';
+            COMMENT ON COLUMN rpt_online_count.CREATED_TIME IS '创建时间';
+
+            create index idx_roc_created_time on rpt_online_count using btree(CREATED_TIME);
+        </sql>
+    </changeSet>
+</databaseChangeLog>

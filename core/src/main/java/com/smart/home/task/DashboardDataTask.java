@@ -1,6 +1,7 @@
 package com.smart.home.task;
 
 import com.smart.home.cache.OnlineUserCache;
+import com.smart.home.cache.UserTokenCache;
 import com.smart.home.common.util.DateUtils;
 import com.smart.home.enums.ArticleCategoryEnum;
 import com.smart.home.modules.article.service.ArticleCommentService;
@@ -8,7 +9,9 @@ import com.smart.home.modules.article.service.ArticleService;
 import com.smart.home.modules.community.service.CommunityPostReplyService;
 import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.modules.other.entity.RptDashboard;
+import com.smart.home.modules.other.entity.RptOnlineCount;
 import com.smart.home.modules.other.service.RptDashboardService;
+import com.smart.home.modules.other.service.RptOnlineCountService;
 import com.smart.home.modules.product.service.ProductCommentReplyService;
 import com.smart.home.modules.product.service.ProductCommentService;
 import lombok.extern.log4j.Log4j2;
@@ -28,6 +31,8 @@ public class DashboardDataTask {
 
     @Autowired
     private RptDashboardService rptDashboardService;
+    @Autowired
+    private RptOnlineCountService rptOnlineCountService;
     @Autowired
     private ArticleService articleService;
     @Autowired
@@ -82,6 +87,21 @@ public class DashboardDataTask {
             log.error(e);
         } finally {
             OnlineUserCache.removeAll();
+        }
+    }
+
+    /**
+     * 计算每小时的在线人数，每隔一小时跑一次
+     */
+    @Scheduled(cron = "0 0 0/1 * * ?")
+    public void countOnlineUserPerHour() {
+        try {
+            long currentOnline = UserTokenCache.size();
+            RptOnlineCount rptOnlineCount = new RptOnlineCount();
+            rptOnlineCount.setOnlineCount((int) currentOnline);
+            rptOnlineCountService.create(rptOnlineCount);
+        } catch (Throwable e) {
+            log.error(e);
         }
     }
 

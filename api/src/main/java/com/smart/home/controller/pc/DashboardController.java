@@ -14,7 +14,9 @@ import com.smart.home.modules.article.service.ArticleService;
 import com.smart.home.modules.community.service.CommunityPostReplyService;
 import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.modules.other.entity.RptDashboard;
+import com.smart.home.modules.other.entity.RptOnlineCount;
 import com.smart.home.modules.other.service.RptDashboardService;
+import com.smart.home.modules.other.service.RptOnlineCountService;
 import com.smart.home.modules.product.service.ProductCommentReplyService;
 import com.smart.home.modules.product.service.ProductCommentService;
 import com.smart.home.util.ResponsePageUtil;
@@ -52,12 +54,25 @@ public class DashboardController {
     private ProductCommentReplyService productCommentReplyService;
     @Autowired
     private RptDashboardService rptDashboardService;
+    @Autowired
+    private RptOnlineCountService rptOnlineCountService;
 
     @ApiOperation("获取当前在线人数")
     @RoleAccess(RoleConsts.ADMIN)
     @GetMapping("/currentOnlineCount")
     public APIResponse onlineCount() {
         return APIResponse.OK(UserTokenCache.size());
+    }
+
+    @ApiOperation("获取每小时的在线人数")
+    @RoleAccess(RoleConsts.ADMIN)
+    @GetMapping("/onlineUserPerHour")
+    public APIResponse<List<RptOnlineCount>> onlineUserPerHour() {
+        Date date = new Date();
+        RptOnlineCount rptOnlineCount = new RptOnlineCount();
+        rptOnlineCount.setCreatedTime(date);
+        List<RptOnlineCount> list = rptOnlineCountService.selectByPage(rptOnlineCount, 1, 24);
+        return APIResponse.OK(list);
     }
 
     @ApiOperation("日活")
