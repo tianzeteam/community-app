@@ -73,4 +73,10 @@ public class SysTraceLogService {
         }
         return null;
     }
+
+    public void deleteLogByDate(Date startDate, Date endDate) {
+        SysTraceLogExample example = new SysTraceLogExample();
+        example.createCriteria().andCreatedTimeBetween(startDate, endDate);
+        sysTraceLogMapper.deleteByExample(example);
+    }
 }
