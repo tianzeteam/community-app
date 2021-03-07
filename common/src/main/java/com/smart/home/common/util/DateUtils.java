@@ -40,7 +40,7 @@ public class DateUtils {
 	public static Date getPreDate() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
-		cal.add(Calendar.DAY_OF_MONTH, -1);
+		cal.add(Calendar.DATE, -1);
 		return cal.getTime();
 	}
 
@@ -350,7 +350,6 @@ public class DateUtils {
 	}
 
 	public static void main(String[] args) {
-		Date date = new Date();
-		System.out.println(getWeekSequenceInMonth(date));
+		System.out.println(getPreDate());
 	}
 }

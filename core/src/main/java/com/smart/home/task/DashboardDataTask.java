@@ -43,10 +43,9 @@ public class DashboardDataTask {
 
     @Scheduled(cron = "0 5 0 * * ?")
     public void storeData() {
-        Date now = new Date();
-        Date startDate = DateUtils.getEarliestDate(now);
-        Date endDate = DateUtils.getLastDateOfTheDay(now);
         Date preDate = DateUtils.getPreDate();
+        Date startDate = DateUtils.getEarliestDate(preDate);
+        Date endDate = DateUtils.getLastDateOfTheDay(preDate);
         try {
             // 日活
             int liveData = OnlineUserCache.countOnline();

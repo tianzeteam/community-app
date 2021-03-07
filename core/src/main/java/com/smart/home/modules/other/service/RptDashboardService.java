@@ -20,7 +20,6 @@ public class RptDashboardService {
     RptDashboardMapper rptDashboardMapper;
 
     public int create(RptDashboard rptDashboard) {
-        rptDashboard.setCreatedTime(new Date());
         return rptDashboardMapper.insertSelective(rptDashboard);
     }
 
