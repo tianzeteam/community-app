@@ -288,6 +288,7 @@ public class UserAccountService {
             // 赋予默认的注册用户角色
             assignDefaultRole(userId, defaultRoleCode);
         }
+        userDataService.initUserData(userId);
         return userAccount;
     }
 

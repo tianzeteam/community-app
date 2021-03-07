@@ -69,6 +69,12 @@ public class UserDataService {
     }
 
     public UserData initUserData(Long userId) {
+        UserDataExample example = new UserDataExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        List<UserData> list = userDataMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(list)) {
+            return list.get(0);
+        }
         UserData userData = new UserData();
         userData.withUserId(userId)
                 .withUserLevel(0)
