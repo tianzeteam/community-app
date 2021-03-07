@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.smart.home.assembler.UserAssembler;
 import com.smart.home.cache.SmsVerifyCodeCache;
 import com.smart.home.cache.SmsVerifyCodeLimitCache;
+import com.smart.home.common.enums.APIResponseCodeEnum;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.common.util.RandomUtils;
 import com.smart.home.dto.auth.User;
@@ -75,7 +76,7 @@ public class LoginController {
      * @return
      */
     @AnonAccess
-    @ApiOperation("微信登陆,返回0正常登陆，返回2需要进一步绑定手机")
+    @ApiOperation(value = "微信登陆,返回0正常登陆，返回2需要进一步绑定手机", notes = "返回0正常登陆，返回2需要进一步绑定手机")
     @PostMapping("/loginByWechat")
     public APIResponse loginByWechat(@RequestBody String data) {
         JSONObject jsonObject = JSON.parseObject(data);
@@ -83,7 +84,7 @@ public class LoginController {
         UserData userData = userDataService.findByWxOpenid(wx);
         if (Objects.isNull(userData)) {
             // 说明还没微信登陆过，需要绑定手机
-            APIResponse apiResponse = APIResponse.ERROR(2, "需要进行手机绑定");
+            APIResponse apiResponse = APIResponse.ERROR(APIResponseCodeEnum.BIND_PHONE.getCode(), "需要进行手机绑定");
             apiResponse.setData(wx);
             return apiResponse;
         }

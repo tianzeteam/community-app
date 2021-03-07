@@ -7,6 +7,7 @@ public enum APIResponseCodeEnum {
 
     SUCCESS(0,"成功"),
     FAILED(1,"失败"),
+    BIND_PHONE(2,"需要绑定手机号码"),
     ERROR_DUPLICATE_DATA(11, "重复记录错误"),
     ERROR_SIGN(12, "签名错误"),
     ERROR_SERVICE_BUSY(13, "服务繁忙"),
