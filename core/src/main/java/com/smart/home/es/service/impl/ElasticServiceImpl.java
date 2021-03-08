@@ -71,7 +71,7 @@ public class ElasticServiceImpl implements ElasticService {
     public void saveKeyword(String keyword) {
         Asserts.notBlank(keyword, "keyword");
         String id = UUIDUtil.uuid();
-        SearchKey searchKey = new SearchKey(id, keyword, keyword, new Date());
+        SearchKey searchKey = new SearchKey(id, keyword, new Date());
         searchKeyRepository.save(searchKey);
     }
 
