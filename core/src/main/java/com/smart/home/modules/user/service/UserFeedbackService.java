@@ -1,15 +1,21 @@
 package com.smart.home.modules.user.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.FeedbackStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.util.FileUtils;
+import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.user.dao.UserFeedbackMapper;
 import com.smart.home.modules.user.entity.UserFeedback;
 import com.smart.home.modules.user.entity.UserFeedbackExample;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -21,10 +27,21 @@ public class UserFeedbackService {
 
     @Resource
     UserFeedbackMapper userFeedbackMapper;
+    @Autowired
+    private SysFileService sysFileService;
 
     public int create(UserFeedback userFeedback) {
         userFeedback.setCreatedTime(new Date());
         userFeedback.setRevision(0);
+        String imageJson = userFeedback.getImages();
+        if (StringUtils.isNotBlank(imageJson)) {
+            List<String> list = JSON.parseArray(imageJson, String.class);
+            List<String> fileNameList = new ArrayList<>(list.size());
+            for (String image : list) {
+                fileNameList.add(FileUtils.getFileNameFromUrl(image));
+            }
+            sysFileService.syncList(fileNameList);
+        }
         return userFeedbackMapper.insertSelective(userFeedback);
     }
 
