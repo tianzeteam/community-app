@@ -27,7 +27,7 @@ import java.util.Map;
  **/
 @Log4j2
 @RestController
-@RequestMapping("/elastic")
+@RequestMapping("/api/elastic")
 public class ElasticController {
 
     @Autowired
