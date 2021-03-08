@@ -352,4 +352,15 @@ public class DateUtils {
 	public static void main(String[] args) {
 		System.out.println(getPreDate());
 	}
+
+	public static Date getCurrentDateTime() {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date now = new Date();
+		try {
+			return dateFormat.parse(dateFormat.format(now));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

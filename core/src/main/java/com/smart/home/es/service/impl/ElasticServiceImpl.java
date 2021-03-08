@@ -1,5 +1,6 @@
 package com.smart.home.es.service.impl;
 
+import com.smart.home.common.util.DateUtils;
 import com.smart.home.common.util.UUIDUtil;
 import com.smart.home.es.bean.DocBean;
 import com.smart.home.es.bean.SearchKey;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -71,7 +71,7 @@ public class ElasticServiceImpl implements ElasticService {
     public void saveKeyword(String keyword) {
         Asserts.notBlank(keyword, "keyword");
         String id = UUIDUtil.uuid();
-        SearchKey searchKey = new SearchKey(id, keyword, new Date());
+        SearchKey searchKey = new SearchKey(id, keyword, DateUtils.getCurrentDateTime());
         searchKeyRepository.save(searchKey);
     }
 

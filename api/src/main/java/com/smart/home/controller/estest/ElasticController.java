@@ -69,7 +69,12 @@ public class ElasticController {
 
     @GetMapping("/findHotKeyword")
     public APIResponse<List<NameCountDTO>> findHotKeyword() {
-        List<NameCountDTO> list = esAggregationQueryService.queryForList("keyword", 10, SearchKey.class);
+        List<NameCountDTO> list = null;
+        try {
+            list = esAggregationQueryService.queryForList("keyword", 10, SearchKey.class);
+        } catch (Exception e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK(list);
     }
 

@@ -17,8 +17,9 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,19 +38,22 @@ public class EsAggregationQueryService extends EsQueryService {
      * @param <T>
      * @return
      */
-    public <T> List<NameCountDTO> queryForList(String fieldName, int fetchSize, Class<T> T) {
-        // TODO 时间区间待定
+    public <T> List<NameCountDTO> queryForList(String fieldName, int fetchSize, Class<T> T) throws Exception {
+        // 查询最近一个月的
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String startDateString = DateUtils.getCurrentMonthFirstDay();
+        String endDateString = DateUtils.getCurrentMonthLastDay();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         boolQueryBuilder.must(QueryBuilders.rangeQuery("createTime")
-                .from(DateUtils.getDateTimeString(new Date()))
-                .to(DateUtils.getDateTimeString(new Date()))
+                .from(DateUtils.getDateTimeString(df.parse(startDateString)))
+                .to(DateUtils.getDateTimeString(df.parse(endDateString)))
         );
         // 定义一个聚合名称
         String aggregationName = UUIDUtil.uuid();
-        // 创建聚合查询条件,加上.keyword表示不使用分词进行聚合
+        // 创建聚合查询条件
         TermsAggregationBuilder termsAggregationBuilder = AggregationBuilders
                 .terms(aggregationName)
-                .field(fieldName+".keyword")
+                .field(fieldName)
                 // true为升序 false为降序 同BucketOrder.aggregation
                 .order(BucketOrder.count(false))
                 .size(fetchSize);

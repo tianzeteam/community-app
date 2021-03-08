@@ -1,5 +1,6 @@
 package com.smart.home.es.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
@@ -32,6 +33,7 @@ public class SearchKey {
     @Field(type = FieldType.Date,
             format = DateFormat.custom,
             pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
 }
