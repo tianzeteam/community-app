@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.FileUtils;
 import com.smart.home.enums.ArticleCategoryEnum;
 import com.smart.home.enums.ArticleRecommendTypeEnum;
@@ -21,10 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author jason
@@ -296,6 +294,12 @@ public class ArticleService {
     }
 
     public void setTop(Long articleId) {
+        Long channelId = articleMapper.findChannelIdById(articleId);
+        ArticleExample example = new ArticleExample();
+        example.createCriteria().andChannelIdEqualTo(channelId).andTopFlagEqualTo(YesNoEnum.YES.getCode());
+        if (articleMapper.countByExample(example) > 0) {
+            throw new ServiceException("该频道下只能存在一个置顶文章");
+        }
         articleMapper.updateTopFlag(articleId, YesNoEnum.YES.getCode());
     }
 
@@ -335,7 +339,12 @@ public class ArticleService {
      */
     public Article queryIndexTopBigImageCard() {
         // 1 是推荐的频道id
-        return articleMapper.queryBigImageCard(YesNoEnum.YES.getCode(), ArticleRecommendTypeEnum.BIG_IMAGE_TOP.getCode(), null, YesNoEnum.YES.getCode());
+        Article article = articleMapper.queryBigImageCard(YesNoEnum.YES.getCode(), ArticleRecommendTypeEnum.BIG_IMAGE_TOP.getCode(), null, YesNoEnum.YES.getCode());
+        if (Objects.isNull(article)) {
+            // 如果不存在置顶内容，则第一个内容默认置顶
+            article = articleMapper.queryBigImageCard(YesNoEnum.NO.getCode(), null, null, null);
+        }
+        return article;
     }
 
     /**

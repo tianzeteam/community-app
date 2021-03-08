@@ -826,8 +826,12 @@
       <if test="channelId != null">
         and channel_id = #{channelId,jdbcType=INTEGER}
       </if>
+    <if test="topFlag != null">
       and top_flag = #{topFlag,jdbcType=INTEGER}
+    </if>
+    <if test="recommendType != null">
       and recommend_type = #{recommendType,jdbcType=INTEGER}
+    </if>
     limit 1
   </select>
 
@@ -851,5 +855,9 @@
 
   <select id="findUserIdAndCategory" resultType="com.smart.home.modules.article.po.UserIdAndCategoryPO">
     select user_id as userId, category from article where id = #{id}
+  </select>
+
+  <select id="findChannelIdById" resultType="java.lang.Long">
+    select channel_id from article where id = #{id,jdbcType=BIGINT}
   </select>
 </mapper>

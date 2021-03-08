@@ -81,4 +81,6 @@ public interface ArticleMapper {
     List<Article> queryIndexArticleCard(@Param("topFlag") Integer topFlag, @Param("recommendType") Integer recommendType, @Param("channelId") Integer channelId, @Param("recommendFlag") Integer recommendFlag);
 
     UserIdAndCategoryPO findUserIdAndCategory(@Param("id") Long id);
+
+    Long findChannelIdById(@Param("id") Long id);
 }
