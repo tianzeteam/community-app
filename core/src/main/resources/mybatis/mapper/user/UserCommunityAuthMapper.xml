@@ -119,7 +119,8 @@
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{speakFlag,jdbcType=INTEGER}, 
       #{blackFlag,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.smart.home.modules.user.entity.UserCommunityAuth">
+  <insert id="insertSelective" parameterType="com.smart.home.modules.user.entity.UserCommunityAuth"
+          keyColumn="id" keyProperty="id" useGeneratedKeys="true">
     insert into user_community_auth
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

@@ -1,13 +1,12 @@
 package com.smart.home.modules.user.service;
 
 import com.alibaba.fastjson.JSON;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.cache.UserTokenCache;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.APIResponseCodeEnum;
 import com.smart.home.common.enums.AccountStatusEnum;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.AuthorizationException;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.FileUtils;
@@ -205,7 +204,11 @@ public class UserAccountService {
                 userAccount.setRoleCodeList(findUserRoleCodeList(userAccount.getId()));
                 UserTokenCache.put(token, userAccount);
                 // 加载社区权限
-                userAccount.setUserCommunityAuth(userCommunityAuthService.findByUserId(userAccount.getId()));
+                UserCommunityAuth userCommunityAuth = userCommunityAuthService.findByUserId(userAccount.getId());
+                if (Objects.isNull(userCommunityAuth)) {
+                    userCommunityAuth = userCommunityAuthService.initDataWithAdminFlag(userAccount.getId(), YesNoEnum.NO.getCode(), userAccount.getId());
+                }
+                userAccount.setUserCommunityAuth(userCommunityAuth);
                 return userAccount;
             }
         }

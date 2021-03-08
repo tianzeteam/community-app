@@ -108,7 +108,7 @@ public class UserCommunityAuthService {
         return null;
     }
 
-    private void initDataWithAdminFlag(Long userId, int adminFlag, Long loginUserId) {
+    public UserCommunityAuth initDataWithAdminFlag(Long userId, int adminFlag, Long loginUserId) {
         UserCommunityAuth userCommunityAuth = new UserCommunityAuth();
         userCommunityAuth.setCreatedTime(new Date());
         userCommunityAuth.setCreatedBy(loginUserId);
@@ -117,6 +117,7 @@ public class UserCommunityAuthService {
                 .withUserId(userId)
                 .withAdminFlag(adminFlag);
         this.userCommunityAuthMapper.insertSelective(userCommunityAuth);
+        return userCommunityAuth;
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
