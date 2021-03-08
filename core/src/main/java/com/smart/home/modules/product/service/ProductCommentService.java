@@ -9,6 +9,8 @@ import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.dto.ContentAdminAuditSearchTO;
 import com.smart.home.dto.ContentAuditAdminRecordTO;
 import com.smart.home.enums.AutoAuditFlagEnum;
+import com.smart.home.es.bean.ProductCommentBean;
+import com.smart.home.es.service.ProductCommentEsService;
 import com.smart.home.modules.product.dao.ProductCommentMapper;
 import com.smart.home.modules.product.entity.Product;
 import com.smart.home.modules.product.entity.ProductComment;
@@ -42,6 +44,8 @@ public class ProductCommentService {
     private UserAccountService userAccountService;
     @Autowired
     private UserDataService userDataService;
+    @Autowired
+    private ProductCommentEsService productCommentEsServiceImpl;
 
     public List<ProductComment> selectByPage(ProductComment productComment, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
@@ -133,7 +137,7 @@ public class ProductCommentService {
                 if (contentAuditorResult.getContentAuditorEvilEnum() == ContentAuditorEvilEnum.NORMAL) {
                     // 机审成功， 直接通过
                     productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                    calculateProductAverageScore(productId, startCount, loginUserId);
+                    calculateProductAverageScore(productId, startCount, loginUserId,id, details);
                     return;
                 }
                 // 机器审核不通过，文本异常
@@ -155,7 +159,7 @@ public class ProductCommentService {
                 if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
                     // 正常，视为通过
                     productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                    calculateProductAverageScore(productId, startCount, loginUserId);
+                    calculateProductAverageScore(productId, startCount, loginUserId, id, details);
                 }
             }
         }).start();
@@ -166,7 +170,7 @@ public class ProductCommentService {
      * @param productId
      * @param starCount
      */
-    private void calculateProductAverageScore(Integer productId, BigDecimal starCount,Long userId) {
+    private void calculateProductAverageScore(Integer productId, BigDecimal starCount,Long userId, Long productCommentId, String details) {
         // 如果评价合法，计算其他数据
         Product product = productService.findById(productId);
         // 超出产品，计算产品的平均分
@@ -191,6 +195,14 @@ public class ProductCommentService {
                 product.getFiveStarCount(), product.getFourStarCount(),product.getThreeStarCount(),
                 product.getTwoStarCount(), product.getOneStarCount());
         userDataService.increaseEvaluateCount(userId);
+        // 加入到es
+        ProductCommentBean productCommentBean = new ProductCommentBean();
+        productCommentBean.setId(productCommentId);
+        productCommentBean.setCreatedTime(new Date());
+        productCommentBean.setDetails(details);
+        productCommentBean.setStarCount(starCount);
+        productCommentBean.setProductId(productId);
+        productCommentEsServiceImpl.save(productCommentBean);
     }
 
     public Long countWaitAudit() {
@@ -246,7 +258,7 @@ public class ProductCommentService {
             ProductComment productComment = findById(id);
             Long userId = productCommentMapper.findUserIdById(id);
             // 计算平均分，并增加一次评论数量
-            calculateProductAverageScore(productComment.getProductId(), productComment.getStarCount(), userId);
+            calculateProductAverageScore(productComment.getProductId(), productComment.getStarCount(), userId, productComment.getId(), productComment.getDetails());
         }
     }
 

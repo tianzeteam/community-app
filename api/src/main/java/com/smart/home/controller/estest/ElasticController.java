@@ -40,8 +40,8 @@ public class ElasticController {
     private EsIndexService esIndexService;
 
     @GetMapping("/deleteIndex")
-    public APIResponse deleteIndex(){
-        return APIResponse.OK(esIndexService.deleteIndex(SearchKey.class));
+    public APIResponse deleteIndex(String indexName){
+        return APIResponse.OK(esIndexService.deleteIndexByName(indexName));
     }
 
     @GetMapping("/createIndex")

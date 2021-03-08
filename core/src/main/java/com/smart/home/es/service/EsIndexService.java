@@ -38,4 +38,7 @@ public class EsIndexService {
         return elasticsearchTemplate.deleteIndex(T);
     }
 
+    public boolean deleteIndexByName(String indexName) {
+        return elasticsearchTemplate.deleteIndex(indexName);
+    }
 }
