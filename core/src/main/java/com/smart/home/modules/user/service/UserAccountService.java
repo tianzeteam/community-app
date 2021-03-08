@@ -195,14 +195,13 @@ public class UserAccountService {
         if (AccountStatusEnum.NORMAL.getStatus() == state) {
             password = encryptPassword(password, userAccount.getSalt());
             if (StringUtils.equals(password, userAccount.getPassword())) {
-                String oldToken = userAccount.getAccessToken();
-                if (StringUtils.isNotBlank(oldToken)) {
-                    UserTokenCache.remove(oldToken);
+                String token = userAccount.getAccessToken();
+                if (StringUtils.isBlank(token)) {
+                    token = generateNewAccessToken(userAccount.getId());
+                    userAccount.setAccessToken(token);
                 }
-                String token = generateNewAccessToken(userAccount.getId());
-                userAccount.setAccessToken(token);
-                userAccount.setRoleCodeList(findUserRoleCodeList(userAccount.getId()));
                 UserTokenCache.put(token, userAccount);
+                userAccount.setRoleCodeList(findUserRoleCodeList(userAccount.getId()));
                 // 加载社区权限
                 UserCommunityAuth userCommunityAuth = userCommunityAuthService.findByUserId(userAccount.getId());
                 if (Objects.isNull(userCommunityAuth)) {
