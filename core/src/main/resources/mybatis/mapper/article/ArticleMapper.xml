@@ -851,6 +851,7 @@
     </if>
     and top_flag = #{topFlag,jdbcType=INTEGER}
     and recommend_type = #{recommendType,jdbcType=INTEGER}
+    order by audit_time desc
   </select>
 
   <select id="findUserIdAndCategory" resultType="com.smart.home.modules.article.po.UserIdAndCategoryPO">

@@ -57,7 +57,6 @@ public class ArticleService {
     }
 
     public int update(Article article) {
-        article.setUpdatedTime(new Date());
         int affectRow = articleMapper.updateByPrimaryKeySelective(article);
         syncUploadFiles(article.getCoverImage(), article.getBannerImages());
         return affectRow;

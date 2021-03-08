@@ -183,4 +183,15 @@
             COMMENT ON COLUMN article.source_from IS '原作者或者媒体';
         </sql>
     </changeSet>
+    <changeSet id="addIndexAuditTime4Article" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="article" indexName="idx_article_audit_time"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_article_audit_time on article using btree(audit_time);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
