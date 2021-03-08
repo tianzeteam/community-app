@@ -6,6 +6,7 @@ import com.smart.home.common.enums.FeedbackStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.request.FeedbackCreateDTO;
+import com.smart.home.controller.app.response.FeedbackDetailVO;
 import com.smart.home.controller.app.response.FeedbackVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
@@ -14,6 +15,7 @@ import com.smart.home.modules.user.entity.UserFeedback;
 import com.smart.home.modules.user.service.UserFeedbackService;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -70,9 +72,13 @@ public class AppFeedbackController {
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryById")
-    public APIResponse<FeedbackVO> queryById(Long id) {
+    public APIResponse<FeedbackDetailVO> queryById(Long id) {
         UserFeedback userFeedback = userFeedbackService.findById(id);
-        return APIResponse.OK(BeanCopyUtils.convertTo(userFeedback, FeedbackVO::new));
+        return APIResponse.OK(BeanCopyUtils.convertTo(userFeedback, FeedbackDetailVO::new, (s, t)->{
+            if (StringUtils.isNotBlank(s.getImages())) {
+                t.setImageList(JSON.parseArray(s.getImages(), String.class));
+            }
+        }));
     }
 
     @ApiOperation("更新已读")
