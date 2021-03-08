@@ -94,6 +94,7 @@ public class UserFeedbackService {
         if (userFeedback.getUserId() != null) {
            criteria.andUserIdEqualTo(userFeedback.getUserId());
         }
+        example.setOrderByClause("id desc");
         return userFeedbackMapper.selectByExample(example);
     }
 
