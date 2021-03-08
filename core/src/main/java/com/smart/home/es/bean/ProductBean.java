@@ -1,5 +1,6 @@
 package com.smart.home.es.bean;
 
+import com.smart.home.es.dto.KeyValueDTO;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
@@ -10,6 +11,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -39,8 +41,8 @@ public class ProductBean {
     @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String tag;
 
-    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
-    private String params;
+    @Field(type = FieldType.Nested)
+    private List<KeyValueDTO> keyValueDTOList;
 
     @Field(type = FieldType.Date, format = DateFormat.custom, pattern = "yyyy-MM-dd", index = false)
     private Date onlineDate;
