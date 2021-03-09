@@ -3,12 +3,14 @@ package com.smart.home.modules.community.service;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
+import com.smart.home.common.util.FileUtils;
 import com.smart.home.modules.community.dao.CommunityCategoryMapper;
 import com.smart.home.modules.community.dao.CommunityMapper;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.entity.Community;
 import com.smart.home.modules.community.entity.CommunityCategory;
 import com.smart.home.modules.community.entity.CommunityExample;
+import com.smart.home.modules.system.service.SysFileService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ public class CommunityService {
     CommunityCategoryMapper communityCategoryMapper;
     @Resource
     CommunityPostMapper communityPostMapper;
+    @Resource
+    private SysFileService sysFileService;
 
     public int create(Community community) throws ServiceException {
         CommunityCategory communityCategory = communityCategoryMapper.selectByPrimaryKey(community.getCategoryId().intValue());
@@ -45,7 +49,11 @@ public class CommunityService {
         community.setFollowerCount(0);
         community.setRevision(0);
         community.setCreatedTime(new Date());
-        return communityMapper.insertSelective(community);
+        int affectRow =  communityMapper.insertSelective(community);
+        if (StringUtils.isNotBlank(community.getCoverImage())) {
+            sysFileService.sync(FileUtils.getFileNameFromUrl(community.getCoverImage()));
+        }
+        return affectRow;
     }
 
     public int update(Community community) throws ServiceException {

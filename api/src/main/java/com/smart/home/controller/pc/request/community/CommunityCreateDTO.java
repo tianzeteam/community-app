@@ -34,7 +34,7 @@ public class CommunityCreateDTO {
     @NotNull(message = "是否置顶不能为空")
     private Integer topFlag;
 
-    @ApiModelProperty("是否加精")
+    @ApiModelProperty("是否加精：0否1是")
     @NotNull(message = "是否加精不能为空")
     private Integer boutiqueFlag;
 
