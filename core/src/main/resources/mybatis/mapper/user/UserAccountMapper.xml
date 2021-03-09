@@ -406,4 +406,8 @@
   <select id="findNicknameByUserId" resultType="java.lang.String">
     select nick_name from user_account where id = #{userId,jdbcType=BIGINT}
   </select>
+
+  <update id="clearToken">
+    update user_account set access_token = null where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

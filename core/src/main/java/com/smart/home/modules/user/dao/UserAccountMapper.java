@@ -43,4 +43,6 @@ public interface UserAccountMapper {
     List<UserAccount> selectByIdAndNicknameAndPermit(@Param("idList") List<Long> idList,@Param("nickName") String nickName,@Param("permitCode") String permitCode);
 
     String findNicknameByUserId(@Param("userId") Long userId);
+
+    int clearToken(@Param("id") Long id);
 }

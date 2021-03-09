@@ -37,6 +37,11 @@ public class AccessTokenFilter implements Filter {
                         UserAccountService userAccountService = SpringContextUtil.getBean(UserAccountService.class);
                         Long userId = Long.valueOf(userIdString);
                         user = userAccountService.findUserByUserId(userId);
+                        if (StringUtils.isBlank(user.getAccessToken())) {
+                            // 说明用户登出过了
+                            filterChain.doFilter(servletRequest, servletResponse);
+                            return;
+                        }
                         user.setRoleCodeList(userAccountService.findUserRoleCodeList(userId));
                         UserTokenCache.put(user.getAccessToken(), user);
                     } else {

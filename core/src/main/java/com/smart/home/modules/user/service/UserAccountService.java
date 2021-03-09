@@ -218,8 +218,7 @@ public class UserAccountService {
         UserAccount userAccount = findUserByUserId(userId);
         String token = userAccount.getAccessToken();
         UserTokenCache.remove(token);
-        userAccount.setAccessToken(null);
-        mapper.updateByPrimaryKeySelective(userAccount);
+        mapper.clearToken(userAccount.getId());
     }
 
     private int verifyWhenLogin(UserAccount userAccount) {
