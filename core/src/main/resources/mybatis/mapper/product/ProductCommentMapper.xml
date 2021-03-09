@@ -515,4 +515,30 @@
           order by #{sortField} desc
       </if>
   </select>
+
+  <select id="queryViaUserIdByPageWhenLogin" resultType="com.smart.home.modules.product.entity.ProductComment">
+      select pc.id,
+             ua.head_url as headUrl,
+             ua.nick_name as nickName,
+             ud.user_level as userLevel,
+             pc.star_count as starCount,
+             pc.created_time as createdTime,
+             pc.details,
+             pc.fun_count as funCount,
+             pc.like_count as likeCount,
+             pc.stamp_count as stampCount,
+             pc.reply_count as replyCount,
+             case when alh.id is null then 0 else 1 end as likeFlag,
+             case when ash.id is null then 0 else 1 end as stampFlag,
+             case when pcfh.id is null then 0 else 1 end as funFlag
+      from product_comment pc
+                   left join user_account ua on ua.id = pc.user_id
+                   left join user_data ud on ud.user_id = ua.id
+                   left join product_comment_like_history alh on alh.source_id = pc.id and alh.category = 0 and alh.user_id = #{loginUserId,jdbcType=BIGINT}
+                   left join product_comment_stamp_history ash on ash.source_id = pc.id and ash.category = 0 and ash.user_id = #{loginUserId,jdbcType=BIGINT}
+                   left join product_comment_fun_history pcfh on pcfh.source_id = pc.id and pcfh.category = 0 and pcfh.user_id = #{loginUserId,jdbcType=BIGINT}
+      where pc.user_id = #{userId,jdbcType=BIGINT}
+      order by pc.created_time desc;
+
+    </select>
 </mapper>

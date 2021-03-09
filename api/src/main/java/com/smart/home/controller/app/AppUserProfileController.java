@@ -7,6 +7,10 @@ import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.MyFocusVO;
 import com.smart.home.controller.app.response.MyFollowerVO;
 import com.smart.home.controller.app.response.MyProfileVO;
+import com.smart.home.controller.app.response.article.MyRootProfileArticleVO;
+import com.smart.home.controller.app.response.article.MyRootProfileCommentVO;
+import com.smart.home.controller.app.response.article.MyRootProfilePostReplyVO;
+import com.smart.home.controller.app.response.article.MyRootProfileProductCommentVO;
 import com.smart.home.controller.app.response.community.MyCollectArticleVO;
 import com.smart.home.controller.app.response.community.MyDraftArticleVO;
 import com.smart.home.controller.app.response.community.MyRootProfilePostVO;
@@ -14,9 +18,16 @@ import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.article.entity.Article;
+import com.smart.home.modules.article.entity.ArticleComment;
+import com.smart.home.modules.article.service.ArticleCommentReplyService;
+import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.article.service.ArticleService;
 import com.smart.home.modules.community.entity.CommunityPost;
+import com.smart.home.modules.community.entity.CommunityPostReply;
+import com.smart.home.modules.community.service.CommunityPostReplyService;
 import com.smart.home.modules.community.service.CommunityPostService;
+import com.smart.home.modules.product.entity.ProductComment;
+import com.smart.home.modules.product.service.ProductCommentService;
 import com.smart.home.modules.user.dto.MyFocusDTO;
 import com.smart.home.modules.user.dto.MyFollowerDTO;
 import com.smart.home.modules.user.entity.UserAccount;
@@ -62,6 +73,14 @@ public class AppUserProfileController {
     private CommunityPostService communityPostService;
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private ArticleCommentService articleCommentService;
+    @Autowired
+    private ArticleCommentReplyService articleCommentReplyService;
+    @Autowired
+    private CommunityPostReplyService communityPostReplyService;
+    @Autowired
+    private ProductCommentService productCommentService;
 
     @ApiOperation("基本用户信息")
     @ApiImplicitParams({
@@ -107,7 +126,7 @@ public class AppUserProfileController {
         });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
-    @ApiOperation("评论数据")
+    @ApiOperation("评论数据-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
@@ -115,14 +134,15 @@ public class AppUserProfileController {
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfileComment")
-    public APIResponse queryMyRootProfileComment(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
+    public APIResponse<ResponsePageBean<MyRootProfileCommentVO>> queryMyRootProfileComment(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
-        // TODO
-        return null;
+        List<ArticleComment> list = articleCommentService.queryViaUserIdByPageWhenLogin(userId, pageNum, pageSize, UserUtils.getLoginUserId());
+        List<MyRootProfileCommentVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfileCommentVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
-    @ApiOperation("回帖数据")
+    @ApiOperation("回帖数据-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
@@ -130,14 +150,15 @@ public class AppUserProfileController {
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfileReply")
-    public APIResponse queryMyRootProfileReply(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
+    public APIResponse<ResponsePageBean<MyRootProfilePostReplyVO>> queryMyRootProfileReply(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
-        // TODO
-        return null;
+        List<CommunityPostReply> list = communityPostReplyService.queryViaUserIdByPageWhenLogin(userId, pageNum, pageSize, UserUtils.getLoginUserId());
+        List<MyRootProfilePostReplyVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfilePostReplyVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
-    @ApiOperation("评价数据")
+    @ApiOperation("评价数据-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
@@ -145,14 +166,15 @@ public class AppUserProfileController {
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfileEvaluate")
-    public APIResponse queryMyRootProfileEvaluate(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
+    public APIResponse<ResponsePageBean<MyRootProfileProductCommentVO>> queryMyRootProfileEvaluate(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
-        // TODO
-        return null;
+        List<ProductComment> list = productCommentService.queryViaUserIdByPageWhenLogin(userId, pageNum, pageSize, UserUtils.getLoginUserId());
+        List<MyRootProfileProductCommentVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfileProductCommentVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
-    @ApiOperation("投稿数据")
+    @ApiOperation("投稿数据-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "根据用户主键ID查询，如果查当前登陆用户的不要传", required = false),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
@@ -160,12 +182,17 @@ public class AppUserProfileController {
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfileContribute")
-    public APIResponse queryMyRootProfileContribute(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
+    public APIResponse<ResponsePageBean<MyRootProfileArticleVO>> queryMyRootProfileContribute(@RequestParam(value = "userId", required = false) Long userId, int pageNum, int pageSize) {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
-        // TODO
-        return null;
+        List<Article> list = articleService.queryViaUserIdByPageWhenLogin(userId, pageNum, pageSize, UserUtils.getLoginUserId());
+        List<MyRootProfileArticleVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfileArticleVO::new,(s,t)->{
+            if (StringUtils.isNotBlank(s.getBannerImages())) {
+                t.setImageList(JSON.parseArray(s.getBannerImages(), String.class));
+            }
+        });
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
 
     @ApiOperation("关注-用户点击关注按钮")
@@ -230,7 +257,7 @@ public class AppUserProfileController {
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/myCollectArticleByPage")
     public APIResponse<ResponsePageBean<MyCollectArticleVO>> myCollectArticleByPage(int pageNum, int pageSize) {
-        List<Article> list = articleService.queryViaUserIdByPage(UserUtils.getLoginUserId(), pageNum, pageSize);
+        List<Article> list = articleService.queryCollectViaUserIdByPage(UserUtils.getLoginUserId(), pageNum, pageSize);
         List<MyCollectArticleVO> resultList = BeanCopyUtils.convertListTo(list, MyCollectArticleVO::new);
         return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }

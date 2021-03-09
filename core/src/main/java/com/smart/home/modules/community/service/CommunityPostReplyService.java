@@ -152,4 +152,9 @@ public class CommunityPostReplyService {
         example.createCriteria().andCreatedTimeBetween(startDate, endDate);
         return communityPostReplyMapper.countByExample(example);
     }
+
+    public List<CommunityPostReply> queryViaUserIdByPageWhenLogin(Long userId, int pageNum, int pageSize, Long loginUserId) {
+        PageHelper.startPage(pageNum, pageSize);
+        return communityPostReplyMapper.queryViaUserIdByPageWhenLogin(userId, loginUserId);
+    }
 }

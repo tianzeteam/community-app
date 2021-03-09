@@ -72,7 +72,9 @@ public interface ArticleMapper {
 
     List<Article> queryViaProductIdByPage(@Param("productId") Integer productId);
 
-    List<Article> queryViaUserIdByPage(@Param("userId") Long userId);
+    List<Article> queryCollectViaUserIdByPage(@Param("userId") Long userId);
+
+    List<Article> queryViaUserIdByPageWhenLogin(@Param("userId") Long userId,@Param("loginUserId") Long loginUserId);
 
     List<Article> queryDraftViaUserIdByPage(@Param("userId") Long userId);
 
@@ -83,4 +85,5 @@ public interface ArticleMapper {
     UserIdAndCategoryPO findUserIdAndCategory(@Param("id") Long id);
 
     Long findChannelIdById(@Param("id") Long id);
+
 }

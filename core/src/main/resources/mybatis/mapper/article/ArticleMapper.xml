@@ -786,7 +786,7 @@
     order by a.created_time desc
   </select>
 
-  <select id="queryViaUserIdByPage" resultType="com.smart.home.modules.article.entity.Article">
+  <select id="queryCollectViaUserIdByPage" resultType="com.smart.home.modules.article.entity.Article">
     select ua.head_url as headUrl,
            ua.nick_name as nickName,
            ud.user_level as userLevel,
@@ -803,6 +803,28 @@
                  left join user_data ud on ud.user_id = ua.id
     where uc.user_id = #{userId,jdbcType=BIGINT}
     order by uc.created_time desc
+  </select>
+
+  <select id="queryViaUserIdByPageWhenLogin"  resultType="com.smart.home.modules.article.entity.Article">
+    select a.id,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel,
+           a.created_time as createdTime,
+           a.details,
+           a.banner_images as bannerImages,
+           a.like_count as likeCount,
+           a.stamp_count as stampCount,
+           a.comment_count as commentCount,
+           case when alh.id is null then 0 else 1 end as likeFlag,
+           case when ash.id is null then 0 else 1 end as stampFlag
+    from article a
+                 left join user_account ua on ua.id = a.user_id
+                 left join user_data ud on ud.user_id = ua.id
+                 left join article_like_history alh on alh.source_id = a.id and alh.category = 0 and alh.user_id = #{loginUserId,jdbcType=BIGINT}
+                 left join article_stamp_history ash on ash.source_id = a.id and ash.type = 0 and ash.user_id = #{loginUserId,jdbcType=BIGINT}
+    where a.user_id = #{userId,jdbcType=BIGINT} and a.audit_state = 1
+    order by a.created_time desc
   </select>
 
   <select id="queryDraftViaUserIdByPage" resultType="com.smart.home.modules.article.entity.Article">
@@ -861,4 +883,5 @@
   <select id="findChannelIdById" resultType="java.lang.Long">
     select channel_id from article where id = #{id,jdbcType=BIGINT}
   </select>
+
 </mapper>

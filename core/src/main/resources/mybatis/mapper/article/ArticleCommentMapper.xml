@@ -327,6 +327,48 @@
     where ac.article_id = #{articleId,jdbcType=BIGINT}
   </select>
 
+  <select id="queryViaUserIdByPageNoLogin" resultType="com.smart.home.modules.article.entity.ArticleComment">
+    select ac.id,
+           0 as pid,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel,
+           ac.author_flag as authorFlag,
+           ac.contents,
+           ac.created_time as createdTime,
+           ac.like_count as likeCount,
+           ac.stamp_count as stampCount,
+           0 as likeFlag,
+           0 as stampFlag
+    from article_comment ac
+                 left join user_account ua on ua.id = ac.user_id
+                 left join user_data ud on ud.user_id = ua.id
+    where ac.user_id = #{userId,jdbcType=BIGINT}
+    order by ac.created_time desc
+  </select>
+
+  <select id="queryViaUserIdByPageWhenLogin" resultType="com.smart.home.modules.article.entity.ArticleComment">
+    select ac.id,
+           0 as pid,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel,
+           ac.author_flag as authorFlag,
+           ac.contents,
+           ac.created_time as createdTime,
+           ac.like_count as likeCount,
+           ac.stamp_count as stampCount,
+           case when alh.id is null then 0 else 1 end as likeFlag,
+           case when ash.id is null then 0 else 1 end as stampFlag
+    from article_comment ac
+                 left join user_account ua on ua.id = ac.user_id
+                 left join user_data ud on ud.user_id = ua.id
+                 left join article_like_history alh on alh.source_id = ac.id and alh.category = 0 and alh.user_id = #{loginUserId,jdbcType=BIGINT}
+                 left join article_stamp_history ash on ash.source_id = ac.id and ash.type = 0 and ash.user_id = #{loginUserId,jdbcType=BIGINT}
+    where ac.user_id = #{userId,jdbcType=BIGINT}
+    order by ac.created_time desc
+  </select>
+
   <update id="updateAutoAuditFlag">
     update article_comment
     set auto_audit_flag = #{autoAuditFlag},
@@ -349,4 +391,5 @@
   <select id="findUserIdById" resultType="java.lang.Long">
     select user_id from article_comment where id = #{id}
   </select>
+
 </mapper>

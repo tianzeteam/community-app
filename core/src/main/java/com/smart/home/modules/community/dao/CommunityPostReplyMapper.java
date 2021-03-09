@@ -47,4 +47,6 @@ public interface CommunityPostReplyMapper {
     int manuallyReject(@Param("id") Long id,@Param("flag") int flag);
 
     Long findUserIdById(@Param("id") Long id);
+
+    List<CommunityPostReply> queryViaUserIdByPageWhenLogin(@Param("userId") Long userId,@Param("loginUserId") Long loginUserId);
 }

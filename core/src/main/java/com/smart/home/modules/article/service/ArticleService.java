@@ -320,9 +320,14 @@ public class ArticleService {
         return articleMapper.queryViaProductIdByPage(productId);
     }
 
-    public List<Article> queryViaUserIdByPage(Long loginUserId, int pageNum, int pageSize) {
+    public List<Article> queryCollectViaUserIdByPage(Long loginUserId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        return articleMapper.queryViaUserIdByPage(loginUserId);
+        return articleMapper.queryCollectViaUserIdByPage(loginUserId);
+    }
+
+    public List<Article> queryViaUserIdByPageWhenLogin(Long userId, int pageNum, int pageSize, Long loginUserId) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleMapper.queryViaUserIdByPageWhenLogin(userId, loginUserId);
     }
 
     public List<Article> queryDraftViaUserIdByPage(Long loginUserId, int pageNum, int pageSize) {
@@ -390,4 +395,5 @@ public class ArticleService {
         example.createCriteria().andCreatedTimeBetween(startDate, endDate).andCategoryEqualTo(category);
         return articleMapper.countByExample(example);
     }
+
 }

@@ -62,4 +62,6 @@ public interface ProductCommentMapper {
     Long findUserIdById(@Param("id") Long id);
 
     List<ContentAuditAdminRecordTO> selectAllNeedAuditContent(ContentAdminAuditSearchTO to);
+
+    List<ProductComment> queryViaUserIdByPageWhenLogin(@Param("userId") Long userId,@Param("loginUserId") Long loginUserId);
 }

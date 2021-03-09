@@ -12,6 +12,7 @@ public class ArticleComment implements Serializable {
     private Integer userLevel;
     private Integer likeFlag;
     private Integer stampFlag;
+    private Long pid;
 ////////////////////////////////////
     private Long id;
 
@@ -274,6 +275,14 @@ public class ArticleComment implements Serializable {
 
     public void setArticleCategory(Integer articleCategory) {
         this.articleCategory = articleCategory;
+    }
+
+    public Long getPid() {
+        return pid;
+    }
+
+    public void setPid(Long pid) {
+        this.pid = pid;
     }
 
     /**

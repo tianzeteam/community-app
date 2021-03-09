@@ -234,4 +234,14 @@ public class ArticleCommentService {
         example.createCriteria().andCreatedTimeBetween(startDate, endDate).andArticleCategoryEqualTo(category);
         return articleCommentMapper.countByExample(example);
     }
+
+    public List<ArticleComment> queryViaUserIdByPageWhenLogin(Long userId, int pageNum, int pageSize, Long loginUserId) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleCommentMapper.queryViaUserIdByPageWhenLogin(userId, loginUserId);
+    }
+
+    public List<ArticleComment> queryViaUserIdByPageNoLogin(Long userId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return articleCommentMapper.queryViaUserIdByPageNoLogin(userId);
+    }
 }

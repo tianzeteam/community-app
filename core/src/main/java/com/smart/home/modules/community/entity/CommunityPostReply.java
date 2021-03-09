@@ -7,7 +7,9 @@ import java.util.Date;
 
 public class CommunityPostReply implements Serializable {
 
+    private String headUrl;
     private String nickName;
+    private Integer userLevel;
     ////////////////////////
     private Long id;
 
@@ -247,6 +249,22 @@ public class CommunityPostReply implements Serializable {
 
     public void setReportCount(Integer reportCount) {
         this.reportCount = reportCount;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
+    }
+
+    public Integer getUserLevel() {
+        return userLevel;
+    }
+
+    public void setUserLevel(Integer userLevel) {
+        this.userLevel = userLevel;
     }
 
     /**

@@ -271,4 +271,9 @@ public class ProductCommentService {
         example.createCriteria().andCreatedTimeBetween(startDate, endDate);
         return productCommentMapper.countByExample(example);
     }
+
+    public List<ProductComment> queryViaUserIdByPageWhenLogin(Long userId, int pageNum, int pageSize, Long loginUserId) {
+        PageHelper.startPage(pageNum, pageSize);
+        return productCommentMapper.queryViaUserIdByPageWhenLogin(userId, loginUserId);
+    }
 }

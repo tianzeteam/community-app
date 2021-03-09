@@ -51,4 +51,9 @@ public interface ArticleCommentMapper {
     int updateAuditFlag(@Param("id") long id,@Param("flag") int flag);
 
     Long findUserIdById(@Param("id") Long id);
+
+    List<ArticleComment> queryViaUserIdByPageWhenLogin(@Param("userId") Long userId, @Param("loginUserId") Long loginUserId);
+
+    List<ArticleComment> queryViaUserIdByPageNoLogin(@Param("userId") Long userId);
+
 }

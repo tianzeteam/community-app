@@ -14,6 +14,9 @@ public class ProductComment implements Serializable {
     private Long funId;
     private Long likeId;
     private Long stampId;
+    private Integer funFlag;
+    private Integer likeFlag;
+    private Integer stampFlag;
 /////////////////////////////////
     private Long id;
 
@@ -311,6 +314,30 @@ public class ProductComment implements Serializable {
 
     public void setHitSensitiveCount(Integer hitSensitiveCount) {
         this.hitSensitiveCount = hitSensitiveCount;
+    }
+
+    public Integer getFunFlag() {
+        return funFlag;
+    }
+
+    public void setFunFlag(Integer funFlag) {
+        this.funFlag = funFlag;
+    }
+
+    public Integer getLikeFlag() {
+        return likeFlag;
+    }
+
+    public void setLikeFlag(Integer likeFlag) {
+        this.likeFlag = likeFlag;
+    }
+
+    public Integer getStampFlag() {
+        return stampFlag;
+    }
+
+    public void setStampFlag(Integer stampFlag) {
+        this.stampFlag = stampFlag;
     }
 
     /**

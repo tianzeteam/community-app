@@ -317,4 +317,24 @@
   <select id="findUserIdById" resultType="java.lang.Long">
     select user_id from community_post_reply where id = #{id}
   </select>
+
+  <select id="queryViaUserIdByPageWhenLogin" resultType="com.smart.home.modules.community.entity.CommunityPostReply">
+    select cpr.id,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel,
+           cpr.contents,
+           cpr.created_time as createdTime,
+           cpr.like_count as likeCount,
+           cpr.stamp_count as stampCount,
+           case when alh.id is null then 0 else 1 end as likeFlag,
+           case when ash.id is null then 0 else 1 end as stampFlag
+    from community_post_reply cpr
+                 left join user_account ua on ua.id = cpr.user_id
+                 left join user_data ud on ud.user_id = ua.id
+                 left join community_like_history alh on alh.post_id = cpr.id and alh.type = 1 and alh.user_id = #{loginUserId,jdbcType=BIGINT}
+                 left join community_stamp_history ash on ash.post_id = cpr.id and ash.type = 1 and ash.user_id = #{loginUserId,jdbcType=BIGINT}
+    where cpr.user_id = #{userId,jdbcType=BIGINT}
+    order by cpr.created_time desc;
+    </select>
 </mapper>

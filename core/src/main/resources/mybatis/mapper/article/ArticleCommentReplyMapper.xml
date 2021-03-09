@@ -263,4 +263,5 @@
                  left join user_data ud on ud.user_id = ua.id
     where acr.article_id = #{articleCommentId,jdbcType=BIGINT}
   </select>
+
 </mapper>
