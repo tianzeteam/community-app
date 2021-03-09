@@ -1,6 +1,7 @@
 package com.smart.home.controller.app;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.controller.app.response.UserProfileVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.RoleAccess;
@@ -86,8 +87,12 @@ public class AppUserAccountSettingController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/updatePassword")
     public APIResponse updatePassword(String password) {
-        userAccountService.initPassword(UserUtils.getLoginUserId(), password);
-        return APIResponse.OK();
+        try {
+            userAccountService.initPassword(UserUtils.getLoginUserId(), password);
+            return APIResponse.OK();
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("绑定微信")
