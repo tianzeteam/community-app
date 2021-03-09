@@ -49,4 +49,36 @@
             COMMENT ON COLUMN sys_help.UPDATED_TIME IS '更新时间';
         </sql>
     </changeSet>
+    <changeSet id="insertData4SysHelp" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_help where title = '账号';
+            </sqlCheck>
+        </preConditions>
+        <comment>新增记录</comment>
+        <sql>
+            insert into sys_help(pid, title, details, sort, tree_level, REVISION)
+            values (0, '账号', '', 10, 0, 0);
+            insert into sys_help(pid, title, details, sort, tree_level, REVISION)
+            values (0, '社区', '', 9, 0, 0);
+            insert into sys_help(pid, title, details, sort, tree_level, REVISION)
+            values (0, '创作者', '', 8, 0, 0);
+            insert into sys_help(pid, title, details, sort, tree_level, REVISION)
+            values (0, '产品库', '', 7, 0, 0);
+            insert into sys_help(pid, title, details, sort, tree_level, REVISION)
+            values (0, '版权相关', '', 6, 0, 0);
+
+            insert into sys_help(pid, title, details, sort, tree_level, REVISION)
+            select id,'昵称/头像/简介','测试数据，待完善',10,0,0 from sys_help where title = '账号';
+
+            insert into sys_help(pid, title, details, sort, tree_level, REVISION)
+            select id,'认证体系','测试数据，待完善',9,0,0 from sys_help where title = '账号';
+
+            insert into sys_help(pid, title, details, sort, tree_level, REVISION)
+            select id,'忘记密码','测试数据，待完善',8,0,0 from sys_help where title = '账号';
+
+            insert into sys_help(pid, title, details, sort, tree_level, REVISION)
+            select id,'手机号更换','测试数据，待完善',7,0,0 from sys_help where title = '账号';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
