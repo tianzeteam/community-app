@@ -1,6 +1,7 @@
 package com.smart.home.controller.app;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.request.PrimaryKeyPageDTO;
 import com.smart.home.controller.app.request.ProductCommentCreateDTO;
@@ -148,7 +149,11 @@ public class AppProductCommentController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/clickUseful")
     public APIResponse clickUseful(Long productCommentId) {
-        likeService.like(LikeCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+        try {
+            likeService.like(LikeCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
     @ApiOperation("产品评价-取消点有用")
@@ -169,7 +174,11 @@ public class AppProductCommentController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/clickUseless")
     public APIResponse clickUseless(Long productCommentId) {
-        stampService.stamp(StampCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+        try {
+            stampService.stamp(StampCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
     @ApiOperation("产品评价-取消点无用")
@@ -190,7 +199,11 @@ public class AppProductCommentController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/clickFun")
     public APIResponse clickFun(Long productCommentId) {
-        funService.fun(FunCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+        try {
+            funService.fun(FunCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
     @ApiOperation("产品评价-取消点有趣")
@@ -223,7 +236,11 @@ public class AppProductCommentController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/likeCommentReply")
     public APIResponse likeCommentReply(Long productCommentReplyId) {
-        likeService.like(LikeCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+        try {
+            likeService.like(LikeCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
     @ApiOperation("评价的回复-取消点赞别人的回复")
@@ -244,7 +261,11 @@ public class AppProductCommentController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/stampCommentReply")
     public APIResponse stampCommentReply(Long productCommentReplyId) {
-        stampService.stamp(StampCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+        try {
+            stampService.stamp(StampCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
     @ApiOperation("评价的回复-取消点踩别人的回复")

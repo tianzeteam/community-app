@@ -1,6 +1,7 @@
 package com.smart.home.controller.pc;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.product.ProductShopCreateDTO;
 import com.smart.home.controller.pc.request.product.ProductShopUpdateDTO;
@@ -42,7 +43,11 @@ public class ProductShopController {
         ProductShop productShop = new ProductShop();
         BeanUtils.copyProperties(productShopCreateDTO, productShop);
         productShop.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(productShopService.create(productShop));
+        try {
+            return APIResponse.OK(productShopService.create(productShop));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("更新产品商城")
@@ -52,14 +57,22 @@ public class ProductShopController {
         ProductShop productShop = new ProductShop();
         BeanUtils.copyProperties(productShopUpdateDTO, productShop);
         productShop.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(productShopService.update(productShop));
+        try {
+            return APIResponse.OK(productShopService.update(productShop));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("删除产品商城")
     @RoleAccess(RoleConsts.ADMIN)
     @PostMapping("/delete")
     public APIResponse delete(@RequestBody IdListBean idListBean) {
-        productShopService.delete(idListBean.getIdList());
+        try {
+            productShopService.delete(idListBean.getIdList());
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

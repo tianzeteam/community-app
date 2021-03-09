@@ -292,7 +292,7 @@ public class ArticleService {
         articleMapper.updateTopFlag(articleId, YesNoEnum.NO.getCode());
     }
 
-    public void setTop(Long articleId) {
+    public void setTop(Long articleId) throws ServiceException {
         Long channelId = articleMapper.findChannelIdById(articleId);
         ArticleExample example = new ArticleExample();
         example.createCriteria().andChannelIdEqualTo(channelId).andTopFlagEqualTo(YesNoEnum.YES.getCode());

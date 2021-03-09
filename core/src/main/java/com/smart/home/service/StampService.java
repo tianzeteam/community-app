@@ -1,5 +1,6 @@
 package com.smart.home.service;
 
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.enums.LikeCategoryEnum;
 import com.smart.home.enums.StampCategoryEnum;
 import com.smart.home.modules.article.entity.ArticleStampHistory;
@@ -33,7 +34,7 @@ public class StampService {
      * @param userId 用户主键ID
      * @param primaryKey 关联记录主键ID
      */
-    public void stamp(StampCategoryEnum stampCategoryEnum, Long userId, Long primaryKey) {
+    public void stamp(StampCategoryEnum stampCategoryEnum, Long userId, Long primaryKey) throws ServiceException {
         switch (stampCategoryEnum) {
             case ARTICLE:
                 createArticleStampHistory(userId, primaryKey, 0);
@@ -122,7 +123,7 @@ public class StampService {
         communityStampHistoryService.create(communityStampHistory);
     }
 
-    private void createProductCommentStampHistory(Long userId, Long primaryKey, Integer category) {
+    private void createProductCommentStampHistory(Long userId, Long primaryKey, Integer category) throws ServiceException {
         ProductCommentStampHistory productCommentStampHistory = new ProductCommentStampHistory();
         productCommentStampHistory.withCategory(category)
                 .withCreatedTime(new Date())

@@ -1,6 +1,7 @@
 package com.smart.home.controller.app;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.MyFocusVO;
 import com.smart.home.controller.app.response.MyFollowerVO;
@@ -168,7 +169,11 @@ public class AppUserProfileController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/focusUser")
     public APIResponse focusUser(Long focusUserId) {
-        userFocusService.focusUser(focusUserId, UserUtils.getLoginUserId());
+        try {
+            userFocusService.focusUser(focusUserId, UserUtils.getLoginUserId());
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

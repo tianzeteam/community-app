@@ -4,6 +4,7 @@ package com.smart.home.service;
  * @author jason
  * @date 2021/2/24
  **/
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.enums.CollectTypeEnum;
 import com.smart.home.modules.article.service.ArticleService;
 import com.smart.home.modules.community.service.CommunityPostService;
@@ -33,7 +34,7 @@ public class CollectService {
      * @param userId 用户主键ID
      * @param primaryKey 关联记录主键ID
      */
-    public void addCollect(CollectTypeEnum collectTypeEnum, Long userId, Long primaryKey) {
+    public void addCollect(CollectTypeEnum collectTypeEnum, Long userId, Long primaryKey) throws ServiceException {
         this.createCollect(collectTypeEnum.getType(), collectTypeEnum.getDesc(), userId, primaryKey);
         switch (collectTypeEnum) {
             case ARTICLE:
@@ -96,7 +97,7 @@ public class CollectService {
         return hasCollect(collectTypeEnum, userId, Arrays.asList(id)).get(id);
     }
 
-    private void createCollect(Integer collectType, String collectTypeName, Long userId, Long primaryKey) {
+    private void createCollect(Integer collectType, String collectTypeName, Long userId, Long primaryKey) throws ServiceException {
         UserCollect userCollect = new UserCollect();
         userCollect.withCollectType(collectType)
                 .withCollectTypeName(collectTypeName)

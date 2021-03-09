@@ -1,6 +1,7 @@
 package com.smart.home.controller.pc;
 
 import com.alibaba.fastjson.JSON;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.product.ProductParamSettingCreateDTO;
 import com.smart.home.controller.pc.request.product.ProductParamSettingUpdateDTO;
@@ -44,7 +45,11 @@ public class ProductParamSettingController {
         if (!CollectionUtils.isEmpty(productParamSettingCreateDTO.getEnumValueList())) {
             productParamSetting.setEnumValues(JSON.toJSONString(productParamSettingCreateDTO.getEnumValueList()));
         }
-        return APIResponse.OK(productParamSettingService.create(productParamSetting));
+        try {
+            return APIResponse.OK(productParamSettingService.create(productParamSetting));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("更新产品参数库")
@@ -56,13 +61,21 @@ public class ProductParamSettingController {
         if (!CollectionUtils.isEmpty(productParamSettingUpdateDTO.getEnumValueList())) {
             productParamSetting.setEnumValues(JSON.toJSONString(productParamSettingUpdateDTO.getEnumValueList()));
         }
-        return APIResponse.OK(productParamSettingService.update(productParamSetting));
+        try {
+            return APIResponse.OK(productParamSettingService.update(productParamSetting));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("删除产品参数库")
     @PostMapping("/delete")
     public APIResponse delete(@RequestBody IdListBean idListBean) {
-        productParamSettingService.delete(idListBean.getIdList());
+        try {
+            productParamSettingService.delete(idListBean.getIdList());
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

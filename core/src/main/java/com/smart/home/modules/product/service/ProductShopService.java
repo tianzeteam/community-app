@@ -30,7 +30,7 @@ public class ProductShopService {
     @Resource
     private SysFileService sysFileService;
 
-    public int create(ProductShop productShop) {
+    public int create(ProductShop productShop) throws ServiceException {
         // 检查唯一性
         ProductShopExample example = new ProductShopExample();
         example.createCriteria().andShopNameEqualTo(productShop.getShopName());
@@ -48,7 +48,7 @@ public class ProductShopService {
         return affectRow;
     }
 
-    public int update(ProductShop productShop) {
+    public int update(ProductShop productShop) throws ServiceException {
         // 检查唯一性
         ProductShopExample example = new ProductShopExample();
         example.createCriteria().andShopNameEqualTo(productShop.getShopName()).andIdNotEqualTo(productShop.getId());
@@ -70,7 +70,7 @@ public class ProductShopService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
+    public void delete(List<Long> idList) throws ServiceException {
         for (Long id : idList) {
             // 检查有没有挂钩产品了
             if (productMapper.countByShopId(id.intValue()) > 0) {

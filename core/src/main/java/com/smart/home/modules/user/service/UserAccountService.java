@@ -8,6 +8,7 @@ import com.smart.home.common.enums.APIResponseCodeEnum;
 import com.smart.home.common.enums.AccountStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.AuthorizationException;
+import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.FileUtils;
 import com.smart.home.common.util.JwtUtil;
@@ -55,7 +56,7 @@ public class UserAccountService {
     private SysFileService sysFileService;
 
     @Transactional(rollbackFor = Exception.class)
-    public int insert(UserAccount entity, List<Integer> roleIdList) {
+    public int insert(UserAccount entity, List<Integer> roleIdList) throws ServiceException {
         if (StringUtils.isBlank(entity.getUsername())) {
             // 当用户名为空的时候，把手机号码赋值给用户名
             Asserts.notBlank(entity.getMobile(), "mobile");
@@ -64,7 +65,7 @@ public class UserAccountService {
         UserAccountExample example = new UserAccountExample();
         example.createCriteria().andUsernameEqualTo(entity.getUsername());
         if (mapper.countByExample(example) > 0) {
-            throw new RuntimeException(APIResponseCodeEnum.ERROR_DUPLICATE_DATA.getMessage());
+            throw new DuplicateDataException("该用户已经存在");
         }
         // 生成密码盐，防止暴力破解密码
         String salt = UUIDUtil.uuid();
@@ -337,7 +338,7 @@ public class UserAccountService {
      * @param userId
      * @param password
      */
-    public void initPassword(Long userId, String password) {
+    public void initPassword(Long userId, String password) throws ServiceException {
         UserAccount userAccount = findUserByUserId(userId);
         if (StringUtils.isNotBlank(userAccount.getPassword())) {
             throw new ServiceException("已经设置过密码了");

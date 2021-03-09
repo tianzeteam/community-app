@@ -57,8 +57,8 @@ public class ArticleController {
 
     @ApiOperation("获取版权申明列表")
     @AnonAccess
-    @GetMapping("/selectCopyrightNoticItems")
-    public APIResponse selectCopyrightNoticItems() {
+    @GetMapping("/selectCopyrightNoticeItems")
+    public APIResponse selectCopyrightNoticeItems() {
         Map<String, String> map = Maps.newHashMap();
         map.put("许署名转载", "许署名转载");
         map.put("未经授权禁止转载", "未经授权禁止转载");

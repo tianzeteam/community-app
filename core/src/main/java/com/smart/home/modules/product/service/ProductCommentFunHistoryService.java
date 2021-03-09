@@ -2,6 +2,7 @@ package com.smart.home.modules.product.service;
 
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.exception.DuplicateDataException;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.modules.product.dao.ProductCommentFunHistoryMapper;
 import com.smart.home.modules.product.entity.ProductCommentFunHistory;
 import com.smart.home.modules.product.entity.ProductCommentFunHistoryExample;
@@ -26,7 +27,7 @@ public class ProductCommentFunHistoryService {
     @Autowired
     private ProductCommentReplyService productCommentReplyService;
 
-    public int create(ProductCommentFunHistory productCommentFunHistory) {
+    public int create(ProductCommentFunHistory productCommentFunHistory) throws ServiceException {
         ProductCommentFunHistoryExample example = new ProductCommentFunHistoryExample();
         example.createCriteria().andUserIdEqualTo(productCommentFunHistory.getUserId())
                 .andSourceIdEqualTo(productCommentFunHistory.getSourceId())

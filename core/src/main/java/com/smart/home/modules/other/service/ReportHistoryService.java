@@ -3,6 +3,7 @@ package com.smart.home.modules.other.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.exception.DuplicateDataException;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.enums.ReportCategoryEnum;
 import com.smart.home.modules.article.dao.ArticleMapper;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
@@ -44,7 +45,7 @@ public class ReportHistoryService {
      * @return
      */
     public int create(ReportCategoryEnum reportCategoryEnum,Long primaryKey, Long userId,
-                      String contents, String images, Long authorUserId, String reason) {
+                      String contents, String images, Long authorUserId, String reason) throws ServiceException {
         // 检查该用户有没有举报过了
         ReportHistoryExample example = new ReportHistoryExample();
         example.createCriteria()

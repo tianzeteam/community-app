@@ -96,7 +96,7 @@ public class UserDataService {
         userDataMapper.updateSign(userId, sign);
     }
 
-    public void bindWechat(Long userId, String openid) {
+    public void bindWechat(Long userId, String openid) throws ServiceException {
         UserData userData = findByUserId(userId);
         if(Objects.isNull(userData)) {
             initUserData(userId);

@@ -28,7 +28,7 @@ public class ArticleChannelService {
     @Resource
     ArticleMapper articleMapper;
 
-    public int create(ArticleChannel articleChannel) {
+    public int create(ArticleChannel articleChannel) throws ServiceException{
         // 检查同名频道
         ArticleChannelExample example = new ArticleChannelExample();
         example.createCriteria().andTitleEqualTo(articleChannel.getTitle());
@@ -41,7 +41,7 @@ public class ArticleChannelService {
         return articleChannelMapper.insertSelective(articleChannel);
     }
 
-    public int update(ArticleChannel articleChannel) {
+    public int update(ArticleChannel articleChannel) throws ServiceException {
         // 查看变更后的名称有没有冲突
         ArticleChannelExample example = new ArticleChannelExample();
         example.createCriteria().andTitleEqualTo(articleChannel.getTitle()).andIdNotEqualTo(articleChannel.getId());
@@ -57,7 +57,7 @@ public class ArticleChannelService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
+    public void delete(List<Long> idList) throws ServiceException {
         for (Long id : idList) {
             // 检查有没有关联的文章了，有的话不能删除
             if (articleMapper.countArticleByChannelId(id) > 0) {

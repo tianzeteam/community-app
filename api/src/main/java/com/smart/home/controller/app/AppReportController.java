@@ -1,6 +1,7 @@
 package com.smart.home.controller.app;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.controller.app.request.ReportCreateDTO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.RoleAccess;
@@ -40,7 +41,11 @@ public class AppReportController {
         String images = reportCreateDTO.getImages();
         Long authorUserId = reportCreateDTO.getAuthorUserId();
         String reason = reportCreateDTO.getReason();
-        reportHistoryService.create(ReportCategoryEnum.ARTICLE, id, userId, contents, images, authorUserId, reason);
+        try {
+            reportHistoryService.create(ReportCategoryEnum.ARTICLE, id, userId, contents, images, authorUserId, reason);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 
@@ -54,7 +59,11 @@ public class AppReportController {
         String images = reportCreateDTO.getImages();
         Long authorUserId = reportCreateDTO.getAuthorUserId();
         String reason = reportCreateDTO.getReason();
-        reportHistoryService.create(ReportCategoryEnum.POST, id, userId, contents, images, authorUserId, reason);
+        try {
+            reportHistoryService.create(ReportCategoryEnum.POST, id, userId, contents, images, authorUserId, reason);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

@@ -2,6 +2,7 @@ package com.smart.home.modules.user.service;
 
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.exception.DuplicateDataException;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.modules.user.dao.UserCollectMapper;
 import com.smart.home.modules.user.entity.UserCollect;
 import com.smart.home.modules.user.entity.UserCollectExample;
@@ -20,7 +21,7 @@ public class UserCollectService {
     @Resource
     UserCollectMapper userCollectMapper;
 
-    public int create(UserCollect userCollect) {
+    public int create(UserCollect userCollect) throws ServiceException {
         // 检查有没有收藏过了，如果收藏过了就报错
         UserCollectExample example = new UserCollectExample();
         example.createCriteria().andUserIdEqualTo(userCollect.getUserId())

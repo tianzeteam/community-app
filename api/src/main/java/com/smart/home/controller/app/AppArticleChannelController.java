@@ -1,6 +1,7 @@
 package com.smart.home.controller.app;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.article.ArticleChannelVO;
 import com.smart.home.dto.APIResponse;
@@ -55,7 +56,11 @@ public class AppArticleChannelController {
     @PostMapping("/addToMyChannel")
     public APIResponse addToMyChannel(Long channelId, Integer sort) {
         Long userId = UserUtils.getLoginUserId();
-        userArticleChannelPreferenceService.create(userId, channelId, sort);
+        try {
+            userArticleChannelPreferenceService.create(userId, channelId, sort);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

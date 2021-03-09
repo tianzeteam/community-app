@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.article.ArticleChannelCreateDTO;
 import com.smart.home.controller.pc.request.article.ArticleChannelUpdateDTO;
@@ -39,7 +40,11 @@ public class ArticleChannelController {
         ArticleChannel articleChannel = new ArticleChannel();
         BeanUtils.copyProperties(articleChannelCreateDTO, articleChannel);
         articleChannel.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(articleChannelService.create(articleChannel));
+        try {
+            return APIResponse.OK(articleChannelService.create(articleChannel));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("更新文章频道")
@@ -48,13 +53,21 @@ public class ArticleChannelController {
         ArticleChannel articleChannel = new ArticleChannel();
         BeanUtils.copyProperties(articleChannelUpdateDTO, articleChannel);
         articleChannel.setUpdatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(articleChannelService.update(articleChannel));
+        try {
+            return APIResponse.OK(articleChannelService.update(articleChannel));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("删除文章频道")
     @PostMapping("/delete")
     public APIResponse delete(@RequestBody IdListBean idListBean) {
-        articleChannelService.delete(idListBean.getIdList());
+        try {
+            articleChannelService.delete(idListBean.getIdList());
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

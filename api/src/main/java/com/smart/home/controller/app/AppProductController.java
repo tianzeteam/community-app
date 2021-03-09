@@ -1,6 +1,7 @@
 package com.smart.home.controller.app;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.request.PrimaryKeyPageDTO;
 import com.smart.home.controller.app.request.ProductSearchDTO;
@@ -105,7 +106,11 @@ public class AppProductController {
     @PostMapping("/collectProduct")
     public APIResponse collectProduct(Long productId) {
         Long userId = UserUtils.getLoginUserId();
-        collectService.addCollect(CollectTypeEnum.PRODUCT, userId, productId);
+        try {
+            collectService.addCollect(CollectTypeEnum.PRODUCT, userId, productId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

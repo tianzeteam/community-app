@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.community.CommunityCreateDTO;
 import com.smart.home.controller.pc.request.community.CommunityUpdateDTO;
@@ -39,7 +40,11 @@ public class CommunityController {
         Community community = new Community();
         BeanUtils.copyProperties(communityCreateDTO, community);
         community.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(communityService.create(community));
+        try {
+            return APIResponse.OK(communityService.create(community));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("更新社区")
@@ -47,13 +52,21 @@ public class CommunityController {
     public APIResponse update(@Valid CommunityUpdateDTO communityUpdateDTO, BindingResult bindingResult) {
         Community community = new Community();
         community.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(communityService.update(community));
+        try {
+            return APIResponse.OK(communityService.update(community));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("删除社区")
     @PostMapping("/delete")
     public APIResponse delete(@RequestBody IdListBean idListBean) {
-        communityService.delete(idListBean.getIdList());
+        try {
+            communityService.delete(idListBean.getIdList());
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

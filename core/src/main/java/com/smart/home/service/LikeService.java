@@ -1,5 +1,6 @@
 package com.smart.home.service;
 
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.enums.LikeCategoryEnum;
 import com.smart.home.modules.article.entity.ArticleLikeHistory;
 import com.smart.home.modules.article.service.ArticleLikeHistoryService;
@@ -32,7 +33,7 @@ public class LikeService {
      * @param userId 用户主键ID
      * @param primaryKey 关联记录主键ID
      */
-    public void like(LikeCategoryEnum likeCategoryEnum, Long userId, Long primaryKey) {
+    public void like(LikeCategoryEnum likeCategoryEnum, Long userId, Long primaryKey) throws ServiceException {
         switch (likeCategoryEnum) {
             case ARTICLE:
                 createArticleLikeHistory(userId, primaryKey, 0);
@@ -122,7 +123,7 @@ public class LikeService {
         communityLikeHistoryService.create(communityLikeHistory);
     }
 
-    private void createProductCommentLikeHistory(Long userId, Long primaryKey, Integer category) {
+    private void createProductCommentLikeHistory(Long userId, Long primaryKey, Integer category) throws ServiceException {
         ProductCommentLikeHistory productCommentLikeHistory = new ProductCommentLikeHistory();
         productCommentLikeHistory.withCategory(category)
                 .withCreatedTime(new Date())

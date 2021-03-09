@@ -51,4 +51,21 @@
             insert into sys_agreement(type,name,REVISION) values (51,'文章投稿协议',0);
         </sql>
     </changeSet>
+    <changeSet id="insertData3SysAgreement2" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_agreement where type = 0;
+            </sqlCheck>
+        </preConditions>
+        <comment>新增记录</comment>
+        <sql>
+            insert into sys_agreement(type,name,details,REVISION) values (0,'关于APP','测试数据，待完善',0);
+            insert into sys_agreement(type,name,details,REVISION) values (1,'更新日志','测试数据，待完善',0);
+            insert into sys_agreement(type,name,details,REVISION) values (2,'用户协议','测试数据，待完善',0);
+            insert into sys_agreement(type,name,details,REVISION) values (3,'隐私政策','测试数据，待完善',0);
+            insert into sys_agreement(type,name,details,REVISION) values (4,'证照中心','测试数据，待完善',0);
+            insert into sys_agreement(type,name,details,REVISION) values (5,'权限说明','测试数据，待完善',0);
+            insert into sys_agreement(type,name,details,REVISION) values (6,'第三方服务','测试数据，待完善',0);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

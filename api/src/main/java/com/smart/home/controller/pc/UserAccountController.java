@@ -2,6 +2,7 @@ package com.smart.home.controller.pc;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.smart.home.assembler.UserAssembler;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
@@ -42,7 +43,11 @@ public class UserAccountController {
         UserAccount entity = new UserAccount();
         BeanUtils.copyProperties(userAccountCreateDTO, entity);
         entity.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(userAccountService.insert(entity, userAccountCreateDTO.getRoleIdList()));
+        try {
+            return APIResponse.OK(userAccountService.insert(entity, userAccountCreateDTO.getRoleIdList()));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation(value = "删除用户账户")

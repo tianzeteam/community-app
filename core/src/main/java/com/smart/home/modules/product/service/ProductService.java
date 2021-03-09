@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.exception.DuplicateDataException;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.FileUtils;
 import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.dao.ProductParamSettingMapper;
@@ -42,7 +43,7 @@ public class ProductService {
     private SysFileService sysFileService;
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public int create(Product product) {
+    public int create(Product product) throws ServiceException {
         // 查重
         ProductExample example = new ProductExample();
         ProductExample.Criteria criteria = example.createCriteria();

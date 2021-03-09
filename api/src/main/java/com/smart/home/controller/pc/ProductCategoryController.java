@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.product.ProductCategoryCreateDTO;
 import com.smart.home.controller.pc.response.product.ProductCategorySelectVO;
@@ -47,7 +48,12 @@ public class ProductCategoryController {
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(productCategoryCreateDTO, productCategory);
         productCategory.setCreatedBy(UserUtils.getLoginUserId());
-        int affectRow = productCategoryService.create(productCategory, productCategoryCreateDTO.getParamIdList());
+        int affectRow = 0;
+        try {
+            affectRow = productCategoryService.create(productCategory, productCategoryCreateDTO.getParamIdList());
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK(affectRow);
     }
 
@@ -57,13 +63,21 @@ public class ProductCategoryController {
         ProductCategory productCategory = new ProductCategory();
         BeanUtils.copyProperties(productCategoryUpdateDTO, productCategory);
         productCategory.setUpdatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(productCategoryService.update(productCategory, productCategoryUpdateDTO.getParamIdList()));
+        try {
+            return APIResponse.OK(productCategoryService.update(productCategory, productCategoryUpdateDTO.getParamIdList()));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("删除产品类目")
     @PostMapping("/delete")
     public APIResponse delete(@RequestBody IdListBean idListBean) {
-        productCategoryService.delete(idListBean.getIdList());
+        try {
+            productCategoryService.delete(idListBean.getIdList());
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

@@ -31,7 +31,7 @@ public class ProductBrandService {
     @Resource
     private SysFileService sysFileService;
 
-    public int create(ProductBrand productBrand) {
+    public int create(ProductBrand productBrand) throws ServiceException {
         // 检查是否存在
         ProductBrandExample example = new ProductBrandExample();
         example.createCriteria().andBrandNameEqualTo(productBrand.getBrandName());
@@ -50,7 +50,7 @@ public class ProductBrandService {
         return affectRow;
     }
 
-    public int update(ProductBrand productBrand) {
+    public int update(ProductBrand productBrand) throws ServiceException {
         ProductBrandExample example = new ProductBrandExample();
         example.createCriteria().andBrandNameEqualTo(productBrand.getBrandName()).andIdNotEqualTo(productBrand.getId());
         if (productBrandMapper.countByExample(example) > 0) {
@@ -71,7 +71,7 @@ public class ProductBrandService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
+    public void delete(List<Long> idList) throws ServiceException {
         for (Long id : idList) {
             // 检查是否关联产品了
             if (productMapper.countByBrandId(id.intValue()) > 0) {

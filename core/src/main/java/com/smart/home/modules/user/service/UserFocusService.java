@@ -62,7 +62,7 @@ public class UserFocusService {
      * @param loginUserId 操作用户主键ID
      */
     @Transactional(rollbackFor = RuntimeException.class)
-    public void focusUser(Long focusUserId, Long loginUserId) {
+    public void focusUser(Long focusUserId, Long loginUserId) throws ServiceException {
         // 判断是否关注过了
         UserFocusExample example = new UserFocusExample();
         example.createCriteria().andUserIdEqualTo(loginUserId).andFocusUserIdEqualTo(focusUserId);

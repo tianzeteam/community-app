@@ -2,6 +2,7 @@ package com.smart.home.controller.common;
 
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.common.response.ArticleCommentReplyVO;
 import com.smart.home.controller.common.response.ArticleCommentVO;
@@ -90,7 +91,11 @@ public class CommonArticleController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/likeArticle")
     public APIResponse likeArticle(Long articleId) {
-        likeService.like(LikeCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+        try {
+            likeService.like(LikeCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
     @ApiOperation("取消点赞文章")
@@ -110,7 +115,11 @@ public class CommonArticleController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/stampArticle")
     public APIResponse stampArticle(Long articleId) {
-        stampService.stamp(StampCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+        try {
+            stampService.stamp(StampCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
     @ApiOperation("取消点踩文章")
@@ -130,7 +139,11 @@ public class CommonArticleController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/addCollect")
     public APIResponse addCollect(Long articleId) {
-        collectService.addCollect(CollectTypeEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+        try {
+            collectService.addCollect(CollectTypeEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
     @ApiOperation("取消收藏文章")
@@ -215,7 +228,11 @@ public class CommonArticleController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/likeComment")
     public APIResponse likeComment(Long articleCommentId) {
-        likeService.like(LikeCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
+        try {
+            likeService.like(LikeCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
     @ApiOperation("取消点赞一级评论")
@@ -235,7 +252,11 @@ public class CommonArticleController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/stampComment")
     public APIResponse stampComment(Long articleCommentId) {
-        stampService.stamp(StampCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
+        try {
+            stampService.stamp(StampCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
     @ApiOperation("取消点踩一级评论")

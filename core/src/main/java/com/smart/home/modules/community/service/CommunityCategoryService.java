@@ -27,7 +27,7 @@ public class CommunityCategoryService {
     @Resource
     CommunityMapper communityMapper;
 
-    public int create(CommunityCategory communityCategory) {
+    public int create(CommunityCategory communityCategory) throws ServiceException {
         // 检查同名
         CommunityCategoryExample example = new CommunityCategoryExample();
         example.createCriteria().andTitleEqualTo(communityCategory.getTitle());
@@ -40,7 +40,7 @@ public class CommunityCategoryService {
         return communityCategoryMapper.insertSelective(communityCategory);
     }
 
-    public int update(CommunityCategory communityCategory) {
+    public int update(CommunityCategory communityCategory) throws ServiceException {
         // 检查同名
         CommunityCategoryExample example = new CommunityCategoryExample();
         example.createCriteria().andTitleEqualTo(communityCategory.getTitle()).andIdNotEqualTo(communityCategory.getId());
@@ -56,7 +56,7 @@ public class CommunityCategoryService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
+    public void delete(List<Long> idList) throws ServiceException {
         for (Long id : idList) {
             // 检查有没有关联到社区了
             if (communityMapper.countByCategoryId(id) > 0) {

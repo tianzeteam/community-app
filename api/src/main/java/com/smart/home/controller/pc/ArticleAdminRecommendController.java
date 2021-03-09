@@ -3,6 +3,7 @@ package com.smart.home.controller.pc;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.SubjectCardCreateDTO;
 import com.smart.home.controller.pc.request.article.ArticleAdminRcommendSearchDTO;
@@ -99,7 +100,11 @@ public class ArticleAdminRecommendController {
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/setTop")
     public APIResponse setTop(Long articleId) {
-        articleService.setTop(articleId);
+        try {
+            articleService.setTop(articleId);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

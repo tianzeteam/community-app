@@ -38,7 +38,7 @@ public class ProductCategoryService {
     private SysFileService sysFileService;
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public int create(ProductCategory productCategory, List<Integer> paramIdList) {
+    public int create(ProductCategory productCategory, List<Integer> paramIdList) throws ServiceException {
         // 检查同级同名
         ProductCategoryExample example = new ProductCategoryExample();
         example.createCriteria().andPidEqualTo(productCategory.getPid())
@@ -78,7 +78,7 @@ public class ProductCategoryService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public int update(ProductCategory productCategory, List<Integer> paramIdList) {
+    public int update(ProductCategory productCategory, List<Integer> paramIdList) throws ServiceException {
         ProductCategoryExample example = new ProductCategoryExample();
         example.createCriteria().andPidEqualTo(productCategory.getPid())
                 .andTitleEqualTo(productCategory.getTitle()).andIdNotEqualTo(productCategory.getId());
@@ -114,7 +114,7 @@ public class ProductCategoryService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
+    public void delete(List<Long> idList) throws ServiceException {
         for (Long id : idList) {
             // 检查有没有关联到产品了
             int level = productCategoryMapper.findLevelById(id.intValue());

@@ -2,6 +2,7 @@ package com.smart.home.modules.user.service;
 
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.exception.DuplicateDataException;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.modules.article.entity.ArticleChannel;
 import com.smart.home.modules.user.dao.UserArticleChannelPreferenceMapper;
 import com.smart.home.modules.user.entity.UserArticleChannelPreference;
@@ -22,7 +23,7 @@ public class UserArticleChannelPreferenceService {
     @Resource
     UserArticleChannelPreferenceMapper userArticleChannelPreferenceMapper;
 
-    public void create(Long userId, Long channelId, Integer sort) {
+    public void create(Long userId, Long channelId, Integer sort) throws ServiceException {
         // 检查重复记录
         UserArticleChannelPreferenceExample example = new UserArticleChannelPreferenceExample();
         example.createCriteria().andUserIdEqualTo(userId).andChannelIdEqualTo(channelId);

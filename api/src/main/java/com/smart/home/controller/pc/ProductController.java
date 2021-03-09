@@ -3,6 +3,7 @@ package com.smart.home.controller.pc;
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.product.*;
 import com.smart.home.controller.pc.response.product.*;
@@ -182,7 +183,11 @@ public class ProductController {
             product.setBrandName(productCreateDTO.getProductBrandDTO().getBrandName());
         }
         product.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(productService.create(product));
+        try {
+            return APIResponse.OK(productService.create(product));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("更新产品")

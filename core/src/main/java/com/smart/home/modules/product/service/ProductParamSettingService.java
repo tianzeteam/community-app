@@ -31,7 +31,7 @@ public class ProductParamSettingService {
     @Resource
     ProductCategoryParamMapper productCategoryParamMapper;
 
-    public int create(ProductParamSetting productParamSetting) {
+    public int create(ProductParamSetting productParamSetting) throws ServiceException {
         ProductParamSettingExample example = new ProductParamSettingExample();
         example.createCriteria().andParamNameEnEqualTo(productParamSetting.getParamName());
         if (productParamSettingMapper.countByExample(example) > 0) {
@@ -45,7 +45,7 @@ public class ProductParamSettingService {
         return productParamSettingMapper.insertSelective(productParamSetting);
     }
 
-    public int update(ProductParamSetting productParamSetting) {
+    public int update(ProductParamSetting productParamSetting) throws ServiceException {
         ProductParamSettingExample example = new ProductParamSettingExample();
         example.createCriteria()
                 .andParamNameEnEqualTo(productParamSetting.getParamName())
@@ -65,7 +65,7 @@ public class ProductParamSettingService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
+    public void delete(List<Long> idList) throws ServiceException {
         for (Long id : idList) {
             // 判断有没有关联产品了，关联产品后不能删除
             if (productParamValueMapper.countByParamId(id.intValue()) > 0) {

@@ -1,6 +1,7 @@
 package com.smart.home.controller.pc;
 
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.product.ProductBrandCreateDTO;
 import com.smart.home.controller.pc.request.product.ProductBrandUpdateDTO;
@@ -42,7 +43,11 @@ public class ProductBrandController {
         ProductBrand productBrand = new ProductBrand();
         BeanUtils.copyProperties(productBrandCreateDTO, productBrand);
         productBrand.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(productBrandService.create(productBrand));
+        try {
+            return APIResponse.OK(productBrandService.create(productBrand));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("更新产品品牌")
@@ -52,14 +57,22 @@ public class ProductBrandController {
         ProductBrand productBrand = new ProductBrand();
         BeanUtils.copyProperties(productBrandUpdateDTO, productBrand);
         productBrand.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(productBrandService.update(productBrand));
+        try {
+            return APIResponse.OK(productBrandService.update(productBrand));
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("删除产品品牌")
     @RoleAccess(RoleConsts.ADMIN)
     @PostMapping("/delete")
     public APIResponse delete(@RequestBody IdListBean idListBean) {
-        productBrandService.delete(idListBean.getIdList());
+        try {
+            productBrandService.delete(idListBean.getIdList());
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

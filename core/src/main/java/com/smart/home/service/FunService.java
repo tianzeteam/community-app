@@ -1,5 +1,6 @@
 package com.smart.home.service;
 
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.enums.FunCategoryEnum;
 import com.smart.home.modules.product.entity.ProductCommentFunHistory;
 import com.smart.home.modules.product.service.ProductCommentFunHistoryService;
@@ -24,7 +25,7 @@ public class FunService {
      * @param userId 用户主键ID
      * @param primaryKey 关联记录主键ID
      */
-    public void fun(FunCategoryEnum funCategoryEnum, Long userId, Long primaryKey) {
+    public void fun(FunCategoryEnum funCategoryEnum, Long userId, Long primaryKey) throws ServiceException {
         switch (funCategoryEnum) {
             case PRODUCT_COMMENT:
                 createCommentHistory(userId, primaryKey, 0);
@@ -75,7 +76,7 @@ public class FunService {
         return false;
     }
 
-    private void createCommentHistory(Long userId, Long primaryKey, Integer category) {
+    private void createCommentHistory(Long userId, Long primaryKey, Integer category) throws ServiceException {
         ProductCommentFunHistory productCommentFunHistory  = new ProductCommentFunHistory();
         productCommentFunHistory.withCreatedTime(new Date())
                 .withCategory(category)

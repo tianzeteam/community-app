@@ -102,8 +102,12 @@ public class AppUserAccountSettingController {
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/bindWechat")
     public APIResponse bindWechat(String openid) {
-        userDataService.bindWechat(UserUtils.getLoginUserId(), openid);
-        return APIResponse.OK();
+        try {
+            userDataService.bindWechat(UserUtils.getLoginUserId(), openid);
+            return APIResponse.OK();
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
 
     @ApiOperation("注销登陆")

@@ -31,7 +31,7 @@ public class CommunityService {
     @Resource
     CommunityPostMapper communityPostMapper;
 
-    public int create(Community community) {
+    public int create(Community community) throws ServiceException {
         CommunityCategory communityCategory = communityCategoryMapper.selectByPrimaryKey(community.getCategoryId().intValue());
         if (Objects.isNull(communityCategory)) {
             throw new ServiceException("社区类目不存在");
@@ -48,7 +48,7 @@ public class CommunityService {
         return communityMapper.insertSelective(community);
     }
 
-    public int update(Community community) {
+    public int update(Community community) throws ServiceException {
         CommunityCategory communityCategory = communityCategoryMapper.selectByPrimaryKey(community.getCategoryId().intValue());
         if (Objects.isNull(communityCategory)) {
             throw new ServiceException("社区类目不存在");
@@ -67,7 +67,7 @@ public class CommunityService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
+    public void delete(List<Long> idList) throws ServiceException {
         for (Long id : idList) {
             // 检查有没有关联的帖子
             if (communityPostMapper.countByCommunityId(id.intValue()) > 0) {
