@@ -789,6 +789,20 @@
     </if>
   </select>
 
+  <select id="queryCollectViaUserIdByPage" resultType="com.smart.home.modules.product.entity.Product">
+    select p.id,
+           p.cover_image as coverImage,
+           p.product_name as productName,
+           p.remark,
+           p.tag,
+           p.comment_count as commentCount,
+           p.average_score as averageScore
+    from user_collect uc
+                 left join product p on p.id = uc.primary_key and uc.collect_type = 2
+    where uc.user_id = #{userId,jdbcType=BIGINT}
+      and uc.collect_type = 2
+  </select>
+
   <select id="queryDetailById" resultType="com.smart.home.modules.product.entity.Product">
     select product.id,
            product.banner_images as bannerImages,
@@ -818,4 +832,5 @@
         comment_count = comment_count + 1
     where id = #{productId}
   </update>
+
 </mapper>

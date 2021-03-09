@@ -209,6 +209,11 @@ public class ProductService {
         return productMapper.queryByCategory(product);
     }
 
+    public List<Product> queryCollectViaUserIdByPage(Long userId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return productMapper.queryCollectViaUserIdByPage(userId);
+    }
+
     public Product queryDetailById(Integer productId, Long loginUserId) {
         return productMapper.queryDetailById(productId, loginUserId);
     }
@@ -216,4 +221,5 @@ public class ProductService {
     public void updateCommentScore(Integer productId, BigDecimal averageScore, Integer fiveStarCount, Integer fourStarCount, Integer threeStarCount, Integer twoStarCount, Integer oneStarCount) {
         productMapper.updateCommentScore(productId, averageScore, fiveStarCount, fourStarCount, threeStarCount, twoStarCount, oneStarCount);
     }
+
 }

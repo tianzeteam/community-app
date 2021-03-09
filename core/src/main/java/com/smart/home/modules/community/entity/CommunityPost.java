@@ -10,6 +10,7 @@ public class CommunityPost implements Serializable {
     private String headUrl;
     private String nickName;
     private String userLevel;
+    private Integer likeFlag;
     ///////////////////////////
     private Long id;
 
@@ -422,6 +423,14 @@ public class CommunityPost implements Serializable {
 
     public void setHitSensitiveCount(Integer hitSensitiveCount) {
         this.hitSensitiveCount = hitSensitiveCount;
+    }
+
+    public Integer getLikeFlag() {
+        return likeFlag;
+    }
+
+    public void setLikeFlag(Integer likeFlag) {
+        this.likeFlag = likeFlag;
     }
 
     /**

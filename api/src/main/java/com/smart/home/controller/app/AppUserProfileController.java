@@ -12,8 +12,10 @@ import com.smart.home.controller.app.response.article.MyRootProfileCommentVO;
 import com.smart.home.controller.app.response.article.MyRootProfilePostReplyVO;
 import com.smart.home.controller.app.response.article.MyRootProfileProductCommentVO;
 import com.smart.home.controller.app.response.community.MyCollectArticleVO;
+import com.smart.home.controller.app.response.community.MyCollectPostVO;
 import com.smart.home.controller.app.response.community.MyDraftArticleVO;
 import com.smart.home.controller.app.response.community.MyRootProfilePostVO;
+import com.smart.home.controller.app.response.product.ProductSearchResultVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.RoleAccess;
@@ -26,8 +28,10 @@ import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostReply;
 import com.smart.home.modules.community.service.CommunityPostReplyService;
 import com.smart.home.modules.community.service.CommunityPostService;
+import com.smart.home.modules.product.entity.Product;
 import com.smart.home.modules.product.entity.ProductComment;
 import com.smart.home.modules.product.service.ProductCommentService;
+import com.smart.home.modules.product.service.ProductService;
 import com.smart.home.modules.user.dto.MyFocusDTO;
 import com.smart.home.modules.user.dto.MyFollowerDTO;
 import com.smart.home.modules.user.entity.UserAccount;
@@ -81,6 +85,8 @@ public class AppUserProfileController {
     private CommunityPostReplyService communityPostReplyService;
     @Autowired
     private ProductCommentService productCommentService;
+    @Autowired
+    private ProductService productService;
 
     @ApiOperation("基本用户信息")
     @ApiImplicitParams({
@@ -268,9 +274,15 @@ public class AppUserProfileController {
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/myCollectPostByPage")
-    public APIResponse myCollectPostByPage(int pageNum, int pageSize) {
-        // TODO 没原型
-        return APIResponse.OK();
+    public APIResponse<ResponsePageBean<MyCollectPostVO>> myCollectPostByPage(int pageNum, int pageSize) {
+        Long userId = UserUtils.getLoginUserId();
+        List<CommunityPost> list = communityPostService.queryCollectViaUserIdByPage(userId, pageNum, pageSize);
+        List<MyCollectPostVO> resultList = BeanCopyUtils.convertListTo(list, MyCollectPostVO::new,(s, t)->{
+           if (StringUtils.isNotBlank(s.getImages())) {
+               t.setImageList(JSON.parseArray(s.getImages(), String.class));
+           }
+        });
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
     @ApiOperation("收藏-分页查询我的收藏产品")
     @ApiImplicitParams({
@@ -280,8 +292,10 @@ public class AppUserProfileController {
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/myCollectProductByPage")
     public APIResponse myCollectProductByPage(int pageNum, int pageSize) {
-        // TODO 没原型
-        return APIResponse.OK();
+        Long userId = UserUtils.getLoginUserId();
+        List<Product> list = productService.queryCollectViaUserIdByPage(userId, pageNum, pageSize);
+        List<ProductSearchResultVO> resultList = BeanCopyUtils.convertListTo(list, ProductSearchResultVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
 
     @ApiOperation("草稿箱-分页查询我的草稿箱")

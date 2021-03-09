@@ -59,6 +59,8 @@ public interface ProductMapper {
 
     List<Product> queryByCategory(Product product);
 
+    List<Product> queryCollectViaUserIdByPage(@Param("userId") Long userId);
+
     Product queryDetailById(@Param("productId") Integer productId,@Param("loginUserId") Long loginUserId);
 
     int updateCommentScore(Integer productId, BigDecimal averageScore, Integer fiveStarCount, Integer fourStarCount, Integer threeStarCount, Integer twoStarCount, Integer oneStarCount);

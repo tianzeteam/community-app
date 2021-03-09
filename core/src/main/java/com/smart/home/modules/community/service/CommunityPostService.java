@@ -180,4 +180,9 @@ public class CommunityPostService {
         example.createCriteria().andCreatedTimeBetween(startDate, endDate);
         return communityPostMapper.countByExample(example);
     }
+
+    public List<CommunityPost> queryCollectViaUserIdByPage(Long userId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return communityPostMapper.queryCollectViaUserIdByPage(userId);
+    }
 }

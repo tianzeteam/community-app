@@ -495,4 +495,25 @@
   <update id="increaseReplyCount">
     update community_post set reply_count = reply_count + 1 where id = #{id}
   </update>
+
+  <select id="queryCollectViaUserIdByPage" resultType="com.smart.home.modules.community.entity.CommunityPost">
+    select cp.id,
+           cp.images,
+           cp.title,
+           cp.contents,
+           cp.created_time as createdTime,
+           cp.like_count as likeCount,
+           cp.reply_count as replyCount,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel,
+           case when clh.id is null then 0 else 1 end as likeFlag
+    from user_collect uc
+                 left join community_post cp on cp.id = uc.primary_key and uc.collect_type = 1
+                 left join user_account ua on ua.id = uc.user_id
+                 left join user_data ud on ud.user_id = ua.id
+                 left join community_like_history clh on clh.post_id = cp.id and clh.type = 0
+    where uc.user_id = #{userId,jdbcType=BIGINT}
+      and uc.collect_type = 1
+    </select>
 </mapper>
