@@ -29,6 +29,8 @@ public class MyProfileVO {
     private Integer followCount;
     @ApiModelProperty("获赞数量")
     private Integer likeCount;
+
+
 ///////////////////////////////////////////////
     @ApiModelProperty("发帖数量")
     private Integer postCount;

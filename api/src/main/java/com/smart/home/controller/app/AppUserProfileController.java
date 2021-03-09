@@ -1,5 +1,6 @@
 package com.smart.home.controller.app;
 
+import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
@@ -28,6 +29,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -98,7 +100,11 @@ public class AppUserProfileController {
             userId = UserUtils.getLoginUserId();
         }
         List<CommunityPost> list = communityPostService.queryViaUserIdByPage(userId, pageNum, pageSize);
-        List<MyRootProfilePostVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfilePostVO::new);
+        List<MyRootProfilePostVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfilePostVO::new,(s, t)->{
+            if (StringUtils.isNotBlank(s.getImages())) {
+                t.setImageList(JSON.parseArray(s.getImages(), String.class));
+            }
+        });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
     @ApiOperation("评论数据")

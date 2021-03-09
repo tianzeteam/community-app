@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.util.Date;
-
+import java.util.List;
 /**
  * @author jason
  * @date 2021/3/3
@@ -20,8 +20,8 @@ public class MyRootProfilePostVO extends UserBaseInfo {
     private String title;
     @ApiModelProperty("正文")
     private String contents;
-    @ApiModelProperty("图片")
-    private String images;
+    @ApiModelProperty("图片数组")
+    private List<String> imageList;
     @ApiModelProperty("赞数量")
     private Integer likeCount;
     @ApiModelProperty("回复数量")

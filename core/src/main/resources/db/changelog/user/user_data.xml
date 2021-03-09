@@ -120,4 +120,19 @@
             create index idx_wx_openid on user_data using btree(wx_openid);
         </sql>
     </changeSet>
+    <changeSet id="addColumnCollectCount4UserData" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="user_data" columnName="collect_count"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table user_data add column collect_count int default 0;
+            COMMENT ON COLUMN user_data.collect_count IS '收藏数量';
+
+            alter table user_data add column draft_count int default 0;
+            COMMENT ON COLUMN user_data.draft_count IS '草稿数量';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
