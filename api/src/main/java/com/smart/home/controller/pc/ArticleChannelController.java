@@ -73,8 +73,11 @@ public class ArticleChannelController {
     }
 
     @ApiOperation("按主键ID查询文章频道")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "主键id", required = true)
+    })
     @GetMapping("/selectById")
-    public APIResponse<ArticleChannel> selectById(Long id) {
+    public APIResponse<ArticleChannel> selectById(@RequestParam(required = true) Long id) {
         return APIResponse.OK(articleChannelService.findById(id));
     }
 
