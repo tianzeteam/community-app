@@ -1,5 +1,6 @@
 package com.smart.home.controller.app;
 
+import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
@@ -21,6 +22,7 @@ import com.smart.home.service.CollectService;
 import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,11 +51,14 @@ public class AppProductController {
     @AnonAccess
     @PostMapping("/queryProductByPage")
     public APIResponse<ResponsePageBean<ProductSearchResultVO>> queryProductByPage(@RequestBody ProductSearchDTO productSearchDTO) {
-        ProductSearchResultVO vo = new ProductSearchResultVO();
         Product product = new Product();
         BeanUtils.copyProperties(productSearchDTO, product);
         List<Product> list = productService.queryByCategory(product, productSearchDTO.getPageNum(), productSearchDTO.getPageSize());
-        List<ProductSearchResultVO> resultList = BeanCopyUtils.convertListTo(list, ProductSearchResultVO::new);
+        List<ProductSearchResultVO> resultList = BeanCopyUtils.convertListTo(list, ProductSearchResultVO::new, (s, t)->{
+            if (StringUtils.isNotBlank(s.getTag())) {
+                t.setTagList(JSON.parseArray(s.getTag(), String.class));
+            }
+        });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
 

@@ -153,4 +153,10 @@
             comment on column product.delete_flag is '是否删除：0否1是';
         </sql>
     </changeSet>
+    <changeSet id="modifyColumnTag4Product" author="jason">
+        <comment>修改字段类型</comment>
+        <sql>
+            alter table product alter column tag type text;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

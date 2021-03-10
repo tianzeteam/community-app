@@ -1,12 +1,12 @@
 package com.smart.home.controller.app.response.product;
 
-import com.smart.home.common.bean.KeyValueBean;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -25,10 +25,19 @@ public class ProductSearchResultVO {
     @ApiModelProperty("产品简介")
     private String remark;
     @ApiModelProperty("产品标签")
-    private String tag;
+    private List<String> tagList;
     @ApiModelProperty("评论数量")
     private Integer commentCount;
     @ApiModelProperty("综合评分")
     private BigDecimal averageScore;
+    @ApiModelProperty("好评率, 不带%号的，前端自己加%")
+    private BigDecimal praiseRate;
+
+    public BigDecimal getPraiseRate() {
+        if (Objects.isNull(praiseRate)) {
+            return new BigDecimal(100);
+        }
+        return praiseRate;
+    }
 
 }
