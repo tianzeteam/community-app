@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.util.Date;
-
+import java.util.List;
 /**
  * @author jason
  * @date 2021/3/3
@@ -28,7 +28,7 @@ public class MyCollectArticleVO extends UserBaseInfo {
     @ApiModelProperty("正文")
     private String details;
     @ApiModelProperty("轮播图")
-    private String bannerImages;
+    private List<String> imageList;
     @ApiModelProperty("标签")
     private String tag;
 

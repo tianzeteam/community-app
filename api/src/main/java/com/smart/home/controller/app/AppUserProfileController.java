@@ -268,7 +268,11 @@ public class AppUserProfileController {
     @GetMapping("/myCollectArticleByPage")
     public APIResponse<ResponsePageBean<MyCollectArticleVO>> myCollectArticleByPage(int pageNum, int pageSize) {
         List<Article> list = articleService.queryCollectViaUserIdByPage(UserUtils.getLoginUserId(), pageNum, pageSize);
-        List<MyCollectArticleVO> resultList = BeanCopyUtils.convertListTo(list, MyCollectArticleVO::new);
+        List<MyCollectArticleVO> resultList = BeanCopyUtils.convertListTo(list, MyCollectArticleVO::new, (s, t)->{
+            if (StringUtils.isNotBlank(s.getBannerImages())) {
+                t.setImageList(JSON.parseArray(s.getBannerImages(), String.class));
+            }
+        });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
     @ApiOperation("收藏-分页查询我的收藏帖子")
