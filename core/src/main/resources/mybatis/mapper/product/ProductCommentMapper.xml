@@ -12,6 +12,7 @@
     <result column="stamp_count" jdbcType="INTEGER" property="stampCount" />
     <result column="reply_count" jdbcType="INTEGER" property="replyCount" />
     <result column="created_time" jdbcType="DATE" property="createdTime" />
+    <result column="images" jdbcType="VARCHAR" property="images"/>
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,7 +74,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, product_id, user_id, star_count, details, fun_count, like_count, stamp_count, 
-    reply_count, created_time
+    reply_count, created_time, images
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.product.entity.ProductCommentExample" resultMap="BaseResultMap">
     select

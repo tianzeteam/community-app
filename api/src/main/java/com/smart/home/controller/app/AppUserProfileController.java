@@ -299,7 +299,7 @@ public class AppUserProfileController {
     })
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/myCollectProductByPage")
-    public APIResponse myCollectProductByPage(int pageNum, int pageSize) {
+    public APIResponse<ResponsePageBean<ProductSearchResultVO>> myCollectProductByPage(int pageNum, int pageSize) {
         Long userId = UserUtils.getLoginUserId();
         List<Product> list = productService.queryCollectViaUserIdByPage(userId, pageNum, pageSize);
         List<ProductSearchResultVO> resultList = BeanCopyUtils.convertListTo(list, ProductSearchResultVO::new);

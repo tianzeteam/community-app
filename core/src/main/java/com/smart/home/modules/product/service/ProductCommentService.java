@@ -20,6 +20,7 @@ import com.smart.home.modules.product.entity.ProductCommentExample;
 import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +29,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author jason
@@ -128,7 +126,7 @@ public class ProductCommentService {
         // 同步图片
         sysFileService.syncImageFileList(imageList);
         // 对评论进行审核，审核通过后计算平均分
-        processAutoAudit(loginUserId, startCount, details, productId, id);
+        processAutoAudit(loginUserId, startCount, details, productId, id, imageList);
     }
 
     public List<ProductComment> queryViaProductIdByPage(Integer productId, int pageNum, int pageSize) {
@@ -136,7 +134,7 @@ public class ProductCommentService {
         return productCommentMapper.queryViaProductIdByPage(productId);
     }
 
-    private void processAutoAudit(Long loginUserId, BigDecimal startCount, String details, Integer productId, long id) {
+    private void processAutoAudit(Long loginUserId, BigDecimal startCount, String details, Integer productId, long id, List<String> imageList) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -150,7 +148,7 @@ public class ProductCommentService {
                 if (contentAuditorResult.getContentAuditorEvilEnum() == ContentAuditorEvilEnum.NORMAL) {
                     // 机审成功， 直接通过
                     productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                    calculateProductAverageScore(productId, startCount, loginUserId,id, details);
+                    calculateProductAverageScore(productId, startCount, loginUserId,id, details, imageList);
                     return;
                 }
                 // 机器审核不通过，文本异常
@@ -172,7 +170,7 @@ public class ProductCommentService {
                 if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
                     // 正常，视为通过
                     productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                    calculateProductAverageScore(productId, startCount, loginUserId, id, details);
+                    calculateProductAverageScore(productId, startCount, loginUserId, id, details, imageList);
                 }
             }
         }).start();
@@ -183,7 +181,7 @@ public class ProductCommentService {
      * @param productId
      * @param starCount
      */
-    private void calculateProductAverageScore(Integer productId, BigDecimal starCount,Long userId, Long productCommentId, String details) {
+    private void calculateProductAverageScore(Integer productId, BigDecimal starCount,Long userId, Long productCommentId, String details, List<String> imageList) {
         // 如果评价合法，计算其他数据
         Product product = productService.findById(productId);
         // 超出产品，计算产品的平均分
@@ -216,6 +214,9 @@ public class ProductCommentService {
         productCommentBean.setStarCount(starCount);
         productCommentBean.setProductId(productId);
         productCommentBean.setUserId(userId);
+        if (!CollectionUtils.isEmpty(imageList)) {
+            productCommentBean.setImages(JSON.toJSONString(imageList));
+        }
         productCommentEsServiceImpl.save(productCommentBean);
     }
 
@@ -272,7 +273,11 @@ public class ProductCommentService {
             ProductComment productComment = findById(id);
             Long userId = productCommentMapper.findUserIdById(id);
             // 计算平均分，并增加一次评论数量
-            calculateProductAverageScore(productComment.getProductId(), productComment.getStarCount(), userId, productComment.getId(), productComment.getDetails());
+            List<String> imageList = new ArrayList<>();
+            if (StringUtils.isNotBlank(productComment.getImages())) {
+                imageList.addAll(JSON.parseArray(productComment.getImages(), String.class));
+            }
+            calculateProductAverageScore(productComment.getProductId(), productComment.getStarCount(), userId, productComment.getId(), productComment.getDetails(), imageList);
         }
     }
 
