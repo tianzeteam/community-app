@@ -42,4 +42,41 @@
 
         </sql>
     </changeSet>
+    <changeSet id="createTableArticleLikeHistory2" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="article_stamp_history"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建文章点赞历史表</comment>
+        <sql>
+            CREATE TABLE article_stamp_history(
+            ID BIGINT NOT NULL,
+            SOURCE_ID BIGINT,
+            USER_ID BIGINT,
+            TYPE INT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE article_stamp_history IS '文章点赞历史';
+            COMMENT ON COLUMN article_stamp_history.ID IS '主键ID';
+            COMMENT ON COLUMN article_stamp_history.SOURCE_ID IS '文章/评论主键ID';
+            COMMENT ON COLUMN article_stamp_history.USER_ID IS '用户主键ID';
+            COMMENT ON COLUMN article_stamp_history.TYPE IS '0文章1评论';
+            COMMENT ON COLUMN article_stamp_history.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE article_stamp_history_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "article_stamp_history" alter column ID set default nextval('article_stamp_history_id_seq');
+
+            create index idx_a_stamp_user_id on article_stamp_history using btree (user_id);
+            create index idx_a_stamp_source_id on article_stamp_history using btree (SOURCE_ID);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
