@@ -720,6 +720,8 @@
   <select id="selectByPage" resultType="com.smart.home.modules.product.entity.Product"
           parameterType="com.smart.home.modules.product.entity.Product">
     select id,
+           cover_image as coverImage,
+           remark,
            product_name as productName,
            tag,
            category_one_name as categoryOneName,

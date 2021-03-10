@@ -86,4 +86,5 @@ public interface ArticleMapper {
 
     Long findChannelIdById(@Param("id") Long id);
 
+    int markAsTestArticle(@Param("id") Long id,@Param("testResult") String testResult,@Param("recommendFlag") Integer recommendFlag);
 }

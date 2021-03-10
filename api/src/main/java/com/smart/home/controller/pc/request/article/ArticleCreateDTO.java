@@ -54,4 +54,10 @@ public class ArticleCreateDTO {
 
     @ApiModelProperty("原作者或者媒体名称")
     private String sourceFrom;
+
+    @ApiModelProperty("插入的产品主键id")
+    private Integer productId;
+
+    @ApiModelProperty("评测结论：评测是针对产品的，所以插入产品后才能插入评测")
+    private ProductTestResultDTO productTestResultDTO;
 }

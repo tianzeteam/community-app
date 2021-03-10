@@ -3,22 +3,31 @@ package com.smart.home.controller.pc;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.article.ArticleCreateDTO;
 import com.smart.home.controller.pc.request.article.ArticleUpdateDTO;
+import com.smart.home.controller.pc.request.product.ProductPageSearchDTO;
 import com.smart.home.controller.pc.response.article.ArticleEditVO;
 import com.smart.home.controller.pc.response.article.ArticleEditVideoVO;
+import com.smart.home.controller.pc.response.article.ArticleInsertProductVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
+import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.enums.AgreementTypeEnum;
 import com.smart.home.enums.ArticleCategoryEnum;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.service.ArticleService;
+import com.smart.home.modules.product.entity.Product;
+import com.smart.home.modules.product.service.ProductService;
 import com.smart.home.modules.system.service.SysAgreementService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -26,7 +35,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -40,6 +51,8 @@ public class ArticleController {
     private ArticleService articleService;
     @Autowired
     private SysAgreementService sysAgreementService;
+    @Autowired
+    private ProductService productService;
 
     @ApiOperation("获取内容创作规范")
     @AnonAccess
@@ -65,10 +78,29 @@ public class ArticleController {
         return APIResponse.OK(map);
     }
 
+    @ApiOperation("获取插入的产品列表-分页")
+    @RoleAccess({RoleConsts.REGISTER, RoleConsts.CREATOR})
+    @PostMapping("/selectInsertProductByPage")
+    public APIResponse<ResponsePageBean<ArticleInsertProductVO>> selectInsertProductByPage(@RequestBody ProductPageSearchDTO productPageSearchDTO) {
+        Product product = new Product();
+        BeanUtils.copyProperties(productPageSearchDTO, product);
+        product.setOnlineFlag(YesNoEnum.YES.getCode());
+        List<Product> list = productService.selectByPage(product, productPageSearchDTO.getPageNum(), productPageSearchDTO.getPageSize());
+        List<ArticleInsertProductVO> resultList = BeanCopyUtils.convertListTo(list, ArticleInsertProductVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+    }
+
     @ApiOperation("投稿/保存草稿文章")
     @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @PostMapping("/create")
     public APIResponse create(@Valid @RequestBody ArticleCreateDTO articleCreateDTO, BindingResult bindingResult) {
+        if (StringUtils.isBlank(articleCreateDTO.getCoverImage()) && CollectionUtils.isEmpty(articleCreateDTO.getBannerImagesList())) {
+            return APIResponse.ERROR("封面图片和轮播图片不能同时为空");
+        }
+        if (StringUtils.isBlank(articleCreateDTO.getCoverImage())) {
+            // 如果封面图片为空，取轮播图片第一个为封面图片
+            articleCreateDTO.setCoverImage(articleCreateDTO.getBannerImagesList().get(0));
+        }
         Article article = new Article();
         BeanUtils.copyProperties(articleCreateDTO, article);
         article.setUserId(UserUtils.getLoginUserId());
@@ -77,7 +109,7 @@ public class ArticleController {
         if (!CollectionUtils.isEmpty(articleCreateDTO.getBannerImagesList())) {
             article.setBannerImages(JSON.toJSONString(articleCreateDTO.getBannerImagesList()));
         }
-        return APIResponse.OK(articleService.create(article));
+        return processCreateArticle(articleCreateDTO, article);
     }
 
     @ApiOperation("投稿/保存草稿视频")
@@ -89,7 +121,7 @@ public class ArticleController {
         article.setUserId(UserUtils.getLoginUserId());
         article.setCreatedBy(UserUtils.getLoginUserId());
         article.setCategory(ArticleCategoryEnum.VIDEO.getCode());
-        return APIResponse.OK(articleService.create(article));
+        return processCreateArticle(articleCreateDTO, article);
     }
 
     @ApiOperation("更新文章")
@@ -137,6 +169,28 @@ public class ArticleController {
     public APIResponse delete(@RequestBody IdListBean idListBean) {
         articleService.delete(idListBean.getIdList());
         return APIResponse.OK();
+    }
+
+    private APIResponse processCreateArticle(@RequestBody @Valid ArticleCreateDTO articleCreateDTO, Article article) {
+        if (articleCreateDTO.getProductTestResultDTO() == null && articleCreateDTO.getProductId() == null) {
+            return APIResponse.ERROR("产品未插入，不能插入评测");
+        }
+        String testResult = null;
+        Integer recommendFlag = null;
+        if (articleCreateDTO.getProductTestResultDTO() != null) {
+            testResult = articleCreateDTO.getProductTestResultDTO().getTestResult();
+            recommendFlag = articleCreateDTO.getProductTestResultDTO().getRecommendFlag();
+            if (Objects.isNull(recommendFlag)) {
+                return APIResponse.ERROR("评测是否推荐不能为空");
+            }
+            if (StringUtils.isBlank(testResult)) {
+                return APIResponse.ERROR("评测结论不能为空");
+            }
+            if (testResult.length() > 200) {
+                return APIResponse.ERROR("评测结论不能超过200字");
+            }
+        }
+        return APIResponse.OK(articleService.create(article, articleCreateDTO.getProductId(), testResult, recommendFlag));
     }
 
 }

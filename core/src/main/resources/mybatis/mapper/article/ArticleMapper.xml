@@ -884,4 +884,7 @@
     select channel_id from article where id = #{id,jdbcType=BIGINT}
   </select>
 
+  <update id="markAsTestArticle">
+    update article set test_result = #{testResult},recommend_flag = #{recommendFlag},test_flag=1 where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

@@ -36,8 +36,10 @@ public class ArticleService {
     private AuditHistoryService auditHistoryService;
     @Autowired
     private SysFileService sysFileService;
+    @Autowired
+    private ArticleProductMappingService articleProductMappingService;
 
-    public int create(Article article) {
+    public int create(Article article, Integer productId, String testResult, Integer recommendFlag) {
         article.setCreatedTime(new Date());
         article.setAuditState(AuditStatusEnum.WAIT_AUDIT.getCode());
         article.setRecommendFlag(YesNoEnum.NO.getCode());
@@ -52,7 +54,14 @@ public class ArticleService {
         article.setCollectCount(0);
         article.setOnlineStatus(RecordStatusEnum.NORMAL.getStatus());
         int affectRow = articleMapper.insertSelective(article);
+        Long articleId = article.getId();
         syncUploadFiles(article.getCoverImage(), article.getBannerImages());
+        if (productId != null) {
+            // 插入关系表
+            articleProductMappingService.create(articleId, productId, testResult, recommendFlag);
+            // 标记为评测文章
+            articleMapper.markAsTestArticle(articleId, testResult, recommendFlag);
+        }
         return affectRow;
     }
 
