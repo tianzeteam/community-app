@@ -238,6 +238,6 @@
     select up.code
     from user_privacy_setting ups
     left join user_privacy up on ups.privacy_id = up.id and ups.category = up.category
-    where ups.user_id = #{userId,jdbcType=BIGINT} and ups.check_flag = 1
+    where ups.user_id = #{userId,jdbcType=BIGINT} and ups.check_flag = 1  and ups.category  = 1
   </select>
 </mapper>
