@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-
+import java.util.List;
 /**
  * @author jason
  * @date 2021/2/25
@@ -24,6 +24,8 @@ public class ProductCommentVO {
     private BigDecimal startCount;
     @ApiModelProperty("评价内容")
     private String details;
+    @ApiModelProperty("图片数组")
+    private List<String> imageList;
     @ApiModelProperty("有趣数量")
     private Integer funCount;
     @ApiModelProperty("赞数量")

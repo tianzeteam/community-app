@@ -4,11 +4,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-
+import java.util.List;
 
 /**
  * @author jason
@@ -28,5 +27,7 @@ public class ProductCommentCreateDTO {
     @NotBlank(message = "评价内容不能为空")
     @Size(max = 100, message = "评价内容不得超过100字")
     private String details;
+    @ApiModelProperty("图片数组")
+    private List<String> imageList;
 
 }

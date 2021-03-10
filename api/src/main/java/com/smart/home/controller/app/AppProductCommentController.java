@@ -1,5 +1,6 @@
 package com.smart.home.controller.app;
 
+import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
@@ -30,6 +31,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -101,7 +103,11 @@ public class AppProductCommentController {
         String details = productCommentCreateDTO.getDetails();
         Long userId = UserUtils.getLoginUserId();
         BigDecimal starCount = productCommentCreateDTO.getStartCount();
-        productCommentService.create(userId, starCount, details,productId);
+        try {
+            productCommentService.create(userId, starCount, details,productId, productCommentCreateDTO.getImageList());
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 
@@ -118,6 +124,9 @@ public class AppProductCommentController {
             t.setFunFlag(s.getFunId() == null ? 0 : 1);
             t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
             t.setStampFlag(s.getStampId() == null ? 0 : 1);
+            if(StringUtils.isNotBlank(s.getImages())) {
+                t.setImageList(JSON.parseArray(s.getImages(), String.class));
+            }
         });
         return APIResponse.OK(vo);
     }

@@ -1,11 +1,13 @@
 package com.smart.home.modules.product.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditor;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditorResult;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorEvilEnum;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
 import com.smart.home.common.enums.AuditStatusEnum;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.dto.ContentAdminAuditSearchTO;
 import com.smart.home.dto.ContentAuditAdminRecordTO;
 import com.smart.home.enums.AutoAuditFlagEnum;
@@ -15,6 +17,7 @@ import com.smart.home.modules.product.dao.ProductCommentMapper;
 import com.smart.home.modules.product.entity.Product;
 import com.smart.home.modules.product.entity.ProductComment;
 import com.smart.home.modules.product.entity.ProductCommentExample;
+import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,8 @@ public class ProductCommentService {
     private UserDataService userDataService;
     @Autowired
     private ProductCommentEsService productCommentEsServiceImpl;
+    @Autowired
+    private SysFileService sysFileService;
 
     public List<ProductComment> selectByPage(ProductComment productComment, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
@@ -101,7 +106,7 @@ public class ProductCommentService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void create(Long loginUserId, BigDecimal startCount, String details, Integer productId) {
+    public void create(Long loginUserId, BigDecimal startCount, String details, Integer productId, List<String> imageList) throws ServiceException {
         ProductComment productComment = new ProductComment();
         productComment.withCreatedTime(new Date())
                 .withDetails(details)
@@ -112,8 +117,16 @@ public class ProductCommentService {
                 .withStampCount(0)
                 .withStarCount(startCount)
                 .withUserId(loginUserId);
+        if (!CollectionUtils.isEmpty(imageList)) {
+            if (imageList.size() > 6) {
+                throw new ServiceException("图片最多不能超过6张");
+            }
+            productComment.setImages(JSON.toJSONString(imageList));
+        }
         productCommentMapper.insertSelective(productComment);
         final long id = productComment.getId();
+        // 同步图片
+        sysFileService.syncImageFileList(imageList);
         // 对评论进行审核，审核通过后计算平均分
         processAutoAudit(loginUserId, startCount, details, productId, id);
     }

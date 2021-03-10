@@ -124,4 +124,15 @@ public class SysFileService {
             sysFileMapper.deleteByExample(example);
         }
     }
+
+    public void syncImageFileList(List<String> imageList) {
+        if (CollectionUtils.isEmpty(imageList)) {
+            return;
+        }
+        List<String> fileNameList = new ArrayList<>();
+        for (String url : imageList) {
+            fileNameList.add(FileUtils.getFileNameFromUrl(url));
+        }
+        syncList(fileNameList);
+    }
 }

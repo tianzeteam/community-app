@@ -42,6 +42,10 @@ public class ProductComment implements Serializable {
     private Integer auditFlag;
     private Integer reportCount;
     private Integer hitSensitiveCount;
+    /**
+     * 图片json数组
+     */
+    private String images;
 
     private static final long serialVersionUID = 1L;
 
@@ -338,6 +342,14 @@ public class ProductComment implements Serializable {
 
     public void setStampFlag(Integer stampFlag) {
         this.stampFlag = stampFlag;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 
     /**

@@ -141,4 +141,16 @@
             create index idx_pc_created_time on product_comment using btree(created_time);
         </sql>
     </changeSet>
+    <changeSet id="addColumnImages4ProductComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_comment" columnName="images"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_comment add column images TEXT;
+            COMMENT ON COLUMN product_comment.images IS '图片json数组';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
