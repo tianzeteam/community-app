@@ -202,6 +202,7 @@ public class ProductCommentService {
         productCommentBean.setDetails(details);
         productCommentBean.setStarCount(starCount);
         productCommentBean.setProductId(productId);
+        productCommentBean.setUserId(userId);
         productCommentEsServiceImpl.save(productCommentBean);
     }
 

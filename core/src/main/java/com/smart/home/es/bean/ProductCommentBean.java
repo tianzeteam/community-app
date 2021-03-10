@@ -28,6 +28,9 @@ public class ProductCommentBean {
     @Id
     private Long id;
 
+    @Field(type = FieldType.Long)
+    private Long userId;
+
     @Field(type = FieldType.Integer)
     private Integer productId;
 
