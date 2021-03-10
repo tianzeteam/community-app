@@ -6,7 +6,7 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
+import java.util.List;
 /**
  * @author jason
  * @date 2021/3/9
@@ -29,6 +29,8 @@ public class MyRootProfileProductCommentVO {
     private Date createdTime;
     @ApiModelProperty("内容")
     private String details;
+    @ApiModelProperty("图片数组")
+    private List<String> imageList;
     @ApiModelProperty("有趣数量")
     private Integer funCount;
     @ApiModelProperty("赞数量")

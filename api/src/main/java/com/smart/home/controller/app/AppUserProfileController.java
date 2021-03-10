@@ -177,7 +177,11 @@ public class AppUserProfileController {
             userId = UserUtils.getLoginUserId();
         }
         List<ProductComment> list = productCommentService.queryViaUserIdByPageWhenLogin(userId, pageNum, pageSize, UserUtils.getLoginUserId());
-        List<MyRootProfileProductCommentVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfileProductCommentVO::new);
+        List<MyRootProfileProductCommentVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfileProductCommentVO::new, (s, t)->{
+            if (StringUtils.isNotBlank(s.getImages())) {
+                t.setImageList(JSON.parseArray(s.getImages(), String.class));
+            }
+        });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
     @ApiOperation("投稿数据-分页")

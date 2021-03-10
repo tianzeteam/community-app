@@ -525,6 +525,7 @@
              pc.star_count as starCount,
              pc.created_time as createdTime,
              pc.details,
+             pc.images,
              pc.fun_count as funCount,
              pc.like_count as likeCount,
              pc.stamp_count as stampCount,
