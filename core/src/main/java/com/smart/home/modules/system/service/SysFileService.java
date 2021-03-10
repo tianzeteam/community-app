@@ -6,6 +6,7 @@ import com.smart.home.cloud.qcloud.cos.CosUtil;
 import com.smart.home.common.bean.Upload;
 import com.smart.home.common.contants.FileStoreType;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.util.FileUtils;
 import com.smart.home.modules.system.dao.SysFileMapper;
 import com.smart.home.modules.system.entity.SysFile;
 import com.smart.home.modules.system.entity.SysFileExample;
@@ -17,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -109,5 +111,17 @@ public class SysFileService {
             return list.get(0);
         }
         return null;
+    }
+
+    public void deleteImageByUrlList(List<String> imageList) {
+        CosUtil.intiClient();
+        String newName = null;
+        for (String url : imageList) {
+            newName = FileUtils.getFileNameFromUrl(url);
+            CosUtil.deleteFile(newName, BucketConsts.IMAGE);
+            SysFileExample example = new SysFileExample();
+            example.createCriteria().andNewNameEqualTo(newName);
+            sysFileMapper.deleteByExample(example);
+        }
     }
 }

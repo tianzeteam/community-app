@@ -72,8 +72,17 @@ public class ArticleService {
     }
 
     public int deleteDraftById(Long articleId) {
-        // TODO 看下对应的图片要删除么
-        return articleMapper.deleteByPrimaryKey(articleId);
+        Article article = findById(articleId);
+        List<String> imageList = new ArrayList<>();
+        if(StringUtils.isNotBlank(article.getCoverImage())) {
+            imageList.add(article.getCoverImage());
+        }
+        if (StringUtils.isNotBlank(article.getBannerImages())) {
+            imageList.addAll(JSON.parseArray(article.getBannerImages(), String.class));
+        }
+        int affectRow = articleMapper.deleteByPrimaryKey(articleId);
+        sysFileService.deleteImageByUrlList(imageList);
+        return affectRow;
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
