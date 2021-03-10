@@ -47,4 +47,16 @@
             COMMENT ON COLUMN subject_card.UPDATED_TIME IS '更新时间';
         </sql>
     </changeSet>
+    <changeSet id="addColumnLocations4SubjectCard" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="subject_card" columnName="locations"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table subject_card add column locations int default 1;
+            COMMENT ON COLUMN subject_card.locations IS '插入位置';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

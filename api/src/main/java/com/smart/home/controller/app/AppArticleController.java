@@ -39,9 +39,12 @@ public class AppArticleController {
     @GetMapping("/queryIndexTopBigImageCard")
     public APIResponse<ArticleBigImageCardVO> queryIndexTopBigImageCard() {
         Article article = articleService.queryIndexTopBigImageCard();
-        ArticleBigImageCardVO vo = new ArticleBigImageCardVO();
-        BeanUtils.copyProperties(article, vo);
-        return APIResponse.OK(vo);
+        if (article != null) {
+            ArticleBigImageCardVO vo = new ArticleBigImageCardVO();
+            BeanUtils.copyProperties(article, vo);
+            return APIResponse.OK(vo);
+        }
+        return APIResponse.OK();
     }
 
     @ApiOperation("获取推荐的文章卡片列表")

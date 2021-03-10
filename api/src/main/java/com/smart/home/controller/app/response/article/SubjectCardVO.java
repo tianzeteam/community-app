@@ -18,5 +18,7 @@ public class SubjectCardVO {
     private String coverImage;
     @ApiModelProperty("链接地址")
     private String url;
+    @ApiModelProperty("插入位置")
+    private Integer locations;
 
 }

@@ -33,6 +33,10 @@ public class SubjectCard implements Serializable {
     private Long updatedBy;
 
     private Date updatedTime;
+    /**
+     * 插入位置
+     */
+    private Integer locations;
 
     private static final long serialVersionUID = 1L;
 
@@ -289,6 +293,14 @@ public class SubjectCard implements Serializable {
         result = prime * result + ((getUpdatedBy() == null) ? 0 : getUpdatedBy().hashCode());
         result = prime * result + ((getUpdatedTime() == null) ? 0 : getUpdatedTime().hashCode());
         return result;
+    }
+
+    public Integer getLocations() {
+        return locations;
+    }
+
+    public void setLocations(Integer locations) {
+        this.locations = locations;
     }
 
     /**
