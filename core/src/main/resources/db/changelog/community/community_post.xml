@@ -155,4 +155,16 @@
             COMMENT ON COLUMN community_post.image_exception_reason IS '机审图片异常原因';
         </sql>
     </changeSet>
+    <changeSet id="addColumnShareCount4CommunityPost" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post" columnName="share_count"/>
+            </not>
+        </preConditions>
+        <comment>新增字段：分享数量</comment>
+        <sql>
+            alter table community_post add column share_count int default 0;
+            COMMENT ON COLUMN community_post.share_count IS '分享数量';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
