@@ -55,6 +55,14 @@ public class CommunityPost implements Serializable {
     private Integer replyCount;
     private Integer autoAuditFlag;
     private Integer hitSensitiveCount;
+    /**
+     * 分享数量
+     */
+    private Integer shareCount;
+    /**
+     * 浏览数量
+     */
+    private Long visitCount;
 
     private static final long serialVersionUID = 1L;
 
@@ -431,6 +439,22 @@ public class CommunityPost implements Serializable {
 
     public void setLikeFlag(Integer likeFlag) {
         this.likeFlag = likeFlag;
+    }
+
+    public Integer getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(Integer shareCount) {
+        this.shareCount = shareCount;
+    }
+
+    public Long getVisitCount() {
+        return visitCount;
+    }
+
+    public void setVisitCount(Long visitCount) {
+        this.visitCount = visitCount;
     }
 
     /**

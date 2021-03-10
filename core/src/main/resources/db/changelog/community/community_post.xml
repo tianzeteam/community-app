@@ -173,4 +173,16 @@
             COMMENT ON COLUMN community_post.reply_count IS '回复数量';
         </sql>
     </changeSet>
+    <changeSet id="addColumnVisitCount4CommunityPost" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post" columnName="visit_count"/>
+            </not>
+        </preConditions>
+        <comment>新增字段：浏览数量</comment>
+        <sql>
+            alter table community_post add column visit_count bigint default 0;
+            COMMENT ON COLUMN community_post.visit_count IS '浏览数量';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
