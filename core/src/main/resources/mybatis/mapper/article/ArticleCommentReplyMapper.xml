@@ -9,6 +9,7 @@
     <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="contents" jdbcType="VARCHAR" property="contents" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="to_user_id" jdbcType="BIGINT" property="toUserId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, pid, article_id, article_comment_id, user_id, contents, created_time
+    id, pid, article_id, article_comment_id, user_id, contents, created_time,to_user_id
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.article.entity.ArticleCommentReplyExample" resultMap="BaseResultMap">
     select
@@ -141,6 +142,9 @@
       <if test="createdTime != null">
         created_time,
       </if>
+      <if test="toUserId != null">
+        to_user_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -163,6 +167,9 @@
       </if>
       <if test="createdTime != null">
         #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="toUserId != null">
+        #{toUserId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>

@@ -47,4 +47,16 @@
 
         </sql>
     </changeSet>
+    <changeSet id="addColumnToUserId4ArticleCommentReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article_comment_reply" columnName="to_user_id"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article_comment_reply add column to_user_id bigint;
+            COMMENT ON COLUMN article_comment_reply.to_user_id IS '回复给谁的';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

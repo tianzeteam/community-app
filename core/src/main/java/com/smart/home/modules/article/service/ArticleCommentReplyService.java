@@ -1,6 +1,7 @@
 package com.smart.home.modules.article.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.modules.article.dao.ArticleCommentMapper;
 import com.smart.home.modules.article.dao.ArticleCommentReplyMapper;
 import com.smart.home.modules.article.entity.ArticleCommentReply;
 import com.smart.home.modules.article.entity.ArticleCommentReplyExample;
@@ -19,6 +20,8 @@ public class ArticleCommentReplyService {
 
     @Resource
     ArticleCommentReplyMapper articleCommentReplyMapper;
+    @Resource
+    ArticleCommentMapper articleCommentMapper;
 
     public int update(ArticleCommentReply articleCommentReply) {
         return articleCommentReplyMapper.updateByPrimaryKeySelective(articleCommentReply);
@@ -56,6 +59,7 @@ public class ArticleCommentReplyService {
                 .withCreatedTime(new Date())
                 .withPid(0L)
                 .withUserId(loginUserId);
+        articleCommentReply.setToUserId(articleCommentMapper.findUserIdById(articleCommentId));
         articleCommentReplyMapper.insertSelective(articleCommentReply);
     }
 

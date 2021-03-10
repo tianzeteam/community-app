@@ -24,6 +24,10 @@ public class ArticleCommentReply implements Serializable {
     private String contents;
 
     private Date createdTime;
+    /**
+     * 回复给哪个用户的
+     */
+    private Long toUserId;
 
     private static final long serialVersionUID = 1L;
 
@@ -192,6 +196,14 @@ public class ArticleCommentReply implements Serializable {
 
     public void setUserLevel(Integer userLevel) {
         this.userLevel = userLevel;
+    }
+
+    public Long getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(Long toUserId) {
+        this.toUserId = toUserId;
     }
 
     /**
