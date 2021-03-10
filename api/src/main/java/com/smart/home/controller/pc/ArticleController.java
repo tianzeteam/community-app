@@ -116,6 +116,9 @@ public class ArticleController {
     @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @PostMapping("/createVideo")
     public APIResponse createVideo(@Valid @RequestBody ArticleCreateDTO articleCreateDTO, BindingResult bindingResult) {
+        if (StringUtils.isBlank(articleCreateDTO.getCoverImage())) {
+            return APIResponse.ERROR("封面图片不能为空");
+        }
         Article article = new Article();
         BeanUtils.copyProperties(articleCreateDTO, article);
         article.setUserId(UserUtils.getLoginUserId());
