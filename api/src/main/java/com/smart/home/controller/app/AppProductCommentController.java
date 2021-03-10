@@ -85,8 +85,7 @@ public class AppProductCommentController {
         int pageNum = primaryKeyPageDTO.getPageNum();
         int pageSize = primaryKeyPageDTO.getPageSize();
         List<ProductComment> list = productCommentService.queryCommentByPage(userId, productId, pageNum, pageSize);
-        List<ProductCommentVO> resultList = new ArrayList<>();
-        BeanCopyUtils.convertListTo(list, ProductCommentVO::new, (s, t) -> {
+        List<ProductCommentVO> resultList = BeanCopyUtils.convertListTo(list, ProductCommentVO::new, (s, t) -> {
             t.setFunFlag(s.getFunId() == null ? 0 : 1);
             t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
             t.setStampFlag(s.getStampId() == null ? 0 : 1);
