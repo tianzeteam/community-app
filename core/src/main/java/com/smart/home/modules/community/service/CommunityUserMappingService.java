@@ -44,7 +44,9 @@ public class CommunityUserMappingService {
         PageHelper.startPage(pageNum, pageSize);
         CommunityUserMappingExample example = new CommunityUserMappingExample();
         CommunityUserMappingExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
+        if (communityUserMapping.getUserId() != null) {
+            criteria.andUserIdEqualTo(communityUserMapping.getUserId());
+        }
         return communityUserMappingMapper.selectByExample(example);
     }
 
