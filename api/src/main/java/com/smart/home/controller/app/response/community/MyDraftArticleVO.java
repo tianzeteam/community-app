@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.util.Date;
-
+import java.util.List;
 /**
  * @author jason
  * @date 2021/3/3
@@ -23,6 +23,6 @@ public class MyDraftArticleVO {
     @ApiModelProperty("正文")
     private String details;
     @ApiModelProperty("图片")
-    private String bannerImages;
+    private List<String> imageList;
 
 }

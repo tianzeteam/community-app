@@ -315,7 +315,11 @@ public class AppUserProfileController {
     @GetMapping("/myDraftArticleByPage")
     public APIResponse<ResponsePageBean<MyDraftArticleVO>> myDraftArticleByPage(int pageNum, int pageSize) {
         List<Article> list = articleService.queryDraftViaUserIdByPage(UserUtils.getLoginUserId(), pageNum, pageSize);
-        List<MyDraftArticleVO> resultList = BeanCopyUtils.convertListTo(list, MyDraftArticleVO::new);
+        List<MyDraftArticleVO> resultList = BeanCopyUtils.convertListTo(list, MyDraftArticleVO::new, (s, t)->{
+            if(StringUtils.isNotBlank(s.getBannerImages())) {
+                t.setImageList(JSON.parseArray(s.getBannerImages(), String.class));
+            }
+        });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList));
     }
 
