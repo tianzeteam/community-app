@@ -52,13 +52,19 @@ public class ArticleChannelService {
         return articleChannelMapper.updateByPrimaryKeySelective(articleChannel);
     }
 
-    public int deleteById(Long id) {
+    public int deleteById(Long id) throws ServiceException {
+        if (id == 1) {
+            throw new ServiceException("【推荐】为系统内置数据，不得删除");
+        }
         return articleChannelMapper.deleteByPrimaryKey(id.intValue());
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
     public void delete(List<Long> idList) throws ServiceException {
         for (Long id : idList) {
+            if (id == 1) {
+                throw new ServiceException("【推荐】为系统内置数据，不得删除");
+            }
             // 检查有没有关联的文章了，有的话不能删除
             if (articleMapper.countArticleByChannelId(id) > 0) {
                 throw new ServiceException("该频道有关联的文章了，不能删除");
