@@ -167,4 +167,10 @@
             COMMENT ON COLUMN community_post.share_count IS '分享数量';
         </sql>
     </changeSet>
+    <changeSet id="modifyCommentReplyCount4CommunityPost" author="jason">
+        <sql>
+            COMMENT ON COLUMN community_post.state IS '状态0草稿1发布2删除';
+            COMMENT ON COLUMN community_post.reply_count IS '回复数量';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
