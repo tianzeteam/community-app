@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ArticleProductMapping implements Serializable {
+
+    private String coverImage;
+    private String productName;
+    /////////////////////////////
     private Long id;
 
     private Long articleId;
@@ -126,6 +130,22 @@ public class ArticleProductMapping implements Serializable {
         result = prime * result + ((getTestResult() == null) ? 0 : getTestResult().hashCode());
         result = prime * result + ((getRecommendFlag() == null) ? 0 : getRecommendFlag().hashCode());
         return result;
+    }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     /**

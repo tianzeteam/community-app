@@ -24,4 +24,7 @@ public class ArticleProductMappingService {
         return articleProductMappingMapper.insertSelective(articleProductMapping);
     }
 
+    public ArticleProductMapping findByArticle(Long id) {
+        return articleProductMappingMapper.findByArticleId(id);
+    }
 }

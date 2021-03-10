@@ -7,6 +7,7 @@ import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.common.response.ArticleCommentReplyVO;
 import com.smart.home.controller.common.response.ArticleCommentVO;
 import com.smart.home.controller.common.response.ArticleDetailVO;
+import com.smart.home.controller.common.response.ProductTestResultVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
@@ -17,8 +18,10 @@ import com.smart.home.enums.StampCategoryEnum;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.entity.ArticleCommentReply;
+import com.smart.home.modules.article.entity.ArticleProductMapping;
 import com.smart.home.modules.article.service.ArticleCommentReplyService;
 import com.smart.home.modules.article.service.ArticleCommentService;
+import com.smart.home.modules.article.service.ArticleProductMappingService;
 import com.smart.home.modules.article.service.ArticleService;
 import com.smart.home.service.CollectService;
 import com.smart.home.service.LikeService;
@@ -60,6 +63,8 @@ public class CommonArticleController {
     private StampService stampService;
     @Autowired
     private CollectService collectService;
+    @Autowired
+    private ArticleProductMappingService articleProductMappingService;
 
     @ApiOperation("根据文章主键id获取详情")
     @ApiImplicitParams({
@@ -70,17 +75,27 @@ public class CommonArticleController {
     public APIResponse<ArticleDetailVO> queryDetailById(Long articleId) {
         ArticleDetailVO articleDetailVO = new ArticleDetailVO();
         Long userId = UserUtils.getLoginUserId();
+        Article article = null;
         if (userId > 0) {
             // 说明是登陆用户
-            Article article = articleService.queryDetailByIdWhenLogin(articleId, userId);
+            article = articleService.queryDetailByIdWhenLogin(articleId, userId);
             BeanUtils.copyProperties(article, articleDetailVO);
         } else {
-            Article article = articleService.queryDetailByIdNoLogin(articleId);
+            article = articleService.queryDetailByIdNoLogin(articleId);
             BeanUtils.copyProperties(article, articleDetailVO);
             articleDetailVO.setCollectFlag(YesNoEnum.NO.getCode());
             articleDetailVO.setFocusFlag(YesNoEnum.NO.getCode());
             articleDetailVO.setLikeFlag(YesNoEnum.NO.getCode());
             articleDetailVO.setStampFlag(YesNoEnum.NO.getCode());
+        }
+        if (YesNoEnum.YES.getCode() == article.getTestFlag()) {
+            // 附加产品评测
+            ArticleProductMapping articleProductMapping = articleProductMappingService.findByArticle(articleDetailVO.getId());
+            if (articleProductMapping != null) {
+                ProductTestResultVO productTestResultVO = new ProductTestResultVO();
+                BeanUtils.copyProperties(articleProductMapping, productTestResultVO);
+                articleDetailVO.setProductTestResultVO(productTestResultVO);
+            }
         }
         return APIResponse.OK(articleDetailVO);
     }

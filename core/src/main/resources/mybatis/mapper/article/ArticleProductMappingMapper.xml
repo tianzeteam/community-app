@@ -216,4 +216,14 @@
       recommend_flag = #{recommendFlag,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="findByArticleId" resultType="com.smart.home.modules.article.entity.ArticleProductMapping">
+    select p.product_name as productName,
+           p.cover_image as coverImage,
+           apm.test_result as testResult,
+           apm.recommend_flag as recommendFlag
+    from article_product_mapping apm
+                 left join product p on apm.product_id = p.id
+    where apm.article_id = #{articleId,jdbcType=BIGINT}
+    </select>
 </mapper>

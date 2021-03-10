@@ -49,7 +49,15 @@ public class ArticleDetailVO {
     @ApiModelProperty("我有没有收藏过了：0否1是")
     private Integer collectFlag;
 
-    // 本文由{{app名称}}作者：{{xxx}}原创，转载请注明出处 TODO
-    // 笨视频转载自：{{xxx}}， 原作者：{{xxx}}， 转载已获得授权 TODO
+    @ApiModelProperty("是否原创:0原创1转载")
+    private Integer articleType;
+    @ApiModelProperty("转载来源")
+    private String originalUrl;
+    @ApiModelProperty("原作者")
+    private String sourceFrom;
+    @ApiModelProperty("转载是否获得授权：0未授权1已获得授权")
+    private Integer originalAuth;
+    @ApiModelProperty("评测结果")
+    private ProductTestResultVO productTestResultVO;
 
 }

@@ -29,4 +29,6 @@ public interface ArticleProductMappingMapper {
     int updateByPrimaryKeySelective(ArticleProductMapping record);
 
     int updateByPrimaryKey(ArticleProductMapping record);
+
+    ArticleProductMapping findByArticleId(@Param("articleId") Long articleId);
 }
