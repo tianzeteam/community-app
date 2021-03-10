@@ -16,6 +16,8 @@ import java.util.List;
 @ToString
 public class MyDraftArticleVO {
 
+    @ApiModelProperty("文章主键id")
+    private Long id;
     @ApiModelProperty("上次编辑时间")
     private Date updatedDate;
     @ApiModelProperty("标题")

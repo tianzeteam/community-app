@@ -838,7 +838,8 @@
   </select>
 
   <select id="queryDraftViaUserIdByPage" resultType="com.smart.home.modules.article.entity.Article">
-    select title,
+    select id,
+           title,
            details,
            banner_images as bannerImages,
            updated_time as updatedTime

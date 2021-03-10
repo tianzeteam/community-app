@@ -53,6 +53,7 @@ public class ArticleService {
         article.setRevision(0);
         article.setCollectCount(0);
         article.setOnlineStatus(RecordStatusEnum.NORMAL.getStatus());
+        article.setUpdatedTime(new Date());
         int affectRow = articleMapper.insertSelective(article);
         Long articleId = article.getId();
         syncUploadFiles(article.getCoverImage(), article.getBannerImages());
