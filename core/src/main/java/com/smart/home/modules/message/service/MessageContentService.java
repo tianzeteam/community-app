@@ -98,4 +98,7 @@ public class MessageContentService {
         }
     }
 
+    public void create(MessageContent messageContent) {
+        messageContentMapper.insertSelective(messageContent);
+    }
 }

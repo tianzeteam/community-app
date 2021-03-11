@@ -58,6 +58,10 @@ com.smart.home.cloud.qcloud.auditor.ImageAuditor.auditorResult
 ```
 com.smart.home.cloud.qcloud.auditor.ContentAuditor.auditorResult
 ```
+- 创建消息统一入口
+```
+com.smart.home.service.MessageService
+```
 
 # postgresql数据库安装(centos7)
 ```

@@ -14,6 +14,7 @@ import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.enums.CollectTypeEnum;
 import com.smart.home.enums.LikeCategoryEnum;
+import com.smart.home.enums.MessageSubTypeEnum;
 import com.smart.home.enums.StampCategoryEnum;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleComment;
@@ -25,6 +26,7 @@ import com.smart.home.modules.article.service.ArticleProductMappingService;
 import com.smart.home.modules.article.service.ArticleService;
 import com.smart.home.service.CollectService;
 import com.smart.home.service.LikeService;
+import com.smart.home.service.MessageService;
 import com.smart.home.service.StampService;
 import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
@@ -65,6 +67,8 @@ public class CommonArticleController {
     private CollectService collectService;
     @Autowired
     private ArticleProductMappingService articleProductMappingService;
+    @Autowired
+    private MessageService messageService;
 
     @ApiOperation("根据文章主键id获取详情")
     @ApiImplicitParams({
@@ -101,13 +105,17 @@ public class CommonArticleController {
     }
     @ApiOperation("点赞文章")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true)
+            @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true),
+            @ApiImplicitParam(name = "authorId", value = "作者主键id", required = true)
+
     })
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/likeArticle")
-    public APIResponse likeArticle(Long articleId) {
+    public APIResponse likeArticle(Long articleId, Long authorId) {
         try {
-            likeService.like(LikeCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+            Long fromUserId = UserUtils.getLoginUserId();
+            likeService.like(LikeCategoryEnum.ARTICLE, fromUserId, articleId);
+            messageService.createLikeMessage(MessageSubTypeEnum.ARTICLE, articleId, fromUserId, authorId);
         } catch (ServiceException e) {
             return APIResponse.ERROR(e.getMessage());
         }
@@ -238,13 +246,17 @@ public class CommonArticleController {
 
     @ApiOperation("点赞一级评论")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "articleCommentId", value = "文章一级评论主键id", required = true)
+            @ApiImplicitParam(name = "articleCommentId", value = "文章一级评论主键id", required = true),
+            @ApiImplicitParam(name = "authorId", value = "评论人的主键id", required = true)
+
     })
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/likeComment")
-    public APIResponse likeComment(Long articleCommentId) {
+    public APIResponse likeComment(Long articleCommentId, Long authorId) {
         try {
+            Long fromUserId = UserUtils.getLoginUserId();
             likeService.like(LikeCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
+            messageService.createLikeMessage(MessageSubTypeEnum.ARTICLE_COMMENT, articleCommentId, fromUserId, authorId);
         } catch (ServiceException e) {
             return APIResponse.ERROR(e.getMessage());
         }

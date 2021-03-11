@@ -80,4 +80,16 @@
             COMMENT ON COLUMN message_content.message_sub_type IS '消息子分类';
         </sql>
     </changeSet>
+    <changeSet id="addColumnHeadUrl4MessageContent" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="message_content" columnName="head_url"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table message_content add column head_url varchar(255);
+            COMMENT ON COLUMN message_content.head_url IS '用户头像';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

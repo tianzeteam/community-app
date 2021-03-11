@@ -32,6 +32,7 @@ public class MessageContent implements Serializable {
 
     private String nickName;
     private Integer messageSubType;
+    private String headUrl;
 
     private static final long serialVersionUID = 1L;
 
@@ -70,6 +71,11 @@ public class MessageContent implements Serializable {
         return this;
     }
 
+    public MessageContent withMessageSubType(Integer messageSubType) {
+        this.setMessageSubType(messageSubType);
+        return this;
+    }
+
     public void setMessageType(Integer messageType) {
         this.messageType = messageType;
     }
@@ -93,6 +99,16 @@ public class MessageContent implements Serializable {
 
     public MessageContent withTitle(String title) {
         this.setTitle(title);
+        return this;
+    }
+
+    public MessageContent withNickName(String nickName) {
+        this.setNickName(nickName);
+        return this;
+    }
+
+    public MessageContent withHeadUrl(String headUrl) {
+        this.setHeadUrl(headUrl);
         return this;
     }
 
@@ -272,6 +288,14 @@ public class MessageContent implements Serializable {
 
     public void setMessageSubType(Integer messageSubType) {
         this.messageSubType = messageSubType;
+    }
+
+    public String getHeadUrl() {
+        return headUrl;
+    }
+
+    public void setHeadUrl(String headUrl) {
+        this.headUrl = headUrl;
     }
 
     /**

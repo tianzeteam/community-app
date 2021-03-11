@@ -16,6 +16,7 @@ import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.enums.FunCategoryEnum;
 import com.smart.home.enums.LikeCategoryEnum;
+import com.smart.home.enums.MessageSubTypeEnum;
 import com.smart.home.enums.StampCategoryEnum;
 import com.smart.home.modules.product.entity.Product;
 import com.smart.home.modules.product.entity.ProductComment;
@@ -25,6 +26,7 @@ import com.smart.home.modules.product.service.ProductCommentService;
 import com.smart.home.modules.product.service.ProductService;
 import com.smart.home.service.FunService;
 import com.smart.home.service.LikeService;
+import com.smart.home.service.MessageService;
 import com.smart.home.service.StampService;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
@@ -33,6 +35,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +64,8 @@ public class AppProductCommentController {
     private LikeService likeService;
     @Autowired
     private FunService funService;
+    @Autowired
+    private MessageService messageService;
 
     @ApiOperation("获取顶部综合评分信息")
     @ApiImplicitParams({
@@ -152,13 +157,17 @@ public class AppProductCommentController {
 
     @ApiOperation("产品评价-点有用")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
+            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true),
+            @ApiImplicitParam(name = "authorId",value = "评价人的主键ID", required = true)
+
     })
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/clickUseful")
-    public APIResponse clickUseful(Long productCommentId) {
+    public APIResponse clickUseful(Long productCommentId, Long authorId) {
         try {
-            likeService.like(LikeCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+            Long fromUserId = UserUtils.getLoginUserId();
+            likeService.like(LikeCategoryEnum.PRODUCT_COMMENT, fromUserId, productCommentId);
+            messageService.createLikeMessage(MessageSubTypeEnum.PRODUCT_COMMENT, productCommentId, fromUserId, authorId);
         } catch (ServiceException e) {
             return APIResponse.ERROR(e.getMessage());
         }
