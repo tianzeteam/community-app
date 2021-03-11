@@ -48,7 +48,7 @@ public class AppProductCategoryController {
         return APIResponse.OK(resultList);
     }
 
-    @ApiOperation("查询三级级分类")
+    @ApiOperation("查询三级分类")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pid", value = "上一级别的主键id", required = true)
     })
@@ -57,6 +57,21 @@ public class AppProductCategoryController {
     public APIResponse<List<ProductCategoryVO>> queryCategoryThree(Integer pid) {
         List<ProductCategory> list = productCategoryService.queryAllValidByPid(pid);
         List<ProductCategoryVO> resultList = BeanCopyUtils.convertListTo(list, ProductCategoryVO::new);
+        return APIResponse.OK(resultList);
+    }
+
+    @ApiOperation("根据一级分类查询二级和三级所有")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pid", value = "一级分类主键id", required = true)
+    })
+    @AnonAccess
+    @GetMapping("/querySubCategories")
+    public APIResponse<List<ProductCategoryVO>> querySubCategories(Integer pid) {
+        List<ProductCategory> list = productCategoryService.queryAllValidByPid(pid);
+        List<ProductCategoryVO> resultList = BeanCopyUtils.convertListTo(list, ProductCategoryVO::new, (s, t)->{
+            List<ProductCategory> subList = productCategoryService.queryAllValidByPid(s.getId());
+            t.setSubCategories(BeanCopyUtils.convertListTo(subList, ProductCategoryVO::new));
+        });
         return APIResponse.OK(resultList);
     }
 
