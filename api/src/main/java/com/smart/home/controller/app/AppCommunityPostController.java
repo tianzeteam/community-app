@@ -7,6 +7,7 @@ import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.service.CommunityPostService;
+import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -71,6 +72,25 @@ public class AppCommunityPostController {
         List<CommunityPostDTO> communityPosts = communityPostService.queryHotPostList(pageNum, pageSize);
         List<RecommendCommunityPostVO> recommendCommunityPostVOS = BeanCopyUtils.convertListTo(communityPosts, RecommendCommunityPostVO::new);
         return APIResponse.OK(ResponsePageBean.restPage(recommendCommunityPostVOS));
+    }
+
+    @AnonAccess
+    @ApiOperation("帖子详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "帖子id", required = true)
+    })
+    @GetMapping("/detail")
+    public APIResponse detail(Long id){
+        Long userId = UserUtils.getLoginUserId();
+        if (userId > 0) {
+            //用户已登录
+            CommunityPostDTO communityPostDTO = communityPostService.queryDetailWithLogin(id, userId);
+
+        }else {
+            //用户未登录
+
+        }
+        return null;
     }
 
 

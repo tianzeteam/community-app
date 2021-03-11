@@ -39,7 +39,7 @@
     <result column="evaluate_count" jdbcType="INTEGER" property="evaluateCount" />
     <result column="contribute_count" jdbcType="INTEGER" property="contributeCount" />
     <result column="head_url" jdbcType="VARCHAR" property="headUrl"/>
-    <result column="username" jdbcType="VARCHAR" property="username"/>
+    <result column="nick_name" jdbcType="VARCHAR" property="nickname"/>
   </resultMap>
 
 
@@ -564,7 +564,7 @@
     select
     a.id, a.user_id, a.remark, a.user_level, a.user_level_count, a.focus_count,
     a.follow_count, a.like_count, a.post_count, a.comment_count, a.reply_count, a.evaluate_count,
-    a.contribute_count, a.revision, a.created_time, b.head_url, b.username
+    a.contribute_count, a.revision, a.created_time, b.head_url, b.username, b.nick_name
     from user_data a left join user_account b on a.user_id = b.id where a.user_id = #{userId} limit 1
   </select>
 </mapper>

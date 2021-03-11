@@ -534,7 +534,7 @@
       select <include refid="Base_Column_List_NO_CONTENTS"/>
       FROM
       community_post
-      where state = 1 and audit_status = 1 and auto_audit_flag = 1
+      where state = 1 and audit_status = 1
       ORDER BY
       visit_count DESC,
       created_time DESC,
@@ -548,7 +548,7 @@
       select <include refid="Base_Column_List_NO_CONTENTS"/>
       FROM
       community_post
-      where created_time between #{startTime} and #{endTime} and state = 1 and audit_status = 1 and auto_audit_flag = 1
+      where created_time between #{startTime} and #{endTime} and state = 1 and audit_status = 1
       ORDER BY
       reply_count DESC
   </select>
@@ -558,7 +558,7 @@
       FROM
       community_post
       <where>
-        state = 1 and audit_status = 1 and auto_audit_flag = 1
+        state = 1 and audit_status = 1
         <if test="boutiqueFlag != null">
           and boutique_flag = #{boutiqueFlag}
         </if>
@@ -567,4 +567,31 @@
       top_flag desc,
       created_time DESC
   </select>
+  
+  
+  <select id="selectByIdEffetive" resultType="com.smart.home.modules.community.dto.CommunityPostDTO">
+    select a.id,
+           a.title,
+           a.contents,
+           a.created_time as createdTime,
+           a.visit_count as visitCount,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.remark as userRemark,
+           ud.sign,
+           ud.user_level as userLevel,
+           case when uc.id is null then 0 else 1 end as collectFlag,
+           case when clh.id is null then 0 else 1 end as likeFlag,
+           case when csh.id is null then 0 else 1 end as stampFlag,
+           case when uf.id is null then 0 else 1 end as focusFlag
+    from community_post a
+                 left join user_account ua on a.user_id = ua.id
+                 left join user_data ud on ua.id = ud.user_id
+                 left join user_collect uc on uc.primary_key = a.id and collect_type = 1 and uc.user_id = #{userId,jdbcType=BIGINT}
+                 left join community_like_history clh on clh.post_id = a.id and clh.type = 0 and clh.user_id = #{userId,jdbcType=BIGINT}
+                 left join community_stamp_history csh on csh.post_id = a.id and csh.type = 0 and csh.user_id = #{userId,jdbcType=BIGINT}
+                 left join user_follower uf on ua.id = uf.user_id and uf.follower_user_id = #{userId,jdbcType=BIGINT}
+    where a.id = #{id,jdbcType=BIGINT} and a.state = 1 and a.audit_status = 1 and ua.state = 0
+  </select>
+  
 </mapper>

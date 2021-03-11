@@ -17,7 +17,7 @@ public class RecommendCommunityPostVO {
     @ApiModelProperty("用户头像")
     private String headUrl;
     @ApiModelProperty("用户名")
-    private String username;
+    private String nickname;
     @ApiModelProperty("用户等级")
     private Integer userLevel;
     @ApiModelProperty("创建时间")
