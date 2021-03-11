@@ -1,9 +1,13 @@
 package com.smart.home.modules.other.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.common.util.FileUtils;
 import com.smart.home.modules.other.dao.SubjectCardMapper;
 import com.smart.home.modules.other.entity.SubjectCard;
 import com.smart.home.modules.other.entity.SubjectCardExample;
+import com.smart.home.modules.system.service.SysFileService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -20,11 +24,17 @@ public class SubjectCardService {
 
     @Resource
     SubjectCardMapper subjectCardMapper;
+    @Autowired
+    private SysFileService sysFileService;
 
     public int create(SubjectCard subjectCard) {
         subjectCard.setCreatedTime(new Date());
         subjectCard.setRevision(0);
-        return subjectCardMapper.insertSelective(subjectCard);
+        int affectRow = subjectCardMapper.insertSelective(subjectCard);
+        if (StringUtils.isNotBlank(subjectCard.getCoverImage())) {
+            sysFileService.sync(FileUtils.getFileNameFromUrl(subjectCard.getCoverImage()));
+        }
+        return affectRow;
     }
 
     public int update(SubjectCard subjectCard) {

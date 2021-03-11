@@ -16,6 +16,7 @@
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
+    <result column="locations" jdbcType="INTEGER" property="locations"/>
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -77,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, cover_image, banner_images, title, sub_title, source_id, category, category_name, 
-    url, revision, created_by, created_time, updated_by, updated_time
+    url, revision, created_by, created_time, updated_by, updated_time,locations
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.other.entity.SubjectCardExample" resultMap="BaseResultMap">
     select
