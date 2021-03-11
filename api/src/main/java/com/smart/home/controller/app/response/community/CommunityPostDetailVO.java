@@ -12,112 +12,89 @@ import java.util.List;
 public class CommunityPostDetailVO {
 
     //头像
-    @ApiModelProperty("")
+    @ApiModelProperty("头像")
     private String headUrl;
     //昵称
-    @ApiModelProperty("")
+    @ApiModelProperty("昵称")
     private String nickname;
     //用户等级
-    @ApiModelProperty("")
+    @ApiModelProperty("用户等级")
     private Integer userLevel;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("用户简介")
     private String userRemark;
     //社区名
-    @ApiModelProperty("")
+    @ApiModelProperty("社区名")
     private String communityTitle;
     ///////////////////////////
 
-    @ApiModelProperty("")
-    private Long id;
-
-    @ApiModelProperty("")
-    private Integer community;
-
-    @ApiModelProperty("")
-    private Long userId;
-
-    @ApiModelProperty("")
+    @ApiModelProperty("标题")
     private String title;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("正文")
     private String contents;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("图片列表")
     private List<String> imagesList;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("是否置顶0否1是")
     private Integer topFlag;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("是否加精0否1是")
     private Integer boutiqueFlag;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("赞数量")
     private Integer likeCount;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("是否能评论0否1是")
     private Integer commentFlag;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("被举报数量")
     private Integer reportCount;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("收藏数量")
     private Integer collectCount;
 
-    @ApiModelProperty("")
-    private Integer auditStatus;
-
-    @ApiModelProperty("")
-    private Integer revision;
-
-    @ApiModelProperty("")
+    @ApiModelProperty("创建时间")
     private Date createdTime;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("被踩数量")
     private Integer stampCount;
 
-    @ApiModelProperty("")
-    private Integer state;
     /**
      * 回复数量
      */
-    @ApiModelProperty("")
+    @ApiModelProperty("回复数量")
     private Integer replyCount;
 
-    @ApiModelProperty("")
-    private Integer autoAuditFlag;
-
-    @ApiModelProperty("")
-    private Integer hitSensitiveCount;
 
     /**
      * 分享数量
      */
-
-    @ApiModelProperty("")
+    @ApiModelProperty("分享数量")
     private Integer shareCount;
     /**
      * 浏览数量
      */
-    @ApiModelProperty("")
+    @ApiModelProperty("浏览数量")
     private Long visitCount;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("简介")
     private String remark;
 
     //是否被当前用户收藏
-    @ApiModelProperty("")
+    @ApiModelProperty("是否被当前用户收藏")
     private Integer collectFlag;
 
     //是否被当前用户点踩
-    @ApiModelProperty("")
+    @ApiModelProperty("是否被当前用户点赞")
     private Integer likeFlag;
 
-    @ApiModelProperty("")
+    @ApiModelProperty("是否被当前用户点踩")
     private Integer stampFlag;
 
     //是否被当前用户关注
-    @ApiModelProperty("")
+    @ApiModelProperty("是否被当前用户关注")
     private Integer focusFlag;
 
 }

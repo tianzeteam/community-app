@@ -27,6 +27,7 @@ public class CommunityPostDTO {
 
     private String contents;
 
+    private String images;
     private List<String> imagesList;
 
     private Integer topFlag;

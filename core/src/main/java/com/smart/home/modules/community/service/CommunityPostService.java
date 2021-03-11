@@ -263,6 +263,7 @@ public class CommunityPostService {
         if (communityPostDTO == null) {
             return null;
         }
+        //处理图片
         return communityPostDTO;
     }
 
