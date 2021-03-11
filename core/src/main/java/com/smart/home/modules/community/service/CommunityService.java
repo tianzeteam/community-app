@@ -49,7 +49,7 @@ public class CommunityService {
         community.setFollowerCount(0);
         community.setRevision(0);
         community.setCreatedTime(new Date());
-        int affectRow =  communityMapper.insertSelective(community);
+        int affectRow = communityMapper.insertSelective(community);
         if (StringUtils.isNotBlank(community.getCoverImage())) {
             sysFileService.sync(FileUtils.getFileNameFromUrl(community.getCoverImage()));
         }

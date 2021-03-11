@@ -49,4 +49,11 @@
             COMMENT ON COLUMN community.UPDATED_TIME IS '更新时间';
         </sql>
     </changeSet>
+    <changeSet id="modifyColumnCreatedTime4Community" author="jason">
+        <comment>修改字段类型</comment>
+        <sql>
+            alter table community alter column created_time type timestamp;
+            alter table community alter column updated_time type timestamp;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

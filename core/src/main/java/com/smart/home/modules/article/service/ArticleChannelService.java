@@ -80,6 +80,7 @@ public class ArticleChannelService {
         if (StringUtils.isNotBlank(articleChannel.getTitle())) {
             criteria.andTitleEqualTo(articleChannel.getTitle());
         }
+        example.setOrderByClause("sort desc");
         return articleChannelMapper.selectByExample(example);
     }
 
