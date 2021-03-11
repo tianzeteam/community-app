@@ -238,6 +238,20 @@ public class CommunityPostService {
         return communityPostDTOS;
     }
 
+    /**
+     * 社区详情-帖子列表
+     * 精华条件搜索
+     */
+    public List<CommunityPostDTO> queryCommunityDetailPostList(Integer boutiqueFlag, int pageNum, int pageSize){
+        PageHelper.startPage(pageNum, pageSize);
+        List<CommunityPost> communityDetail = communityPostMapper.getCommunityDetail(boutiqueFlag);
+        if (CollUtil.isEmpty(communityDetail)) {
+            return Collections.EMPTY_LIST;
+        }
+        List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(communityDetail);
+        return communityPostDTOS;
+    }
+
 
 
     private List<CommunityPostDTO> transCommunityPostDTO(List<CommunityPost> list){
@@ -265,4 +279,5 @@ public class CommunityPostService {
         });
         return communityPostDTOS;
     }
+
 }

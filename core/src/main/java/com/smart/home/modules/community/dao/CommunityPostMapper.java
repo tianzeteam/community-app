@@ -74,4 +74,6 @@ public interface CommunityPostMapper {
 
     List<CommunityPost> getHotPost(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
+    List<CommunityPost> getCommunityDetail(@Param("boutiqueFlag") Integer boutiqueFlag);
+
 }

@@ -78,4 +78,7 @@ public class RecommendCommunityPostVO {
     @ApiModelProperty("浏览数量")
     private Long visitCount;
 
+    @ApiModelProperty("简介，截取正文内容前N个字符")
+    private String remark;
+
 }

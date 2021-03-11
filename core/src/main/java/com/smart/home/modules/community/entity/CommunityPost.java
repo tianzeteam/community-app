@@ -64,7 +64,19 @@ public class CommunityPost implements Serializable {
      */
     private Long visitCount;
 
+    private String remark;
+
     private static final long serialVersionUID = 1L;
+
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public CommunityPost setRemark(String remark) {
+        this.remark = remark;
+        return this;
+    }
 
     public Long getId() {
         return id;

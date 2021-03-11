@@ -25,6 +25,7 @@
     <result column="share_count" jdbcType="INTEGER" property="shareCount"/>
     <result column="visit_count" jdbcType="INTEGER" property="visitCount"/>
     <result column="auto_audit_flag" jdbcType="INTEGER" property="autoAuditFlag"/>
+    <result column="remark" jdbcType="VARCHAR" property="remark"/>
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -92,7 +93,7 @@
   <sql id="Base_Column_List_NO_CONTENTS">
     id, community, user_id, title, images, top_flag, boutique_flag, like_count,
     comment_flag, report_count, audit_status, revision, created_time, updated_by, updated_time,
-    stamp_count,collect_count,state,reply_count,visit_count,share_count
+    stamp_count,collect_count,state,reply_count,visit_count,share_count, remark
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostExample" resultMap="BaseResultMap">
     select
@@ -544,11 +545,26 @@
     </select>
 
   <select id="getHotPost" resultMap="BaseResultMap">
-    select <include refid="Base_Column_List_NO_CONTENTS"/>
-    FROM
-    community_post
-    where created_time between #{startTime} and #{endTime} and state = 1 and audit_status = 1 and auto_audit_flag = 1
-    ORDER BY
-    reply_count DESC
+      select <include refid="Base_Column_List_NO_CONTENTS"/>
+      FROM
+      community_post
+      where created_time between #{startTime} and #{endTime} and state = 1 and audit_status = 1 and auto_audit_flag = 1
+      ORDER BY
+      reply_count DESC
+  </select>
+
+  <select id="getCommunityDetail" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+      select <include refid="Base_Column_List_NO_CONTENTS"/>
+      FROM
+      community_post
+      <where>
+        state = 1 and audit_status = 1 and auto_audit_flag = 1
+        <if test="boutiqueFlag != null">
+          and boutique_flag = #{boutiqueFlag}
+        </if>
+      </where>
+      ORDER BY
+      top_flag desc,
+      created_time DESC
   </select>
 </mapper>

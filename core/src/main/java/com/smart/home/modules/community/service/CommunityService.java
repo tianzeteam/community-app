@@ -109,4 +109,5 @@ public class CommunityService {
         example.setOrderByClause("sort desc");
         return communityMapper.selectByExample(example);
     }
+
 }

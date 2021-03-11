@@ -63,4 +63,6 @@ public class CommunityPostDTO {
      * 浏览数量
      */
     private Long visitCount;
+
+    private String remark;
 }
