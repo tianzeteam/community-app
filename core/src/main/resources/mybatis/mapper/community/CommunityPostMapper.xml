@@ -84,7 +84,12 @@
   <sql id="Base_Column_List">
     id, community, user_id, title, contents, images, top_flag, boutique_flag, like_count, 
     comment_flag, report_count, audit_status, revision, created_time, updated_by, updated_time, 
-    stamp_count,collect_count,state,reply_count
+    stamp_count,collect_count,state,reply_count,visit_count,share_count
+  </sql>
+  <sql id="Base_Column_List_NO_CONTENTS">
+    id, community, user_id, title, images, top_flag, boutique_flag, like_count,
+    comment_flag, report_count, audit_status, revision, created_time, updated_by, updated_time,
+    stamp_count,collect_count,state,reply_count,visit_count,share_count
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostExample" resultMap="BaseResultMap">
     select
@@ -520,4 +525,17 @@
     <update id="increaseVisitCount" parameterType="long">
       update community_post set visit_count = visit_count + 1 where id = #{id}
     </update>
+  
+    <select id="getSortRecommend" resultMap="BaseResultMap">
+      select <include refid="Base_Column_List_NO_CONTENTS"/>
+      FROM
+      community_post
+      ORDER BY
+      visit_count DESC,
+      created_time DESC,
+      reply_count DESC,
+      like_count DESC,
+      collect_count DESC,
+      share_count DESC
+    </select>
 </mapper>

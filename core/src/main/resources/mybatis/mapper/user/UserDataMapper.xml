@@ -23,6 +23,26 @@
     <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
   </resultMap>
+
+  <resultMap id="BaseResultMapDTO" type="com.smart.home.modules.user.dto.UserDataDTO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="user_level" jdbcType="INTEGER" property="userLevel" />
+    <result column="user_level_count" jdbcType="INTEGER" property="userLevelCount" />
+    <result column="focus_count" jdbcType="INTEGER" property="focusCount" />
+    <result column="follow_count" jdbcType="INTEGER" property="followCount" />
+    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
+    <result column="post_count" jdbcType="INTEGER" property="postCount" />
+    <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
+    <result column="reply_count" jdbcType="INTEGER" property="replyCount" />
+    <result column="evaluate_count" jdbcType="INTEGER" property="evaluateCount" />
+    <result column="contribute_count" jdbcType="INTEGER" property="contributeCount" />
+    <result column="head_url" jdbcType="VARCHAR" property="headUrl"/>
+    <result column="username" jdbcType="VARCHAR" property="username"/>
+  </resultMap>
+
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
@@ -539,4 +559,12 @@
   <update id="increaseManuallyExceptionCount">
     update user_data set user_audit_exception_count = user_audit_exception_count + 1 where user_id = #{userId,jdbcType=BIGINT}
   </update>
+
+  <select id="getByUserId" resultMap="BaseResultMapDTO" parameterType="long">
+    select
+    a.id, a.user_id, a.remark, a.user_level, a.user_level_count, a.focus_count,
+    a.follow_count, a.like_count, a.post_count, a.comment_count, a.reply_count, a.evaluate_count,
+    a.contribute_count, a.revision, a.created_time, b.head_url, b.username
+    from user_data a left join user_account b on a.user_id = b.id where a.user_id = #{userId} limit 1
+  </select>
 </mapper>

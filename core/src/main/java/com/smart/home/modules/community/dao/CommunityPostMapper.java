@@ -69,4 +69,6 @@ public interface CommunityPostMapper {
     List<CommunityPost> queryCollectViaUserIdByPage(@Param("userId") Long userId);
 
     int increaseVisitCount(Long id);
+
+    List<CommunityPost> getSortRecommend();
 }

@@ -1,10 +1,12 @@
 package com.smart.home.modules.community.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.enums.AutoAuditFlagEnum;
+import com.smart.home.modules.community.dto.RecommendCommunityPostDTO;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -197,7 +200,13 @@ public class CommunityPostService {
      * 推荐帖子列表
      * 排序规则：帖子浏览人数，帖子已发布时间，帖子回帖数，点赞数，收藏数，分享数
      */
-    public List<CommunityPost> queryRecommendPostList(int pageNum, int pageSize) {
+    public List<RecommendCommunityPostDTO> queryRecommendPostList(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<CommunityPost> sortRecommends = communityPostMapper.getSortRecommend();
+        if (CollUtil.isEmpty(sortRecommends)) {
+            return Collections.EMPTY_LIST;
+        }
+        //查用户
 
         return null;
     }
