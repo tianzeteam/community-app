@@ -8,8 +8,10 @@ import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.es.dto.CommunitySearchDTO;
+import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.entity.Community;
 import com.smart.home.modules.community.entity.CommunityUserMapping;
+import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.modules.community.service.CommunityService;
 import com.smart.home.modules.community.service.CommunityUserMappingService;
 import com.smart.home.util.UserUtils;
@@ -31,6 +33,8 @@ public class AppCommunityController {
     private CommunityService communityService;
     @Autowired
     private CommunityUserMappingService communityUserMappingService;
+    @Autowired
+    private CommunityPostService communityPostService;
 
 
     @AnonAccess
@@ -40,7 +44,7 @@ public class AppCommunityController {
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
     })
     @GetMapping("/queryList")
-    public APIResponse queryList(CommunitySearchDTO communitySearchDTO, Integer pageNum, Integer pageSize) {
+    public APIResponse<ResponsePageBean<CommunitySelectVO>> queryList(CommunitySearchDTO communitySearchDTO, Integer pageNum, Integer pageSize) {
         Community community = new Community();
         BeanUtils.copyProperties(communitySearchDTO, community);
         List<Community> communities = communityService.selectByPage(community, pageNum, pageSize);
@@ -68,7 +72,7 @@ public class AppCommunityController {
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
     })
     @GetMapping("/mine/queryList")
-    public APIResponse myQueryList(Integer pageNum, Integer pageSize) {
+    public APIResponse<ResponsePageBean<CommunityUserMappingVO>> myQueryList(Integer pageNum, Integer pageSize) {
         CommunityUserMapping communityUserMapping = new CommunityUserMapping();
         communityUserMapping.setUserId(UserUtils.getLoginUserId());
         List<CommunityUserMapping> communityUserMappings = communityUserMappingService.selectByPage(communityUserMapping, pageNum, pageSize);
@@ -76,6 +80,19 @@ public class AppCommunityController {
 
 
         return APIResponse.OK(ResponsePageBean.restPage(communityUserMappingVOS));
+    }
+
+    @AnonAccess
+    @ApiOperation("社区详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码a", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true),
+            @ApiImplicitParam(name = "boutiqueFlag", value = "是否是精品，0否1是，无选择默认为null", required = false)
+    })
+    @GetMapping("/detail/post")
+    public APIResponse detailPost(Integer boutiqueFlag, Integer pageNum, Integer pageSize){
+        List<CommunityPostDTO> communityPostDTOS = communityPostService.queryCommunityDetailPostList(boutiqueFlag, pageNum, pageSize);
+        return APIResponse.OK(ResponsePageBean.restPage(communityPostDTOS));
     }
 
 

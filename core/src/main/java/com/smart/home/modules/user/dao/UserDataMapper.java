@@ -1,5 +1,6 @@
 package com.smart.home.modules.user.dao;
 
+import com.smart.home.modules.user.dto.UserDataDTO;
 import com.smart.home.modules.user.entity.UserData;
 import com.smart.home.modules.user.entity.UserDataExample;
 import java.util.List;
@@ -57,4 +58,8 @@ public interface UserDataMapper {
     int increaseImageExceptionCount(@Param("userId") Long userId);
 
     int increaseManuallyExceptionCount(@Param("userId") Long userId);
+
+    //查询用户信息以及头像
+    UserDataDTO getByUserId(Long userId);
+
 }

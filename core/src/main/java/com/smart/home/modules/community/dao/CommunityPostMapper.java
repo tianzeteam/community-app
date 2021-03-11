@@ -67,4 +67,13 @@ public interface CommunityPostMapper {
     int increaseReplyCount(@Param("id") Long id);
 
     List<CommunityPost> queryCollectViaUserIdByPage(@Param("userId") Long userId);
+
+    int increaseVisitCount(Long id);
+
+    List<CommunityPost> getSortRecommend();
+
+    List<CommunityPost> getHotPost(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+    List<CommunityPost> getCommunityDetail(@Param("boutiqueFlag") Integer boutiqueFlag);
+
 }
