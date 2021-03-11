@@ -40,7 +40,7 @@ public class AppCommunityController {
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
     })
     @GetMapping("/queryList")
-    public APIResponse queryList(CommunitySearchDTO communitySearchDTO, Integer pageNum, Integer pageSize) {
+    public APIResponse<ResponsePageBean<CommunitySelectVO>> queryList(CommunitySearchDTO communitySearchDTO, Integer pageNum, Integer pageSize) {
         Community community = new Community();
         BeanUtils.copyProperties(communitySearchDTO, community);
         List<Community> communities = communityService.selectByPage(community, pageNum, pageSize);
@@ -68,7 +68,7 @@ public class AppCommunityController {
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
     })
     @GetMapping("/mine/queryList")
-    public APIResponse myQueryList(Integer pageNum, Integer pageSize) {
+    public APIResponse<ResponsePageBean<CommunityUserMappingVO>> myQueryList(Integer pageNum, Integer pageSize) {
         CommunityUserMapping communityUserMapping = new CommunityUserMapping();
         communityUserMapping.setUserId(UserUtils.getLoginUserId());
         List<CommunityUserMapping> communityUserMappings = communityUserMappingService.selectByPage(communityUserMapping, pageNum, pageSize);

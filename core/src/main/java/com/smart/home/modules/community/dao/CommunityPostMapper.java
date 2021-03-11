@@ -67,4 +67,6 @@ public interface CommunityPostMapper {
     int increaseReplyCount(@Param("id") Long id);
 
     List<CommunityPost> queryCollectViaUserIdByPage(@Param("userId") Long userId);
+
+    int increaseVisitCount(Long id);
 }

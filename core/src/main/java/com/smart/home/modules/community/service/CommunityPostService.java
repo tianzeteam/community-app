@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author jason
@@ -184,5 +185,20 @@ public class CommunityPostService {
     public List<CommunityPost> queryCollectViaUserIdByPage(Long userId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         return communityPostMapper.queryCollectViaUserIdByPage(userId);
+    }
+
+    public void syncClick(Long id){
+        CompletableFuture.runAsync(()->{
+            communityPostMapper.increaseVisitCount(id);
+        });
+    }
+
+    /**
+     * 推荐帖子列表
+     * 排序规则：帖子浏览人数，帖子已发布时间，帖子回帖数，点赞数，收藏数，分享数
+     */
+    public List<CommunityPost> queryRecommendPostList(int pageNum, int pageSize) {
+
+        return null;
     }
 }

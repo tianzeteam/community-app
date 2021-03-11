@@ -516,4 +516,8 @@
     where uc.user_id = #{userId,jdbcType=BIGINT}
       and uc.collect_type = 1
     </select>
+
+    <update id="increaseVisitCount" parameterType="long">
+      update community_post set visit_count = visit_count + 1 where id = #{id}
+    </update>
 </mapper>
