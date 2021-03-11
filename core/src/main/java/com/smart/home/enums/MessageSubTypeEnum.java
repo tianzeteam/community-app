@@ -12,7 +12,6 @@ public enum MessageSubTypeEnum {
     COMMUNITY_POST_REPLY(3, "回帖"),
     ARTICLE(5, "文章");
 
-
     private int code;
     private String desc;
 

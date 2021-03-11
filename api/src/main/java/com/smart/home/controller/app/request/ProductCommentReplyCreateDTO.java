@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
@@ -18,7 +19,11 @@ import java.math.BigDecimal;
 @ToString
 public class ProductCommentReplyCreateDTO {
 
+    @ApiModelProperty("产品评价的作者主键id")
+    @NotNull(message = "产品评价的作者主键id不能为空")
+    private Long productCommentAuthorId;
     @ApiModelProperty("产品评价主键id")
+    @NotNull(message = "产品评价主键id不能为空")
     private Long productCommentId;
     @ApiModelProperty("父级回复主键id， 一级传0")
     private Long pid;

@@ -242,7 +242,9 @@ public class AppProductCommentController {
         String details = productCommentReplyCreateDTO.getDetails();
         Long userId = UserUtils.getLoginUserId();
         Long pid = productCommentReplyCreateDTO.getPid();
+        Long productCommentAuthorId = productCommentReplyCreateDTO.getProductCommentAuthorId();
         productCommentReplyService.create(userId, details, productCommentId, pid);
+        messageService.createReplyMessage(MessageSubTypeEnum.PRODUCT_COMMENT, productCommentId, userId, productCommentAuthorId, details);
         return APIResponse.OK();
     }
 

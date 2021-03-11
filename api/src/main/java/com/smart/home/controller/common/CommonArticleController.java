@@ -227,11 +227,12 @@ public class CommonArticleController {
     @ApiOperation("发表一级评论")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true),
+            @ApiImplicitParam(name = "articleAuthorId", value = "文章作者主键id", required = true),
             @ApiImplicitParam(name = "contents", value = "评论内容", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/addComment")
-    public APIResponse addComment(Long articleId, String contents) {
+    public APIResponse addComment(Long articleId,Long articleAuthorId, String contents) {
         if (Objects.isNull(articleId)) {
             return APIResponse.ERROR("文章主键id不能为空");
         }
@@ -240,7 +241,9 @@ public class CommonArticleController {
         } else if (contents.length() > 200) {
             return APIResponse.ERROR("评论内容不能超过200字");
         }
-        articleCommentService.create(UserUtils.getLoginUserId(), articleId, contents);
+        Long fromUserId = UserUtils.getLoginUserId();
+        articleCommentService.create(fromUserId, articleId, contents);
+        messageService.createReplyMessage(MessageSubTypeEnum.ARTICLE, articleId, fromUserId, articleAuthorId, contents);
         return APIResponse.OK();
     }
 
@@ -301,12 +304,15 @@ public class CommonArticleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true),
             @ApiImplicitParam(name = "articleCommentId", value = "文章一级评论主键id", required = true),
+            @ApiImplicitParam(name = "articleCommentAuthorId", value = "文章一级评论作者主键id", required = true),
             @ApiImplicitParam(name = "contents", value = "回复内容", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/addCommentReply")
-    public APIResponse addCommentReply(Long articleId, Long articleCommentId, String contents) {
-        articleCommentReplyService.create(UserUtils.getLoginUserId(), articleId, articleCommentId, contents);
+    public APIResponse addCommentReply(Long articleId, Long articleCommentId,Long articleCommentAuthorId, String contents) {
+        Long fromUserId = UserUtils.getLoginUserId();
+        articleCommentReplyService.create(fromUserId, articleId, articleCommentId, contents);
+        messageService.createReplyMessage(MessageSubTypeEnum.ARTICLE_COMMENT, articleId, fromUserId, articleCommentAuthorId, contents);
         return APIResponse.OK();
     }
 
