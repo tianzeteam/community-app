@@ -4,8 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditor;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditorResult;
+import com.smart.home.cloud.qcloud.auditor.ImageAuditor;
+import com.smart.home.cloud.qcloud.auditor.ImageAuditorResult;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorEvilEnum;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
+import com.smart.home.cloud.qcloud.enums.ImageAuditorSuggestionEnum;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.dto.ContentAdminAuditSearchTO;
@@ -138,24 +141,58 @@ public class ProductCommentService {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                boolean contentPass = false;
                 ContentAuditorResult contentAuditorResult = ContentAuditor.auditorResult(details);
                 if (contentAuditorResult == null) {
-                    // 机审失败，进入人工审核
+                    // 机审文本失败，进入人工审核
                     productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "请求云服务失败");
                     return;
                 }
-
                 if (contentAuditorResult.getContentAuditorEvilEnum() == ContentAuditorEvilEnum.NORMAL) {
-                    // 机审成功， 直接通过
-                    productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                    calculateProductAverageScore(productId, startCount, loginUserId,id, details, imageList);
-                    return;
+                    // 机审成功， 标记为成功， 还要等图片审核结果
+                    contentPass = true;
                 }
+                // 图片审核，如果有的话
+                boolean hasImage = false;
+                ImageAuditorResult imageAuditorResult = null;
+                if (!CollectionUtils.isEmpty(imageList)) {
+                    hasImage = true;
+                    for (String image : imageList) {
+                        imageAuditorResult = ImageAuditor.auditorResult(image);
+                        if (imageAuditorResult == null) {
+                            break;
+                        }
+                        if (imageAuditorResult.getImageAuditorSuggestionEnum() != ImageAuditorSuggestionEnum.Pass) {
+                            break;
+                        }
+                    }
+                    if (Objects.isNull(imageAuditorResult)) {
+                        // 机审图片失败，进入人工审核
+                        productCommentMapper.updateAutoAuditFlag4ImageAudit(id, AutoAuditFlagEnum.ERROR.getCode(), "请求云服务失败");
+                        return;
+                    }
+                    if (imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Pass) {
+                        // 图片机审成功 加上 文本审核成功
+                        if (contentPass) {
+                            productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                            calculateProductAverageScore(productId, startCount, loginUserId,id, details, imageList);
+                            return;
+                        }
+                    }
+                } else {
+                    // 没有图片的话判断机审结果，成功的话直接更新成成功
+                    if (contentPass) {
+                        productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                        calculateProductAverageScore(productId, startCount, loginUserId,id, details, imageList);
+                        return;
+                    }
+                }
+
                 // 机器审核不通过，文本异常
                 // 先看看建议通过不通过
                 ContentAuditorSuggestionEnum contentAuditorSuggestionEnum = contentAuditorResult.getContentAuditorSuggestionEnum();
                 if (contentAuditorSuggestionEnum == null
-                        ||ContentAuditorSuggestionEnum.Block == contentAuditorSuggestionEnum
+                        || ContentAuditorSuggestionEnum.Block == contentAuditorSuggestionEnum
                         || ContentAuditorSuggestionEnum.Review == contentAuditorSuggestionEnum) {
                     productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode(), contentAuditorResult.getContentAuditorEvilTypeEnum().getDesc());
                     List<String> keywordsList = contentAuditorResult.getKeywordsList();
@@ -165,10 +202,23 @@ public class ProductCommentService {
                         userDataService.increaseHitSensitiveCount(loginUserId, keywordsList.size());
                     }
                     userDataService.increaseTextExceptionCount(loginUserId);
-                    return;
-                }
-                if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
+                } else if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
                     // 正常，视为通过
+                    contentPass = true;
+                }
+                if (hasImage) {
+                    // 机器审核不通过，图片异常
+                    if (imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Block
+                            || imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Review) {
+                        String reason = imageAuditorResult.getImageAuditorLabelEnum().getDesc();
+                        if (contentPass) {
+                            productCommentMapper.updateAutoAuditFlag4ImageAudit(id, AutoAuditFlagEnum.IMAGE_EXCEPTION.getCode(), reason);
+                        } else {
+                            productCommentMapper.updateAutoAuditFlag4ImageAudit(id, AutoAuditFlagEnum.IMAGE_AND_CONTENT_EXCEPTION.getCode(), reason);
+                        }
+                        userDataService.increaseImageExceptionCount(loginUserId);
+                    }
+                } else if (contentPass) {
                     productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
                     calculateProductAverageScore(productId, startCount, loginUserId, id, details, imageList);
                 }

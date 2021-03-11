@@ -35,4 +35,7 @@ public enum ImageAuditorLabelEnum {
         return code;
     }
 
+    public String getDesc() {
+        return desc;
+    }
 }
