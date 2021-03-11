@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  **/
 @Data
 @ToString
-public class ProductShopUpdateDTO {
+public class ProductShopUpdateDTO extends ProductShopCreateDTO {
 
     @ApiModelProperty("主键id")
     @NotNull(message = "主键id不能为空")
