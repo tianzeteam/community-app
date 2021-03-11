@@ -20,15 +20,17 @@ public class MessageReplyVO {
 
     @ApiModelProperty("谁回复了我-用户主键id")
     private Long userId;
+    @ApiModelProperty("谁回复了我-用户头像")
+    private String headUrl;
     @ApiModelProperty("谁回复了我-用户昵称")
     private String nickName;
     @ApiModelProperty("发生时间")
     private Date createdTime;
-    @ApiModelProperty("回复内容分类:0文章1文章评论")
+    @ApiModelProperty("回复内容分类:0回复文章评论1回复产品评价2回复帖子3回复回帖5评论文章")
     private Integer replyCategory;
-    @ApiModelProperty("文章封面图片")
+    @ApiModelProperty("封面图片")
     private String coverImage;
-    @ApiModelProperty("文章标题")
+    @ApiModelProperty("标题")
     private String title;
     @ApiModelProperty("原文主键id")
     private Long sourceId;
