@@ -252,9 +252,16 @@ public class ProductCommentService {
             product.setOneStarCount(product.getOneStarCount() + 1);
         }
         product.setAverageScore(averageScore);
+        // 计算好评率
+        int praiseRate = 100;
+        int denominator = product.getFiveStarCount()+product.getFourStarCount()+product.getThreeStarCount()+product.getTwoStarCount()+product.getOneStarCount();
+        if (denominator != 0) {
+            int molecule = product.getFiveStarCount()+product.getFourStarCount();
+            praiseRate = new BigDecimal(molecule).divide(new BigDecimal(denominator)).multiply(new BigDecimal(100)).intValue();
+        }
         productService.updateCommentScore(productId, averageScore,
                 product.getFiveStarCount(), product.getFourStarCount(),product.getThreeStarCount(),
-                product.getTwoStarCount(), product.getOneStarCount());
+                product.getTwoStarCount(), product.getOneStarCount(), praiseRate);
         userDataService.increaseEvaluateCount(userId);
         // 加入到es
         ProductCommentBean productCommentBean = new ProductCommentBean();
