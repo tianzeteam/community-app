@@ -8,7 +8,7 @@ public class UserDataDTO {
     //头像
     private String headUrl;
     //昵称
-    private String username;
+    private String nickname;
 
     //-------------
 

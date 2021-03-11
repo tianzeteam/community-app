@@ -10,9 +10,10 @@ public class CommunityPostDTO {
     //头像
     private String headUrl;
     //昵称
-    private String username;
+    private String nickname;
     //用户等级
     private Integer userLevel;
+    private String userRemark;
     //社区名
     private String communityTitle;
     ///////////////////////////
@@ -26,6 +27,7 @@ public class CommunityPostDTO {
 
     private String contents;
 
+    private String images;
     private List<String> imagesList;
 
     private Integer topFlag;
@@ -65,4 +67,16 @@ public class CommunityPostDTO {
     private Long visitCount;
 
     private String remark;
+
+    //是否被当前用户收藏
+    private Integer collectFlag;
+
+    //是否被当前用户点踩
+    private Integer likeFlag;
+
+    private Integer stampFlag;
+
+    //是否被当前用户关注
+    private Integer focusFlag;
+
 }

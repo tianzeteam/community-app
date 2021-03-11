@@ -1,5 +1,6 @@
 package com.smart.home.modules.community.dao;
 
+import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
 import java.util.List;
@@ -75,5 +76,7 @@ public interface CommunityPostMapper {
     List<CommunityPost> getHotPost(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
     List<CommunityPost> getCommunityDetail(@Param("boutiqueFlag") Integer boutiqueFlag);
+
+    CommunityPostDTO selectByIdEffetive(@Param("id") Long id, @Param("userId") Long userId);
 
 }

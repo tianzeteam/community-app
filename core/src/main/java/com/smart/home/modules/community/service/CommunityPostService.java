@@ -252,6 +252,20 @@ public class CommunityPostService {
         return communityPostDTOS;
     }
 
+    /**
+     * 帖子详情
+     * 登录用户
+     */
+    public CommunityPostDTO queryDetailWithLogin(Long id, Long userId){
+        //增加一次浏览
+        syncClick(id);
+        CommunityPostDTO communityPostDTO = communityPostMapper.selectByIdEffetive(id, userId);
+        if (communityPostDTO == null) {
+            return null;
+        }
+        //处理图片
+        return communityPostDTO;
+    }
 
 
     private List<CommunityPostDTO> transCommunityPostDTO(List<CommunityPost> list){
@@ -266,7 +280,7 @@ public class CommunityPostService {
             //查用户
             UserDataDTO userDataDTO = userDataMapper.getByUserId(x.getUserId());
             if (userDataDTO != null) {
-                communityPostDTO.setUsername(userDataDTO.getUsername());
+                communityPostDTO.setNickname(userDataDTO.getNickname());
                 communityPostDTO.setHeadUrl(userDataDTO.getHeadUrl());
                 communityPostDTO.setUserLevel(userDataDTO.getUserLevel());
             }

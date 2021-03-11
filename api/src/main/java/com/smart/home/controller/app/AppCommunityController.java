@@ -90,9 +90,10 @@ public class AppCommunityController {
             @ApiImplicitParam(name = "boutiqueFlag", value = "是否是精品，0否1是，无选择默认为null", required = false)
     })
     @GetMapping("/detail/post")
-    public APIResponse detailPost(Integer boutiqueFlag, Integer pageNum, Integer pageSize){
+    public APIResponse<ResponsePageBean<CommunityUserMappingVO>> detailPost(Integer boutiqueFlag, Integer pageNum, Integer pageSize){
         List<CommunityPostDTO> communityPostDTOS = communityPostService.queryCommunityDetailPostList(boutiqueFlag, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(communityPostDTOS));
+        List<CommunityUserMappingVO> communityUserMappingVOS = BeanCopyUtils.convertListTo(communityPostDTOS, CommunityUserMappingVO::new);
+        return APIResponse.OK(ResponsePageBean.restPage(communityUserMappingVOS));
     }
 
 

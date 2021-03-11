@@ -1,17 +1,20 @@
 package com.smart.home.controller.app;
 
 import com.smart.home.common.util.BeanCopyUtils;
+import com.smart.home.controller.app.response.community.CommunityPostDetailVO;
 import com.smart.home.controller.app.response.community.RecommendCommunityPostVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.service.CommunityPostService;
+import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,6 +74,26 @@ public class AppCommunityPostController {
         List<CommunityPostDTO> communityPosts = communityPostService.queryHotPostList(pageNum, pageSize);
         List<RecommendCommunityPostVO> recommendCommunityPostVOS = BeanCopyUtils.convertListTo(communityPosts, RecommendCommunityPostVO::new);
         return APIResponse.OK(ResponsePageBean.restPage(recommendCommunityPostVOS));
+    }
+
+    @AnonAccess
+    @ApiOperation("帖子详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "帖子id", required = true)
+    })
+    @GetMapping("/detail")
+    public APIResponse<CommunityPostDetailVO> detail(Long id){
+        CommunityPostDetailVO communityPostDetailVO = new CommunityPostDetailVO();
+        Long userId = UserUtils.getLoginUserId();
+        if (userId > 0) {
+            //用户已登录
+            CommunityPostDTO communityPostDTO = communityPostService.queryDetailWithLogin(id, userId);
+            BeanUtils.copyProperties(communityPostDTO, communityPostDetailVO);
+        }else {
+            //用户未登录
+
+        }
+        return null;
     }
 
 
