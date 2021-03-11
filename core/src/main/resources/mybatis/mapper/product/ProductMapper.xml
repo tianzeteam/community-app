@@ -831,6 +831,7 @@
         three_star_count=#{threeStarCount},
         two_star_count=#{twoStarCount},
         one_star_count=#{oneStarCount},
+        praise_rate = #{praiseRate},
         comment_count = comment_count + 1
     where id = #{productId}
   </update>

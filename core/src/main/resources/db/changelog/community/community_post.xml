@@ -185,4 +185,16 @@
             COMMENT ON COLUMN community_post.visit_count IS '浏览数量';
         </sql>
     </changeSet>
+    <changeSet id="addColumnRemark4CommunityPost" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post" columnName="remark"/>
+            </not>
+        </preConditions>
+        <comment>新增字段：简介</comment>
+        <sql>
+            alter table community_post add column remark varchar(255);
+            COMMENT ON COLUMN community_post.remark IS '简介，截取正文内容前N个字符';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -64,7 +64,7 @@ public class AppCommunityController {
     @AnonAccess
     @ApiOperation("我的社区列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageNum", value = "分页页码a", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
     })
     @GetMapping("/mine/queryList")

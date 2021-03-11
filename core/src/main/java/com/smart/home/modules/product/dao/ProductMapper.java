@@ -63,5 +63,5 @@ public interface ProductMapper {
 
     Product queryDetailById(@Param("productId") Integer productId,@Param("loginUserId") Long loginUserId);
 
-    int updateCommentScore(Integer productId, BigDecimal averageScore, Integer fiveStarCount, Integer fourStarCount, Integer threeStarCount, Integer twoStarCount, Integer oneStarCount);
+    int updateCommentScore(Integer productId, BigDecimal averageScore, Integer fiveStarCount, Integer fourStarCount, Integer threeStarCount, Integer twoStarCount, Integer oneStarCount, Integer praiseRate);
 }

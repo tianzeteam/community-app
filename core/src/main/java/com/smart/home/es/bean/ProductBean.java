@@ -75,6 +75,8 @@ public class ProductBean {
 
     @Field(type = FieldType.Double, index = false)
     private BigDecimal averageScore;
+    @Field(type = FieldType.Integer, index = false)
+    private Integer praiseRate;
     @Field(type = FieldType.Double, index = false)
     private BigDecimal hotRate;
 

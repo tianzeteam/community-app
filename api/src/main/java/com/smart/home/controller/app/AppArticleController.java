@@ -64,9 +64,12 @@ public class AppArticleController {
     @GetMapping("/queryBigImageCardByChannelId")
     public APIResponse<ArticleBigImageCardVO> queryBigImageCardByChannelId(Integer articleChannelId) {
         Article article = articleService.queryBigImageCardByChannelId(articleChannelId);
-        ArticleBigImageCardVO vo = new ArticleBigImageCardVO();
-        BeanUtils.copyProperties(article, vo);
-        return APIResponse.OK(vo);
+        if (article != null) {
+            ArticleBigImageCardVO vo = new ArticleBigImageCardVO();
+            BeanUtils.copyProperties(article, vo);
+            return APIResponse.OK(vo);
+        }
+        return APIResponse.OK();
     }
 
     @ApiOperation("获取其他频道的文章卡片列表")
