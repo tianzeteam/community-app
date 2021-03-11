@@ -1,17 +1,27 @@
 package com.smart.home.modules.community.service;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.util.DateUtils;
 import com.smart.home.enums.AutoAuditFlagEnum;
-import com.smart.home.modules.community.dto.RecommendCommunityPostDTO;
+import com.smart.home.modules.community.dao.CommunityMapper;
+import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
+import com.smart.home.modules.community.entity.Community;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
+import com.smart.home.modules.user.dao.UserDataMapper;
+import com.smart.home.modules.user.dto.UserDataDTO;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +45,10 @@ public class CommunityPostService {
     private UserAccountService userAccountService;
     @Autowired
     private UserDataService userDataService;
+    @Resource
+    private UserDataMapper userDataMapper;
+    @Resource
+    private CommunityMapper communityMapper;
 
     public int create(CommunityPost communityPost) {
         communityPost.setTopFlag(YesNoEnum.NO.getCode());
@@ -200,14 +214,55 @@ public class CommunityPostService {
      * 推荐帖子列表
      * 排序规则：帖子浏览人数，帖子已发布时间，帖子回帖数，点赞数，收藏数，分享数
      */
-    public List<RecommendCommunityPostDTO> queryRecommendPostList(int pageNum, int pageSize) {
+    public List<CommunityPostDTO> queryRecommendPostList(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<CommunityPost> sortRecommends = communityPostMapper.getSortRecommend();
         if (CollUtil.isEmpty(sortRecommends)) {
             return Collections.EMPTY_LIST;
         }
-        //查用户
+        List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(sortRecommends);
+        return communityPostDTOS;
+    }
 
-        return null;
+    /**
+     * 热议
+     * 排序规则：发布时间在7天内的帖子，跟帖数量倒序
+     */
+    public List<CommunityPostDTO> queryHotPostList(int pageNum, int pageSize){
+        PageHelper.startPage(pageNum, pageSize);
+        List<CommunityPost> communityPosts = communityPostMapper.getHotPost(DateUtil.offsetDay(DateUtil.date(), -7).toString(), DateUtil.date().toString());
+        if (CollUtil.isEmpty(communityPosts)) {
+            return Collections.EMPTY_LIST;
+        }
+        List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(communityPosts);
+        return communityPostDTOS;
+    }
+
+
+
+    private List<CommunityPostDTO> transCommunityPostDTO(List<CommunityPost> list){
+        List<CommunityPostDTO> communityPostDTOS = Lists.newArrayListWithCapacity(list.size());
+        list.stream().forEach(x->{
+            CommunityPostDTO communityPostDTO = new CommunityPostDTO();
+            BeanUtils.copyProperties(x, communityPostDTO);
+            if (StrUtil.isNotEmpty(x.getImages())) {
+                List<String> strings = JSON.parseArray(x.getImages(), String.class);
+                communityPostDTO.setImagesList(strings);
+            }
+            //查用户
+            UserDataDTO userDataDTO = userDataMapper.getByUserId(x.getUserId());
+            if (userDataDTO != null) {
+                communityPostDTO.setUsername(userDataDTO.getUsername());
+                communityPostDTO.setHeadUrl(userDataDTO.getHeadUrl());
+                communityPostDTO.setUserLevel(userDataDTO.getUserLevel());
+            }
+            //查社区
+            Community community = communityMapper.selectByPrimaryKey(x.getCommunity());
+            if (community != null) {
+                communityPostDTO.setCommunityTitle(community.getTitle());
+            }
+            communityPostDTOS.add(communityPostDTO);
+        });
+        return communityPostDTOS;
     }
 }

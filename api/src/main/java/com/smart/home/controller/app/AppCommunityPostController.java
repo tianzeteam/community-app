@@ -5,7 +5,7 @@ import com.smart.home.controller.app.response.community.RecommendCommunityPostVO
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
-import com.smart.home.modules.community.entity.CommunityPost;
+import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.service.CommunityPostService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -53,8 +53,25 @@ public class AppCommunityPostController {
     @GetMapping("/recommend/queryList")
     public APIResponse<ResponsePageBean<RecommendCommunityPostVO>> recommendQueryList(Integer pageNum, Integer pageSize) {
         log.info("推荐帖子列表:");
-        List<CommunityPost> communityPosts = communityPostService.queryRecommendPostList(pageNum, pageSize);
+        List<CommunityPostDTO> communityPosts = communityPostService.queryRecommendPostList(pageNum, pageSize);
         List<RecommendCommunityPostVO> recommendCommunityPostVOS = BeanCopyUtils.convertListTo(communityPosts, RecommendCommunityPostVO::new);
         return APIResponse.OK(ResponsePageBean.restPage(recommendCommunityPostVOS));
     }
+
+    //暂时先用一个返回vo
+    @AnonAccess
+    @ApiOperation("热议帖子列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
+    })
+    @GetMapping("/hot/queryList")
+    public APIResponse<ResponsePageBean<RecommendCommunityPostVO>> hotQueryList(Integer pageNum, Integer pageSize) {
+        log.info("热议帖子列表:");
+        List<CommunityPostDTO> communityPosts = communityPostService.queryHotPostList(pageNum, pageSize);
+        List<RecommendCommunityPostVO> recommendCommunityPostVOS = BeanCopyUtils.convertListTo(communityPosts, RecommendCommunityPostVO::new);
+        return APIResponse.OK(ResponsePageBean.restPage(recommendCommunityPostVOS));
+    }
+
+
 }

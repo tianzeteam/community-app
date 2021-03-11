@@ -6,11 +6,11 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class RecommendCommunityPostDTO {
+public class CommunityPostDTO {
     //头像
     private String headUrl;
     //昵称
-    private String nickName;
+    private String username;
     //用户等级
     private Integer userLevel;
     //社区名

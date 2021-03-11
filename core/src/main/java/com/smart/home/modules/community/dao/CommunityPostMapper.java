@@ -71,4 +71,7 @@ public interface CommunityPostMapper {
     int increaseVisitCount(Long id);
 
     List<CommunityPost> getSortRecommend();
+
+    List<CommunityPost> getHotPost(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
 }
