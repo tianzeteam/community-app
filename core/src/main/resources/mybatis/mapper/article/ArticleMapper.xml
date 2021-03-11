@@ -727,7 +727,7 @@
                  left join user_account ua on a.user_id = ua.id
                  left join user_data ud on ua.id = ud.user_id
                  left join article_channel ac on a.channel_id = ac.id
-                 left join user_collect uc on uc.primary_key = a.id and uc.user_id = #{userId,jdbcType=BIGINT}
+                 left join user_collect uc on uc.primary_key = a.id and collect_type = 0 and uc.user_id = #{userId,jdbcType=BIGINT}
                  left join article_like_history alh on alh.source_id = a.id and alh.category = 0 and alh.user_id = #{userId,jdbcType=BIGINT}
                  left join article_stamp_history ash on ash.source_id = a.id and ash.type = 0 and ash.user_id = #{userId,jdbcType=BIGINT}
                  left join user_follower uf on ua.id = uf.user_id and uf.follower_user_id = #{userId,jdbcType=BIGINT}
