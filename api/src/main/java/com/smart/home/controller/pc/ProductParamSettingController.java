@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -95,15 +96,25 @@ public class ProductParamSettingController {
 
     @ApiOperation("按主键ID查询产品参数库")
     @GetMapping("/selectById")
-    public APIResponse<ProductParamSetting> selectById(Integer id) {
-        return APIResponse.OK(productParamSettingService.findById(id));
+    public APIResponse<ProductParamSettingUpdateDTO> selectById(Integer id) {
+        ProductParamSetting productParamSetting = productParamSettingService.findById(id);
+        ProductParamSettingUpdateDTO to = new ProductParamSettingUpdateDTO();
+        BeanUtils.copyProperties(productParamSetting, to);
+        if (StringUtils.isNotBlank(productParamSetting.getEnumValues())) {
+            to.setEnumValueList(JSON.parseArray(productParamSetting.getEnumValues(), String.class));
+        }
+        return APIResponse.OK();
     }
 
     @ApiOperation("下拉选择参数库")
     @GetMapping("selectSelectItems")
     public APIResponse<List<ProductParamSettingSelectVO>> selectSelectItems() {
         List<ProductParamSetting> list = productParamSettingService.queryAllValidExceptEnableAll();
-        List<ProductParamSettingSelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductParamSettingSelectVO::new);
+        List<ProductParamSettingSelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductParamSettingSelectVO::new,(s, t)->{
+            if (StringUtils.isNotBlank(s.getEnumValues())) {
+                t.setEnumValueList(JSON.parseArray(s.getEnumValues(), String.class));
+            }
+        });
         return APIResponse.OK(resultList);
     }
 

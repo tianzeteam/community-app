@@ -3,7 +3,7 @@ package com.smart.home.controller.pc.response.product;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
-
+import java.util.List;
 /**
  * @author jason
  * @date 2021/2/27
@@ -21,6 +21,6 @@ public class ProductParamSettingSelectVO {
     @ApiModelProperty("简介")
     private String remark;
     @ApiModelProperty("枚举值")
-    private String enumValues;
+    private List<String> enumValueList;
 
 }
