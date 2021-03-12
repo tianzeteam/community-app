@@ -10,6 +10,7 @@ public class CommunityPostReply implements Serializable {
     private String headUrl;
     private String nickName;
     private Integer userLevel;
+    private String toUserNickName;
     ////////////////////////
     private Long id;
 
@@ -50,6 +51,15 @@ public class CommunityPostReply implements Serializable {
 
     public CommunityPostReply withId(Long id) {
         this.setId(id);
+        return this;
+    }
+
+    public String getToUserNickName() {
+        return toUserNickName;
+    }
+
+    public CommunityPostReply setToUserNickName(String toUserNickName) {
+        this.toUserNickName = toUserNickName;
         return this;
     }
 

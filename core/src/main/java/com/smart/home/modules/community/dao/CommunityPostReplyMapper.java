@@ -1,5 +1,6 @@
 package com.smart.home.modules.community.dao;
 
+import com.smart.home.modules.community.dto.CommunityPostReplyDTO;
 import com.smart.home.modules.community.entity.CommunityPostReply;
 import com.smart.home.modules.community.entity.CommunityPostReplyExample;
 import java.util.List;
@@ -49,4 +50,9 @@ public interface CommunityPostReplyMapper {
     Long findUserIdById(@Param("id") Long id);
 
     List<CommunityPostReply> queryViaUserIdByPageWhenLogin(@Param("userId") Long userId,@Param("loginUserId") Long loginUserId);
+
+    List<CommunityPostReply> queryByIdWhenLogin(CommunityPostReplyDTO communityPostReplyDTO);
+
+    List<CommunityPostReply> queryByPageNotLogin(CommunityPostReplyDTO communityPostReplyDTO);
+
 }

@@ -623,5 +623,6 @@
                  left join user_data ud on ua.id = ud.user_id
     where a.id = #{id,jdbcType=BIGINT} and a.state = 1 and a.audit_status = 1 and ua.state = 0
   </select>
+
   
 </mapper>

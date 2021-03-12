@@ -339,4 +339,64 @@
     where cpr.user_id = #{userId,jdbcType=BIGINT}
     order by cpr.created_time desc;
     </select>
+
+  <select id="queryByIdWhenLogin" resultType="com.smart.home.modules.community.entity.CommunityPostReply" parameterType="com.smart.home.modules.community.dto.CommunityPostReplyDTO">
+    select cpr.id,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.user_level as userLevel,
+           cpr.contents,
+           cpr.to_user_id as toUserId,
+           cpr.created_time as createdTime,
+           cpr.like_count as likeCount,
+           cpr.stamp_count as stampCount,
+           cpr.author_flag as authorFlag,
+           case when alh.id is null then 0 else 1 end as likeFlag,
+           case when ash.id is null then 0 else 1 end as stampFlag
+    from community_post_reply cpr
+                 left join user_account ua on ua.id = cpr.user_id
+                 left join user_data ud on ud.user_id = ua.id
+                 left join community_like_history alh on alh.post_id = cpr.id and alh.type = 1 and alh.user_id = #{userId,jdbcType=BIGINT}
+                 left join community_stamp_history ash on ash.post_id = cpr.id and ash.type = 1 and ash.user_id = #{userId,jdbcType=BIGINT}
+    where cpr.id = #{id,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
+    <choose>
+      <when test="hotSortFlag != null">
+        order by cpr.reply_count desc
+      </when>
+      <when test="sortFlag != null and sortFlag = 0">
+        order by cpr.id asc
+      </when>
+      <otherwise>
+        order by cpr.id desc
+      </otherwise>
+    </choose>
+    </select>
+
+  <select id="queryByPageNotLogin" resultType="com.smart.home.modules.community.entity.CommunityPostReply" parameterType="com.smart.home.modules.community.dto.CommunityPostReplyDTO">
+    select cpr.id,
+      ua.head_url as headUrl,
+      ua.nick_name as nickName,
+      ud.user_level as userLevel,
+      cpr.contents,
+      cpr.to_user_id as toUserId,
+      cpr.created_time as createdTime,
+      cpr.like_count as likeCount,
+      cpr.stamp_count as stampCount,
+      cpr.author_flag as authorFlag,
+    from community_post_reply cpr
+    left join user_account ua on ua.id = cpr.user_id
+    left join user_data ud on ud.user_id = ua.id
+    where cpr.id = #{id,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
+    <choose>
+      <when test="hotSortFlag != null">
+        order by cpr.reply_count desc
+      </when>
+      <when test="sortFlag != null and sortFlag = 0">
+        order by cpr.id asc
+      </when>
+      <otherwise>
+        order by cpr.id desc
+      </otherwise>
+    </choose>
+    </select>
 </mapper>

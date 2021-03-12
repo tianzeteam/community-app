@@ -1,10 +1,12 @@
 package com.smart.home.modules.community.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
+import com.smart.home.modules.community.dto.CommunityPostReplyDTO;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostReply;
 import com.smart.home.modules.community.entity.CommunityPostReplyExample;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Date;
 
@@ -157,4 +160,33 @@ public class CommunityPostReplyService {
         PageHelper.startPage(pageNum, pageSize);
         return communityPostReplyMapper.queryViaUserIdByPageWhenLogin(userId, loginUserId);
     }
+
+    /**
+     * 获取评论 回复
+     */
+    public List<CommunityPostReply> queryPageById(CommunityPostReplyDTO communityPostReplyDTO, int pageNum, int pageSize, Boolean ifLogin){
+        List<CommunityPostReply> communityPostReplies = null;
+        if (ifLogin) {
+            //登录
+            PageHelper.startPage(pageNum, pageSize);
+            communityPostReplies = communityPostReplyMapper.queryByIdWhenLogin(communityPostReplyDTO);
+        }else {
+            //未登录
+            PageHelper.startPage(pageNum, pageSize);
+            communityPostReplies = communityPostReplyMapper.queryByPageNotLogin(communityPostReplyDTO);
+        }
+        if (CollUtil.isEmpty(communityPostReplies)) {
+            return Collections.EMPTY_LIST;
+        }
+        if (communityPostReplyDTO.getReplyType() != 0) {
+            //一级无回复，不需要查回复用户
+            communityPostReplies.stream().forEach(x->{
+                if (x.getToUserId() != null) {
+                    x.setToUserNickName(userAccountService.findNicknameByUserId(x.getToUserId()));
+                }
+            });
+        }
+        return communityPostReplies;
+    }
+
 }

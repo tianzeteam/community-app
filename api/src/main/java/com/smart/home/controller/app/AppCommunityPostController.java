@@ -97,5 +97,14 @@ public class AppCommunityPostController {
         return APIResponse.OK(communityPostDetailVO);
     }
 
+    @AnonAccess
+    @ApiOperation("发帖")
+    @GetMapping("/release")
+    public APIResponse release(){
+        //用户是否存在，检查是否禁言
+
+        return APIResponse.OK();
+    }
+
 
 }
