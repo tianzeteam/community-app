@@ -28,29 +28,38 @@ public class CosUtil {
     private static COSClient cosClient = null;
     public static final String APP_ID = "1305077657";
 
-    public static synchronized void intiClient() {
-        if (cosClient == null) {
-            // 1 初始化用户身份信息（secretId, secretKey）。
-            COSCredentials cred = new BasicCOSCredentials(QcloudProperties.secretId, QcloudProperties.secretKey);
-            // 2 设置 bucket 的区域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
-            // clientConfig 中包含了设置 region, https(默认 http), 超时, 代理等 set 方法, 使用可参见源码或者常见问题 Java SDK 部分。
-            Region region = new Region("ap-nanjing");
-            ClientConfig clientConfig = new ClientConfig(region);
-            // 3 生成 cos 客户端。
-            cosClient = new COSClient(cred, clientConfig);
-            // 查询存储桶列表， 没有就生成
-            List<String> bucketNameList = new ArrayList<>();
-            List<Bucket> buckets = cosClient.listBuckets();
-            for (Bucket bucketElement : buckets) {
-                bucketNameList.add(bucketElement.getName());
+    public static void intiClient() {
+        if (cosClient != null) {
+            return;
+        }
+        synchronized (APP_ID) {
+            if (cosClient != null) {
+                return;
             }
-            if (!bucketNameList.contains(FileType.IMAGE)) {
-                createBucket(FileType.IMAGE);
-            }
-            if (!bucketNameList.contains(FileType.VIDEO)) {
-                createBucket(FileType.VIDEO);
+            if (cosClient == null) {
+                // 1 初始化用户身份信息（secretId, secretKey）。
+                COSCredentials cred = new BasicCOSCredentials(QcloudProperties.secretId, QcloudProperties.secretKey);
+                // 2 设置 bucket 的区域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224
+                // clientConfig 中包含了设置 region, https(默认 http), 超时, 代理等 set 方法, 使用可参见源码或者常见问题 Java SDK 部分。
+                Region region = new Region("ap-nanjing");
+                ClientConfig clientConfig = new ClientConfig(region);
+                // 3 生成 cos 客户端。
+                cosClient = new COSClient(cred, clientConfig);
+                // 查询存储桶列表， 没有就生成
+                List<String> bucketNameList = new ArrayList<>();
+                List<Bucket> buckets = cosClient.listBuckets();
+                for (Bucket bucketElement : buckets) {
+                    bucketNameList.add(bucketElement.getName());
+                }
+                if (!bucketNameList.contains(FileType.IMAGE)) {
+                    createBucket(FileType.IMAGE);
+                }
+                if (!bucketNameList.contains(FileType.VIDEO)) {
+                    createBucket(FileType.VIDEO);
+                }
             }
         }
+
     }
 
     private static boolean createBucket(String bucketName) {
@@ -73,6 +82,7 @@ public class CosUtil {
      * 指定要上传的文件，本方法适用200M以下文件
      */
     public static String uploadFile(InputStream inputStream, Upload upload) {
+        CosUtil.intiClient();
         ObjectMetadata objectMetadata = new ObjectMetadata();
         //文件的大小
         objectMetadata.setContentLength(upload.getSize());
@@ -107,6 +117,7 @@ public class CosUtil {
     }
 
     public static void deleteFile(String key, String bucketName) {
+        CosUtil.intiClient();
         bucketName = Joiner.on("-").join(bucketName, APP_ID);
         cosClient.deleteObject(bucketName, key);
     }

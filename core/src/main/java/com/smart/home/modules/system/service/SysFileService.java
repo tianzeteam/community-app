@@ -56,7 +56,19 @@ public class SysFileService {
         PageHelper.startPage(pageNum, pageSize);
         SysFileExample example = new SysFileExample();
         SysFileExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
+        if(sysFile.getSyncFlag() != null) {
+            criteria.andSyncFlagEqualTo(sysFile.getSyncFlag());
+        }
+        return sysFileMapper.selectByExample(example);
+    }
+
+    public List<SysFile> selectAll(SysFile sysFile, Date startDate, Date endDate) {
+        SysFileExample example = new SysFileExample();
+        SysFileExample.Criteria criteria = example.createCriteria();
+        if(sysFile.getSyncFlag() != null) {
+            criteria.andSyncFlagEqualTo(sysFile.getSyncFlag());
+        }
+        criteria.andCreatedTimeBetween(startDate, endDate);
         return sysFileMapper.selectByExample(example);
     }
 
@@ -70,7 +82,6 @@ public class SysFileService {
         BeanUtils.copyProperties(upload, sysFile);
         if (StringUtils.equals(FileStoreType.COS, upload.getStoreType())) {
             // 存储到腾讯cos对象存储服务
-            CosUtil.intiClient();
             String md5 = CosUtil.uploadFile(inputStream, upload);
             sysFile.setMd5(md5);
             sysFile.setUrl("https://"+upload.getBucketName()+"-"+CosUtil.APP_ID+".cos.ap-nanjing.myqcloud.com/"+upload.getNewName());
@@ -97,7 +108,6 @@ public class SysFileService {
     public void deleteByNewName(String newFileName) {
         SysFile sysFile = findByNewName(newFileName);
         if (null != sysFile) {
-            CosUtil.intiClient();
             CosUtil.deleteFile(newFileName, BucketConsts.IMAGE);
             deleteById(sysFile.getId());
         }
@@ -114,7 +124,6 @@ public class SysFileService {
     }
 
     public void deleteImageByUrlList(List<String> imageList) {
-        CosUtil.intiClient();
         String newName = null;
         for (String url : imageList) {
             newName = FileUtils.getFileNameFromUrl(url);
@@ -135,4 +144,5 @@ public class SysFileService {
         }
         syncList(fileNameList);
     }
+
 }
