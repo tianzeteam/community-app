@@ -6,12 +6,14 @@ import com.smart.home.assembler.UserAssembler;
 import com.smart.home.cache.SmsVerifyCodeCache;
 import com.smart.home.cache.SmsVerifyCodeLimitCache;
 import com.smart.home.cache.WechatAccessTokenCache;
+import com.smart.home.cloud.qcloud.sms.SmsSendUtil;
 import com.smart.home.cloud.wechat.login.WechatLoginUtil;
 import com.smart.home.common.enums.APIResponseCodeEnum;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.common.util.RandomUtils;
 import com.smart.home.dto.auth.User;
+import com.smart.home.modules.system.service.SysConfigService;
 import com.smart.home.modules.user.entity.UserAccount;
 import com.smart.home.modules.user.entity.UserData;
 import com.smart.home.modules.user.service.UserAccountService;
@@ -44,6 +46,8 @@ public class LoginController {
     private UserAccountService userAccountService;
     @Autowired
     private UserDataService userDataService;
+    @Autowired
+    private SysConfigService sysConfigService;
 
     @AnonAccess
     @ApiOperation(value = "用户名密码登陆")
@@ -186,13 +190,19 @@ public class LoginController {
         if (SmsVerifyCodeLimitCache.canSend(mobile)) {
             String code = RandomUtils.generateNumberString(4);
             SmsVerifyCodeCache.put(mobile, code);
-            // TODO 调用云服务发送短信, 遵循1分钟1一次，一小时内4次，一天内8次的原则
-            code = "123456";
-            SmsVerifyCodeCache.put(mobile, code);
-            return APIResponse.OK();
+            String sign = sysConfigService.findValueFromCache("qcloud.sms.sign");
+            String smsTempId = sysConfigService.findValueFromCache("qcloud.sms.temp.loginCode");
+            try {
+                if (SmsSendUtil.sendVerifyCode(sign, smsTempId,code, mobile, "5")){
+                    SmsVerifyCodeCache.put(mobile, code);
+                }
+            } catch (ServiceException e) {
+                return APIResponse.ERROR(e.getMessage());
+            }
         } else {
             return APIResponse.ERROR("一分钟内只能发送一次");
         }
+        return APIResponse.OK();
     }
 
 }

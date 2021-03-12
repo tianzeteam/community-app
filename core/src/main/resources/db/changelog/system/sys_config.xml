@@ -79,4 +79,37 @@
             insert into sys_config(param_key, param_value, remark, REVISION) values ('server.host', 'http://localhost','服务端请求根地址', 0);
         </sql>
     </changeSet>
+    <changeSet id="addRecord4SysConfig3" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_config where param_key = 'qcloud.sms.sign';
+            </sqlCheck>
+        </preConditions>
+        <comment>新增数据</comment>
+        <sql>
+            insert into sys_config(param_key, param_value, remark, REVISION) values ('qcloud.sms.sign', '北京大地之灵科技有限公司','短信签名', 0);
+        </sql>
+    </changeSet>
+    <changeSet id="addRecord4SysConfig4" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_config where param_key = 'qcloud.sms.temp.loginCode';
+            </sqlCheck>
+        </preConditions>
+        <comment>新增数据</comment>
+        <sql>
+            insert into sys_config(param_key, param_value, remark, REVISION) values ('qcloud.sms.temp.loginCode', '890828','短信登陆验证码模板id', 0);
+        </sql>
+    </changeSet>
+    <changeSet id="addRecord4SysConfig5" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_config where param_key = 'qcloud.sms.temp.bindCode';
+            </sqlCheck>
+        </preConditions>
+        <comment>新增数据</comment>
+        <sql>
+            insert into sys_config(param_key, param_value, remark, REVISION) values ('qcloud.sms.temp.bindCode', '890845','绑定手机号发送的验证码', 0);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

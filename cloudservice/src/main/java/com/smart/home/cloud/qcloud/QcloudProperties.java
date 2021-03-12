@@ -12,4 +12,7 @@ public class QcloudProperties {
     public static final String auditorEndpoint = "cms.tencentcloudapi.com";
     public static final String region = "ap-shanghai";
 
+    public static final String smsEndpoint = "sms.tencentcloudapi.com";
+
+
 }
