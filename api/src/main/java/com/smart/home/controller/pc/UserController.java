@@ -23,6 +23,7 @@ import com.smart.home.modules.product.entity.ProductComment;
 import com.smart.home.modules.product.service.ProductCommentService;
 import com.smart.home.modules.user.entity.UserCommunityAuth;
 import com.smart.home.modules.user.entity.UserData;
+import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserCommunityAuthService;
 import com.smart.home.modules.user.service.UserDataService;
 import com.smart.home.util.ResponsePageUtil;
@@ -53,6 +54,8 @@ public class UserController {
 
     @Autowired
     private UserDataService userDataService;
+    @Autowired
+    private UserAccountService userAccountService;
     @Autowired
     private ArticleCommentService articleCommentService;
     @Autowired
@@ -145,15 +148,18 @@ public class UserController {
     public APIResponse banUser(@Valid @RequestBody List<CommunityUserBanDTO> communityUserBanDTOList, BindingResult bindingResult) {
         Long createdBy = UserUtils.getLoginUserId();
         for (CommunityUserBanDTO communityUserBanDTO : communityUserBanDTOList) {
+            Long userId = communityUserBanDTO.getUserId();
             UserCommunityAuth userCommunityAuth = new UserCommunityAuth();
             userCommunityAuth.setCreatedBy(createdBy);
             userCommunityAuth.setCreatedTime(new Date());
             userCommunityAuth.setBlackFlag(YesNoEnum.YES.getCode());
             userCommunityAuth.setEffectiveStartDate(communityUserBanDTO.getEffectiveStartDate());
             userCommunityAuth.setEffectiveEndDate(communityUserBanDTO.getEffectiveEndDate());
-            userCommunityAuth.setUserId(communityUserBanDTO.getUserId());
+            userCommunityAuth.setUserId(userId);
             userCommunityAuth.setRemark(Joiner.on(",").join(communityUserBanDTO.getReasonList()));
             userCommunityAuthService.createOrUpdate(userCommunityAuth);
+            // 封禁后踢出登陆状态
+            userAccountService.doLogout(userId);
         }
         return APIResponse.OK();
     }

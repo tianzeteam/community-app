@@ -10,10 +10,7 @@ import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.AuthorizationException;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
-import com.smart.home.common.util.FileUtils;
-import com.smart.home.common.util.JwtUtil;
-import com.smart.home.common.util.SummaryUtils;
-import com.smart.home.common.util.UUIDUtil;
+import com.smart.home.common.util.*;
 import com.smart.home.modules.system.entity.SysMenu;
 import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.system.service.SysMenuService;
@@ -190,7 +187,7 @@ public class UserAccountService {
      * @param password
      * @return
      */
-    public UserAccount doAuthentication(String username, String password) {
+    public UserAccount doAuthentication(String username, String password) throws ServiceException {
         UserAccount userAccount = findUserByUsername(username);
         int state = verifyWhenLogin(userAccount);
         if (AccountStatusEnum.NORMAL.getStatus() == state) {
@@ -203,12 +200,7 @@ public class UserAccountService {
                 }
                 UserTokenCache.put(token, userAccount);
                 userAccount.setRoleCodeList(findUserRoleCodeList(userAccount.getId()));
-                // 加载社区权限
-                UserCommunityAuth userCommunityAuth = userCommunityAuthService.findByUserId(userAccount.getId());
-                if (Objects.isNull(userCommunityAuth)) {
-                    userCommunityAuth = userCommunityAuthService.initDataWithAdminFlag(userAccount.getId(), YesNoEnum.NO.getCode(), userAccount.getId());
-                }
-                userAccount.setUserCommunityAuth(userCommunityAuth);
+                loadCommunityAuth(userAccount);
                 return userAccount;
             }
         }
@@ -241,7 +233,7 @@ public class UserAccountService {
      * @param mobile
      * @return
      */
-    public UserAccount loginViaMobile(String mobile) {
+    public UserAccount loginViaMobile(String mobile) throws ServiceException {
         UserAccount userAccount = findUserByMobile(mobile);
         if (Objects.isNull(userAccount)) {
             // 如果不存在，则创建
@@ -253,6 +245,7 @@ public class UserAccountService {
             userAccount.setAccessToken(token);
             userAccount.setRoleCodeList(findUserRoleCodeList(userAccount.getId()));
             UserTokenCache.put(token, userAccount);
+            loadCommunityAuth(userAccount);
             return userAccount;
         }
         throw new AuthorizationException("用户名或者密码错误");
@@ -425,5 +418,41 @@ public class UserAccountService {
 
     public String findNicknameByUserId(Long userId) {
         return mapper.findNicknameByUserId(userId);
+    }
+
+    /**
+     * 加载社区权限
+     * @param userAccount
+     * @throws ServiceException
+     */
+    public void loadCommunityAuth(UserAccount userAccount) throws ServiceException {
+        // 加载社区权限
+        UserCommunityAuth userCommunityAuth = userCommunityAuthService.findByUserId(userAccount.getId());
+        if (Objects.isNull(userCommunityAuth)) {
+            userCommunityAuth = userCommunityAuthService.initDataWithAdminFlag(userAccount.getId(), YesNoEnum.NO.getCode(), userAccount.getId());
+        } else {
+            // 看看是否被封禁了
+            Integer banFlag = userCommunityAuth.getBlackFlag();
+            if (YesNoEnum.YES.getCode() == banFlag) {
+                // 如果被封禁了，继续看下是否解封了
+                Date effectvieEndDate = userCommunityAuth.getEffectiveEndDate();
+                if (Objects.isNull(effectvieEndDate)) {
+                    // 说明永久封禁
+                    throw new ServiceException("您已被永久封禁");
+                }
+                Date now = new Date();
+                if (now.getTime() < effectvieEndDate.getTime()) {
+                    // 还没解封
+                    throw new ServiceException("当前账户处于封禁状态，解封时间："+ DateUtils.getDateTimeString(effectvieEndDate));
+                } else {
+                    // 动态解封
+                    userCommunityAuthService.releaseBlack(Arrays.asList(userAccount.getId()));
+                    userCommunityAuth.setBlackFlag(YesNoEnum.NO.getCode());
+                    userCommunityAuth.setEffectiveStartDate(null);
+                    userCommunityAuth.setEffectiveEndDate(null);
+                }
+            }
+        }
+        userAccount.setUserCommunityAuth(userCommunityAuth);
     }
 }

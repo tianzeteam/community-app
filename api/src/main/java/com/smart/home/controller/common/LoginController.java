@@ -8,6 +8,7 @@ import com.smart.home.cache.SmsVerifyCodeLimitCache;
 import com.smart.home.cache.WechatAccessTokenCache;
 import com.smart.home.cloud.wechat.login.WechatLoginUtil;
 import com.smart.home.common.enums.APIResponseCodeEnum;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.common.util.RandomUtils;
 import com.smart.home.dto.auth.User;
@@ -48,7 +49,12 @@ public class LoginController {
     @ApiOperation(value = "用户名密码登陆")
     @PostMapping("loginByPassword")
     public APIResponse<User> login(@RequestParam String username, @RequestParam String password) {
-        UserAccount userAccount = userAccountService.doAuthentication(username, password);
+        UserAccount userAccount = null;
+        try {
+            userAccount = userAccountService.doAuthentication(username, password);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         User user = UserAssembler.assemblerUser(userAccount);
         return APIResponse.OK(user);
     }
@@ -58,7 +64,12 @@ public class LoginController {
     @PostMapping("/loginBySmsCode")
     public APIResponse<User> loginBySmsCode(@RequestParam String mobile, @RequestParam String smsVerifyCode) {
         if (SmsVerifyCodeCache.isValid(mobile, smsVerifyCode)) {
-            UserAccount userAccount = userAccountService.loginViaMobile(mobile);
+            UserAccount userAccount = null;
+            try {
+                userAccount = userAccountService.loginViaMobile(mobile);
+            } catch (ServiceException e) {
+                return APIResponse.ERROR(e.getMessage());
+            }
             User user = UserAssembler.assemblerUser(userAccount);
             return APIResponse.OK(user);
         }
@@ -109,6 +120,11 @@ public class LoginController {
             return apiResponse;
         }
         UserAccount userAccount = userAccountService.findUserByUserId(userData.getUserId());
+        try {
+            userAccountService.loadCommunityAuth(userAccount);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         User user = UserAssembler.assemblerUser(userAccount);
         return APIResponse.OK(user);
     }

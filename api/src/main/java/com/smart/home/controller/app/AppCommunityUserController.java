@@ -8,6 +8,7 @@ import com.smart.home.controller.app.request.CommunityUserForbiddenSpeechDTO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.user.entity.UserCommunityAuth;
+import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserCommunityAuthService;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
@@ -33,12 +34,15 @@ public class AppCommunityUserController {
 
     @Autowired
     private UserCommunityAuthService userCommunityAuthService;
+    @Autowired
+    private UserAccountService userAccountService;
 
     @ApiOperation("封禁用户")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/banUser")
     public APIResponse banUser(@Valid @RequestBody CommunityUserBanDTO communityUserBanDTO, BindingResult bindingResult) {
         Long createdBy = UserUtils.getLoginUserId();
+        Long userId = communityUserBanDTO.getUserId();
         UserCommunityAuth userCommunityAuth = new UserCommunityAuth();
         userCommunityAuth.setCreatedBy(createdBy);
         userCommunityAuth.setCreatedTime(new Date());
@@ -48,6 +52,8 @@ public class AppCommunityUserController {
         userCommunityAuth.setUserId(communityUserBanDTO.getUserId());
         userCommunityAuth.setRemark(Joiner.on(",").join(communityUserBanDTO.getReasonList()));
         userCommunityAuthService.createOrUpdate(userCommunityAuth);
+        // 封禁后踢出登陆状态
+        userAccountService.doLogout(userId);
         return APIResponse.OK();
     }
 
