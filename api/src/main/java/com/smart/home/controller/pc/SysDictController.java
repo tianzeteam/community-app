@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import com.smart.home.controller.pc.request.system.SysDictUpdateDTO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
@@ -9,13 +10,12 @@ import com.smart.home.controller.pc.request.system.SysDictSearchDTO;
 import com.smart.home.modules.system.entity.SysDict;
 import com.smart.home.modules.system.service.SysDictService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author jason
@@ -45,6 +45,18 @@ public class SysDictController {
         BeanUtils.copyProperties(sysDictDTO, sysDict);
         sysDict.setUpdatedBy(UserUtils.getLoginUserId());
         return APIResponse.OK(sysDictService.update(sysDict));
+    }
+
+    @ApiOperation("按主键id查询")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "主键id", required = true)
+    })
+    @GetMapping("/selectById")
+    public APIResponse<SysDictUpdateDTO> selectById(@RequestParam(required = true) Integer id) {
+        SysDict sysDict = sysDictService.findById(id);
+        SysDictUpdateDTO to = new SysDictUpdateDTO();
+        BeanUtils.copyProperties(sysDict, to);
+        return APIResponse.OK(to);
     }
 
     @ApiOperation(value = "删除数据字典")

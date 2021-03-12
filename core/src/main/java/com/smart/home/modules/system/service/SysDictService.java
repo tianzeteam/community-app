@@ -105,4 +105,8 @@ public class SysDictService {
         }
         return null;
     }
+
+    public SysDict findById(Integer id) {
+        return sysDictMapper.selectByPrimaryKey(id);
+    }
 }
