@@ -599,5 +599,28 @@
                  left join user_follower uf on ua.id = uf.user_id and uf.follower_user_id = #{userId,jdbcType=BIGINT}
     where a.id = #{id,jdbcType=BIGINT} and a.state = 1 and a.audit_status = 1 and ua.state = 0
   </select>
+
+  <select id="selectById" resultType="com.smart.home.modules.community.dto.CommunityPostDTO">
+    select a.id,
+           a.title,
+           a.contents,
+           a.images,
+           a.top_flag as topFlag,
+           a.created_time as createdTime,
+           a.visit_count as visitCount,
+           a.boutique_flag as boutiqueFlag,
+           a.like_count as likeCount,
+           a.comment_flag as commentFlag,
+           a.collect_count as collectCount,
+           ua.head_url as headUrl,
+           ua.nick_name as nickName,
+           ud.remark as userRemark,
+           ud.sign,
+           ud.user_level as userLevel
+    from community_post a
+                 left join user_account ua on a.user_id = ua.id
+                 left join user_data ud on ua.id = ud.user_id
+    where a.id = #{id,jdbcType=BIGINT} and a.state = 1 and a.audit_status = 1 and ua.state = 0
+  </select>
   
 </mapper>

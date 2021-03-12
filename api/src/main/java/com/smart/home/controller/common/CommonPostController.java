@@ -2,9 +2,17 @@ package com.smart.home.controller.common;
 
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.RoleAccess;
+import com.smart.home.enums.CollectTypeEnum;
+import com.smart.home.enums.LikeCategoryEnum;
+import com.smart.home.enums.StampCategoryEnum;
 import com.smart.home.modules.community.service.CommunityPostService;
+import com.smart.home.service.CollectService;
+import com.smart.home.service.LikeService;
+import com.smart.home.service.StampService;
+import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -25,6 +33,13 @@ public class CommonPostController {
 
     @Autowired
     private CommunityPostService communityPostService;
+    @Autowired
+    private CollectService collectService;
+    @Autowired
+    private LikeService likeService;
+    @Autowired
+    private StampService stampService;
+
 
     @ApiOperation("设置为精华")
     @ApiImplicitParams({
@@ -67,6 +82,79 @@ public class CommonPostController {
     @PostMapping("/cancelTop")
     public APIResponse cancelTop(Long postId) {
         communityPostService.updateTopFlag(postId, YesNoEnum.NO.getCode());
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("点赞帖子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "帖子主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/likePost")
+    public APIResponse likePost(Long id) {
+        try {
+            likeService.like(LikeCategoryEnum.POST, UserUtils.getLoginUserId(), id);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        return APIResponse.OK();
+    }
+    @ApiOperation("取消点赞帖子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "帖子主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/cancelLikePost")
+    public APIResponse cancelLikePost(Long id) {
+        likeService.cancelLike(LikeCategoryEnum.POST, UserUtils.getLoginUserId(), id);
+        return APIResponse.OK();
+    }
+    @ApiOperation("点踩帖子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "帖子主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/stampPost")
+    public APIResponse stampPost(Long id) {
+        try {
+            stampService.stamp(StampCategoryEnum.POST, UserUtils.getLoginUserId(), id);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        return APIResponse.OK();
+    }
+    @ApiOperation("取消点踩帖子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "帖子主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/cancelStampPost")
+    public APIResponse cancelStampPost(Long id) {
+        stampService.cancelStamp(StampCategoryEnum.POST, UserUtils.getLoginUserId(), id);
+        return APIResponse.OK();
+    }
+    @ApiOperation("收藏帖子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "帖子主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/addCollect")
+    public APIResponse addCollect(Long id) {
+        try {
+            collectService.addCollect(CollectTypeEnum.POST, UserUtils.getLoginUserId(), id);
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        return APIResponse.OK();
+    }
+    @ApiOperation("取消收藏帖子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "帖子主键id", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/cancelAdCollect")
+    public APIResponse cancelAdCollect(Long id) {
+        collectService.cancelCollect(CollectTypeEnum.POST, UserUtils.getLoginUserId(), id);
         return APIResponse.OK();
     }
 

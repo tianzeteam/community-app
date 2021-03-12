@@ -91,9 +91,10 @@ public class AppCommunityPostController {
             BeanUtils.copyProperties(communityPostDTO, communityPostDetailVO);
         }else {
             //用户未登录
-
+            CommunityPostDTO communityPostDTO = communityPostService.queryDetailNotLogin(id);
+            BeanUtils.copyProperties(communityPostDTO, communityPostDetailVO);
         }
-        return null;
+        return APIResponse.OK(communityPostDetailVO);
     }
 
 

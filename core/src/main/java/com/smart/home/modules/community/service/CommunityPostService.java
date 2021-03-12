@@ -264,6 +264,22 @@ public class CommunityPostService {
             return null;
         }
         //处理图片
+        if (StrUtil.isNotEmpty(communityPostDTO.getImages())) {
+            communityPostDTO.setImagesList(JSON.parseArray(communityPostDTO.getImages(), String.class));
+        }
+        return communityPostDTO;
+    }
+
+    public CommunityPostDTO queryDetailNotLogin(Long id){
+        syncClick(id);
+        CommunityPostDTO communityPostDTO = communityPostMapper.selectById(id);
+        if (communityPostDTO == null) {
+            return null;
+        }
+        //处理图片
+        if (StrUtil.isNotEmpty(communityPostDTO.getImages())) {
+            communityPostDTO.setImagesList(JSON.parseArray(communityPostDTO.getImages(), String.class));
+        }
         return communityPostDTO;
     }
 

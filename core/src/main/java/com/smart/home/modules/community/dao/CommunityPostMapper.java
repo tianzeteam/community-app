@@ -79,4 +79,6 @@ public interface CommunityPostMapper {
 
     CommunityPostDTO selectByIdEffetive(@Param("id") Long id, @Param("userId") Long userId);
 
+    CommunityPostDTO selectById(@Param("id") Long id);
+
 }

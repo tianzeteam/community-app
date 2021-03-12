@@ -24,8 +24,8 @@ public class CommunityPostDetailVO {
     @ApiModelProperty("用户简介")
     private String userRemark;
     //社区名
-    @ApiModelProperty("社区名")
-    private String communityTitle;
+//    @ApiModelProperty("社区名")
+//    private String communityTitle;
     ///////////////////////////
 
     @ApiModelProperty("标题")
