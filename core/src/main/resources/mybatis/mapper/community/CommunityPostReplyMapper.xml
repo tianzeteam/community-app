@@ -11,6 +11,8 @@
     <result column="like_count" jdbcType="INTEGER" property="likeCount" />
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="stamp_count" jdbcType="INTEGER" property="stampCount" />
+    <result column="author_flag" jdbcType="INTEGER" property="authorFlag" />
+    <result column="to_user_id" jdbcType="BIGINT" property="toUserId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,7 +74,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, user_id, post_id, post_reply_id, reply_type, contents, like_count, created_time, 
-    stamp_count
+    stamp_count,author_flag,to_user_id
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostReplyExample" resultMap="BaseResultMap">
     select

@@ -121,4 +121,19 @@
             COMMENT ON COLUMN community_post_reply.image_exception_reason IS '机审图片异常原因';
         </sql>
     </changeSet>
+    <changeSet id="addColumnAuthorFlag4PostReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post_reply" columnName="author_flag"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table community_post_reply add column author_flag int default 0;
+            COMMENT ON COLUMN community_post_reply.author_flag IS '是否是作者：0否1是';
+
+            alter table community_post_reply add column to_user_id bigint;
+            COMMENT ON COLUMN community_post_reply.to_user_id IS '回复给谁:用户主键id';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -33,6 +33,14 @@ public class CommunityPostReply implements Serializable {
     private Integer auditFlag;
     private Integer hitSensitiveCount;
     private Integer reportCount;
+    /**
+     * 是否是作者：0否1是
+     */
+    private Integer authorFlag;
+    /**
+     * 回复给谁：用户主键id
+     */
+    private Long toUserId;
 
     private static final long serialVersionUID = 1L;
 
@@ -265,6 +273,22 @@ public class CommunityPostReply implements Serializable {
 
     public void setUserLevel(Integer userLevel) {
         this.userLevel = userLevel;
+    }
+
+    public Integer getAuthorFlag() {
+        return authorFlag;
+    }
+
+    public void setAuthorFlag(Integer authorFlag) {
+        this.authorFlag = authorFlag;
+    }
+
+    public Long getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(Long toUserId) {
+        this.toUserId = toUserId;
     }
 
     /**
