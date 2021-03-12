@@ -26,6 +26,7 @@
     <result column="visit_count" jdbcType="INTEGER" property="visitCount"/>
     <result column="auto_audit_flag" jdbcType="INTEGER" property="autoAuditFlag"/>
     <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    <result column="reason" jdbcType="VARCHAR" property="reason"/>
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -88,12 +89,12 @@
   <sql id="Base_Column_List">
     id, community, user_id, title, contents, images, top_flag, boutique_flag, like_count, 
     comment_flag, report_count, audit_status, revision, created_time, updated_by, updated_time, 
-    stamp_count,collect_count,state,reply_count,visit_count,share_count
+    stamp_count,collect_count,state,reply_count,visit_count,share_count,reason
   </sql>
   <sql id="Base_Column_List_NO_CONTENTS">
     id, community, user_id, title, images, top_flag, boutique_flag, like_count,
     comment_flag, report_count, audit_status, revision, created_time, updated_by, updated_time,
-    stamp_count,collect_count,state,reply_count,visit_count,share_count, remark
+    stamp_count,collect_count,state,reply_count,visit_count,share_count, remark,reason
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostExample" resultMap="BaseResultMap">
     select

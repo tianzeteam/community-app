@@ -65,6 +65,10 @@ public class CommunityPost implements Serializable {
     private Long visitCount;
 
     private String remark;
+    /**
+     * 删帖原因
+     */
+    private String reason;
 
     private static final long serialVersionUID = 1L;
 
@@ -467,6 +471,14 @@ public class CommunityPost implements Serializable {
 
     public void setVisitCount(Long visitCount) {
         this.visitCount = visitCount;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     /**

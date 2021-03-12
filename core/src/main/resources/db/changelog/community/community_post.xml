@@ -197,4 +197,16 @@
             COMMENT ON COLUMN community_post.remark IS '简介，截取正文内容前N个字符';
         </sql>
     </changeSet>
+    <changeSet id="addColumnDeleteReason4CommunityPost" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="community_post" columnName="reason"/>
+            </not>
+        </preConditions>
+        <comment>新增字段：删帖原因</comment>
+        <sql>
+            alter table community_post add column reason varchar(255);
+            COMMENT ON COLUMN community_post.reason IS '删帖原因';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
