@@ -103,7 +103,7 @@ public class ProductParamSettingController {
         if (StringUtils.isNotBlank(productParamSetting.getEnumValues())) {
             to.setEnumValueList(JSON.parseArray(productParamSetting.getEnumValues(), String.class));
         }
-        return APIResponse.OK();
+        return APIResponse.OK(to);
     }
 
     @ApiOperation("下拉选择参数库")
