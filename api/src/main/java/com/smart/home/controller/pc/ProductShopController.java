@@ -103,7 +103,7 @@ public class ProductShopController {
     @GetMapping("/selectSelectItems")
     public APIResponse<List<ProductShopSelectVO>> selectSelectItems() {
         List<ProductShop> list = productShopService.queryAllValid();
-        List<ProductShopSelectVO> resutList = BeanCopyUtils.convertListTo(list, ProductShopSelectVO::new);
-        return APIResponse.OK(resutList);
+        List<ProductShopSelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductShopSelectVO::new);
+        return APIResponse.OK(resultList);
     }
 }

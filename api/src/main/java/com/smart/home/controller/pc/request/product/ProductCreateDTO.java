@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
@@ -56,5 +57,9 @@ public class ProductCreateDTO {
     private String specification;
     @ApiModelProperty("支持的平台")
     private String supportPlatform;
+
+    @ApiModelProperty("状态：0正常1隐藏")
+    @NotNull(message = "状态不能为空")
+    private Integer onlineFlag;
 
 }

@@ -101,7 +101,7 @@ public class ProductCategoryController {
 
     @ApiOperation("按主键ID查询产品类目")
     @GetMapping("/selectById")
-    public APIResponse<ProductCategory> selectById(Long id) {
+    public APIResponse<ProductCategoryVO> selectById(Long id) {
         ProductCategory productCategory = productCategoryService.findById(id);
         ProductCategoryVO vo = new ProductCategoryVO();
         BeanUtils.copyProperties(productCategory, vo);
@@ -115,7 +115,7 @@ public class ProductCategoryController {
             }
             vo.setParamList(paramList);
         }
-        return APIResponse.OK();
+        return APIResponse.OK(vo);
     }
 
     @ApiOperation("下拉选择类目")

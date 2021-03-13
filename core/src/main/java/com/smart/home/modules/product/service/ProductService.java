@@ -81,7 +81,6 @@ public class ProductService {
         product.setThreeStarCount(0);
         product.setFourStarCount(0);
         product.setFiveStarCount(0);
-        product.setOnlineFlag(RecordStatusEnum.NORMAL.getStatus());
         int affectRow = productMapper.insertSelective(product);
         if (affectRow > 0) {
             Integer productId = product.getId();
