@@ -16,6 +16,8 @@ import java.util.List;
 @ToString
 public class ProductCategoryVO {
 
+    @ApiModelProperty("主键id")
+    private Integer id;
     @ApiModelProperty("上一级主键id，0是顶级")
     private Integer pid;
     @ApiModelProperty("图标")

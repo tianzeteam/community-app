@@ -108,7 +108,7 @@ public class ProductCategoryController {
             productCategory = productCategoryService.findById(vo.getPid());
             vo.setParent(assemblerProductCategoryVO(productCategory));
             if (productCategory.getPid() != 0) {
-                productCategory = productCategoryService.findById(vo.getPid());
+                productCategory = productCategoryService.findById(productCategory.getPid());
                 vo.getParent().setParent(assemblerProductCategoryVO(productCategory));
             }
         }
