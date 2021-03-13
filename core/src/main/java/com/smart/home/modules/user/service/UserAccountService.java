@@ -143,11 +143,12 @@ public class UserAccountService {
         }
     }
 
-    private void assignDefaultRole(long userId, String roleCode) {
+    private String assignDefaultRole(long userId, String roleCode) {
         Integer roleId = sysRoleService.findRoleIdByCode(roleCode);
         UserRoleMapping userRoleMapping = new UserRoleMapping();
         userRoleMapping.withUserId(userId).withRoleId(roleId).withRoleCode(roleCode);
         userRoleMappingMapper.insert(userRoleMapping);
+        return initUserPermits(userId);
     }
 
     public List<UserRoleMapping> findUserRoles(Long userId) {
@@ -356,14 +357,7 @@ public class UserAccountService {
         String permitJson = mapper.findPermitsById(loginUserId);
         Map<String, Map<String, Integer>> rootMap = new HashMap<>();
         if (StringUtils.isBlank(permitJson)) {
-            List<SysMenu> list = sysMenuService.selectAllValidByPid(0);
-            Map<String, Integer> map = new HashMap<>();
-            for (SysMenu sysMenu : list) {
-                map.put(sysMenu.getPermit(), 0);
-            }
-            rootMap.put("permits", map);
-            permitJson = JSON.toJSONString(rootMap);
-            mapper.savePermits(loginUserId, permitJson);
+            initUserPermits(loginUserId);
         } else {
             rootMap = JSON.parseObject(permitJson, Map.class);
         }
@@ -377,15 +371,7 @@ public class UserAccountService {
             String permitJson = userAccount.getPermits();
             Map<String, Map<String, Integer>> rootMap = new HashMap<>();
             if (StringUtils.isBlank(permitJson)) {
-                List<SysMenu> list = sysMenuService.selectAllValidByPid(0);
-                Map<String, Integer> map = new HashMap<>();
-                for (SysMenu sysMenu : list) {
-                    map.put(sysMenu.getPermit(), 0);
-                }
-                rootMap.put("permits", map);
-                permitJson = JSON.toJSONString(rootMap);
-                mapper.savePermits(userAccount.getId(), permitJson);
-                userAccount.setPermits(permitJson);
+                userAccount.setPermits(initUserPermits(userAccount.getId()));
             }
         }
         return resultList;
@@ -454,5 +440,18 @@ public class UserAccountService {
             }
         }
         userAccount.setUserCommunityAuth(userCommunityAuth);
+    }
+
+    private String initUserPermits(long userId) {
+        Map<String, Map<String, Integer>> rootMap = new HashMap<>();
+        List<SysMenu> list = sysMenuService.selectAllValidByPid(0);
+        Map<String, Integer> map = new HashMap<>();
+        for (SysMenu sysMenu : list) {
+            map.put(sysMenu.getPermit(), 0);
+        }
+        rootMap.put("permits", map);
+        String permitJson = JSON.toJSONString(rootMap);
+        mapper.savePermits(userId, permitJson);
+        return permitJson;
     }
 }
