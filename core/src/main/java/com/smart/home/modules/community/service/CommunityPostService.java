@@ -12,6 +12,7 @@ import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.util.DateUtils;
 import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.community.dao.CommunityMapper;
+import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.entity.Community;
@@ -49,6 +50,8 @@ public class CommunityPostService {
     private UserDataMapper userDataMapper;
     @Resource
     private CommunityMapper communityMapper;
+    @Resource
+    private CommunityPostReplyMapper communityPostReplyMapper;
 
     public int create(CommunityPost communityPost) {
         communityPost.setTopFlag(YesNoEnum.NO.getCode());
@@ -132,9 +135,18 @@ public class CommunityPostService {
         communityPostMapper.updateTopFlag(postId, flag);
     }
 
-    public List<CommunityPost> queryViaUserIdByPage(Long userId, int pageNum, int pageSize) {
+    public List<CommunityPost> queryViaUserIdByPage(Long userId, int pageNum, int pageSize, Long loginUserId) {
         PageHelper.startPage(pageNum, pageSize);
-        return communityPostMapper.queryViaUserIdByPage(userId);
+        List<CommunityPost> list = communityPostMapper.queryViaUserIdByPage(userId, loginUserId);
+        for (CommunityPost communityPost : list) {
+            long replyCount = communityPostReplyMapper.countByUserId(loginUserId);
+            if (replyCount > 0) {
+                communityPost.setReplyFlag(YesNoEnum.YES.getCode());
+            } else {
+                communityPost.setReplyFlag(YesNoEnum.NO.getCode());
+            }
+        }
+        return list;
     }
 
     public Long countWaitAudit() {

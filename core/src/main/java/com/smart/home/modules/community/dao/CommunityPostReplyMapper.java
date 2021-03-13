@@ -55,4 +55,5 @@ public interface CommunityPostReplyMapper {
 
     List<CommunityPostReply> queryByPageNotLogin(CommunityPostReplyDTO communityPostReplyDTO);
 
+    long countByUserId(@Param("userId") Long userId);
 }

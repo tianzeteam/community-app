@@ -28,5 +28,9 @@ public class MyRootProfilePostVO extends UserBaseInfo {
     private Integer replyCount;
     @ApiModelProperty("创建时间")
     private Date createdTime;
+    @ApiModelProperty("是否评论过:0否1是")
+    private Integer replyFlag;
+    @ApiModelProperty("是否点赞过：0否1是")
+    private Integer likeFlag;
 
 }

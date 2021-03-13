@@ -475,10 +475,12 @@
            cp.images,
            cp.like_count as likeCount,
            cp.reply_count as replyCount,
-           cp.created_time as createdTime
+           cp.created_time as createdTime,
+           case when clh.id is null then 0 else 1 end as likeFlag
     from community_post cp
                  left join user_account ua on ua.id = cp.user_id
                  left join user_data ud on ud.user_id = ua.id
+                 left join community_like_history clh on clh.post_id = cp.id and type = 0 and clh.user_id = #{loginUserId,jdbcType=BIGINT}
     where cp.user_id = #{userId,jdbcType=BIGINT}
   </select>
 

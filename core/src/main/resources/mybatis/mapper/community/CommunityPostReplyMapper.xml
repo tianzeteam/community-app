@@ -399,4 +399,8 @@
       </otherwise>
     </choose>
     </select>
+
+  <select id="countByUserId" resultType="long">
+    select count(1) from community_post_reply where user_id = #{userId,jdbcType=BIGINT}
+  </select>
 </mapper>

@@ -124,7 +124,7 @@ public class AppUserProfileController {
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
         }
-        List<CommunityPost> list = communityPostService.queryViaUserIdByPage(userId, pageNum, pageSize);
+        List<CommunityPost> list = communityPostService.queryViaUserIdByPage(userId, pageNum, pageSize, UserUtils.getLoginUserId());
         List<MyRootProfilePostVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfilePostVO::new,(s, t)->{
             if (StringUtils.isNotBlank(s.getImages())) {
                 t.setImageList(JSON.parseArray(s.getImages(), String.class));

@@ -11,6 +11,7 @@ public class CommunityPost implements Serializable {
     private String nickName;
     private String userLevel;
     private Integer likeFlag;
+    private Integer replyFlag;
     ///////////////////////////
     private Long id;
 
@@ -479,6 +480,14 @@ public class CommunityPost implements Serializable {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public Integer getReplyFlag() {
+        return replyFlag;
+    }
+
+    public void setReplyFlag(Integer replyFlag) {
+        this.replyFlag = replyFlag;
     }
 
     /**
