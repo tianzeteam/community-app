@@ -62,6 +62,10 @@ com.smart.home.cloud.qcloud.auditor.ContentAuditor.auditorResult
 ```
 com.smart.home.service.MessageService
 ```
+- ES搜索统一入口Service
+```
+com.smart.home.es.service.SearchEsService
+```
 
 # postgresql数据库安装(centos7)
 ```
