@@ -280,6 +280,7 @@ public class UserAccountService {
         userAccount.setRevision(0);
         userAccount.setUsername(mobile);
         userAccount.setMobile(mobile);
+        userAccount.setNickName(mobile.substring(0, 7)+"****");
         mapper.insertSelective(userAccount);
         long userId = userAccount.getId();
         String token = JwtUtil.createToken(String.valueOf(userId),String.valueOf(System.currentTimeMillis()));
@@ -454,4 +455,5 @@ public class UserAccountService {
         mapper.savePermits(userId, permitJson);
         return permitJson;
     }
+
 }
