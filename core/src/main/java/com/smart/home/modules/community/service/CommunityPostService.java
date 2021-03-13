@@ -9,7 +9,6 @@ import com.google.common.collect.Lists;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
-import com.smart.home.common.util.DateUtils;
 import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.community.dao.CommunityMapper;
 import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
@@ -139,7 +138,7 @@ public class CommunityPostService {
         PageHelper.startPage(pageNum, pageSize);
         List<CommunityPost> list = communityPostMapper.queryViaUserIdByPage(userId, loginUserId);
         for (CommunityPost communityPost : list) {
-            long replyCount = communityPostReplyMapper.countByUserId(loginUserId);
+            long replyCount = communityPostReplyMapper.countByUserId(loginUserId, communityPost.getId());
             if (replyCount > 0) {
                 communityPost.setReplyFlag(YesNoEnum.YES.getCode());
             } else {

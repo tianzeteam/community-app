@@ -401,6 +401,6 @@
     </select>
 
   <select id="countByUserId" resultType="long">
-    select count(1) from community_post_reply where user_id = #{userId,jdbcType=BIGINT}
+    select count(1) from community_post_reply where user_id = #{userId,jdbcType=BIGINT} and post_id = #{postId,jdbcType=BIGINT}
   </select>
 </mapper>
