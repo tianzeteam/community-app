@@ -281,6 +281,7 @@ public class UserAccountService {
         userAccount.setUsername(mobile);
         userAccount.setMobile(mobile);
         userAccount.setNickName(mobile.substring(0, 7)+"****");
+        userAccount.setCreatedTime(new Date());
         mapper.insertSelective(userAccount);
         long userId = userAccount.getId();
         String token = JwtUtil.createToken(String.valueOf(userId),String.valueOf(System.currentTimeMillis()));
