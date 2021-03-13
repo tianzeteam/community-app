@@ -152,10 +152,10 @@ public class ProductCategoryService {
         return productCategoryMapper.selectByExample(example);
     }
 
-    public ProductCategory findById(Long id) {
-        ProductCategory productCategory = productCategoryMapper.selectByPrimaryKey(id.intValue());
+    public ProductCategory findById(Integer id) {
+        ProductCategory productCategory = productCategoryMapper.selectByPrimaryKey(id);
         // 查询挂钩的产品参数
-        List<Integer> paramIdList = productCategoryParamService.findParamIdListByCategoryId(id.intValue());
+        List<Integer> paramIdList = productCategoryParamService.findParamIdListByCategoryId(id);
         productCategory.setParamIdList(paramIdList);
         return productCategory;
     }

@@ -101,19 +101,16 @@ public class ProductCategoryController {
 
     @ApiOperation("按主键ID查询产品类目")
     @GetMapping("/selectById")
-    public APIResponse<ProductCategoryVO> selectById(Long id) {
+    public APIResponse<ProductCategoryVO> selectById(Integer id) {
         ProductCategory productCategory = productCategoryService.findById(id);
-        ProductCategoryVO vo = new ProductCategoryVO();
-        BeanUtils.copyProperties(productCategory, vo);
-        if (!CollectionUtils.isEmpty(productCategory.getParamIdList())) {
-            List<ProductParamSettingSelectVO> paramList = new ArrayList<>();
-            for (Integer paramId : productCategory.getParamIdList()) {
-                ProductParamSetting productParamSetting = productParamSettingService.findById(paramId);
-                ProductParamSettingSelectVO productParamSettingSelectVO = new ProductParamSettingSelectVO();
-                BeanUtils.copyProperties(productParamSetting, productParamSettingSelectVO);
-                paramList.add(productParamSettingSelectVO);
+        ProductCategoryVO vo = assemblerProductCategoryVO(productCategory);
+        if(vo.getPid().intValue() != 0) {
+            productCategory = productCategoryService.findById(vo.getPid());
+            vo.setParent(assemblerProductCategoryVO(productCategory));
+            if (productCategory.getPid() != 0) {
+                productCategory = productCategoryService.findById(vo.getPid());
+                vo.getParent().setParent(assemblerProductCategoryVO(productCategory));
             }
-            vo.setParamList(paramList);
         }
         return APIResponse.OK(vo);
     }
@@ -127,6 +124,22 @@ public class ProductCategoryController {
         List<ProductCategory> list = productCategoryService.queryAllValidByPid(pid);
         List<ProductCategorySelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductCategorySelectVO::new);
         return APIResponse.OK(resultList);
+    }
+
+    private ProductCategoryVO assemblerProductCategoryVO(ProductCategory productCategory) {
+        ProductCategoryVO vo = new ProductCategoryVO();
+        BeanUtils.copyProperties(productCategory, vo);
+        if (!CollectionUtils.isEmpty(productCategory.getParamIdList())) {
+            List<ProductParamSettingSelectVO> paramList = new ArrayList<>();
+            for (Integer paramId : productCategory.getParamIdList()) {
+                ProductParamSetting productParamSetting = productParamSettingService.findById(paramId);
+                ProductParamSettingSelectVO productParamSettingSelectVO = new ProductParamSettingSelectVO();
+                BeanUtils.copyProperties(productParamSetting, productParamSettingSelectVO);
+                paramList.add(productParamSettingSelectVO);
+            }
+            vo.setParamList(paramList);
+        }
+        return vo;
     }
 
 }

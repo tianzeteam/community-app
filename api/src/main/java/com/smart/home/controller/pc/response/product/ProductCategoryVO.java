@@ -26,6 +26,7 @@ public class ProductCategoryVO {
     private Integer sort;
     @ApiModelProperty("关联参数库数组")
     private List<ProductParamSettingSelectVO> paramList;
-
+    @ApiModelProperty("父类目对象，没有返回null")
+    private ProductCategoryVO parent;
 
 }
