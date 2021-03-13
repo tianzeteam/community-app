@@ -4,6 +4,7 @@ import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.controller.app.response.UserProfileVO;
 import com.smart.home.dto.APIResponse;
+import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.user.entity.UserAccount;
 import com.smart.home.modules.user.service.UserAccountService;
@@ -111,11 +112,13 @@ public class AppUserAccountSettingController {
     }
 
     @ApiOperation("注销登陆")
-    @RoleAccess(RoleConsts.REGISTER)
+    @AnonAccess
     @PostMapping("logout")
     public APIResponse logout() {
-        Long userId = UserUtils.getLoginUserId();
-        userAccountService.doLogout(userId);
+        if (UserUtils.getLoginUserId() > 0) {
+            Long userId = UserUtils.getLoginUserId();
+            userAccountService.doLogout(userId);
+        }
         return APIResponse.OK();
     }
 
