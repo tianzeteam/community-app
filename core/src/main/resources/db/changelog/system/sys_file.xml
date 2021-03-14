@@ -65,4 +65,11 @@
             CREATE INDEX idx_file_new_name ON sys_file USING btree (NEW_NAME);
         </sql>
     </changeSet>
+    <changeSet id="modifyColumnCreatedTime4SysFile" author="jason">
+        <comment>修改字段类型</comment>
+        <sql>
+            alter table sys_file alter column created_time type timestamp;
+            alter table sys_file alter column updated_time type timestamp;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
