@@ -5,6 +5,7 @@ import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.modules.user.entity.UserFeedback;
 import com.smart.home.modules.user.service.UserFeedbackService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,7 +50,7 @@ public class UserFeedbackController {
     @PostMapping("/selectByPage")
     public APIResponse<ResponsePageBean<UserFeedback>> selectByPage(UserFeedback userFeedback, int pageNum, int pageSize) {
         List<UserFeedback> list = userFeedbackService.selectByPage(userFeedback, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
     @ApiOperation("按主键ID查询用户反馈")

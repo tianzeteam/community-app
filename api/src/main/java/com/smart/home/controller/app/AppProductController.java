@@ -59,7 +59,7 @@ public class AppProductController {
                 t.setTagList(JSON.parseArray(s.getTag(), String.class));
             }
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("产品详情")
@@ -86,7 +86,7 @@ public class AppProductController {
     public APIResponse<ResponsePageBean<ProductPageCommentVO>> queryProductCommentByPage(Integer productId, int pageNum, int pageSize) {
         List<ProductComment> list = productCommentService.queryViaProductIdByPage(productId, pageNum, pageSize);
         List<ProductPageCommentVO> resultList = BeanCopyUtils.convertListTo(list, ProductPageCommentVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("根据产品主键id查询评测-分页查询")
@@ -100,7 +100,7 @@ public class AppProductController {
     public APIResponse<ResponsePageBean<ProductDetailPageTestVO>> queryProductTestByPage(Integer productId, int pageNum, int pageSize) {
         List<Article> list = articleService.queryViaProductIdByPage(productId, pageNum, pageSize);
         List<ProductDetailPageTestVO> resultList = BeanCopyUtils.convertListTo(list, ProductDetailPageTestVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("收藏产品")

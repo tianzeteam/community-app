@@ -87,7 +87,7 @@ public class ArticleController {
         product.setOnlineFlag(YesNoEnum.YES.getCode());
         List<Product> list = productService.selectByPage(product, productPageSearchDTO.getPageNum(), productPageSearchDTO.getPageSize());
         List<ArticleInsertProductVO> resultList = BeanCopyUtils.convertListTo(list, ArticleInsertProductVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("投稿/保存草稿文章")

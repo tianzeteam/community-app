@@ -9,6 +9,7 @@ import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.enums.MessageTypeEnum;
 import com.smart.home.modules.message.entity.MessageContent;
 import com.smart.home.modules.message.service.MessageContentService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -63,7 +64,7 @@ public class MessageContentController {
         MessageContent messageContent = new MessageContent();
         messageContent.setMessageType(MessageTypeEnum.NOTIFY.getType());
         List<MessageContent> list = messageContentService.selectByPage(messageContent, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
+        return APIResponse.OK(ResponsePageUtil.restPage(list,list));
     }
 
     @ApiOperation("按主键ID查询系统通知消息")

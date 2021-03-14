@@ -194,11 +194,11 @@ public class CommonArticleController {
             // 说明是登陆的
             List<ArticleComment> list = articleCommentService.queryCommentByPageWhenLogin(userId, articleId, pageNum, pageSize);
             List<ArticleCommentVO> resultList = BeanCopyUtils.convertListTo(list, ArticleCommentVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         } else {
             List<ArticleComment> list = articleCommentService.queryCommentByPageNoLogin(articleId, pageNum, pageSize);
             List<ArticleCommentVO> resultList = BeanCopyUtils.convertListTo(list, ArticleCommentVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         }
     }
 
@@ -216,11 +216,11 @@ public class CommonArticleController {
             // 说明是登陆的
             List<ArticleCommentReply> list = articleCommentReplyService.queryCommentReplyByPageWhenLogin(userId, articleCommentId, pageNum, pageSize);
             List<ArticleCommentReplyVO> resultList = BeanCopyUtils.convertListTo(list, ArticleCommentReplyVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         } else {
             List<ArticleCommentReply> list = articleCommentReplyService.queryCommentReplyByPageNoLogin(articleCommentId, pageNum, pageSize);
             List<ArticleCommentReplyVO> resultList = BeanCopyUtils.convertListTo(list, ArticleCommentReplyVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         }
     }
 

@@ -3,6 +3,7 @@ package com.smart.home.controller.pc;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import com.smart.home.controller.pc.request.system.SysConfigDTO;
 import com.smart.home.controller.pc.request.system.SysConfigSearchDTO;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author jason
@@ -59,7 +62,8 @@ public class SysConfigController {
     public APIResponse<ResponsePageBean<SysConfig>> selectByPage(SysConfigSearchDTO sysConfigSearchDTO) {
         SysConfig sysConfig = new SysConfig();
         BeanUtils.copyProperties(sysConfigSearchDTO, sysConfig);
-        return APIResponse.OK(ResponsePageBean.restPage(sysConfigService.selectByPage(sysConfig, sysConfigSearchDTO.getPageNum(), sysConfigSearchDTO.getPageSize())));
+        List<SysConfig> list = sysConfigService.selectByPage(sysConfig, sysConfigSearchDTO.getPageNum(), sysConfigSearchDTO.getPageSize());
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
 }

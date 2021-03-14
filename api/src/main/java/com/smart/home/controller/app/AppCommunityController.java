@@ -14,8 +14,12 @@ import com.smart.home.modules.community.entity.CommunityUserMapping;
 import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.modules.community.service.CommunityService;
 import com.smart.home.modules.community.service.CommunityUserMappingService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +53,7 @@ public class AppCommunityController {
         BeanUtils.copyProperties(communitySearchDTO, community);
         List<Community> communities = communityService.selectByPage(community, pageNum, pageSize);
         List<CommunitySelectVO> communitySelectVOS = BeanCopyUtils.convertListTo(communities, CommunitySelectVO::new);
-        return APIResponse.OK(ResponsePageBean.restPage(communitySelectVOS));
+        return APIResponse.OK(ResponsePageUtil.restPage(communitySelectVOS, communities));
     }
 
     @AnonAccess
@@ -77,9 +81,7 @@ public class AppCommunityController {
         communityUserMapping.setUserId(UserUtils.getLoginUserId());
         List<CommunityUserMapping> communityUserMappings = communityUserMappingService.selectByPage(communityUserMapping, pageNum, pageSize);
         List<CommunityUserMappingVO> communityUserMappingVOS = BeanCopyUtils.convertListTo(communityUserMappings, CommunityUserMappingVO::new);
-
-
-        return APIResponse.OK(ResponsePageBean.restPage(communityUserMappingVOS));
+        return APIResponse.OK(ResponsePageUtil.restPage(communityUserMappingVOS, communityUserMappings));
     }
 
     @AnonAccess
@@ -93,7 +95,7 @@ public class AppCommunityController {
     public APIResponse<ResponsePageBean<CommunityUserMappingVO>> detailPost(Integer boutiqueFlag, Integer pageNum, Integer pageSize){
         List<CommunityPostDTO> communityPostDTOS = communityPostService.queryCommunityDetailPostList(boutiqueFlag, pageNum, pageSize);
         List<CommunityUserMappingVO> communityUserMappingVOS = BeanCopyUtils.convertListTo(communityPostDTOS, CommunityUserMappingVO::new);
-        return APIResponse.OK(ResponsePageBean.restPage(communityUserMappingVOS));
+        return APIResponse.OK(ResponsePageUtil.restPage(communityUserMappingVOS, communityPostDTOS));
     }
 
 

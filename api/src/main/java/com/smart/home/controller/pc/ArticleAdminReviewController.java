@@ -14,6 +14,7 @@ import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.enums.ArticleStateEnum;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.service.ArticleService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -58,7 +59,7 @@ public class ArticleAdminReviewController {
             t.setAuthorId(s.getUserId());
             t.setArticleId(s.getId());
         });
-        return APIResponse.OK(ResponsePageBean.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("按文章主键id查详细内容")

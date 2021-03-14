@@ -10,6 +10,7 @@ import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.modules.article.entity.ArticleChannel;
 import com.smart.home.modules.article.service.ArticleChannelService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -82,7 +83,7 @@ public class ArticleChannelController {
         ArticleChannel articleChannel = new ArticleChannel();
         articleChannel.setTitle(title);
         List<ArticleChannel> list = articleChannelService.selectByPage(articleChannel, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
     @ApiOperation("按主键ID查询文章频道")

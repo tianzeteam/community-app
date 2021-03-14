@@ -4,6 +4,7 @@ import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.modules.other.entity.AuditHistory;
 import com.smart.home.modules.other.service.AuditHistoryService;
+import com.smart.home.util.ResponsePageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -38,7 +39,7 @@ public class AuditHistoryController {
         AuditHistory auditHistory = new AuditHistory();
         auditHistory.setCategory(queryType);
         List<AuditHistory> list = auditHistoryService.selectByPage(auditHistory, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
     @ApiOperation("按主键ID查询审核历史")

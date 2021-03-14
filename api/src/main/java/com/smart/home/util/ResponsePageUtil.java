@@ -1,5 +1,6 @@
 package com.smart.home.util;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smart.home.dto.ResponsePageBean;
@@ -14,15 +15,45 @@ public class ResponsePageUtil {
 
     /**
      * 将PageHelper分页后的list转为分页信息
+     * 这个方法废弃掉，这个方法附加的分页信息有问题， 用restPage(List<T> list, List pager) 方法代替
      */
-    public static <T> ResponsePageBean<T> restPage(List<T> list) {
+    @Deprecated
+    public static <T> ResponsePageBean<T> restPage(List<T> resultList) {
+        if (resultList instanceof Page) {
+            ResponsePageBean<T> result = new ResponsePageBean<T>();
+            PageInfo<T> pageInfo = new PageInfo<T>(resultList);
+            result.setTotalPage(pageInfo.getPages());
+            result.setPageNum(pageInfo.getPageNum());
+            result.setPageSize(pageInfo.getPageSize());
+            result.setTotalCount(pageInfo.getTotal());
+            result.setList(pageInfo.getList());
+            PageHelper.clearPage();
+            return result;
+        } else {
+            throw new RuntimeException("输入参数必须是Page类型的， 否则请调用restPage(List<T> resultList, List pager)方法");
+        }
+    }
+
+    public static <T> ResponsePageBean<T> restPage(List<T> resultList, List pager) {
         ResponsePageBean<T> result = new ResponsePageBean<T>();
-        PageInfo<T> pageInfo = new PageInfo<T>(list);
-        result.setTotalPage(pageInfo.getPages());
-        result.setPageNum(pageInfo.getPageNum());
-        result.setPageSize(pageInfo.getPageSize());
-        result.setTotalCount(pageInfo.getTotal());
-        result.setList(pageInfo.getList());
+        if (resultList instanceof Page) {
+            PageInfo<T> pageInfo = new PageInfo<T>(resultList);
+            result.setTotalPage(pageInfo.getPages());
+            result.setPageNum(pageInfo.getPageNum());
+            result.setPageSize(pageInfo.getPageSize());
+            result.setTotalCount(pageInfo.getTotal());
+            result.setList(pageInfo.getList());
+            PageHelper.clearPage();
+            return result;
+        }
+        if (pager instanceof Page) {
+            Page page = (Page) pager;
+            result.setTotalPage(page.getPages());
+            result.setPageNum(page.getPageNum());
+            result.setPageSize(page.getPageSize());
+            result.setTotalCount(page.getTotal());
+        }
+        result.setList(resultList);
         PageHelper.clearPage();
         return result;
     }

@@ -313,7 +313,7 @@ public class ProductController {
         product.setTagList(productPageSearchDTO.getTagList());
         List<Product> list = productService.selectByPage(product, productPageSearchDTO.getPageNum(), productPageSearchDTO.getPageSize());
         List<ProductPageVO> resultList = BeanCopyUtils.convertListTo(list, ProductPageVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
 }

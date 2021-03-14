@@ -12,6 +12,7 @@ import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.other.entity.StatisticPage;
 import com.smart.home.modules.other.service.StatisticPageService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.*;
 import org.springframework.beans.BeanUtils;
@@ -73,7 +74,7 @@ public class StatisticPageController {
     public APIResponse<ResponsePageBean<StaticPageVO>> selectByPage(String name, int pageNum, int pageSize) {
         List<StatisticPage> list = statisticPageService.selectSummaryByPage(name, pageNum, pageSize);
         List<StaticPageVO> resultList = BeanCopyUtils.convertListTo(list, StaticPageVO::new);
-        return APIResponse.OK(ResponsePageBean.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("按主键ID查询静态页面")

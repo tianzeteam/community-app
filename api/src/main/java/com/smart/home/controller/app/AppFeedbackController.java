@@ -13,8 +13,12 @@ import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.user.entity.UserFeedback;
 import com.smart.home.modules.user.service.UserFeedbackService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -47,7 +51,7 @@ public class AppFeedbackController {
         userFeedback.setUserId(UserUtils.getLoginUserId());
         List<UserFeedback> list = userFeedbackService.selectByPage(userFeedback, pageNum, pageSize);
         List<FeedbackVO> feedbackVOList = BeanCopyUtils.convertListTo(list, FeedbackVO::new);
-        return APIResponse.OK(ResponsePageBean.restPage(feedbackVOList));
+        return APIResponse.OK(ResponsePageUtil.restPage(feedbackVOList, list));
     }
 
     @ApiOperation("创建反馈")

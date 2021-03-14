@@ -68,7 +68,7 @@ public class PermissionAdminController {
         List<UserAccountWithAdminPermitVO> resultList = BeanCopyUtils.convertListTo(list, UserAccountWithAdminPermitVO::new, (s, t)->{
             t.setPermissions(JSON.parseObject(s.getPermits(), Map.class));
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("更新用户后台权限-授权/撤销")

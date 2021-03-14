@@ -3,17 +3,18 @@ package com.smart.home.controller.pc;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.smart.home.assembler.UserAssembler;
 import com.smart.home.common.exception.ServiceException;
+import com.smart.home.controller.pc.request.user.UserAccountCreateDTO;
+import com.smart.home.controller.pc.request.user.UserAccountSearchDTO;
+import com.smart.home.controller.pc.request.user.UserRoleAssignDTO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.UserRole;
-import com.smart.home.util.UserUtils;
-import com.smart.home.controller.pc.request.user.UserAccountCreateDTO;
-import com.smart.home.controller.pc.request.user.UserAccountSearchDTO;
-import com.smart.home.controller.pc.request.user.UserRoleAssignDTO;
 import com.smart.home.modules.user.entity.UserAccount;
 import com.smart.home.modules.user.entity.UserRoleMapping;
 import com.smart.home.modules.user.service.UserAccountService;
+import com.smart.home.util.ResponsePageUtil;
+import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -61,7 +62,8 @@ public class UserAccountController {
     public APIResponse<ResponsePageBean<UserAccount>> selectByPage(UserAccountSearchDTO userAccountSearchDTO) {
         UserAccount entity = new UserAccount();
         BeanUtils.copyProperties(userAccountSearchDTO, entity);
-        return APIResponse.OK(ResponsePageBean.restPage(userAccountService.selectByPage(entity, userAccountSearchDTO.getPageNum(), userAccountSearchDTO.getPageSize())));
+        List<UserAccount> list = userAccountService.selectByPage(entity, userAccountSearchDTO.getPageNum(), userAccountSearchDTO.getPageSize());
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
     @ApiOperation(value = "授权用户角色")
