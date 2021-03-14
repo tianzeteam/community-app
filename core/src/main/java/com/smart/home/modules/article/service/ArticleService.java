@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author jason
@@ -274,7 +275,9 @@ public class ArticleService {
 
     public Article queryDetailByIdNoLogin(Long articleId) {
         // 增加一次浏览量
-        articleMapper.increaseVisitCount(articleId);
+        CompletableFuture.runAsync(()->{
+            articleMapper.increaseVisitCount(articleId);
+        });
         return articleMapper.queryDetailByIdNoLogin(articleId);
     }
 
