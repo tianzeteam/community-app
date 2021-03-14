@@ -6,7 +6,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
+import java.util.List;
 /**
  * @author jason
  * @date 2021/2/28
@@ -21,7 +21,7 @@ public class ReportCreateDTO {
     @ApiModelProperty("描述")
     private String contents;
     @ApiModelProperty("截图为证-如果有的话")
-    private String images;
+    private List<String> imageList;
     @ApiModelProperty("作者用户主键id")
     @NotNull(message = "作者用户主键id不能为空")
     private Long authorUserId;

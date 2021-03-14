@@ -1,5 +1,7 @@
 package com.smart.home.controller.app;
 
+import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.controller.app.request.ReportCreateDTO;
@@ -38,7 +40,10 @@ public class AppReportController {
         Long id = reportCreateDTO.getId();
         Long userId = UserUtils.getLoginUserId();
         String contents = reportCreateDTO.getContents();
-        String images = reportCreateDTO.getImages();
+        String images = null;
+        if (CollUtil.isNotEmpty(reportCreateDTO.getImageList())) {
+            images = JSON.toJSONString(reportCreateDTO.getImageList());
+        }
         Long authorUserId = reportCreateDTO.getAuthorUserId();
         String reason = reportCreateDTO.getReason();
         try {
@@ -56,7 +61,10 @@ public class AppReportController {
         Long id = reportCreateDTO.getId();
         Long userId = UserUtils.getLoginUserId();
         String contents = reportCreateDTO.getContents();
-        String images = reportCreateDTO.getImages();
+        String images = null;
+        if (CollUtil.isNotEmpty(reportCreateDTO.getImageList())) {
+            images = JSON.toJSONString(reportCreateDTO.getImageList());
+        }
         Long authorUserId = reportCreateDTO.getAuthorUserId();
         String reason = reportCreateDTO.getReason();
         try {
