@@ -32,6 +32,8 @@ public class MessageReplyVO {
     private String coverImage;
     @ApiModelProperty("标题")
     private String title;
+    @ApiModelProperty("内容")
+    private String messageContent;
     @ApiModelProperty("原文主键id")
     private Long sourceId;
 
