@@ -12,6 +12,7 @@ import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.product.entity.ProductShop;
 import com.smart.home.modules.product.service.ProductShopService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -88,7 +89,7 @@ public class ProductShopController {
         ProductShop productShop = new ProductShop();
         productShop.setShopName(name);
         List<ProductShop> list = productShopService.selectByPage(productShop, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
     @ApiOperation("按主键ID查询产品商城")

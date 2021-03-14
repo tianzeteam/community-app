@@ -49,8 +49,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -130,7 +130,7 @@ public class AppUserProfileController {
                 t.setImageList(JSON.parseArray(s.getImages(), String.class));
             }
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
     @ApiOperation("评论数据-分页")
     @ApiImplicitParams({
@@ -146,7 +146,7 @@ public class AppUserProfileController {
         }
         List<ArticleComment> list = articleCommentService.queryViaUserIdByPageWhenLogin(userId, pageNum, pageSize, UserUtils.getLoginUserId());
         List<MyRootProfileCommentVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfileCommentVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
     @ApiOperation("回帖数据-分页")
     @ApiImplicitParams({
@@ -162,7 +162,7 @@ public class AppUserProfileController {
         }
         List<CommunityPostReply> list = communityPostReplyService.queryViaUserIdByPageWhenLogin(userId, pageNum, pageSize, UserUtils.getLoginUserId());
         List<MyRootProfilePostReplyVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfilePostReplyVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
     @ApiOperation("评价数据-分页")
     @ApiImplicitParams({
@@ -182,7 +182,7 @@ public class AppUserProfileController {
                 t.setImageList(JSON.parseArray(s.getImages(), String.class));
             }
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
     @ApiOperation("投稿数据-分页")
     @ApiImplicitParams({
@@ -202,7 +202,7 @@ public class AppUserProfileController {
                 t.setImageList(JSON.parseArray(s.getBannerImages(), String.class));
             }
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("关注-用户点击关注按钮")
@@ -242,7 +242,7 @@ public class AppUserProfileController {
         Long userId = UserUtils.getLoginUserId();
         List<MyFocusDTO> list = userFollowerService.myFocusByPage(userId, pageNum, pageSize);
         List<MyFocusVO> resultList = BeanCopyUtils.convertListTo(list, MyFocusVO::new);
-        return APIResponse.OK(ResponsePageBean.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("粉丝-分页查询我的粉丝")
@@ -256,7 +256,7 @@ public class AppUserProfileController {
         Long userId = UserUtils.getLoginUserId();
         List<MyFollowerDTO> list = userFollowerService.myFollowerByPage(userId, pageNum, pageSize);
         List<MyFollowerVO> resultList = BeanCopyUtils.convertListTo(list, MyFollowerVO::new);
-        return APIResponse.OK(ResponsePageBean.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("收藏-分页查询我的收藏投稿")
@@ -273,7 +273,7 @@ public class AppUserProfileController {
                 t.setImageList(JSON.parseArray(s.getBannerImages(), String.class));
             }
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
     @ApiOperation("收藏-分页查询我的收藏帖子")
     @ApiImplicitParams({
@@ -290,7 +290,7 @@ public class AppUserProfileController {
                t.setImageList(JSON.parseArray(s.getImages(), String.class));
            }
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
     @ApiOperation("收藏-分页查询我的收藏产品")
     @ApiImplicitParams({
@@ -303,7 +303,7 @@ public class AppUserProfileController {
         Long userId = UserUtils.getLoginUserId();
         List<Product> list = productService.queryCollectViaUserIdByPage(userId, pageNum, pageSize);
         List<ProductSearchResultVO> resultList = BeanCopyUtils.convertListTo(list, ProductSearchResultVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("草稿箱-分页查询我的草稿箱")
@@ -320,7 +320,7 @@ public class AppUserProfileController {
                 t.setImageList(JSON.parseArray(s.getBannerImages(), String.class));
             }
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("删除草稿")

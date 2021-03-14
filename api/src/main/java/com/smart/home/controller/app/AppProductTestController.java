@@ -41,7 +41,7 @@ public class AppProductTestController {
     public APIResponse<ResponsePageBean<ProductPageTestVO>> queryByPage(Integer productId, Integer pageNum, Integer pageSize) {
         List<Article> list = articleService.queryTestForProductByPage(productId, pageNum, pageSize);
         List<ProductPageTestVO> resultList = BeanCopyUtils.convertListTo(list, ProductPageTestVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
 }

@@ -179,7 +179,7 @@ public class DashboardController {
     @GetMapping("/selectHistoryDataByPage")
     public APIResponse<ResponsePageBean<RptDashboard>> selectHistoryDataByPage(int pageNum, int pageSize) {
         List<RptDashboard> list = rptDashboardService.selectByPage(new RptDashboard(), pageNum, pageSize);
-        return APIResponse.OK(ResponsePageUtil.restPage(list));
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
 }

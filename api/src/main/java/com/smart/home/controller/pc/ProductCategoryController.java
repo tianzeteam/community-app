@@ -3,8 +3,8 @@ package com.smart.home.controller.pc;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.product.ProductCategoryCreateDTO;
-import com.smart.home.controller.pc.response.product.ProductCategorySelectVO;
 import com.smart.home.controller.pc.request.product.ProductCategoryUpdateDTO;
+import com.smart.home.controller.pc.response.product.ProductCategorySelectVO;
 import com.smart.home.controller.pc.response.product.ProductCategoryVO;
 import com.smart.home.controller.pc.response.product.ProductParamSettingSelectVO;
 import com.smart.home.dto.APIResponse;
@@ -14,6 +14,7 @@ import com.smart.home.modules.product.entity.ProductCategory;
 import com.smart.home.modules.product.entity.ProductParamSetting;
 import com.smart.home.modules.product.service.ProductCategoryService;
 import com.smart.home.modules.product.service.ProductParamSettingService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -96,7 +97,7 @@ public class ProductCategoryController {
         productCategory.setTitle(title);
         productCategory.setLevel(level);
         List<ProductCategory> list = productCategoryService.selectByPage(productCategory, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
     @ApiOperation("按主键ID查询产品类目")

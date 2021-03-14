@@ -21,13 +21,6 @@ public class ResponsePageBean<T> {
     @ApiModelProperty("分页数据")
     private List<T> list;
 
-    /**
-     * 将PageHelper分页后的list转为分页信息
-     */
-    public static <T> ResponsePageBean<T> restPage(List<T> list) {
-        return ResponsePageUtil.restPage(list);
-    }
-
     public Integer getPageNum() {
         return pageNum;
     }

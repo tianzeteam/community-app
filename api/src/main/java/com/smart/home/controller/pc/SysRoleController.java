@@ -1,22 +1,27 @@
 package com.smart.home.controller.pc;
 
-import com.smart.home.dto.APIResponse;
-import com.smart.home.dto.IdListBean;
-import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.controller.pc.request.system.SysRoleDTO;
 import com.smart.home.controller.pc.request.system.SysRoleMenuAssignDTO;
 import com.smart.home.controller.pc.request.system.SysRoleSearchDTO;
+import com.smart.home.dto.APIResponse;
+import com.smart.home.dto.IdListBean;
+import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.modules.system.entity.SysRole;
 import com.smart.home.modules.system.service.SysRoleService;
+import com.smart.home.util.ResponsePageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author jason
@@ -57,7 +62,8 @@ public class SysRoleController {
     public APIResponse<ResponsePageBean<SysRole>> selectByPage(SysRoleSearchDTO sysRoleSearchDTO) {
         SysRole entity = new SysRole();
         BeanUtils.copyProperties(sysRoleSearchDTO, entity);
-        return APIResponse.OK(ResponsePageBean.restPage(sysRoleService.selectByPage(entity, sysRoleSearchDTO.getPageNum(), sysRoleSearchDTO.getPageSize())));
+        List<SysRole> list = sysRoleService.selectByPage(entity, sysRoleSearchDTO.getPageNum(), sysRoleSearchDTO.getPageSize());
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
     @ApiOperation(value = "授权菜单")

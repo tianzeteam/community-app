@@ -57,7 +57,7 @@ public class AppMessageController {
             t.setUserId(s.getSenderId());
             t.setLikeCategory(s.getMessageSubType());
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
     @ApiOperation("获取赞列表消息ACK-用户删除服务器消息数据")
     @RoleAccess(RoleConsts.REGISTER)
@@ -80,7 +80,7 @@ public class AppMessageController {
             t.setUserId(s.getSenderId());
             t.setReplyCategory(s.getMessageSubType());
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("获取回复列表消息ACK-用户删除服务器消息数据")
@@ -101,7 +101,7 @@ public class AppMessageController {
     public APIResponse<ResponsePageBean<MessageNotifyVO>> queryNotifyMessageByPage(int pageNum, int pageSize) {
         List<MessageContent> list = messageContentService.queryMessageByPage(MessageTypeEnum.NOTIFY, UserUtils.getLoginUserId(),pageNum, pageSize);
         List<MessageNotifyVO> resultList = BeanCopyUtils.convertListTo(list, MessageNotifyVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("获取通知列表消息ACK-用户删除服务器消息数据")

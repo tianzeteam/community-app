@@ -28,6 +28,7 @@ import com.smart.home.service.FunService;
 import com.smart.home.service.LikeService;
 import com.smart.home.service.MessageService;
 import com.smart.home.service.StampService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -97,7 +98,7 @@ public class AppProductCommentController {
             t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
             t.setStampFlag(s.getStampId() == null ? 0 : 1);
         });
-        return APIResponse.OK(ResponsePageBean.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("发表评价")
@@ -152,7 +153,7 @@ public class AppProductCommentController {
             t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
             t.setStampFlag(s.getStampId() == null ? 0 : 1);
         });
-        return APIResponse.OK(ResponsePageBean.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("产品评价-点有用")

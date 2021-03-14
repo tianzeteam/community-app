@@ -59,11 +59,11 @@ public class AppCommunityPostReplyController {
             // 说明是登陆的
             List<CommunityPostReply> list = communityPostReplyService.queryPageById(communityPostReplyDTO, pageNum, pageSize, true);
             List<CommunityPostReplyVO> resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         } else {
             List<CommunityPostReply> list = communityPostReplyService.queryPageById(communityPostReplyDTO, pageNum, pageSize, false);
             List<CommunityPostReplyVO> resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         }
     }
 

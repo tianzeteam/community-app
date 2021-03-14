@@ -80,4 +80,5 @@ public class BeanCopyUtils extends BeanUtils {
     public interface ConvertCallBack<S, T> {
         void callBack(S t, T s);
     }
+
 }

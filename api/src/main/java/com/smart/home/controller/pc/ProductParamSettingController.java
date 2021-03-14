@@ -11,6 +11,7 @@ import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.modules.product.entity.ProductParamSetting;
 import com.smart.home.modules.product.service.ProductParamSettingService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -91,7 +92,7 @@ public class ProductParamSettingController {
         ProductParamSetting productParamSetting = new ProductParamSetting();
         productParamSetting.setParamName(paramName);
         List<ProductParamSetting> list = productParamSettingService.selectByPage(productParamSetting, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
     @ApiOperation("按主键ID查询产品参数库")

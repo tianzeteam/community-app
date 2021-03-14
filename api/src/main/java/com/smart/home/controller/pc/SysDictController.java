@@ -1,14 +1,15 @@
 package com.smart.home.controller.pc;
 
+import com.smart.home.controller.pc.request.system.SysDictDTO;
+import com.smart.home.controller.pc.request.system.SysDictSearchDTO;
 import com.smart.home.controller.pc.request.system.SysDictUpdateDTO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
-import com.smart.home.util.UserUtils;
-import com.smart.home.controller.pc.request.system.SysDictDTO;
-import com.smart.home.controller.pc.request.system.SysDictSearchDTO;
 import com.smart.home.modules.system.entity.SysDict;
 import com.smart.home.modules.system.service.SysDictService;
+import com.smart.home.util.ResponsePageUtil;
+import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -16,6 +17,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author jason
@@ -70,7 +73,8 @@ public class SysDictController {
     public APIResponse<ResponsePageBean<SysDict>> selectByPage(SysDictSearchDTO sysDictSearchDTO) {
         SysDict sysDict = new SysDict();
         BeanUtils.copyProperties(sysDictSearchDTO, sysDict);
-        return APIResponse.OK(ResponsePageBean.restPage(sysDictService.selectByPage(sysDict, sysDictSearchDTO.getPageNum(), sysDictSearchDTO.getPageSize())));
+        List<SysDict> list = sysDictService.selectByPage(sysDict, sysDictSearchDTO.getPageNum(), sysDictSearchDTO.getPageSize());
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
 }

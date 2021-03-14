@@ -49,6 +49,6 @@ public class IndexPageController {
     public APIResponse<ResponsePageBean<IndexArticleCardVO>> selectArticleCardByPage(Integer channelId, int pageNum, int pageSize) {
         List<Article> list = articleService.selectArticleCardByPage(channelId, pageNum, pageSize);
         List<IndexArticleCardVO> resultList = BeanCopyUtils.convertListTo(list, IndexArticleCardVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 }

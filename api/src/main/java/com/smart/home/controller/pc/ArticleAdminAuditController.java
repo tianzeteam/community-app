@@ -4,8 +4,8 @@ import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.article.ArticleAdminAuditSearchDTO;
-import com.smart.home.controller.pc.response.article.ArticleAdminPageVO;
 import com.smart.home.controller.pc.request.article.ArticleAdminRejectDTO;
+import com.smart.home.controller.pc.response.article.ArticleAdminPageVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
@@ -13,6 +13,7 @@ import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.enums.ArticleStateEnum;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.service.ArticleService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -55,7 +56,7 @@ public class ArticleAdminAuditController {
             t.setAuthorId(s.getUserId());
             t.setArticleId(s.getId());
         });
-        return APIResponse.OK(ResponsePageBean.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("按文章主键id查详细内容")

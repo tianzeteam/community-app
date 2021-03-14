@@ -112,7 +112,7 @@ public class UserController {
             articleComment.setUserId(userId);
             List<ArticleComment> list = articleCommentService.selectByPage(articleComment, pageNum, pageSize);
             List<UserAdminContentVO> resultList = BeanCopyUtils.convertListTo(list, UserAdminContentVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         }
         if (queryType.intValue() == 1) {
             ProductComment productComment = new ProductComment();
@@ -121,7 +121,7 @@ public class UserController {
             List<UserAdminContentVO> resultList = BeanCopyUtils.convertListTo(list, UserAdminContentVO::new, (s,t)->{
                 t.setContents(s.getDetails());
             });
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         }
         if (queryType.intValue() == 2) {
             CommunityPost communityPost = new CommunityPost();
@@ -130,14 +130,14 @@ public class UserController {
             List<UserAdminContentVO> resultList = BeanCopyUtils.convertListTo(list, UserAdminContentVO::new, (s,t)->{
                 t.setImageList(JSON.parseArray(s.getImages(), String.class));
             });
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         }
         if (queryType.intValue() == 3) {
             CommunityPostReply communityPostReply = new CommunityPostReply();
             communityPostReply.setUserId(userId);
             List<CommunityPostReply> list = communityPostReplyService.selectByPage(communityPostReply, pageNum, pageSize);
             List<UserAdminContentVO> resultList = BeanCopyUtils.convertListTo(list, UserAdminContentVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         }
         return APIResponse.ERROR("非法的queryType");
     }

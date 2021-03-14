@@ -10,6 +10,7 @@ import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.modules.community.entity.CommunityCategory;
 import com.smart.home.modules.community.service.CommunityCategoryService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -82,7 +83,7 @@ public class CommunityCategoryController {
         CommunityCategory communityCategory = new CommunityCategory();
         communityCategory.setTitle(title);
         List<CommunityCategory> list = communityCategoryService.selectByPage(communityCategory, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
     @ApiOperation("按主键ID查询社区类目")

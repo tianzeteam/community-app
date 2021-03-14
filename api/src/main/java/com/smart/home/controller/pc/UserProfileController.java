@@ -70,7 +70,7 @@ public class UserProfileController {
         Long userId = UserUtils.getLoginUserId();
         List<Article> list = articleService.selectTitleImageCreateIimeByPage(userId, queryType, auditState, pageNum, pageSize);
         List<PcUserProfileArticleVO> resultList = BeanCopyUtils.convertListTo(list, PcUserProfileArticleVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
 }

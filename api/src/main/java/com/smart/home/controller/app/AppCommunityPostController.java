@@ -8,6 +8,7 @@ import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.service.CommunityPostService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -58,7 +59,7 @@ public class AppCommunityPostController {
         log.info("推荐帖子列表:");
         List<CommunityPostDTO> communityPosts = communityPostService.queryRecommendPostList(pageNum, pageSize);
         List<RecommendCommunityPostVO> recommendCommunityPostVOS = BeanCopyUtils.convertListTo(communityPosts, RecommendCommunityPostVO::new);
-        return APIResponse.OK(ResponsePageBean.restPage(recommendCommunityPostVOS));
+        return APIResponse.OK(ResponsePageUtil.restPage(recommendCommunityPostVOS, communityPosts));
     }
 
     //暂时先用一个返回vo
@@ -73,7 +74,7 @@ public class AppCommunityPostController {
         log.info("热议帖子列表:");
         List<CommunityPostDTO> communityPosts = communityPostService.queryHotPostList(pageNum, pageSize);
         List<RecommendCommunityPostVO> recommendCommunityPostVOS = BeanCopyUtils.convertListTo(communityPosts, RecommendCommunityPostVO::new);
-        return APIResponse.OK(ResponsePageBean.restPage(recommendCommunityPostVOS));
+        return APIResponse.OK(ResponsePageUtil.restPage(recommendCommunityPostVOS, communityPosts));
     }
 
     @AnonAccess

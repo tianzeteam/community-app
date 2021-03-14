@@ -5,6 +5,7 @@ import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.modules.other.entity.ReportHistory;
 import com.smart.home.modules.other.service.ReportHistoryService;
+import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,7 +43,7 @@ public class ReportHistoryController {
     @PostMapping("/selectByPage")
     public APIResponse<ResponsePageBean<ReportHistory>> selectByPage(ReportHistory reportHistory, int pageNum, int pageSize) {
         List<ReportHistory> list = reportHistoryService.selectByPage(reportHistory, pageNum, pageSize);
-        return APIResponse.OK(ResponsePageBean.restPage(list));
+        return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
     @ApiOperation("按主键ID查询举报历史")
