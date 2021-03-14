@@ -67,7 +67,6 @@ public class SubjectCardService {
     }
 
     public SubjectCard queryLatestSubjectCard() {
-        PageHelper.startPage(1, 1);
         SubjectCardExample example = new SubjectCardExample();
         example.createCriteria().andRevisionEqualTo(0);
         example.setOrderByClause("created_time desc");

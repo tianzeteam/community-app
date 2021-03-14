@@ -12,6 +12,8 @@ import lombok.ToString;
 @ToString
 public class SubjectCardVO {
 
+    @ApiModelProperty("页面主键id")
+    private Integer id;
     @ApiModelProperty("标题")
     private String title;
     @ApiModelProperty("封面图片")
