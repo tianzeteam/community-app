@@ -26,5 +26,7 @@ public class ArticleCardVO {
     private String sourceFrom;
     @ApiModelProperty("创建时间")
     private Date createdTime;
+    @ApiModelProperty("文章类型：0文章1视频")
+    private Integer category;
 
 }

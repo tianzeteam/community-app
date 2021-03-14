@@ -851,7 +851,8 @@
   <select id="queryBigImageCard" resultType="com.smart.home.modules.article.entity.Article">
     select cover_image as coverImage,
            title,
-            id
+            id,
+            category
     from article
     where  state = 1 and audit_state = 1
     <if test="recommendFlag != null">
@@ -873,6 +874,7 @@
     select cover_image as coverImage,
             title,
             id,
+            category,
             source_from as sourceFrom,
             created_time as createdTime
     from article

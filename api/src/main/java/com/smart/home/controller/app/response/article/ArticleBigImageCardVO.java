@@ -20,5 +20,7 @@ public class ArticleBigImageCardVO {
     private String title;
     @ApiModelProperty("大图")
     private String coverImage;
+    @ApiModelProperty("文章分类：0文章1ship ")
+    private Integer category;
 
 }
