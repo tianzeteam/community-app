@@ -124,7 +124,8 @@
       #{likeCount,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}, #{stampCount,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.smart.home.modules.community.entity.CommunityPostReply">
+  <insert id="insertSelective" parameterType="com.smart.home.modules.community.entity.CommunityPostReply"
+          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into community_post_reply
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -154,6 +155,12 @@
       <if test="stampCount != null">
         stamp_count,
       </if>
+      <if test="authorFlag != null">
+        author_flag,
+      </if>
+      <if test="toUserId != null">
+        to_user_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -182,6 +189,12 @@
       </if>
       <if test="stampCount != null">
         #{stampCount,jdbcType=INTEGER},
+      </if>
+      <if test="authorFlag != null">
+        #{authorFlag},
+      </if>
+      <if test="toUserId != null">
+        #{toUserId},
       </if>
     </trim>
   </insert>
@@ -301,7 +314,7 @@
   </update>
 
   <update id="updateAutoAuditFlag">
-    update community_post_reply set auto_audit_flag = #{autoAuditFlag} where id = #{id,jdbcType=BIGINT}
+    update community_post_reply set auto_audit_flag = #{autoAuditFlag},text_exception_reason = #{reason} where id = #{id,jdbcType=BIGINT}
   </update>
 
   <update id="updateAutoAuditFlagAndAuditFlag">
@@ -402,5 +415,46 @@
 
   <select id="countByUserId" resultType="long">
     select count(1) from community_post_reply where user_id = #{userId,jdbcType=BIGINT} and post_id = #{postId,jdbcType=BIGINT}
+  </select>
+
+
+  <select id="queryByCommentIdWhenLogin" resultType="com.smart.home.modules.community.entity.CommunityPostReply" parameterType="com.smart.home.modules.community.dto.CommunityPostReplyDTO">
+    select cpr.id,
+    ua.head_url as headUrl,
+    ua.nick_name as nickName,
+    ud.user_level as userLevel,
+    cpr.contents,
+    cpr.to_user_id as toUserId,
+    cpr.created_time as createdTime,
+    cpr.like_count as likeCount,
+    cpr.stamp_count as stampCount,
+    cpr.author_flag as authorFlag,
+    case when alh.id is null then 0 else 1 end as likeFlag,
+    case when ash.id is null then 0 else 1 end as stampFlag
+    from community_post_reply cpr
+    left join user_account ua on ua.id = cpr.user_id
+    left join user_data ud on ud.user_id = ua.id
+    left join community_like_history alh on alh.post_id = cpr.id and alh.type = 2 and alh.user_id = #{userId,jdbcType=BIGINT}
+    left join community_stamp_history ash on ash.post_id = cpr.id and ash.type = 2 and ash.user_id = #{userId,jdbcType=BIGINT}
+    where cpr.post_id = #{id,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
+    order by cpr.id desc
+  </select>
+
+  <select id="queryByCommentIdNotLogin" resultType="com.smart.home.modules.community.entity.CommunityPostReply" parameterType="com.smart.home.modules.community.dto.CommunityPostReplyDTO">
+    select cpr.id,
+    ua.head_url as headUrl,
+    ua.nick_name as nickName,
+    ud.user_level as userLevel,
+    cpr.contents,
+    cpr.to_user_id as toUserId,
+    cpr.created_time as createdTime,
+    cpr.like_count as likeCount,
+    cpr.stamp_count as stampCount,
+    cpr.author_flag as authorFlag,
+    from community_post_reply cpr
+    left join user_account ua on ua.id = cpr.user_id
+    left join user_data ud on ud.user_id = ua.id
+    where cpr.post_id = #{id,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
+    order by cpr.id desc
   </select>
 </mapper>

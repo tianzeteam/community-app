@@ -6,9 +6,18 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.smart.home.cloud.qcloud.auditor.ContentAuditor;
+import com.smart.home.cloud.qcloud.auditor.ContentAuditorResult;
+import com.smart.home.cloud.qcloud.auditor.ImageAuditor;
+import com.smart.home.cloud.qcloud.auditor.ImageAuditorResult;
+import com.smart.home.cloud.qcloud.enums.ContentAuditorEvilEnum;
+import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
+import com.smart.home.cloud.qcloud.enums.ImageAuditorSuggestionEnum;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.exception.ServiceException;
+import com.smart.home.common.util.DateUtils;
 import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.community.dao.CommunityMapper;
 import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
@@ -17,20 +26,22 @@ import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.entity.Community;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
+import com.smart.home.modules.system.service.SysFileService;
+import com.smart.home.modules.user.dao.UserCommunityAuthMapper;
 import com.smart.home.modules.user.dao.UserDataMapper;
 import com.smart.home.modules.user.dto.UserDataDTO;
+import com.smart.home.modules.user.entity.UserCommunityAuth;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -49,6 +60,11 @@ public class CommunityPostService {
     private UserDataMapper userDataMapper;
     @Resource
     private CommunityMapper communityMapper;
+    @Autowired
+    private SysFileService sysFileService;
+    @Resource
+    private UserCommunityAuthMapper userCommunityAuthMapper;
+
     @Resource
     private CommunityPostReplyMapper communityPostReplyMapper;
 
@@ -293,6 +309,129 @@ public class CommunityPostService {
         }
         return communityPostDTO;
     }
+
+    /**
+     * 发帖
+     */
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void executePost(CommunityPostDTO communityPostDTO){
+        UserCommunityAuth userCommunityAuth = userCommunityAuthMapper.selectByUserId(communityPostDTO.getUserId());
+        if (userCommunityAuth == null) {
+            throw new ServiceException("您无社区权限");
+        }
+        if (userCommunityAuth.getSpeakFlag() == 1) {
+            throw new ServiceException("您已被禁言");
+        }
+        if (userCommunityAuth.getBlackFlag() == 1) {
+            throw new ServiceException("您已被封禁");
+        }
+
+        CommunityPost communityPost = new CommunityPost();
+        communityPost.setUserId(communityPost.getUserId());
+        communityPost.setCommunity(communityPostDTO.getCommunity());
+        communityPost.setTitle(communityPostDTO.getTitle());
+        communityPost.setContents(communityPostDTO.getContents());
+        communityPost.setImages(communityPostDTO.getImages());
+        communityPost.setTopFlag(communityPostDTO.getTopFlag());
+        communityPost.setBoutiqueFlag(communityPostDTO.getBoutiqueFlag());
+        communityPost.setCommentFlag(communityPostDTO.getCommentFlag());
+        communityPost.setRemark(StrUtil.sub(communityPostDTO.getContents(), 0, 100) + "……");
+        communityPostMapper.insertSelective(communityPost);
+        Long id = communityPost.getId();
+
+        // 同步图片
+        sysFileService.syncImageFileList(communityPostDTO.getImagesList());
+        processAutoAudit(communityPostDTO.getUserId(), id, communityPostDTO.getContents(), communityPostDTO.getImagesList());
+    }
+
+
+
+    private void processAutoAudit(Long loginUserId, long id, String details, List<String> imageList) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean contentPass = false;
+                ContentAuditorResult contentAuditorResult = ContentAuditor.auditorResult(details);
+                if (contentAuditorResult == null) {
+                    // 机审文本失败，进入人工审核
+                    communityPostMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "请求云服务失败");
+                    return;
+                }
+                if (contentAuditorResult.getContentAuditorEvilEnum() == ContentAuditorEvilEnum.NORMAL) {
+                    // 机审成功， 标记为成功， 还要等图片审核结果
+                    contentPass = true;
+                }
+                // 图片审核，如果有的话
+                boolean hasImage = false;
+                ImageAuditorResult imageAuditorResult = null;
+                if (!CollectionUtils.isEmpty(imageList)) {
+                    hasImage = true;
+                    for (String image : imageList) {
+                        imageAuditorResult = ImageAuditor.auditorResult(image);
+                        if (imageAuditorResult == null) {
+                            break;
+                        }
+                        if (imageAuditorResult.getImageAuditorSuggestionEnum() != ImageAuditorSuggestionEnum.Pass) {
+                            break;
+                        }
+                    }
+                    if (Objects.isNull(imageAuditorResult)) {
+                        // 机审图片失败，进入人工审核
+                        communityPostMapper.updateAutoAuditFlagImage(id, AutoAuditFlagEnum.ERROR.getCode(), "请求云服务失败");
+                        return;
+                    }
+                    if (imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Pass) {
+                        // 图片机审成功 加上 文本审核成功
+                        if (contentPass) {
+                            communityPostMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                            return;
+                        }
+                    }
+                } else {
+                    // 没有图片的话判断机审结果，成功的话直接更新成成功
+                    if (contentPass) {
+                        communityPostMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                        return;
+                    }
+                }
+
+                // 机器审核不通过，文本异常
+                // 先看看建议通过不通过
+                ContentAuditorSuggestionEnum contentAuditorSuggestionEnum = contentAuditorResult.getContentAuditorSuggestionEnum();
+                if (contentAuditorSuggestionEnum == null
+                        || ContentAuditorSuggestionEnum.Block == contentAuditorSuggestionEnum
+                        || ContentAuditorSuggestionEnum.Review == contentAuditorSuggestionEnum) {
+                    communityPostMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode(), contentAuditorResult.getContentAuditorEvilTypeEnum().getDesc());
+                    List<String> keywordsList = contentAuditorResult.getKeywordsList();
+                    if (!CollectionUtils.isEmpty(keywordsList)) {
+                        communityPostMapper.updateHitSensitiveCount(id, keywordsList.size());
+                        // 增加用户的总敏感词数量
+                        userDataService.increaseHitSensitiveCount(loginUserId, keywordsList.size());
+                    }
+                    userDataService.increaseTextExceptionCount(loginUserId);
+                } else if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
+                    // 正常，视为通过
+                    contentPass = true;
+                }
+                if (hasImage) {
+                    // 机器审核不通过，图片异常
+                    if (imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Block
+                            || imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Review) {
+                        String reason = imageAuditorResult.getImageAuditorLabelEnum().getDesc();
+                        if (contentPass) {
+                            communityPostMapper.updateAutoAuditFlagImage(id, AutoAuditFlagEnum.IMAGE_EXCEPTION.getCode(), reason);
+                        } else {
+                            communityPostMapper.updateAutoAuditFlagImage(id, AutoAuditFlagEnum.IMAGE_AND_CONTENT_EXCEPTION.getCode(), reason);
+                        }
+                        userDataService.increaseImageExceptionCount(loginUserId);
+                    }
+                } else if (contentPass) {
+                    communityPostMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                }
+            }
+        }).start();
+    }
+
 
 
     private List<CommunityPostDTO> transCommunityPostDTO(List<CommunityPost> list){

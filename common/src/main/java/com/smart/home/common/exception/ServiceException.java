@@ -3,7 +3,7 @@ package com.smart.home.common.exception;
 /**
  * @author jason
  */
-public class ServiceException extends Exception {
+public class ServiceException extends RuntimeException {
 
 	/**
 	 *
