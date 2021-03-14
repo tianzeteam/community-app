@@ -1,11 +1,15 @@
 package com.smart.home.controller.app;
 
+import com.alibaba.fastjson.JSON;
+import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.BeanCopyUtils;
+import com.smart.home.controller.app.request.CommunityPostReq;
 import com.smart.home.controller.app.response.community.CommunityPostDetailVO;
 import com.smart.home.controller.app.response.community.RecommendCommunityPostVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
+import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.util.ResponsePageUtil;
@@ -18,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -98,12 +103,18 @@ public class AppCommunityPostController {
         return APIResponse.OK(communityPostDetailVO);
     }
 
-    @AnonAccess
+    @RoleAccess(RoleConsts.REGISTER)
     @ApiOperation("发帖")
     @GetMapping("/release")
-    public APIResponse release(){
+    public APIResponse release(@RequestBody CommunityPostReq communityPostReq){
+        log.info("发帖params：{}", JSON.toJSONString(communityPostReq));
         //用户是否存在，检查是否禁言
-
+        CommunityPostDTO communityPostDTO = new CommunityPostDTO();
+        BeanUtils.copyProperties(communityPostReq, communityPostDTO);
+        communityPostDTO.setUserId(UserUtils.getLoginUserId());
+        communityPostDTO.setImages(JSON.toJSONString(communityPostReq.getList()));
+        communityPostDTO.setImagesList(communityPostReq.getList());
+        communityPostService.executePost(communityPostDTO);
         return APIResponse.OK();
     }
 

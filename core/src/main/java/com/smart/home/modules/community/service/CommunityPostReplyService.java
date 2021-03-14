@@ -71,6 +71,8 @@ public class CommunityPostReplyService {
         communityPostReply.setReplyType(0);
         communityPostReply.setContents(contents);
         communityPostReply.setCreatedTime(DateUtil.date());
+        communityPostReply.setLikeCount(0);
+        communityPostReply.setStampCount(0);
         if (communityPost.getUserId().equals(loginUserId)) {
             communityPostReply.setAuthorFlag(YesNoEnum.YES.getCode());
         }else {

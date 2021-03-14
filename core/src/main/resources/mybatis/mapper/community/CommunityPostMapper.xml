@@ -566,7 +566,7 @@
       FROM
       community_post
       <where>
-        state = 1 and audit_status = 1
+          community = #{communityId} and state = 1 and audit_status = 1
         <if test="boutiqueFlag != null">
           and boutique_flag = #{boutiqueFlag}
         </if>

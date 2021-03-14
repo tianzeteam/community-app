@@ -1,9 +1,11 @@
 package com.smart.home.modules.community.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.community.dao.CommunityLikeHistoryMapper;
 import com.smart.home.modules.community.entity.CommunityLikeHistory;
 import com.smart.home.modules.community.entity.CommunityLikeHistoryExample;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import java.util.Date;
 /**
  * @author jason
  **/
+@Slf4j
 @Service
 public class CommunityLikeHistoryService {
 
@@ -26,6 +29,12 @@ public class CommunityLikeHistoryService {
     private CommunityPostReplyService communityPostReplyService;
 
     public int create(CommunityLikeHistory communityLikeHistory) {
+        CommunityLikeHistory likeHistory = communityLikeHistoryMapper.selectByUserIdAndPostId(communityLikeHistory.getUserId(), communityLikeHistory.getPostId(), communityLikeHistory.getType());
+        if (likeHistory != null) {
+            log.warn("已经点赞过:{}", JSON.toJSONString(communityLikeHistory));
+            return 1;
+        }
+
         communityLikeHistory.setCreatedTime(new Date());
         int affectRow = communityLikeHistoryMapper.insertSelective(communityLikeHistory);
         if (affectRow > 0) {

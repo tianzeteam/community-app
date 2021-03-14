@@ -77,7 +77,7 @@ public interface CommunityPostMapper {
 
     List<CommunityPost> getHotPost(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
-    List<CommunityPost> getCommunityDetail(@Param("boutiqueFlag") Integer boutiqueFlag);
+    List<CommunityPost> getCommunityDetail(@Param("communityId") Long communityId, @Param("boutiqueFlag") Integer boutiqueFlag);
 
     CommunityPostDTO selectByIdEffetive(@Param("id") Long id, @Param("userId") Long userId);
 

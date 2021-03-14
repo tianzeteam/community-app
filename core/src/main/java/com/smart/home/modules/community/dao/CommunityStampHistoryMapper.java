@@ -1,5 +1,6 @@
 package com.smart.home.modules.community.dao;
 
+import com.smart.home.modules.community.entity.CommunityLikeHistory;
 import com.smart.home.modules.community.entity.CommunityStampHistory;
 import com.smart.home.modules.community.entity.CommunityStampHistoryExample;
 import java.util.List;
@@ -29,4 +30,6 @@ public interface CommunityStampHistoryMapper {
     int updateByPrimaryKeySelective(CommunityStampHistory record);
 
     int updateByPrimaryKey(CommunityStampHistory record);
+
+    CommunityStampHistory selectByUserIdAndPostId(@Param("userId") Long userId, @Param("postId") Long postId, @Param("type") Integer type);
 }

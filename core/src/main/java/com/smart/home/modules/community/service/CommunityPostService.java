@@ -269,9 +269,9 @@ public class CommunityPostService {
      * 社区详情-帖子列表
      * 精华条件搜索
      */
-    public List<CommunityPostDTO> queryCommunityDetailPostList(Integer boutiqueFlag, int pageNum, int pageSize){
+    public List<CommunityPostDTO> queryCommunityDetailPostList(Long communityId, Integer boutiqueFlag, int pageNum, int pageSize){
         PageHelper.startPage(pageNum, pageSize);
-        List<CommunityPost> communityDetail = communityPostMapper.getCommunityDetail(boutiqueFlag);
+        List<CommunityPost> communityDetail = communityPostMapper.getCommunityDetail(communityId, boutiqueFlag);
         if (CollUtil.isEmpty(communityDetail)) {
             return Collections.EMPTY_LIST;
         }
@@ -449,6 +449,7 @@ public class CommunityPostService {
                 communityPostDTO.setNickname(userDataDTO.getNickname());
                 communityPostDTO.setHeadUrl(userDataDTO.getHeadUrl());
                 communityPostDTO.setUserLevel(userDataDTO.getUserLevel());
+                communityPostDTO.setUserRemark(userDataDTO.getRemark());
             }
             //查社区
             Community community = communityMapper.selectByPrimaryKey(x.getCommunity());

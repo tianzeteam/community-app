@@ -29,4 +29,6 @@ public interface CommunityLikeHistoryMapper {
     int updateByPrimaryKeySelective(CommunityLikeHistory record);
 
     int updateByPrimaryKey(CommunityLikeHistory record);
+
+    CommunityLikeHistory selectByUserIdAndPostId(@Param("userId") Long userId, @Param("postId") Long postId, @Param("type") Integer type);
 }

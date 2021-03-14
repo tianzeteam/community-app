@@ -2,6 +2,7 @@ package com.smart.home.controller.app;
 
 import com.alibaba.fastjson.JSONObject;
 import com.smart.home.common.util.BeanCopyUtils;
+import com.smart.home.controller.app.response.community.CommunityDetailVO;
 import com.smart.home.controller.pc.response.community.CommunitySelectVO;
 import com.smart.home.controller.pc.response.community.CommunityUserMappingVO;
 import com.smart.home.dto.APIResponse;
@@ -9,6 +10,7 @@ import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.es.dto.CommunitySearchDTO;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
+import com.smart.home.modules.community.dto.CommunityUserMappingDTO;
 import com.smart.home.modules.community.entity.Community;
 import com.smart.home.modules.community.entity.CommunityUserMapping;
 import com.smart.home.modules.community.service.CommunityPostService;
@@ -70,7 +72,7 @@ public class AppCommunityController {
     }
 
     @AnonAccess
-    @ApiOperation("我的社区列表")
+    @ApiOperation("我加入的社区列表")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "分页页码a", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
@@ -79,23 +81,27 @@ public class AppCommunityController {
     public APIResponse<ResponsePageBean<CommunityUserMappingVO>> myQueryList(Integer pageNum, Integer pageSize) {
         CommunityUserMapping communityUserMapping = new CommunityUserMapping();
         communityUserMapping.setUserId(UserUtils.getLoginUserId());
-        List<CommunityUserMapping> communityUserMappings = communityUserMappingService.selectByPage(communityUserMapping, pageNum, pageSize);
-        List<CommunityUserMappingVO> communityUserMappingVOS = BeanCopyUtils.convertListTo(communityUserMappings, CommunityUserMappingVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(communityUserMappingVOS, communityUserMappings));
+        List<CommunityUserMappingDTO> userMappingDTOS = communityUserMappingService.selectByPage(communityUserMapping, pageNum, pageSize);
+        List<CommunityUserMappingVO> communityUserMappingVOS = BeanCopyUtils.convertListTo(userMappingDTOS, CommunityUserMappingVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(communityUserMappingVOS, userMappingDTOS));
     }
 
+    /**
+     * 社区下有哪些帖子，精华帖子
+     */
     @AnonAccess
     @ApiOperation("社区详情")
     @ApiImplicitParams({
+            @ApiImplicitParam(name = "communityId", value = "社区id", required = true),
             @ApiImplicitParam(name = "pageNum", value = "分页页码a", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true),
             @ApiImplicitParam(name = "boutiqueFlag", value = "是否是精品，0否1是，无选择默认为null", required = false)
     })
     @GetMapping("/detail/post")
-    public APIResponse<ResponsePageBean<CommunityUserMappingVO>> detailPost(Integer boutiqueFlag, Integer pageNum, Integer pageSize){
-        List<CommunityPostDTO> communityPostDTOS = communityPostService.queryCommunityDetailPostList(boutiqueFlag, pageNum, pageSize);
-        List<CommunityUserMappingVO> communityUserMappingVOS = BeanCopyUtils.convertListTo(communityPostDTOS, CommunityUserMappingVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(communityUserMappingVOS, communityPostDTOS));
+    public APIResponse<ResponsePageBean<CommunityDetailVO>> detailPost(Long communityId, Integer boutiqueFlag, Integer pageNum, Integer pageSize){
+        List<CommunityPostDTO> communityPostDTOS = communityPostService.queryCommunityDetailPostList(communityId, boutiqueFlag, pageNum, pageSize);
+        List<CommunityDetailVO> detailVOS = BeanCopyUtils.convertListTo(communityPostDTOS, CommunityDetailVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(detailVOS, communityPostDTOS));
     }
 
 

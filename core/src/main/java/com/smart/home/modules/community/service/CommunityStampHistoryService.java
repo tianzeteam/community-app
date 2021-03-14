@@ -1,9 +1,11 @@
 package com.smart.home.modules.community.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.modules.community.dao.CommunityStampHistoryMapper;
 import com.smart.home.modules.community.entity.CommunityStampHistory;
 import com.smart.home.modules.community.entity.CommunityStampHistoryExample;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import java.util.Date;
 /**
  * @author jason
  **/
+@Slf4j
 @Service
 public class CommunityStampHistoryService {
 
@@ -26,6 +29,11 @@ public class CommunityStampHistoryService {
     private CommunityPostReplyService communityPostReplyService;
 
     public int create(CommunityStampHistory communityStampHistory) {
+        CommunityStampHistory stampHistory = communityStampHistoryMapper.selectByUserIdAndPostId(communityStampHistory.getUserId(), communityStampHistory.getPostId(), communityStampHistory.getType());
+        if (stampHistory != null) {
+            log.warn("已经踩过:{}", JSON.toJSONString(communityStampHistory));
+            return 1;
+        }
         communityStampHistory.setCreatedTime(new Date());
         int affectRow = communityStampHistoryMapper.insertSelective(communityStampHistory);
         if (affectRow > 0) {
