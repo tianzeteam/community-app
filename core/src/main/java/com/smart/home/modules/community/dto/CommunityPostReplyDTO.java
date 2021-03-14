@@ -9,6 +9,10 @@ public class CommunityPostReplyDTO {
 
     private Long userId;
 
+    private Long postId;
+
+    private Long postReplyId;
+
     //0主贴回复1二级回复
     private Integer replyType;
 

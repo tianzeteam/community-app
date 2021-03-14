@@ -19,8 +19,10 @@ import com.smart.home.enums.StampCategoryEnum;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.entity.ArticleCommentReply;
 import com.smart.home.modules.community.dto.CommunityPostReplyDTO;
+import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostReply;
 import com.smart.home.modules.community.service.CommunityPostReplyService;
+import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.service.LikeService;
 import com.smart.home.service.MessageService;
 import com.smart.home.service.StampService;
@@ -54,6 +56,8 @@ public class AppCommunityPostReplyController {
     private LikeService likeService;
     @Autowired
     private StampService stampService;
+    @Autowired
+    private CommunityPostService communityPostService;
 
 
     @ApiOperation("发表一级评论")
@@ -132,14 +136,19 @@ public class AppCommunityPostReplyController {
     @ApiOperation("回复评论(包括一二级)")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "commentId", value = "评论主键id", required = true),
-            @ApiImplicitParam(name = "contents", value = "回复内容", required = true)
+            @ApiImplicitParam(name = "contents", value = "回复内容", required = true),
+            @ApiImplicitParam(name = "postId", value = "帖子id", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/addCommentReply")
-    public APIResponse addCommentReply(Long commentId, String contents) {
+    public APIResponse addCommentReply(Long commentId, Long postId, String contents) {
         CommunityPostReply postReply = communityPostReplyService.getById(commentId);
         if (postReply == null) {
-            return APIResponse.ERROR("无此帖子");
+            return APIResponse.ERROR("无此评论");
+        }
+        CommunityPost communityPost = communityPostService.findById(postId);
+        if (communityPost == null) {
+            return APIResponse.ERROR("没有此文章");
         }
         Long fromUserId = UserUtils.getLoginUserId();
         CommunityPostReply communityPostReply = new CommunityPostReply();
@@ -149,7 +158,9 @@ public class AppCommunityPostReplyController {
         communityPostReply.setReplyType(1);
         communityPostReply.setContents(contents);
         communityPostReply.setToUserId(postReply.getUserId());
-        if (fromUserId.equals(postReply.getUserId())) {
+        communityPostReply.setLikeCount(0);
+        communityPostReply.setStampCount(0);
+        if (fromUserId.equals(communityPost.getUserId())) {
             communityPostReply.setAuthorFlag(1);
         }else {
             communityPostReply.setAuthorFlag(0);
@@ -162,7 +173,7 @@ public class AppCommunityPostReplyController {
 
     @ApiOperation("获取一级评论-分页")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "帖子主键id", required = true),
+            @ApiImplicitParam(name = "postId", value = "帖子主键id", required = true),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true),
             @ApiImplicitParam(name = "hotSortFlag", value = "热门", required = false),
@@ -170,13 +181,13 @@ public class AppCommunityPostReplyController {
     })
     @AnonAccess
     @GetMapping("/queryCommentByPage")
-    public APIResponse<ResponsePageBean<CommunityPostReplyVO>> queryCommentByPage(Long id, Integer hotSortFlag, Integer sortFlag, int pageNum, int pageSize) {
+    public APIResponse<ResponsePageBean<CommunityPostReplyVO>> queryCommentByPage(Long postId, Integer hotSortFlag, Integer sortFlag, int pageNum, int pageSize) {
         CommunityPostReplyDTO communityPostReplyDTO = new CommunityPostReplyDTO();
         Long userId = UserUtils.getLoginUserId();
         communityPostReplyDTO.setHotSortFlag(hotSortFlag);
         communityPostReplyDTO.setSortFlag(sortFlag);
         communityPostReplyDTO.setUserId(userId);
-        communityPostReplyDTO.setId(id);
+        communityPostReplyDTO.setPostId(postId);
         communityPostReplyDTO.setReplyType(0);
         if (userId > 0) {
             // 说明是登陆的
@@ -202,17 +213,17 @@ public class AppCommunityPostReplyController {
         CommunityPostReplyDTO communityPostReplyDTO = new CommunityPostReplyDTO();
         Long userId = UserUtils.getLoginUserId();
         communityPostReplyDTO.setUserId(userId);
-        communityPostReplyDTO.setId(commentId);
         communityPostReplyDTO.setReplyType(1);
+        communityPostReplyDTO.setPostReplyId(commentId);
         if (userId > 0) {
             // 说明是登陆的
             List<CommunityPostReply> list = communityPostReplyService.queryPageByCommentId(communityPostReplyDTO, pageNum, pageSize, true);
             List<CommunityPostReplyVO> resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         } else {
             List<CommunityPostReply> list = communityPostReplyService.queryPageByCommentId(communityPostReplyDTO, pageNum, pageSize, false);
             List<CommunityPostReplyVO> resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList));
+            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         }
     }
 

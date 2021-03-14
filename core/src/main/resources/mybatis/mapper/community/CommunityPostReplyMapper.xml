@@ -371,7 +371,7 @@
                  left join user_data ud on ud.user_id = ua.id
                  left join community_like_history alh on alh.post_id = cpr.id and alh.type = 1 and alh.user_id = #{userId,jdbcType=BIGINT}
                  left join community_stamp_history ash on ash.post_id = cpr.id and ash.type = 1 and ash.user_id = #{userId,jdbcType=BIGINT}
-    where cpr.id = #{id,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
+    where cpr.post_id = #{postId,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
     <choose>
       <when test="hotSortFlag != null">
         order by cpr.reply_count desc
@@ -395,11 +395,11 @@
       cpr.created_time as createdTime,
       cpr.like_count as likeCount,
       cpr.stamp_count as stampCount,
-      cpr.author_flag as authorFlag,
+      cpr.author_flag as authorFlag
     from community_post_reply cpr
     left join user_account ua on ua.id = cpr.user_id
     left join user_data ud on ud.user_id = ua.id
-    where cpr.id = #{id,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
+    where cpr.post_id = #{postId,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
     <choose>
       <when test="hotSortFlag != null">
         order by cpr.reply_count desc
@@ -436,7 +436,7 @@
     left join user_data ud on ud.user_id = ua.id
     left join community_like_history alh on alh.post_id = cpr.id and alh.type = 2 and alh.user_id = #{userId,jdbcType=BIGINT}
     left join community_stamp_history ash on ash.post_id = cpr.id and ash.type = 2 and ash.user_id = #{userId,jdbcType=BIGINT}
-    where cpr.post_id = #{id,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
+    where cpr.post_reply_id = #{postReplyId,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
     order by cpr.id desc
   </select>
 
@@ -450,11 +450,11 @@
     cpr.created_time as createdTime,
     cpr.like_count as likeCount,
     cpr.stamp_count as stampCount,
-    cpr.author_flag as authorFlag,
+    cpr.author_flag as authorFlag
     from community_post_reply cpr
     left join user_account ua on ua.id = cpr.user_id
     left join user_data ud on ud.user_id = ua.id
-    where cpr.post_id = #{id,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
+    where cpr.post_reply_id = #{postReplyId,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
     order by cpr.id desc
   </select>
 </mapper>

@@ -216,4 +216,10 @@
       created_time = #{createdTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectByUserIdAndPostId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from community_stamp_history where user_id = #{userId} and post_id = #{postId} and `type` = #{type}
+  </select>
+
 </mapper>
