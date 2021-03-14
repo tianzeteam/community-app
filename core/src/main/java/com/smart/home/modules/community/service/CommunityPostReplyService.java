@@ -1,9 +1,17 @@
 package com.smart.home.modules.community.service;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import com.github.pagehelper.PageHelper;
+import com.smart.home.cloud.qcloud.auditor.ContentAuditor;
+import com.smart.home.cloud.qcloud.auditor.ContentAuditorResult;
+import com.smart.home.cloud.qcloud.enums.ContentAuditorEvilEnum;
+import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
 import com.smart.home.common.enums.AuditStatusEnum;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.enums.AutoAuditFlagEnum;
+import com.smart.home.modules.article.entity.ArticleComment;
+import com.smart.home.modules.article.po.UserIdAndCategoryPO;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
 import com.smart.home.modules.community.dto.CommunityPostReplyDTO;
@@ -16,12 +24,14 @@ import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author jason
@@ -41,6 +51,74 @@ public class CommunityPostReplyService {
     public int create(CommunityPostReply communityPostReply) {
         communityPostReply.setCreatedTime(new Date());
         return communityPostReplyMapper.insertSelective(communityPostReply);
+    }
+
+    public CommunityPostReply getById(Long id){
+        CommunityPostReply communityPostReply = communityPostReplyMapper.selectByPrimaryKey(id);
+        return communityPostReply;
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void create(Long loginUserId, Long postId, String contents) {
+        CommunityPost communityPost = communityPostMapper.selectByPrimaryKey(postId);
+        if (communityPost == null) {
+            return;
+        }
+
+        CommunityPostReply communityPostReply = new CommunityPostReply();
+        communityPostReply.setUserId(loginUserId);
+        communityPostReply.setPostId(postId);
+        communityPostReply.setReplyType(0);
+        communityPostReply.setContents(contents);
+        communityPostReply.setCreatedTime(DateUtil.date());
+        if (communityPost.getUserId().equals(loginUserId)) {
+            communityPostReply.setAuthorFlag(YesNoEnum.YES.getCode());
+        }else {
+            communityPostReply.setAuthorFlag(YesNoEnum.NO.getCode());
+        }
+        communityPostReplyMapper.insertSelective(communityPostReply);
+        long id = communityPostReply.getId();
+        processAutoAudit(id, postId, contents, loginUserId);
+    }
+
+    private void processAutoAudit(long id, Long postId, String contents, Long loginUserId) {
+        CompletableFuture.runAsync(()->{
+            ContentAuditorResult contentAuditorResult = ContentAuditor.auditorResult(contents);
+            if (contentAuditorResult == null) {
+                // 机审失败，进入人工审核
+                communityPostReplyMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "请求云服务失败");
+                return;
+            }
+            if (contentAuditorResult.getContentAuditorEvilEnum() == ContentAuditorEvilEnum.NORMAL) {
+                // 机审成功， 直接通过
+                communityPostReplyMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                // 增加一次评论数量
+                communityPostMapper.increaseReplyCount(postId);
+                return;
+            }
+            // 机器审核不通过，文本异常
+            // 先看看建议通过不通过
+            ContentAuditorSuggestionEnum contentAuditorSuggestionEnum = contentAuditorResult.getContentAuditorSuggestionEnum();
+            if (contentAuditorSuggestionEnum == null
+                    || ContentAuditorSuggestionEnum.Block == contentAuditorSuggestionEnum
+                    || ContentAuditorSuggestionEnum.Review == contentAuditorSuggestionEnum) {
+                communityPostReplyMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.CONTENT_EXCEPTION.getCode(), contentAuditorResult.getContentAuditorEvilTypeEnum().getDesc());
+                List<String> keywordsList = contentAuditorResult.getKeywordsList();
+                if (!CollectionUtils.isEmpty(keywordsList)) {
+                    communityPostReplyMapper.updateHitSensitiveCount(id, keywordsList.size());
+                    // 增加用户的总敏感词数量
+                    userDataService.increaseHitSensitiveCount(loginUserId, keywordsList.size());
+                }
+                userDataService.increaseTextExceptionCount(loginUserId);
+                return;
+            }
+            if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
+                // 正常，视为通过
+                communityPostReplyMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                // 增加一次评论数量
+                communityPostMapper.increaseReplyCount(postId);
+            }
+        });
     }
 
     public int update(CommunityPostReply communityPostReply) {
@@ -187,6 +265,35 @@ public class CommunityPostReplyService {
             });
         }
         return communityPostReplies;
+    }
+
+    /**
+     * 根据评论id查找二级回复
+     */
+    public List<CommunityPostReply> queryPageByCommentId(CommunityPostReplyDTO communityPostReplyDTO, int pageNum, int pageSize, Boolean ifLogin){
+        List<CommunityPostReply> communityPostReplies = null;
+        if (ifLogin) {
+            //登录
+            PageHelper.startPage(pageNum, pageSize);
+            communityPostReplies = communityPostReplyMapper.queryByCommentIdWhenLogin(communityPostReplyDTO);
+        }else {
+            //未登录
+            PageHelper.startPage(pageNum, pageSize);
+            communityPostReplies = communityPostReplyMapper.queryByCommentIdNotLogin(communityPostReplyDTO);
+        }
+        if (CollUtil.isEmpty(communityPostReplies)) {
+            return Collections.EMPTY_LIST;
+        }
+        if (communityPostReplyDTO.getReplyType() != 0) {
+            //一级无回复，不需要查回复用户
+            communityPostReplies.stream().forEach(x->{
+                if (x.getToUserId() != null) {
+                    x.setToUserNickName(userAccountService.findNicknameByUserId(x.getToUserId()));
+                }
+            });
+        }
+        return communityPostReplies;
+
     }
 
 }

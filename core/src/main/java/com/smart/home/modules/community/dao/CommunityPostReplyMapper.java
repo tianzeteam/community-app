@@ -39,7 +39,7 @@ public interface CommunityPostReplyMapper {
 
     int decreaseStampCount(@Param("id") Long id);
 
-    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag);
+    int updateAutoAuditFlag(@Param("id") Long id, @Param("autoAuditFlag") int autoAuditFlag, @Param("reason") String reason);
 
     int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
 
@@ -54,6 +54,11 @@ public interface CommunityPostReplyMapper {
     List<CommunityPostReply> queryByIdWhenLogin(CommunityPostReplyDTO communityPostReplyDTO);
 
     List<CommunityPostReply> queryByPageNotLogin(CommunityPostReplyDTO communityPostReplyDTO);
+
+
+    List<CommunityPostReply> queryByCommentIdWhenLogin(CommunityPostReplyDTO communityPostReplyDTO);
+
+    List<CommunityPostReply> queryByCommentIdNotLogin(CommunityPostReplyDTO communityPostReplyDTO);
 
     long countByUserId(@Param("userId") Long userId, @Param("postId") Long postId);
 }

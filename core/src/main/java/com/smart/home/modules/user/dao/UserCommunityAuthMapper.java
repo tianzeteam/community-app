@@ -35,4 +35,6 @@ public interface UserCommunityAuthMapper {
     List<UserCommunityAuth> queryAllAdminUser(@Param("userId") Long userId, @Param("nickName") String nickName);
 
     int releaseBlack(@Param("userId") Long userId);
+
+    UserCommunityAuth selectByUserId(@Param("userId") Long userId);
 }

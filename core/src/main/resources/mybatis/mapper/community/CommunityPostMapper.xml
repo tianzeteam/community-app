@@ -148,7 +148,8 @@
       #{revision,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=BIGINT}, 
       #{updatedTime,jdbcType=TIMESTAMP}, #{stampCount,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.smart.home.modules.community.entity.CommunityPost">
+  <insert id="insertSelective" parameterType="com.smart.home.modules.community.entity.CommunityPost"
+          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into community_post
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -485,7 +486,11 @@
   </select>
 
   <update id="updateAutoAuditFlag">
-    update community_post set auto_audit_flag = #{autoAuditFlag} where id = #{id,jdbcType=BIGINT}
+    update community_post set auto_audit_flag = #{autoAuditFlag},text_exception_reason = #{reason} where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updateAutoAuditFlagImage">
+    update community_post set auto_audit_flag = #{autoAuditFlag}, image_exception_reason = #{reason} where id = #{id}
   </update>
 
   <update id="updateAutoAuditFlagAndAuditFlag">

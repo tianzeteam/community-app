@@ -55,7 +55,9 @@ public interface CommunityPostMapper {
 
     List<CommunityPost> queryViaUserIdByPage(@Param("userId") Long userId, @Param("loginUserId") Long loginUserId);
 
-    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag);
+    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag, @Param("reason") String reason);
+
+    int updateAutoAuditFlagImage(@Param("id") Long id, @Param("autoAuditFlag") int autoAuditFlag, @Param("reason") String reason);
 
     int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
 
