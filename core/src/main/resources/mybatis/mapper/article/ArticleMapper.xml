@@ -676,7 +676,8 @@
 
   <select id="queryDetailByIdNoLogin" resultType="com.smart.home.modules.article.entity.Article">
     select a.id,
-           a.cover_image as coverImage ,
+           a.cover_image as coverImage,
+           a.banner_images as bannerImages,
            a.title,
            a.details,
            a.like_count as likeCount,
@@ -702,7 +703,8 @@
 
   <select id="queryDetailByIdWhenLogin" resultType="com.smart.home.modules.article.entity.Article">
     select a.id,
-           a.cover_image as coverImage ,
+           a.cover_image as coverImage,
+           a.banner_images as bannerImages,
            a.title,
            a.details,
            a.like_count as likeCount,

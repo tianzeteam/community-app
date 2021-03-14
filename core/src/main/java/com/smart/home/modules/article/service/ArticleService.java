@@ -283,7 +283,9 @@ public class ArticleService {
 
     public Article queryDetailByIdWhenLogin(Long articleId, Long userId) {
         // 增加一次浏览量
-        articleMapper.increaseVisitCount(articleId);
+        CompletableFuture.runAsync(()->{
+            articleMapper.increaseVisitCount(articleId);
+        });
         return articleMapper.queryDetailByIdWhenLogin(articleId, userId);
     }
 

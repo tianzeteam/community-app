@@ -1,5 +1,6 @@
 package com.smart.home.controller.common;
 
+import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.ServiceException;
@@ -84,6 +85,9 @@ public class CommonArticleController {
             // 说明是登陆用户
             article = articleService.queryDetailByIdWhenLogin(articleId, userId);
             BeanUtils.copyProperties(article, articleDetailVO);
+            if (StringUtils.isNotBlank(article.getBannerImages())) {
+                articleDetailVO.setImageList(JSON.parseArray(article.getBannerImages(), String.class));
+            }
         } else {
             article = articleService.queryDetailByIdNoLogin(articleId);
             BeanUtils.copyProperties(article, articleDetailVO);
@@ -91,6 +95,9 @@ public class CommonArticleController {
             articleDetailVO.setFocusFlag(YesNoEnum.NO.getCode());
             articleDetailVO.setLikeFlag(YesNoEnum.NO.getCode());
             articleDetailVO.setStampFlag(YesNoEnum.NO.getCode());
+            if (StringUtils.isNotBlank(article.getBannerImages())) {
+                articleDetailVO.setImageList(JSON.parseArray(article.getBannerImages(), String.class));
+            }
         }
         if (YesNoEnum.YES.getCode() == article.getTestFlag()) {
             // 附加产品评测
