@@ -33,8 +33,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,16 +59,11 @@ public class AppCommunityPostReplyController {
     @ApiOperation("发表一级评论")
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/addComment")
-    public APIResponse addComment(@RequestBody CommunityPostReplyReq communityPostReplyReq) {
+    public APIResponse addComment(@Valid @RequestBody CommunityPostReplyReq communityPostReplyReq, BindingResult bindingResult) {
         log.info("发表一级评论params：{}", JSON.toJSONString(communityPostReplyReq));
-        if (StringUtils.isBlank(communityPostReplyReq.getContents())) {
-            return APIResponse.ERROR("评论内容不能为空");
-        } else if (communityPostReplyReq.getContents().length() > 200) {
-            return APIResponse.ERROR("评论内容不能超过200字");
-        }
         Long fromUserId = UserUtils.getLoginUserId();
         communityPostReplyService.create(fromUserId, communityPostReplyReq.getId(), communityPostReplyReq.getContents());
-        messageService.createReplyMessage(MessageSubTypeEnum.ARTICLE, communityPostReplyReq.getId(), fromUserId, communityPostReplyReq.getAuthorId(), communityPostReplyReq.getContents());
+        messageService.createReplyMessage(MessageSubTypeEnum.COMMUNITY_POST_REPLY, communityPostReplyReq.getId(), fromUserId, communityPostReplyReq.getAuthorId(), communityPostReplyReq.getContents());
         return APIResponse.OK();
     }
 
