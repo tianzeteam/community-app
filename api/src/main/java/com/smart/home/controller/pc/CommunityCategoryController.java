@@ -88,7 +88,7 @@ public class CommunityCategoryController {
 
     @ApiOperation("按主键ID查询社区类目")
     @GetMapping("/selectById")
-    public APIResponse<CommunityCategory> selectById(Long id) {
+    public APIResponse<CommunityCategory> selectById(Integer id) {
         return APIResponse.OK(communityCategoryService.findById(id));
     }
 

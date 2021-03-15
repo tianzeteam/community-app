@@ -4,11 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
+import com.smart.home.common.util.FileUtils;
 import com.smart.home.modules.community.dao.CommunityCategoryMapper;
 import com.smart.home.modules.community.dao.CommunityMapper;
 import com.smart.home.modules.community.entity.CommunityCategory;
 import com.smart.home.modules.community.entity.CommunityCategoryExample;
+import com.smart.home.modules.system.service.SysFileService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,8 @@ public class CommunityCategoryService {
     CommunityCategoryMapper communityCategoryMapper;
     @Resource
     CommunityMapper communityMapper;
+    @Autowired
+    private SysFileService sysFileService;
 
     public int create(CommunityCategory communityCategory) throws ServiceException {
         // 检查同名
@@ -37,7 +42,11 @@ public class CommunityCategoryService {
         communityCategory.setCreatedTime(new Date());
         communityCategory.setRevision(0);
         communityCategory.setState(RecordStatusEnum.NORMAL.getStatus());
-        return communityCategoryMapper.insertSelective(communityCategory);
+        int affectRow = communityCategoryMapper.insertSelective(communityCategory);
+        if (StringUtils.isNotBlank(communityCategory.getCoverImage())) {
+            sysFileService.sync(FileUtils.getFileNameFromUrl(communityCategory.getCoverImage()));
+        }
+        return affectRow;
     }
 
     public int update(CommunityCategory communityCategory) throws ServiceException {
@@ -47,8 +56,21 @@ public class CommunityCategoryService {
         if (communityCategoryMapper.countByExample(example) > 0) {
             throw new DuplicateDataException("该社区类目已经存在");
         }
+        CommunityCategory dbData = findById(communityCategory.getId());
+        String oldImage = dbData.getCoverImage();
         communityCategory.setUpdatedTime(new Date());
-        return communityCategoryMapper.updateByPrimaryKeySelective(communityCategory);
+        int affectRow = communityCategoryMapper.updateByPrimaryKeySelective(communityCategory);
+        if (StringUtils.isBlank(communityCategory.getCoverImage())) {
+            if (StringUtils.isNotBlank(oldImage)) {
+                sysFileService.deleteByNewName(FileUtils.getFileNameFromUrl(oldImage));
+            }
+        } else {
+            if (!StringUtils.equals(communityCategory.getCoverImage(), oldImage)) {
+                sysFileService.deleteByNewName(FileUtils.getFileNameFromUrl(oldImage));
+                sysFileService.sync(FileUtils.getFileNameFromUrl(communityCategory.getCoverImage()));
+            }
+        }
+        return affectRow;
     }
 
     public int deleteById(Long id) {
@@ -62,7 +84,13 @@ public class CommunityCategoryService {
             if (communityMapper.countByCategoryId(id) > 0) {
                 throw new ServiceException("社区类目已经关联到社区了，不能删除");
             }
-            communityCategoryMapper.deleteByPrimaryKey(id.intValue());
+            CommunityCategory communityCategory = findById(id.intValue());
+            if (StringUtils.isNotBlank(communityCategory.getCoverImage())) {
+                communityCategoryMapper.deleteByPrimaryKey(id.intValue());
+                sysFileService.deleteByNewName(FileUtils.getFileNameFromUrl(communityCategory.getCoverImage()));
+            } else {
+                communityCategoryMapper.deleteByPrimaryKey(id.intValue());
+            }
         }
     }
 
@@ -77,8 +105,8 @@ public class CommunityCategoryService {
         return communityCategoryMapper.selectByExample(example);
     }
 
-    public CommunityCategory findById(Long id) {
-        CommunityCategory communityCategory = communityCategoryMapper.selectByPrimaryKey(id.intValue());
+    public CommunityCategory findById(Integer id) {
+        CommunityCategory communityCategory = communityCategoryMapper.selectByPrimaryKey(id);
         return communityCategory;
     }
 
