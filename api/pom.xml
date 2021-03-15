@@ -11,7 +11,9 @@
     <packaging>jar</packaging>
     <name>smart</name>
     <modelVersion>4.0.0</modelVersion>
-
+    <properties>
+        <jsoup.version>1.11.3</jsoup.version>
+    </properties>
     <artifactId>controller</artifactId>
     <dependencies>
         <dependency>
@@ -67,7 +69,12 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.1.17</version>
         </dependency>
-
+        <!--html解析工具，处理xss攻击-->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>common</artifactId>

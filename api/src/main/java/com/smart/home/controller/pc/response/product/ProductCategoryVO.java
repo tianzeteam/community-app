@@ -24,6 +24,8 @@ public class ProductCategoryVO {
     private String icon;
     @ApiModelProperty("名称")
     private String title;
+    @ApiModelProperty("几级类目")
+    private Integer level;
     @ApiModelProperty("排序，越大越靠前")
     private Integer sort;
     @ApiModelProperty("关联参数库数组")
