@@ -13,7 +13,7 @@ import lombok.ToString;
 public class CommunityCategorySelectVO {
 
     @ApiModelProperty("社区类目主键id")
-    private Long id;
+    private Integer id;
     @ApiModelProperty("名称")
     private String title;
 
