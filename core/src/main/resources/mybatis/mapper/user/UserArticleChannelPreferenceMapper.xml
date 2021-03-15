@@ -208,6 +208,6 @@
     from user_article_channel_preference  uacp
     left join article_channel ac on ac.id = uacp.channel_id
     where uacp.user_id = #{loginUserId}
-    order by uacp.sort asc
+    order by uacp.sort desc
   </select>
 </mapper>

@@ -17,10 +17,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,16 +63,12 @@ public class AppArticleChannelController {
         return APIResponse.OK();
     }
 
-    @ApiOperation("从我的频道移除")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "channelId", value = "频道主键id", required = true),
-
-    })
+    @ApiOperation("更新我的频道")
     @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/removeFromMyChannel")
-    public APIResponse removeFromMyChannel(Long channelId) {
+    @PostMapping("/updateMyChannel")
+    public APIResponse removeFromMyChannel(@RequestBody List<Long> channelIdList) {
         Long userId = UserUtils.getLoginUserId();
-        userArticleChannelPreferenceService.delete(userId, channelId);
+        userArticleChannelPreferenceService.deleteAndInsert(userId, channelIdList);
         return APIResponse.OK();
     }
 

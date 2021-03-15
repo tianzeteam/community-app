@@ -43,6 +43,23 @@ public class UserArticleChannelPreferenceService {
         userArticleChannelPreferenceMapper.deleteByExample(example);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteAndInsert(Long userId, List<Long> channelIdList) {
+        // 删除全部
+        UserArticleChannelPreferenceExample example = new UserArticleChannelPreferenceExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        userArticleChannelPreferenceMapper.deleteByExample(example);
+        int size = channelIdList.size();
+        for (Long channelId : channelIdList) {
+            UserArticleChannelPreference userArticleChannelPreference = new UserArticleChannelPreference();
+            userArticleChannelPreference.withChannelId(channelId)
+                    .withSort(size)
+                    .withUserId(userId);
+            userArticleChannelPreferenceMapper.insertSelective(userArticleChannelPreference);
+            size --;
+        }
+    }
+
     public List<ArticleChannel> queryMyChannel(Long loginUserId) {
         return userArticleChannelPreferenceMapper.queryMyChannel(loginUserId);
     }
