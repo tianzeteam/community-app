@@ -82,6 +82,9 @@ public class ProductParamSettingService {
         if (StringUtils.isNotBlank(productParamSetting.getParamName())) {
             criteria.andParamNameEqualTo(productParamSetting.getParamName());
         }
+        if (productParamSetting.getEnableAll() != null) {
+            criteria.andEnableAllEqualTo(productParamSetting.getEnableAll());
+        }
         return productParamSettingMapper.selectByExample(example);
     }
 

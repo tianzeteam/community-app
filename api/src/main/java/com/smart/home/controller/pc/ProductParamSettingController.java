@@ -84,13 +84,15 @@ public class ProductParamSettingController {
     @ApiOperation("分页查询产品参数库")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "paramName", value = "参数名称", required = false),
+            @ApiImplicitParam(name = "enableAll", value = "应用给所有的产品:0否1是", required = false),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
     })
     @PostMapping("/selectByPage")
-    public APIResponse<ResponsePageBean<ProductParamSetting>> selectByPage(String paramName, int pageNum, int pageSize) {
+    public APIResponse<ResponsePageBean<ProductParamSetting>> selectByPage(String paramName, Integer enableAll, int pageNum, int pageSize) {
         ProductParamSetting productParamSetting = new ProductParamSetting();
         productParamSetting.setParamName(paramName);
+        productParamSetting.setEnableAll(enableAll);
         List<ProductParamSetting> list = productParamSettingService.selectByPage(productParamSetting, pageNum, pageSize);
         return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
