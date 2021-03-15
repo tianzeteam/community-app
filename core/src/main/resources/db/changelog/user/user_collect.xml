@@ -50,4 +50,15 @@
             create index idx_collect_user_id on user_collect using btree (user_id);
         </sql>
     </changeSet>
+    <changeSet id="createUniqueIndex4UserCollect" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="user_collect" indexName="uni_user_collect"/>
+            </not>
+        </preConditions>
+        <comment>创建唯一索引</comment>
+        <sql>
+            create unique index uni_user_collect on user_collect using btree (USER_ID,PRIMARY_KEY,COLLECT_TYPE);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

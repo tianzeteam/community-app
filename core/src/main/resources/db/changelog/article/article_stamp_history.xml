@@ -79,4 +79,15 @@
             create index idx_a_stamp_source_id on article_stamp_history using btree (SOURCE_ID);
         </sql>
     </changeSet>
+    <changeSet id="createUniqueIndex4ArticleStampHistory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="article_stamp_history" indexName="uni_astamp_userid_sourceid"/>
+            </not>
+        </preConditions>
+        <comment>创建唯一索引</comment>
+        <sql>
+            create unique index uni_astamp_userid_sourceid on article_stamp_history using btree (user_id,source_id,type);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

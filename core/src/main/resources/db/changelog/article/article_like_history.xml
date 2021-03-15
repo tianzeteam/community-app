@@ -42,4 +42,15 @@
 
         </sql>
     </changeSet>
+    <changeSet id="createUniqueIndex4ArticleLikeHistory" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="article_like_history" indexName="uni_userid_sourceid"/>
+            </not>
+        </preConditions>
+        <comment>创建唯一索引</comment>
+        <sql>
+            create unique index uni_userid_sourceid on article_like_history using btree (user_id,source_id,category);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
