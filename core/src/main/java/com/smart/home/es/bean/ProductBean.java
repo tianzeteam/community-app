@@ -1,5 +1,6 @@
 package com.smart.home.es.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.smart.home.es.dto.KeyValueDTO;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -23,7 +24,7 @@ import java.util.List;
 @Builder
 @ToString
 @Accessors(chain = true)
-@Document(indexName = "product", type = "_doc", shards = 1, replicas = 0)
+@Document(indexName = "product", type = "_doc", shards = 5, replicas = 1)
 public class ProductBean {
 
     @Id
@@ -45,12 +46,13 @@ public class ProductBean {
     private List<KeyValueDTO> keyValueDTOList;
 
     @Field(type = FieldType.Date, format = DateFormat.custom, pattern = "yyyy-MM-dd", index = false)
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date onlineDate;
 
-    @Field(type = FieldType.Integer)
+    @Field(type = FieldType.Integer, index = false)
     private Integer onlineFlag;
 
-    @Field(type = FieldType.Integer)
+    @Field(type = FieldType.Integer, index = false)
     private Integer recommendFlag;
 
     @Field(type = FieldType.Keyword)
