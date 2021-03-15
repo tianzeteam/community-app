@@ -21,7 +21,7 @@ import java.util.Date;
 @Builder
 @ToString
 @Accessors(chain = true)
-@Document(indexName = "article", type = "_doc", shards = 5, replicas = 1)
+@Document(indexName = "article_index", type = "article", shards = 3, replicas = 1)
 public class ArticleBean {
 
     @Id

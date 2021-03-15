@@ -21,7 +21,7 @@ import java.util.Date;
 @Builder
 @ToString
 @Accessors(chain = true)
-@Document(indexName = "smart_search_key", shards = 1, replicas = 0)
+@Document(indexName = "smart_search_key", type = "search_key", shards = 1, replicas = 0)
 public class SearchKey {
 
     @Id
