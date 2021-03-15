@@ -38,10 +38,8 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -138,6 +136,30 @@ public class CommonArticleController {
         likeService.cancelLike(LikeCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
         return APIResponse.OK();
     }
+    @ApiOperation("点赞/取消赞文章-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true),
+            @ApiImplicitParam(name = "authorId", value = "作者主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0点赞1取消赞", required = true)
+
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/likeOrCancelLikeArticle")
+    public APIResponse likeArticle(Long articleId, Long authorId, @RequestParam(required = true) Integer action) {
+        try {
+            Long fromUserId = UserUtils.getLoginUserId();
+            if (action == 0) {
+                likeService.like(LikeCategoryEnum.ARTICLE, fromUserId, articleId);
+                messageService.createLikeMessage(MessageSubTypeEnum.ARTICLE, articleId, fromUserId, authorId);
+            } else {
+                likeService.cancelLike(LikeCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+            }
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        return APIResponse.OK();
+    }
+
     @ApiOperation("点踩文章")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true)
@@ -162,6 +184,27 @@ public class CommonArticleController {
         stampService.cancelStamp(StampCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
         return APIResponse.OK();
     }
+    @ApiOperation("点踩/取消踩文章-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0点踩1取消点踩", required = true)
+
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/stampOrCancelStampArticle")
+    public APIResponse stampArticle(Long articleId,@RequestParam(required = true) Integer action) {
+        try {
+            if (action == 0) {
+                stampService.stamp(StampCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+            } else {
+                stampService.cancelStamp(StampCategoryEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+            }
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        return APIResponse.OK();
+    }
+
     @ApiOperation("收藏文章")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true)
@@ -186,6 +229,26 @@ public class CommonArticleController {
         collectService.cancelCollect(CollectTypeEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
         return APIResponse.OK();
     }
+    @ApiOperation("收藏/取消收藏文章-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0收藏1取消收藏", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/addOrCancelAddCollect")
+    public APIResponse addCollect(Long articleId, @RequestParam(required = true) Integer action) {
+        try {
+            if (action == 0) {
+                collectService.addCollect(CollectTypeEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+            } else {
+                collectService.cancelCollect(CollectTypeEnum.ARTICLE, UserUtils.getLoginUserId(), articleId);
+            }
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        return APIResponse.OK();
+    }
+
 
     @ApiOperation("获取一级评论-分页")
     @ApiImplicitParams({
