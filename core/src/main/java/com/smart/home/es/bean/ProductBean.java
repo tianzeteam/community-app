@@ -24,7 +24,7 @@ import java.util.List;
 @Builder
 @ToString
 @Accessors(chain = true)
-@Document(indexName = "product", type = "_doc", shards = 5, replicas = 1)
+@Document(indexName = "product_index", type = "product", shards = 3, replicas = 1)
 public class ProductBean {
 
     @Id

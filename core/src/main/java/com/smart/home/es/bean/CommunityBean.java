@@ -17,7 +17,7 @@ import java.util.Date;
 @Builder
 @ToString
 @Accessors(chain = true)
-@Document(indexName = "community", type = "_doc", shards = 1, replicas = 0)
+@Document(indexName = "community_index", type = "community", shards = 3, replicas = 1)
 public class CommunityBean implements Serializable
 {
     private static final long serialVersionUID = 1L;
