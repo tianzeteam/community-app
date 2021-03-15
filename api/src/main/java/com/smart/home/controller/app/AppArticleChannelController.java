@@ -1,5 +1,6 @@
 package com.smart.home.controller.app;
 
+import cn.hutool.core.collection.CollUtil;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
@@ -81,7 +82,15 @@ public class AppArticleChannelController {
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyChannel")
     public APIResponse<List<ArticleChannelVO>> queryMyChannel() {
-        List<ArticleChannel> list = userArticleChannelPreferenceService.queryMyChannel(UserUtils.getLoginUserId());
+        Long userId = UserUtils.getLoginUserId();
+        List<ArticleChannel> list = userArticleChannelPreferenceService.queryMyChannel(userId);
+        if (CollUtil.isEmpty(list)) {
+            // 如果是空的，默认把所有评到给用户
+            list = articleChannelService.selectAllValid();
+            for (ArticleChannel articleChannel : list) {
+                userArticleChannelPreferenceService.create(userId, Long.valueOf(articleChannel.getId()), articleChannel.getSort());
+            }
+        }
         List<ArticleChannelVO> resultList = BeanCopyUtils.convertListTo(list, ArticleChannelVO::new);
         return APIResponse.OK(resultList);
     }
