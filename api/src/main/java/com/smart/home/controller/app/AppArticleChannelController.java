@@ -6,6 +6,7 @@ import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.article.ArticleChannelVO;
 import com.smart.home.dto.APIResponse;
+import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.article.entity.ArticleChannel;
@@ -19,6 +20,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,9 +68,9 @@ public class AppArticleChannelController {
     @ApiOperation("更新我的频道")
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/updateMyChannel")
-    public APIResponse removeFromMyChannel(@RequestBody List<Long> channelIdList) {
+    public APIResponse removeFromMyChannel(@RequestBody IdListBean idListBean) {
         Long userId = UserUtils.getLoginUserId();
-        userArticleChannelPreferenceService.deleteAndInsert(userId, channelIdList);
+        userArticleChannelPreferenceService.deleteAndInsert(userId, idListBean.getIdList());
         return APIResponse.OK();
     }
 
