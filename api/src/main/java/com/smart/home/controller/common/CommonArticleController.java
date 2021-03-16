@@ -1,5 +1,6 @@
 package com.smart.home.controller.common;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.YesNoEnum;
@@ -276,10 +277,26 @@ public class CommonArticleController {
             // 说明是登陆的
             List<ArticleComment> list = articleCommentService.queryCommentByPageWhenLogin(userId, articleId, pageNum, pageSize);
             List<ArticleCommentVO> resultList = BeanCopyUtils.convertListTo(list, ArticleCommentVO::new);
+            if (CollUtil.isNotEmpty(resultList)) {
+                for (ArticleCommentVO articleCommentVO : resultList) {
+                    // 加载二级评论
+                    List<ArticleCommentReply> replyList = articleCommentReplyService.queryCommentReplyByPageWhenLogin(userId, articleCommentVO.getId(), pageNum, 5);
+                    List<ArticleCommentReplyVO> replyResultList = BeanCopyUtils.convertListTo(list, ArticleCommentReplyVO::new);
+                    articleCommentVO.setReplyResultList(ResponsePageUtil.restPage(replyResultList, replyList));
+                }
+            }
             return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         } else {
             List<ArticleComment> list = articleCommentService.queryCommentByPageNoLogin(articleId, pageNum, pageSize);
             List<ArticleCommentVO> resultList = BeanCopyUtils.convertListTo(list, ArticleCommentVO::new);
+            if (CollUtil.isNotEmpty(resultList)) {
+                for (ArticleCommentVO articleCommentVO : resultList) {
+                    // 加载二级评论
+                    List<ArticleCommentReply> replyList = articleCommentReplyService.queryCommentReplyByPageNoLogin(articleCommentVO.getId(), pageNum, 5);
+                    List<ArticleCommentReplyVO> replyResultList = BeanCopyUtils.convertListTo(list, ArticleCommentReplyVO::new);
+                    articleCommentVO.setReplyResultList(ResponsePageUtil.restPage(replyResultList, replyList));
+                }
+            }
             return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         }
     }

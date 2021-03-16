@@ -326,6 +326,7 @@
     select ua.head_url as headUrl,
            ua.nick_name as nickName,
            ud.user_level as userLevel,
+           pc.id,
            pc.star_count as starCount,
            pc.details as details,
            pc.fun_count as funCount,

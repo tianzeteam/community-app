@@ -1,5 +1,6 @@
 package com.smart.home.controller.common.response;
 
+import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.UserBaseInfo;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author jason
@@ -34,5 +36,7 @@ public class ArticleCommentVO extends UserBaseInfo {
     private Integer likeFlag;
     @ApiModelProperty("我有没有点过踩了-0否1是")
     private Integer stampFlag;
+    @ApiModelProperty("回复列表-分页")
+    private ResponsePageBean<ArticleCommentReplyVO> replyResultList;
 
 }

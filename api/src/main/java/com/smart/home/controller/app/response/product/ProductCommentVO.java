@@ -1,5 +1,7 @@
 package com.smart.home.controller.app.response.product;
 
+import com.smart.home.dto.ResponsePageBean;
+import com.smart.home.util.ResponsePageUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
@@ -13,6 +15,9 @@ import java.util.List;
 @Data
 @ToString
 public class ProductCommentVO {
+
+    @ApiModelProperty("主键id")
+    private Long id;
 
     @ApiModelProperty("用户头像")
     private String headUrl;
@@ -39,5 +44,8 @@ public class ProductCommentVO {
     private Integer likeFlag;
     @ApiModelProperty("点过踩0否1是-登陆后才有值")
     private Integer stampFlag;
+
+    @ApiModelProperty("回复列表-分页")
+    private ResponsePageBean<ProductCommentReplyVO> replyResultList;
 
 }

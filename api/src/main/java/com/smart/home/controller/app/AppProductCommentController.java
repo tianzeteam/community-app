@@ -1,5 +1,6 @@
 package com.smart.home.controller.app;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.exception.ServiceException;
@@ -98,6 +99,16 @@ public class AppProductCommentController {
             t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
             t.setStampFlag(s.getStampId() == null ? 0 : 1);
         });
+        if (CollUtil.isNotEmpty(resultList)) {
+            for (ProductCommentVO productCommentVO : resultList) {
+                List<ProductCommentReply> replyList = productCommentReplyService.queryCommentDetailReplyByPage(userId, productCommentVO.getId(), 0L, pageNum, pageSize);
+                List<ProductCommentReplyVO> replyResultList = BeanCopyUtils.convertListTo(list, ProductCommentReplyVO::new, (s,t)->{
+                    t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
+                    t.setStampFlag(s.getStampId() == null ? 0 : 1);
+                });
+                productCommentVO.setReplyResultList(ResponsePageUtil.restPage(replyResultList, replyList));
+            }
+        }
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
