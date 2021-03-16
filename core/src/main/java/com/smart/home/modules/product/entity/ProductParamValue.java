@@ -67,6 +67,11 @@ public class ProductParamValue implements Serializable {
         return this;
     }
 
+    public ProductParamValue withParamName(String paramName) {
+        this.setParamName(paramName);
+        return this;
+    }
+
     public void setParamValue(String paramValue) {
         this.paramValue = paramValue;
     }

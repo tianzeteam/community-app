@@ -162,6 +162,7 @@ public class ProductController {
                 ProductParamValue productParamValue = new ProductParamValue();
                 productParamValue.withParamId(productParamValueDTO.getId())
                         .withParamValue(productParamValueDTO.getParamValue())
+                        .withParamName(productParamValueDTO.getParamName())
                         .withSort(productParamValueDTO.getSort());
                 productParamValueList.add(productParamValue);
             }
@@ -222,10 +223,12 @@ public class ProductController {
                 ProductParamValue productParamValue = new ProductParamValue();
                 productParamValue.withParamId(productParamValueDTO.getId())
                         .withParamValue(productParamValueDTO.getParamValue())
+                        .withParamName(productParamValueDTO.getParamName())
                         .withProductId(productUpdateDTO.getId())
                         .withSort(productParamValueDTO.getSort());
                 productParamValueList.add(productParamValue);
             }
+            product.setProductParamValueList(productParamValueList);
         }
         if (productUpdateDTO.getCategoryOneDTO() != null) {
             product.setCategoryOneId(productUpdateDTO.getCategoryOneDTO().getId());
