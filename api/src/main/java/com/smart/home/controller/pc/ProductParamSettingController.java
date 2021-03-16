@@ -59,7 +59,7 @@ public class ProductParamSettingController {
     public APIResponse update(@Valid @RequestBody ProductParamSettingUpdateDTO productParamSettingUpdateDTO, BindingResult bindingResult) {
         ProductParamSetting productParamSetting = new ProductParamSetting();
         BeanUtils.copyProperties(productParamSettingUpdateDTO, productParamSetting);
-        productParamSetting.setCreatedBy(UserUtils.getLoginUserId());
+        productParamSetting.setUpdatedBy(UserUtils.getLoginUserId());
         if (!CollectionUtils.isEmpty(productParamSettingUpdateDTO.getEnumValueList())) {
             productParamSetting.setEnumValues(JSON.toJSONString(productParamSettingUpdateDTO.getEnumValueList()));
         }
