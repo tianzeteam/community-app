@@ -165,6 +165,7 @@ public class ProductController {
                         .withSort(productParamValueDTO.getSort());
                 productParamValueList.add(productParamValue);
             }
+            product.setProductParamValueList(productParamValueList);
         }
         if (productCreateDTO.getCategoryOneDTO() != null) {
             product.setCategoryOneId(productCreateDTO.getCategoryOneDTO().getId());
