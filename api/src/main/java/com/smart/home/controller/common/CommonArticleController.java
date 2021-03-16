@@ -25,6 +25,7 @@ import com.smart.home.modules.article.service.ArticleCommentReplyService;
 import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.article.service.ArticleProductMappingService;
 import com.smart.home.modules.article.service.ArticleService;
+import com.smart.home.modules.user.service.UserFocusService;
 import com.smart.home.service.CollectService;
 import com.smart.home.service.LikeService;
 import com.smart.home.service.MessageService;
@@ -68,6 +69,8 @@ public class CommonArticleController {
     private ArticleProductMappingService articleProductMappingService;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private UserFocusService userFocusService;
 
     @ApiOperation("根据文章主键id获取详情")
     @ApiImplicitParams({
@@ -89,6 +92,9 @@ public class CommonArticleController {
             if (StringUtils.isNotBlank(article.getBannerImages())) {
                 articleDetailVO.setImageList(JSON.parseArray(article.getBannerImages(), String.class));
             }
+            // 我是否关注了该用户
+            long count = userFocusService.countByFocusUserId(userId, article.getUserId());
+            articleDetailVO.setFocusUserFlag(count > 0 ? YesNoEnum.YES.getCode() : YesNoEnum.NO.getCode());
         } else {
             article = articleService.queryDetailByIdNoLogin(articleId);
             if (Objects.isNull(article)) {

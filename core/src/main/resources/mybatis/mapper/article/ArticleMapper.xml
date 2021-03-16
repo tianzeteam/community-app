@@ -707,6 +707,7 @@
            a.banner_images as bannerImages,
            a.title,
            a.details,
+           a.user_id as userId,
            a.like_count as likeCount,
            a.visit_count as visitCount,
            a.comment_count as commentCount,

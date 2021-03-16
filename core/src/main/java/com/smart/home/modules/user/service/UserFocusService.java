@@ -111,4 +111,10 @@ public class UserFocusService {
             }
         }
     }
+
+    public long countByFocusUserId(Long userId, Long focusUserId) {
+        UserFocusExample example = new UserFocusExample();
+        example.createCriteria().andUserIdEqualTo(userId).andFocusUserIdEqualTo(focusUserId);
+        return userFocusMapper.countByExample(example);
+    }
 }

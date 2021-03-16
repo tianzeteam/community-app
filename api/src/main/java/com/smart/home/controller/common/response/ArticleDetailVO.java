@@ -30,6 +30,8 @@ public class ArticleDetailVO {
     private Integer userLevel;
     @ApiModelProperty("用户签名")
     private String sign;
+    @ApiModelProperty("我是否关注了该用户:0否1是")
+    private Integer focusUserFlag;
     @ApiModelProperty("浏览量")
     private Integer visitCount;
     @ApiModelProperty("创建时间")

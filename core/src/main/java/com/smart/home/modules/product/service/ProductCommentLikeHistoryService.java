@@ -50,7 +50,7 @@ public class ProductCommentLikeHistoryService {
 
     public void unlikeComment(Long userId, Long id) {
         ProductCommentLikeHistoryExample example = new ProductCommentLikeHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(0);
+        example.createCriteria().andSourceIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(0);
         if (productCommentLikeHistoryMapper.deleteByExample(example) > 0) {
             productCommentService.decreaseLikeCount(id);
         }
@@ -58,7 +58,7 @@ public class ProductCommentLikeHistoryService {
 
     public void unlikeCommentReply(Long userId, Long id) {
         ProductCommentLikeHistoryExample example = new ProductCommentLikeHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(1);
+        example.createCriteria().andSourceIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(1);
         if (productCommentLikeHistoryMapper.deleteByExample(example) > 0) {
             productCommentReplyService.decreaseLikeCount(id);
         }

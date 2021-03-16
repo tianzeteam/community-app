@@ -50,7 +50,7 @@ public class CommunityLikeHistoryService {
 
     public void unlikePost(Long userId, Long id) {
         CommunityLikeHistoryExample example = new CommunityLikeHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
+        example.createCriteria().andPostIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
         if (communityLikeHistoryMapper.deleteByExample(example) > 0) {
             communityPostService.decreaseLikeCount(id);
         }
@@ -64,7 +64,7 @@ public class CommunityLikeHistoryService {
 
     public void unlikePostReply(Long userId, Long id) {
         CommunityLikeHistoryExample example = new CommunityLikeHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(1);
+        example.createCriteria().andPostIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(1);
         if (communityLikeHistoryMapper.deleteByExample(example) > 0) {
             communityPostReplyService.decreaseLikeCount(id);
         }
