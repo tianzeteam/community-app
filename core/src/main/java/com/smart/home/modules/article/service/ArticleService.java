@@ -11,12 +11,15 @@ import com.smart.home.enums.ArticleCategoryEnum;
 import com.smart.home.enums.ArticleRecommendTypeEnum;
 import com.smart.home.enums.ArticleStateEnum;
 import com.smart.home.enums.AuditCategoryEnum;
+import com.smart.home.es.bean.ArticleBean;
+import com.smart.home.es.service.ArticleEsService;
 import com.smart.home.modules.article.dao.ArticleMapper;
 import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleExample;
 import com.smart.home.modules.other.service.AuditHistoryService;
 import com.smart.home.modules.system.service.SysFileService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +42,8 @@ public class ArticleService {
     private SysFileService sysFileService;
     @Autowired
     private ArticleProductMappingService articleProductMappingService;
+    @Autowired
+    private ArticleEsService articleEsServiceImpl;
 
     public int create(Article article, Integer productId, String testResult, Integer recommendFlag) {
         article.setCreatedTime(new Date());
@@ -67,9 +72,16 @@ public class ArticleService {
         return affectRow;
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public int update(Article article) {
         int affectRow = articleMapper.updateByPrimaryKeySelective(article);
         syncUploadFiles(article.getCoverImage(), article.getBannerImages());
+        Article dbArticle = findById(article.getId());
+        if (AuditStatusEnum.APPROVED.getCode() == dbArticle.getAuditState() && RecordStatusEnum.NORMAL.getStatus() == dbArticle.getOnlineStatus()) {
+            ArticleBean articleBean = new ArticleBean();
+            BeanUtils.copyProperties(dbArticle, articleBean);
+            articleEsServiceImpl.save(articleBean);
+        }
         return affectRow;
     }
 
@@ -92,6 +104,8 @@ public class ArticleService {
         for (Long id : idList) {
             // 软删除
             articleMapper.updateState(id, RecordStatusEnum.DELETE.getStatus());
+            // 同步es
+            articleEsServiceImpl.deleteById(id);
         }
     }
 
@@ -188,6 +202,10 @@ public class ArticleService {
             if (affectRow > 0) {
                 // 增加一条审核记录
                 auditHistoryService.create(AuditCategoryEnum.ARTICLE_AUDIT, id, "文章审核通过", YesNoEnum.YES, userId);
+                // 同步到es
+                ArticleBean articleBean = new ArticleBean();
+                BeanUtils.copyProperties(article, articleBean);
+                articleEsServiceImpl.save(articleBean);
             }
         }
     }
@@ -261,6 +279,8 @@ public class ArticleService {
             article.setOnlineStatus(RecordStatusEnum.PAUSED.getStatus());
             article.setUpdatedBy(userId);
             articleMapper.updateByPrimaryKeySelective(article);
+            // 同步es
+            articleEsServiceImpl.deleteById(id);
         }
     }
     @Transactional(rollbackFor = RuntimeException.class)
@@ -270,6 +290,10 @@ public class ArticleService {
             article.setOnlineStatus(RecordStatusEnum.NORMAL.getStatus());
             article.setUpdatedBy(userId);
             articleMapper.updateByPrimaryKeySelective(article);
+            // 同步es
+            ArticleBean articleBean = new ArticleBean();
+            BeanUtils.copyProperties(article, articleBean);
+            articleEsServiceImpl.save(articleBean);
         }
     }
 

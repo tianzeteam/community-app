@@ -71,6 +71,6 @@ public class ArticleBean {
     private Integer collectCount;
 
     @Field(type = FieldType.Integer, index = false)
-    private Integer articleTYpe;
+    private Integer articleType;
 
 }
