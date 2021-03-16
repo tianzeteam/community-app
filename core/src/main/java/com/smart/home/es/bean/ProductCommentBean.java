@@ -26,6 +26,7 @@ import java.util.Date;
 @Document(indexName = EsConstant.productCommentIndex, type = EsConstant.productComment, shards = 3, replicas = 1)
 public class ProductCommentBean {
 
+    @Id
     @Field(type = FieldType.Long, index = true)
     private Long id;
 

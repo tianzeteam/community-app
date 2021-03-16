@@ -25,6 +25,7 @@ import java.util.Date;
 @Document(indexName = EsConstant.articleIndex, type = EsConstant.article, shards = 3, replicas = 1)
 public class ArticleBean {
 
+    @Id
     @Field(type = FieldType.Long, index = true)
     private Long id;
 

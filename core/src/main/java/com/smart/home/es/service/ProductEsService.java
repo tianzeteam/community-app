@@ -8,7 +8,7 @@ import com.smart.home.es.bean.ProductBean;
  **/
 public interface ProductEsService {
 
-    void deleteById (Integer id);
+    void deleteById (Long id);
 
     void save(ProductBean productBean);
 

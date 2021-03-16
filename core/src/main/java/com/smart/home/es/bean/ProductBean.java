@@ -28,6 +28,7 @@ import java.util.List;
 @Document(indexName = EsConstant.productIndex, type = EsConstant.product, shards = 3, replicas = 1)
 public class ProductBean {
 
+    @Id
     @Field(type = FieldType.Long, index = true)
     private Long id;
 

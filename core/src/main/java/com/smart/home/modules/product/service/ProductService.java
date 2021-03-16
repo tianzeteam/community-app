@@ -126,6 +126,7 @@ public class ProductService {
             ProductBean productBean = new ProductBean();
             BeanUtils.copyProperties(product, productBean);
             productBean.setKeyValueDTOList(paramList);
+            productBean.setId(Long.valueOf(productId));
             productEsServiceImpl.save(productBean);
         }
         syncImages(product);
@@ -174,6 +175,7 @@ public class ProductService {
             ProductBean productBean = new ProductBean();
             BeanUtils.copyProperties(findById(productId), productBean);
             productBean.setKeyValueDTOList(paramList);
+            productBean.setId(Long.valueOf(productId));
             productEsServiceImpl.update(productBean);
         }
         syncImages(product);
@@ -199,7 +201,7 @@ public class ProductService {
         for (Long id : idList) {
             productMapper.softDelete(id.intValue());
             // 删除es数据
-            productEsServiceImpl.deleteById(id.intValue());
+            productEsServiceImpl.deleteById(id);
         }
     }
 

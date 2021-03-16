@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  * @date 2021/3/15
  **/
 @Repository
-public interface ProductRepository extends ElasticsearchRepository<ProductBean, Integer> {
+public interface ProductRepository extends ElasticsearchRepository<ProductBean, Long> {
 }

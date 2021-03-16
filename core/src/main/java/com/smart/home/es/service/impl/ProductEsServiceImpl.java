@@ -18,7 +18,7 @@ public class ProductEsServiceImpl extends EsQueryService implements ProductEsSer
     private ProductRepository productRepository;
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
 
