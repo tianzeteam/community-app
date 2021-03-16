@@ -41,7 +41,7 @@ public class ArticleStampHistoryService {
 
     public void unstampArticle(Long userId, Long id) {
         ArticleStampHistoryExample example = new ArticleStampHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
+        example.createCriteria().andSourceIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
         if (articleStampHistoryMapper.deleteByExample(example) > 0) {
             articleService.decreaseStampCount(id);
         }
@@ -49,7 +49,7 @@ public class ArticleStampHistoryService {
 
     public void unstampArticleComment(Long userId, Long id) {
         ArticleStampHistoryExample example = new ArticleStampHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(1);
+        example.createCriteria().andSourceIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(1);
         if (articleStampHistoryMapper.deleteByExample(example) > 0) {
             articleCommentService.decreaseStampCount(id);
         }

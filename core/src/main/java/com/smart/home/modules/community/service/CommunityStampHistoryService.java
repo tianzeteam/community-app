@@ -49,7 +49,7 @@ public class CommunityStampHistoryService {
 
     public void unstampPost(Long userId, Long id) {
         CommunityStampHistoryExample example = new CommunityStampHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
+        example.createCriteria().andPostIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(0);
         if (communityStampHistoryMapper.deleteByExample(example) > 0) {
             communityPostService.decreaseStampCount(id);
         }
@@ -57,7 +57,7 @@ public class CommunityStampHistoryService {
 
     public void unstampPostReply(Long userId, Long id) {
         CommunityStampHistoryExample example = new CommunityStampHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(1);
+        example.createCriteria().andPostIdEqualTo(id).andUserIdEqualTo(userId).andTypeEqualTo(1);
         if (communityStampHistoryMapper.deleteByExample(example) > 0) {
             communityPostReplyService.decreaseStampCount(id);
         }

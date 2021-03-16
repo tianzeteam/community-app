@@ -22,6 +22,8 @@ public class ArticleDetailVO {
     private List<String> imageList;
     @ApiModelProperty("文章标题")
     private String title;
+    @ApiModelProperty("用户主键id")
+    private Long userId;
     @ApiModelProperty("用户头像")
     private String headUrl;
     @ApiModelProperty("用户昵称")

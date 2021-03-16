@@ -49,7 +49,7 @@ public class ProductCommentStampHistoryService {
 
     public void unstampComment(Long userId, Long id) {
         ProductCommentStampHistoryExample example = new ProductCommentStampHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(0);
+        example.createCriteria().andSourceIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(0);
         if (productCommentStampHistoryMapper.deleteByExample(example) > 0) {
             productCommentService.decreaseStampCount(id);
         }
@@ -57,7 +57,7 @@ public class ProductCommentStampHistoryService {
 
     public void unstampCommentReply(Long userId, Long id) {
         ProductCommentStampHistoryExample example = new ProductCommentStampHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(1);
+        example.createCriteria().andSourceIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(1);
         if (productCommentStampHistoryMapper.deleteByExample(example) > 0) {
             productCommentReplyService.decreaseStampCount(id);
         }
