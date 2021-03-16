@@ -1,6 +1,7 @@
 package com.smart.home.es.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smart.home.es.common.EsConstant;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
@@ -22,10 +23,10 @@ import java.util.Date;
 @Builder
 @ToString
 @Accessors(chain = true)
-@Document(indexName = "product_comment_index", type = "product_comment", shards = 3, replicas = 1)
+@Document(indexName = EsConstant.productCommentIndex, type = EsConstant.productComment, shards = 3, replicas = 1)
 public class ProductCommentBean {
 
-    @Id
+    @Field(type = FieldType.Long, index = true)
     private Long id;
 
     @Field(type = FieldType.Long)
