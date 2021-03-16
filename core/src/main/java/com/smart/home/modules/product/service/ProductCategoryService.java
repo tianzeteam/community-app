@@ -98,9 +98,7 @@ public class ProductCategoryService {
             }
             productCategory.setLevel(level+1);
         }
-        if (paramIdList != null && paramIdList.isEmpty()) {
-            productCategoryParamService.deleteByProductCategoryId(productCategory.getId());
-        }
+        productCategoryParamService.deleteByProductCategoryId(productCategory.getId());
         if (CollUtil.isNotEmpty(paramIdList)) {
             int sort = 0;
             for (Integer productParamId : paramIdList) {
