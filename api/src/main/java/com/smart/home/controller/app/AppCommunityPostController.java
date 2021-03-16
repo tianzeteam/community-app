@@ -62,9 +62,9 @@ public class AppCommunityPostController {
     @GetMapping("/recommend/queryList")
     public APIResponse<ResponsePageBean<RecommendCommunityPostVO>> recommendQueryList(Integer pageNum, Integer pageSize) {
         log.info("推荐帖子列表:");
-        List<CommunityPostDTO> communityPosts = communityPostService.queryRecommendPostList(pageNum, pageSize);
-        List<RecommendCommunityPostVO> recommendCommunityPostVOS = BeanCopyUtils.convertListTo(communityPosts, RecommendCommunityPostVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(recommendCommunityPostVOS, communityPosts));
+        List<CommunityPostDTO> list = communityPostService.queryRecommendPostList(pageNum, pageSize);
+        List<RecommendCommunityPostVO> resultList = BeanCopyUtils.convertListTo(list, RecommendCommunityPostVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPageByLocalPage(resultList));
     }
 
     //暂时先用一个返回vo

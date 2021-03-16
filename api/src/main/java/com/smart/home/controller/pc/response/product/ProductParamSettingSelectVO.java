@@ -22,5 +22,7 @@ public class ProductParamSettingSelectVO {
     private String remark;
     @ApiModelProperty("枚举值")
     private List<String> enumValueList;
+    @ApiModelProperty("是否应用给所有产品:0否1是")
+    private Integer enableAll;
 
 }

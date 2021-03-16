@@ -270,9 +270,27 @@ public class ProductController {
         if (StringUtils.isNotBlank(product.getTag())) {
             productUpdateDTO.setTagList(JSON.parseArray(product.getTag(), String.class));
         }
-        productUpdateDTO.setCategoryOneDTO(new ProductCategoryDTO(product.getCategoryOneId(), product.getCategoryOneName(), productCategoryParamService.findParamIdListByCategoryId(product.getCategoryOneId())));
-        productUpdateDTO.setCategoryTwoDTO(new ProductCategoryDTO(product.getCategoryTwoId(), product.getCategoryTwoName(), productCategoryParamService.findParamIdListByCategoryId(product.getCategoryTwoId())));
-        productUpdateDTO.setCategoryThreeDTO(new ProductCategoryDTO(product.getCategoryThreeId(), product.getCategoryThreeName(), productCategoryParamService.findParamIdListByCategoryId(product.getCategoryThreeId())));
+        List<ProductParamSetting> list = productCategoryParamService.findParamListByCategoryId(product.getCategoryOneId());
+        List<ProductParamSettingSelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductParamSettingSelectVO::new,(s,t)->{
+            if (StringUtils.isNotBlank(s.getEnumValues())) {
+                t.setEnumValueList(JSON.parseArray(s.getEnumValues(), String.class));
+            }
+        });
+        productUpdateDTO.setCategoryOneDTO(new ProductCategoryDTO(product.getCategoryOneId(), product.getCategoryOneName(), resultList));
+        list = productCategoryParamService.findParamListByCategoryId(product.getCategoryTwoId());
+        resultList = BeanCopyUtils.convertListTo(list, ProductParamSettingSelectVO::new,(s,t)->{
+            if (StringUtils.isNotBlank(s.getEnumValues())) {
+                t.setEnumValueList(JSON.parseArray(s.getEnumValues(), String.class));
+            }
+        });
+        productUpdateDTO.setCategoryTwoDTO(new ProductCategoryDTO(product.getCategoryTwoId(), product.getCategoryTwoName(), resultList));
+        list = productCategoryParamService.findParamListByCategoryId(product.getCategoryThreeId());
+        resultList = BeanCopyUtils.convertListTo(list, ProductParamSettingSelectVO::new,(s,t)->{
+            if (StringUtils.isNotBlank(s.getEnumValues())) {
+                t.setEnumValueList(JSON.parseArray(s.getEnumValues(), String.class));
+            }
+        });
+        productUpdateDTO.setCategoryThreeDTO(new ProductCategoryDTO(product.getCategoryThreeId(), product.getCategoryThreeName(), resultList));
         productUpdateDTO.setProductBrandDTO(new ProductBrandDTO(product.getBrandId(), product.getBrandName()));
         if (StringUtils.isNotBlank(product.getParams())) {
             productUpdateDTO.setParamValueDTOList(JSON.parseArray(product.getParams(), ProductParamValueDTO.class));

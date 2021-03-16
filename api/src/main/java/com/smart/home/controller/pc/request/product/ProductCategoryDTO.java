@@ -1,10 +1,12 @@
 package com.smart.home.controller.pc.request.product;
 
+import com.smart.home.controller.pc.response.product.ProductParamSettingSelectVO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
 import java.util.List;
 /**
  * @author jason
@@ -21,6 +23,6 @@ public class ProductCategoryDTO {
     @ApiModelProperty("名称,之前查询带出来的")
     private String title;
     @ApiModelProperty("分类下的参数id数组")
-    private List<Integer> paramIdList;
+    private List<ProductParamSettingSelectVO> paramList;
 
 }

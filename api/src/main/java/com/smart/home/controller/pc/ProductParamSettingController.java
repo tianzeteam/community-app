@@ -109,7 +109,7 @@ public class ProductParamSettingController {
 
     @ApiOperation("下拉选择参数库")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "enableAll", value = "0查类目关联的1查应用给所有产品的", required = false)
+            @ApiImplicitParam(name = "enableAll", value = "0查类目关联的1查应用给所有产品的2查询所有", required = false)
     })
     @GetMapping("selectSelectItems")
     public APIResponse<List<ProductParamSettingSelectVO>> selectSelectItems(Integer enableAll) {
@@ -119,8 +119,10 @@ public class ProductParamSettingController {
         List<ProductParamSetting> list = null;
         if (enableAll == 0) {
             list = productParamSettingService.queryAllValidExceptEnableAll();
-        } else {
+        } else if (enableAll == 1){
             list = productParamSettingService.queryAllValidForEnableAll();
+        } else if (enableAll == 2) {
+            list = productParamSettingService.queryAllValid();
         }
         List<ProductParamSettingSelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductParamSettingSelectVO::new,(s, t)->{
             if (StringUtils.isNotBlank(s.getEnumValues())) {
