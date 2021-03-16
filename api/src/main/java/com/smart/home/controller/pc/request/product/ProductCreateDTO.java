@@ -28,6 +28,7 @@ public class ProductCreateDTO {
     private String remark;
 
     @ApiModelProperty("封面图片")
+    @NotBlank(message = "封面图片不能为空")
     private String coverImage;
 
     @ApiModelProperty("产品图库列表")
@@ -44,18 +45,23 @@ public class ProductCreateDTO {
 
     //////////////////////////////////////////////////////
     @ApiModelProperty("一级类目对象")
+    @NotNull(message = "一级类目对象不能为空")
     private ProductCategoryDTO categoryOneDTO;
     @ApiModelProperty("二级类目对象")
+    @NotNull(message = "二级类目对象不能为空")
     private ProductCategoryDTO categoryTwoDTO;
     @ApiModelProperty("三级类目对象")
+    @NotNull(message = "三级类目对象不能为空")
     private ProductCategoryDTO categoryThreeDTO;
     @ApiModelProperty("品牌对象")
     private ProductBrandDTO productBrandDTO;
     @ApiModelProperty("上线日期")
+    @NotNull(message = "上线日期不能为空")
     private Date onlineDate;
     @ApiModelProperty("规格型号")
     private String specification;
     @ApiModelProperty("支持的平台")
+    @NotBlank(message = "支持的平台不能为空")
     private String supportPlatform;
 
     @ApiModelProperty("状态：0正常1隐藏")
