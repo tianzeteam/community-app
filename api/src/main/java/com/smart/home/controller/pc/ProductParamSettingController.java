@@ -13,10 +13,7 @@ import com.smart.home.modules.product.entity.ProductParamSetting;
 import com.smart.home.modules.product.service.ProductParamSettingService;
 import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -110,9 +108,20 @@ public class ProductParamSettingController {
     }
 
     @ApiOperation("下拉选择参数库")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "enableAll", value = "0查类目关联的1查应用给所有产品的", required = false)
+    })
     @GetMapping("selectSelectItems")
-    public APIResponse<List<ProductParamSettingSelectVO>> selectSelectItems() {
-        List<ProductParamSetting> list = productParamSettingService.queryAllValidExceptEnableAll();
+    public APIResponse<List<ProductParamSettingSelectVO>> selectSelectItems(Integer enableAll) {
+        if (Objects.isNull(enableAll)) {
+            enableAll = 0;
+        }
+        List<ProductParamSetting> list = null;
+        if (enableAll == 0) {
+            list = productParamSettingService.queryAllValidExceptEnableAll();
+        } else {
+            list = productParamSettingService.queryAllValidForEnableAll();
+        }
         List<ProductParamSettingSelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductParamSettingSelectVO::new,(s, t)->{
             if (StringUtils.isNotBlank(s.getEnumValues())) {
                 t.setEnumValueList(JSON.parseArray(s.getEnumValues(), String.class));

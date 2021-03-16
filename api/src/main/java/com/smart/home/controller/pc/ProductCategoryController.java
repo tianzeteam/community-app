@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import cn.hutool.core.collection.CollUtil;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.pc.request.product.ProductCategoryCreateDTO;
@@ -123,7 +124,11 @@ public class ProductCategoryController {
     @GetMapping("selectSelectItems")
     public APIResponse<List<ProductCategorySelectVO>> selectSelectItems(Integer pid) {
         List<ProductCategory> list = productCategoryService.queryAllValidByPid(pid);
-        List<ProductCategorySelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductCategorySelectVO::new);
+        List<ProductCategorySelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductCategorySelectVO::new, (s, t)->{
+            if (CollUtil.isNotEmpty(s.getParamIdList())) {
+                t.setParamIdList(s.getParamIdList());
+            }
+        });
         return APIResponse.OK(resultList);
     }
 

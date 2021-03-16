@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Role;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -46,6 +47,8 @@ public class ProductController {
     @Autowired
     private ProductCategoryService productCategoryService;
     @Autowired
+    private ProductCategoryParamService productCategoryParamService;
+    @Autowired
     private ProductParamSettingService productParamSettingService;
     @Autowired
     private ProductBrandService productBrandService;
@@ -61,6 +64,7 @@ public class ProductController {
         return APIResponse.OK(resultList);
     }
 
+    @ApiIgnore
     @ApiOperation("选择一级类目")
     @RoleAccess(RoleConsts.ADMIN)
     @GetMapping("/queryCategoryOne")
@@ -69,7 +73,7 @@ public class ProductController {
         List<ProductCategorySelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductCategorySelectVO::new);
         return APIResponse.OK(resultList);
     }
-
+    @ApiIgnore
     @ApiOperation("选择二级类目")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pid", value = "上级类目主键id", required = true)
@@ -81,7 +85,7 @@ public class ProductController {
         List<ProductCategorySelectVO> resultList = BeanCopyUtils.convertListTo(list, ProductCategorySelectVO::new);
         return APIResponse.OK(resultList);
     }
-
+    @ApiIgnore
     @ApiOperation("选择三级类目")
     @RoleAccess(RoleConsts.ADMIN)
     @GetMapping("/queryCategoryThree")
@@ -266,9 +270,9 @@ public class ProductController {
         if (StringUtils.isNotBlank(product.getTag())) {
             productUpdateDTO.setTagList(JSON.parseArray(product.getTag(), String.class));
         }
-        productUpdateDTO.setCategoryOneDTO(new ProductCategoryDTO(product.getCategoryOneId(), product.getCategoryOneName()));
-        productUpdateDTO.setCategoryTwoDTO(new ProductCategoryDTO(product.getCategoryTwoId(), product.getCategoryTwoName()));
-        productUpdateDTO.setCategoryThreeDTO(new ProductCategoryDTO(product.getCategoryThreeId(), product.getCategoryThreeName()));
+        productUpdateDTO.setCategoryOneDTO(new ProductCategoryDTO(product.getCategoryOneId(), product.getCategoryOneName(), productCategoryParamService.findParamIdListByCategoryId(product.getCategoryOneId())));
+        productUpdateDTO.setCategoryTwoDTO(new ProductCategoryDTO(product.getCategoryTwoId(), product.getCategoryTwoName(), productCategoryParamService.findParamIdListByCategoryId(product.getCategoryTwoId())));
+        productUpdateDTO.setCategoryThreeDTO(new ProductCategoryDTO(product.getCategoryThreeId(), product.getCategoryThreeName(), productCategoryParamService.findParamIdListByCategoryId(product.getCategoryThreeId())));
         productUpdateDTO.setProductBrandDTO(new ProductBrandDTO(product.getBrandId(), product.getBrandName()));
         if (StringUtils.isNotBlank(product.getParams())) {
             productUpdateDTO.setParamValueDTOList(JSON.parseArray(product.getParams(), ProductParamValueDTO.class));

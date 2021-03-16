@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * @author jason
  * @date 2021/2/26
@@ -16,5 +18,7 @@ public class ProductCategorySelectVO {
     private Integer id;
     @ApiModelProperty("名称")
     private String title;
+    @ApiModelProperty("参数列表")
+    private List<Integer> paramIdList;
 
 }

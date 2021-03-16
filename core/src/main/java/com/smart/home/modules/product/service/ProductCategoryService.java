@@ -170,6 +170,10 @@ public class ProductCategoryService {
         ProductCategoryExample example = new ProductCategoryExample();
         example.createCriteria().andPidEqualTo(pid).andStateEqualTo(RecordStatusEnum.NORMAL.getStatus());
         example.setOrderByClause("sort desc");
-        return productCategoryMapper.selectByExample(example);
+        List<ProductCategory> list = productCategoryMapper.selectByExample(example);
+        for (ProductCategory productCategory : list) {
+            productCategory.setParamIdList(productCategoryParamService.findParamIdListByCategoryId(productCategory.getId()));
+        }
+        return list;
     }
 }

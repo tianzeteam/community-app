@@ -104,6 +104,12 @@ public class ProductParamSettingService {
         return productParamSettingMapper.selectByExample(example);
     }
 
+    public List<ProductParamSetting> queryAllValidForEnableAll() {
+        ProductParamSettingExample example = new ProductParamSettingExample();
+        example.createCriteria().andEnableAllEqualTo(YesNoEnum.YES.getCode());
+        return productParamSettingMapper.selectByExample(example);
+    }
+
     public List<ProductParamSetting> queryAllValidWithEnableAll() {
         ProductParamSettingExample example = new ProductParamSettingExample();
         example.createCriteria().andEnableAllEqualTo(YesNoEnum.YES.getCode());
