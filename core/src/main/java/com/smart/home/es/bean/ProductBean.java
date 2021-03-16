@@ -66,11 +66,11 @@ public class ProductBean {
     private Integer categoryThreeId;
 
     @Field(type = FieldType.Keyword)
-    private Integer categoryOneName;
+    private String categoryOneName;
     @Field(type = FieldType.Keyword)
-    private Integer categoryTwoName;
+    private String categoryTwoName;
     @Field(type = FieldType.Keyword)
-    private Integer categoryThreeName;
+    private String categoryThreeName;
 
     @Field(type = FieldType.Keyword)
     private String supportPlatform;

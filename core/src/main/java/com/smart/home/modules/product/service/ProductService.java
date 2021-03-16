@@ -2,11 +2,12 @@ package com.smart.home.modules.product.service;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
-import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.FileUtils;
+import com.smart.home.es.bean.ProductBean;
+import com.smart.home.es.dto.KeyValueDTO;
 import com.smart.home.es.service.ProductEsService;
 import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.dao.ProductParamSettingMapper;
@@ -16,6 +17,8 @@ import com.smart.home.modules.product.entity.*;
 import com.smart.home.modules.system.entity.SysFile;
 import com.smart.home.modules.system.service.SysFileService;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.K;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,8 +90,11 @@ public class ProductService {
         product.setThreeStarCount(0);
         product.setFourStarCount(0);
         product.setFiveStarCount(0);
+        product.setDeleteFlag(YesNoEnum.NO.getCode());
+        product.setRecommendFlag(YesNoEnum.NO.getCode());
         int affectRow = productMapper.insertSelective(product);
         if (affectRow > 0) {
+            List<KeyValueDTO> paramList = new ArrayList<>();
             Integer productId = product.getId();
             if (product.getProductParamValueList() != null) {
                 for (ProductParamValue productParamValue : product.getProductParamValueList()) {
@@ -102,6 +108,10 @@ public class ProductService {
                     }
                     productParamValue.setProductId(productId);
                     productParamValueMapper.insertSelective(productParamValue);
+                    KeyValueDTO keyValueDTO = new KeyValueDTO();
+                    keyValueDTO.setKey(productParamValue.getParamName());
+                    keyValueDTO.setValue(productParamValue.getParamValue());
+                    paramList.add(keyValueDTO);
                 }
                 productMapper.saveParams(productId, JSON.toJSONString(product.getProductParamValueList()));
             }
@@ -112,6 +122,11 @@ public class ProductService {
                 }
                 productMapper.saveShops(productId, JSON.toJSONString(product.getProductShopMappingList()));
             }
+            // 同步到es
+            ProductBean productBean = new ProductBean();
+            BeanUtils.copyProperties(product, productBean);
+            productBean.setKeyValueDTOList(paramList);
+            productEsServiceImpl.save(productBean);
         }
         syncImages(product);
         return affectRow;
@@ -123,6 +138,7 @@ public class ProductService {
         if (affectRow > 0) {
             Integer productId = product.getId();
             productParamValueMapper.deleteByProductId(product.getId());
+            List<KeyValueDTO> paramList = new ArrayList<>();
             if (product.getProductParamValueList() != null) {
                 for (ProductParamValue productParamValue : product.getProductParamValueList()) {
                     if (productParamValue.getParamId() == null) {
@@ -135,6 +151,10 @@ public class ProductService {
                     }
                     productParamValue.setProductId(productId);
                     productParamValueMapper.insertSelective(productParamValue);
+                    KeyValueDTO keyValueDTO = new KeyValueDTO();
+                    keyValueDTO.setKey(productParamValue.getParamName());
+                    keyValueDTO.setValue(productParamValue.getParamValue());
+                    paramList.add(keyValueDTO);
                 }
                 productMapper.saveParams(productId, JSON.toJSONString(product.getProductParamValueList()));
             } else {
@@ -150,6 +170,11 @@ public class ProductService {
             } else {
                 productMapper.saveShops(productId, "");
             }
+            // 同步到es
+            ProductBean productBean = new ProductBean();
+            BeanUtils.copyProperties(findById(productId), productBean);
+            productBean.setKeyValueDTOList(paramList);
+            productEsServiceImpl.update(productBean);
         }
         syncImages(product);
         return affectRow;

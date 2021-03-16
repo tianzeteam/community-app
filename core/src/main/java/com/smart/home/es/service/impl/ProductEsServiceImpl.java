@@ -1,5 +1,6 @@
 package com.smart.home.es.service.impl;
 
+import com.smart.home.es.bean.ProductBean;
 import com.smart.home.es.dao.ProductRepository;
 import com.smart.home.es.service.EsQueryService;
 import com.smart.home.es.service.ProductEsService;
@@ -19,5 +20,15 @@ public class ProductEsServiceImpl extends EsQueryService implements ProductEsSer
     @Override
     public void deleteById(Integer id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public void save(ProductBean productBean) {
+        productRepository.save(productBean);
+    }
+
+    @Override
+    public void update(ProductBean productBean) {
+        productRepository.save(productBean);
     }
 }
