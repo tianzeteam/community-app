@@ -4,6 +4,8 @@ import com.smart.home.cloud.qcloud.consts.BucketConsts;
 import com.smart.home.common.contants.FileStoreType;
 import com.smart.home.common.contants.FileType;
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.exception.RestfulRequestException;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.system.service.SysFileService;
@@ -41,7 +43,7 @@ public class SysFileController {
                 "image/png"
         };
         if(!FileUpload.isContentType(multipartFile, types)){
-            throw new RuntimeException(EnumFileUploadError.INVALID_FILE_TYPE.getMessage());
+            throw new RestfulRequestException(EnumFileUploadError.INVALID_FILE_TYPE.getMessage());
         }
         upload.setBucketName(BucketConsts.IMAGE);
         upload.setStoreType(FileStoreType.COS);
@@ -63,7 +65,7 @@ public class SysFileController {
                 "application/vnd.rn-realmedia-vbr"
         };
         if(!FileUpload.isContentType(multipartFile, types)){
-            throw new RuntimeException(EnumFileUploadError.INVALID_FILE_TYPE.getMessage());
+            throw new RestfulRequestException(EnumFileUploadError.INVALID_FILE_TYPE.getMessage());
         }
         upload.setBucketName(BucketConsts.VIDEO);
         upload.setStoreType(FileStoreType.COS);
