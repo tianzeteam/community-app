@@ -4,8 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditor;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditorResult;
@@ -18,7 +18,7 @@ import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.ServiceException;
-import com.smart.home.common.util.DateUtils;
+import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.community.dao.CommunityMapper;
 import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
@@ -245,11 +245,15 @@ public class CommunityPostService {
     public List<CommunityPostDTO> queryRecommendPostList(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<CommunityPost> sortRecommends = communityPostMapper.getSortRecommend();
-        if (CollUtil.isEmpty(sortRecommends)) {
-            return Collections.EMPTY_LIST;
-        }
         List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(sortRecommends);
-        return communityPostDTOS;
+        return toPageList((Page) sortRecommends, communityPostDTOS);
+    }
+
+    private <T> Page<T> toPageList(Page pager, List<T> list) {
+        Page<T> page = new Page();
+        page.addAll(list);
+        BeanCopyUtils.copyProperties(pager, page);
+        return page;
     }
 
     /**
@@ -259,11 +263,8 @@ public class CommunityPostService {
     public List<CommunityPostDTO> queryHotPostList(int pageNum, int pageSize){
         PageHelper.startPage(pageNum, pageSize);
         List<CommunityPost> communityPosts = communityPostMapper.getHotPost(DateUtil.offsetDay(DateUtil.date(), -7).toString(), DateUtil.date().toString());
-        if (CollUtil.isEmpty(communityPosts)) {
-            return Collections.EMPTY_LIST;
-        }
         List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(communityPosts);
-        return communityPostDTOS;
+        return toPageList((Page) communityPosts, communityPostDTOS);
     }
 
     /**
@@ -273,11 +274,8 @@ public class CommunityPostService {
     public List<CommunityPostDTO> queryCommunityDetailPostList(Long communityId, Integer boutiqueFlag, int pageNum, int pageSize){
         PageHelper.startPage(pageNum, pageSize);
         List<CommunityPost> communityDetail = communityPostMapper.getCommunityDetail(communityId, boutiqueFlag);
-        if (CollUtil.isEmpty(communityDetail)) {
-            return Collections.EMPTY_LIST;
-        }
         List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(communityDetail);
-        return communityPostDTOS;
+        return toPageList((Page) communityDetail, communityPostDTOS);
     }
 
     /**
@@ -436,6 +434,9 @@ public class CommunityPostService {
 
 
     private List<CommunityPostDTO> transCommunityPostDTO(List<CommunityPost> list){
+        if (CollUtil.isEmpty(list)) {
+            return Collections.EMPTY_LIST;
+        }
         List<CommunityPostDTO> communityPostDTOS = Lists.newArrayListWithCapacity(list.size());
         list.stream().forEach(x->{
             CommunityPostDTO communityPostDTO = new CommunityPostDTO();

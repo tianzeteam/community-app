@@ -56,7 +56,7 @@ public class ResponsePageUtil {
             PageHelper.clearPage();
             return result;
         }
-        return restPageByLocalPage(resultList);
+        throw new RuntimeException("方法使用错误");
     }
 
     /**
@@ -69,18 +69,6 @@ public class ResponsePageUtil {
         result.setPageSize(tempResPageHelperBean.getPageSize());
         result.setTotalCount(tempResPageHelperBean.getTotalCount());
         result.setList(list);
-        PageHelper.clearPage();
-        return result;
-    }
-
-    public static <T> ResponsePageBean<T> restPageByLocalPage(List<T> resultList) {
-        ResponsePageBean<T> result = new ResponsePageBean<T>();
-        Page localPage = PageHelper.getLocalPage();
-        result.setTotalPage(localPage.getPages());
-        result.setPageNum(localPage.getPageNum());
-        result.setPageSize(localPage.getPageSize());
-        result.setTotalCount(localPage.getTotal());
-        result.setList(resultList);
         PageHelper.clearPage();
         return result;
     }
