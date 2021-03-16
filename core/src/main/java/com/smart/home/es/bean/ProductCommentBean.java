@@ -1,6 +1,7 @@
 package com.smart.home.es.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smart.home.dto.PersionalMessageDTO;
 import com.smart.home.es.common.EsConstant;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -24,7 +25,7 @@ import java.util.Date;
 @ToString
 @Accessors(chain = true)
 @Document(indexName = EsConstant.productCommentIndex, type = EsConstant.productComment, shards = 3, replicas = 1)
-public class ProductCommentBean {
+public class ProductCommentBean extends PersionalMessageDTO {
 
     @Id
     @Field(type = FieldType.Long, index = true)

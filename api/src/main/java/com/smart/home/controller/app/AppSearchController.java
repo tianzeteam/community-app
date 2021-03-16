@@ -3,8 +3,10 @@ package com.smart.home.controller.app;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.es.dto.NameCountDTO;
+import com.smart.home.es.service.EsCommonService;
 import com.smart.home.es.service.SearchEsService;
 import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 /**
  * @author jason
  * @date 2021/3/14
  **/
+@Slf4j
 @Api(tags = "搜索")
 @RestController
 @RequestMapping("/api/app/search")
@@ -38,6 +43,18 @@ public class AppSearchController {
             resultList.add(nameCountDTO.getName());
         }
         return APIResponse.OK(resultList);
+    }
+
+    @ApiOperation("综合搜索")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "contents", value = "文案", required = true)
+    })
+    @AnonAccess
+    @GetMapping("/multiple")
+    public APIResponse multiple(String contents){
+        log.info("multiple综合搜索:{}", contents);
+        Map<String, Object> multiple = searchEsService.multiple(contents);
+        return APIResponse.OK(multiple);
     }
 
 }

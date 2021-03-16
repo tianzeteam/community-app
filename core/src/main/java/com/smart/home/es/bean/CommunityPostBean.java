@@ -1,6 +1,7 @@
 package com.smart.home.es.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smart.home.dto.PersionalMessageDTO;
 import com.smart.home.es.common.EsConstant;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -21,7 +22,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(indexName = EsConstant.communityPostIndex, type = EsConstant.communityPost, shards = 3, replicas = 1)
-public class CommunityPostBean {
+public class CommunityPostBean  extends PersionalMessageDTO {
 
     @Field(type = FieldType.Long, index = true)
     private Long id;

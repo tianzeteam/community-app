@@ -129,7 +129,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from user_data
     where id = #{id,jdbcType=BIGINT}
@@ -364,25 +364,25 @@
   <update id="updateByExample" parameterType="map">
     update user_data
     set id = #{record.id,jdbcType=BIGINT},
-      user_id = #{record.userId,jdbcType=BIGINT},
-      wx_openid = #{record.wxOpenid,jdbcType=VARCHAR},
-      sign = #{record.sign,jdbcType=VARCHAR},
-      remark = #{record.remark,jdbcType=VARCHAR},
-      user_level = #{record.userLevel,jdbcType=INTEGER},
-      user_level_count = #{record.userLevelCount,jdbcType=INTEGER},
-      focus_count = #{record.focusCount,jdbcType=INTEGER},
-      follow_count = #{record.followCount,jdbcType=INTEGER},
-      like_count = #{record.likeCount,jdbcType=INTEGER},
-      post_count = #{record.postCount,jdbcType=INTEGER},
-      comment_count = #{record.commentCount,jdbcType=INTEGER},
-      reply_count = #{record.replyCount,jdbcType=INTEGER},
-      evaluate_count = #{record.evaluateCount,jdbcType=INTEGER},
-      contribute_count = #{record.contributeCount,jdbcType=INTEGER},
-      revision = #{record.revision,jdbcType=INTEGER},
-      created_by = #{record.createdBy,jdbcType=BIGINT},
-      created_time = #{record.createdTime,jdbcType=TIMESTAMP},
-      updated_by = #{record.updatedBy,jdbcType=BIGINT},
-      updated_time = #{record.updatedTime,jdbcType=TIMESTAMP}
+    user_id = #{record.userId,jdbcType=BIGINT},
+    wx_openid = #{record.wxOpenid,jdbcType=VARCHAR},
+    sign = #{record.sign,jdbcType=VARCHAR},
+    remark = #{record.remark,jdbcType=VARCHAR},
+    user_level = #{record.userLevel,jdbcType=INTEGER},
+    user_level_count = #{record.userLevelCount,jdbcType=INTEGER},
+    focus_count = #{record.focusCount,jdbcType=INTEGER},
+    follow_count = #{record.followCount,jdbcType=INTEGER},
+    like_count = #{record.likeCount,jdbcType=INTEGER},
+    post_count = #{record.postCount,jdbcType=INTEGER},
+    comment_count = #{record.commentCount,jdbcType=INTEGER},
+    reply_count = #{record.replyCount,jdbcType=INTEGER},
+    evaluate_count = #{record.evaluateCount,jdbcType=INTEGER},
+    contribute_count = #{record.contributeCount,jdbcType=INTEGER},
+    revision = #{record.revision,jdbcType=INTEGER},
+    created_by = #{record.createdBy,jdbcType=BIGINT},
+    created_time = #{record.createdTime,jdbcType=TIMESTAMP},
+    updated_by = #{record.updatedBy,jdbcType=BIGINT},
+    updated_time = #{record.updatedTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -487,23 +487,23 @@
 
   <select id="selectByIdOrNickname" resultType="com.smart.home.modules.user.entity.UserData">
     select ua.id as userId,
-           ua.username as username,
-           ua.head_url as headUrl,
-           ua.created_time as createdTime,
-           ud.remark as remark,
-           ud.hit_sensitive_count as hitSensitiveCount,
-           ud.by_report_count as byReportCount,
-           ud.report_reason_rate as reportReasonRate,
-           ud.text_exception_count as textExceptionCount,
-           ud.image_exception_count as imageExceptionCount,
-           ud.user_audit_exception_count as userAuditExceptionCount,
-           ud.black_count as blackCount,
-           uca.black_flag as blackFlag,
-           uca.speak_flag as speakFlag,
-           uca.effective_end_date as effectiveEndDate
+    ua.username as username,
+    ua.head_url as headUrl,
+    ua.created_time as createdTime,
+    ud.remark as remark,
+    ud.hit_sensitive_count as hitSensitiveCount,
+    ud.by_report_count as byReportCount,
+    ud.report_reason_rate as reportReasonRate,
+    ud.text_exception_count as textExceptionCount,
+    ud.image_exception_count as imageExceptionCount,
+    ud.user_audit_exception_count as userAuditExceptionCount,
+    ud.black_count as blackCount,
+    uca.black_flag as blackFlag,
+    uca.speak_flag as speakFlag,
+    uca.effective_end_date as effectiveEndDate
     from user_data ud
-                 left join user_account ua on ud.user_id = ua.id
-                 left join user_community_auth uca on uca.user_id = ua.id
+    left join user_account ua on ud.user_id = ua.id
+    left join user_community_auth uca on uca.user_id = ua.id
     where 1=1
     <if test="userId != null and nickName == null">
       and ud.user_id = #{userId,jdbcType=BIGINT}
@@ -515,7 +515,7 @@
       and (ud.user_id = #{userId,jdbcType=BIGINT} or ua.nick_name = #{nickName,jdbcType=VARCHAR})
     </if>
     limit 1
-    </select>
+  </select>
 
   <update id="increaseByReportCount">
     update user_data
@@ -566,5 +566,14 @@
     a.follow_count, a.like_count, a.post_count, a.comment_count, a.reply_count, a.evaluate_count,
     a.contribute_count, a.revision, a.created_time, b.head_url, b.username, b.nick_name
     from user_data a left join user_account b on a.user_id = b.id where a.user_id = #{userId} limit 1
+  </select>
+
+  <select id="selectByUserIds" resultMap="BaseResultMapDTO" parameterType="long">
+    select
+    a.user_id, a.remark, a.user_level, b.head_url, b.username, b.nick_name
+    from user_data a left join user_account b on a.user_id = b.id where a.user_id in
+    <foreach collection="ids" close=")" item="id" open="(" separator=",">
+      #{id}
+    </foreach>
   </select>
 </mapper>

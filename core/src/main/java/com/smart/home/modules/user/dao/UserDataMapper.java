@@ -62,6 +62,6 @@ public interface UserDataMapper {
     //查询用户信息以及头像
     UserDataDTO getByUserId(Long userId);
 
-    //查询当前用户是否关注，收藏，点赞
+    List<UserDataDTO> selectByUserIds(@Param("ids") List<Long> ids);
 
 }

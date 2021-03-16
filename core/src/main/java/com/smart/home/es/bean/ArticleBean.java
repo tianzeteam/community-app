@@ -1,6 +1,7 @@
 package com.smart.home.es.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smart.home.dto.PersionalMessageDTO;
 import com.smart.home.es.common.EsConstant;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -23,11 +24,14 @@ import java.util.Date;
 @ToString
 @Accessors(chain = true)
 @Document(indexName = EsConstant.articleIndex, type = EsConstant.article, shards = 3, replicas = 1)
-public class ArticleBean {
+public class ArticleBean extends PersionalMessageDTO {
 
     @Id
     @Field(type = FieldType.Long, index = true)
     private Long id;
+
+    @Field(type = FieldType.Long, index = true)
+    private Long userId;
 
     @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String title;
