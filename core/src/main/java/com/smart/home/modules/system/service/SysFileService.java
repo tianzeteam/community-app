@@ -107,6 +107,9 @@ public class SysFileService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     public void deleteByNewName(String newFileName) {
+        if (StringUtils.isBlank(newFileName)) {
+            return;
+        }
         SysFile sysFile = findByNewName(newFileName);
         if (null != sysFile) {
             if (deleteById(sysFile.getId()) > 0) {
@@ -116,6 +119,9 @@ public class SysFileService {
     }
 
     private SysFile findByNewName(String newFileName) {
+        if (StringUtils.isBlank(newFileName)) {
+            return null;
+        }
         SysFileExample example = new SysFileExample();
         example.createCriteria().andNewNameEqualTo(newFileName);
         List<SysFile> list = sysFileMapper.selectByExample(example);
@@ -129,6 +135,9 @@ public class SysFileService {
         String newName = null;
         for (String url : imageList) {
             newName = FileUtils.getFileNameFromUrl(url);
+            if (StringUtils.isBlank(newName)) {
+                continue;
+            }
             CosUtil.deleteFile(newName, BucketConsts.IMAGE);
             SysFileExample example = new SysFileExample();
             example.createCriteria().andNewNameEqualTo(newName);

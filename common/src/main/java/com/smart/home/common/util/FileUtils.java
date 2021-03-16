@@ -1,6 +1,7 @@
 package com.smart.home.common.util;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,9 @@ public class FileUtils {
     }
 
     public static String getFileNameFromUrl(String url) {
+        if (StringUtils.isBlank(url)) {
+            return null;
+        }
         int lastIndexOf = url.lastIndexOf("/");
         return url.substring(lastIndexOf+1);
     }
