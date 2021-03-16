@@ -105,11 +105,13 @@ public class SysFileService {
         sysFileMapper.updateSyncFlagList(needSyncFileNameList, 1);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public void deleteByNewName(String newFileName) {
         SysFile sysFile = findByNewName(newFileName);
         if (null != sysFile) {
-            CosUtil.deleteFile(newFileName, BucketConsts.IMAGE);
-            deleteById(sysFile.getId());
+            if (deleteById(sysFile.getId()) > 0) {
+                CosUtil.deleteFile(newFileName, BucketConsts.IMAGE);
+            }
         }
     }
 

@@ -3,9 +3,11 @@ package com.smart.home.modules.product.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.RecordStatusEnum;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.FileUtils;
+import com.smart.home.es.service.ProductEsService;
 import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.dao.ProductParamSettingMapper;
 import com.smart.home.modules.product.dao.ProductParamValueMapper;
@@ -24,6 +26,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author jason
@@ -41,6 +44,8 @@ public class ProductService {
     ProductParamSettingMapper productParamSettingMapper;
     @Autowired
     private SysFileService sysFileService;
+    @Autowired
+    private ProductEsService productEsServiceImpl;
 
     @Transactional(rollbackFor = RuntimeException.class)
     public int create(Product product) throws ServiceException {
@@ -65,6 +70,7 @@ public class ProductService {
         if (StringUtils.isNotBlank(product.getSpecification())) {
             criteria.andSpecificationEqualTo(product.getSpecification());
         }
+        criteria.andDeleteFlagEqualTo(YesNoEnum.NO.getCode());
         if (productMapper.countByExample(example) > 0) {
             throw new DuplicateDataException("该产品已经存在");
         }
@@ -163,14 +169,12 @@ public class ProductService {
         sysFileService.syncList(needSyncFileNameList);
     }
 
-    public int deleteById(Long id) {
-        return productMapper.deleteByPrimaryKey(id.intValue());
-    }
-
     @Transactional(rollbackFor = RuntimeException.class)
     public void delete(List<Long> idList) {
         for (Long id : idList) {
             productMapper.softDelete(id.intValue());
+            // 删除es数据
+            productEsServiceImpl.deleteById(id.intValue());
         }
     }
 
