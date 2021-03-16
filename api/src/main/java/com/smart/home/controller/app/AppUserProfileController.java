@@ -48,6 +48,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Objects;
@@ -205,6 +206,7 @@ public class AppUserProfileController {
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
+    @ApiIgnore
     @ApiOperation("关注-用户点击关注按钮")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "focusUserId", value = "被关注的用户主键ID", required = true)
@@ -219,7 +221,7 @@ public class AppUserProfileController {
         }
         return APIResponse.OK();
     }
-
+    @ApiIgnore
     @ApiOperation("关注-用户点击取消关注按钮")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "focusUserId", value = "被关注的用户主键ID", required = true)
@@ -228,6 +230,26 @@ public class AppUserProfileController {
     @PostMapping("/cancelFocusUser")
     public APIResponse cancelFocusUser(Long focusUserId) {
         userFocusService.cancelFocusUser(focusUserId, UserUtils.getLoginUserId());
+        return APIResponse.OK();
+    }
+    @ApiOperation("关注/取消关注用户-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "focusUserId", value = "被关注的用户主键ID", required = true),
+            @ApiImplicitParam(name = "action", value = "0关注1取消关注", required = true)
+
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/focusOrCancelFocusUser")
+    public APIResponse focusOrCancelFocusUser(Long focusUserId,@RequestParam(required = true) Integer action) {
+        try {
+            if (action == 0) {
+                userFocusService.focusUser(focusUserId, UserUtils.getLoginUserId());
+            } else {
+                userFocusService.cancelFocusUser(focusUserId, UserUtils.getLoginUserId());
+            }
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 
