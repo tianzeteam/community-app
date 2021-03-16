@@ -1,6 +1,7 @@
 package com.smart.home.es.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smart.home.es.common.EsConstant;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
@@ -21,10 +22,10 @@ import java.util.Date;
 @Builder
 @ToString
 @Accessors(chain = true)
-@Document(indexName = "article_index", type = "article", shards = 3, replicas = 1)
+@Document(indexName = EsConstant.articleIndex, type = EsConstant.article, shards = 3, replicas = 1)
 public class ArticleBean {
 
-    @Id
+    @Field(type = FieldType.Long, index = true)
     private Long id;
 
     @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")

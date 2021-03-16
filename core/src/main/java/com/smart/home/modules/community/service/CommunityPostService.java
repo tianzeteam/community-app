@@ -334,7 +334,11 @@ public class CommunityPostService {
         communityPost.setTopFlag(communityPostDTO.getTopFlag());
         communityPost.setBoutiqueFlag(communityPostDTO.getBoutiqueFlag());
         communityPost.setCommentFlag(communityPostDTO.getCommentFlag());
-        communityPost.setRemark(StrUtil.sub(communityPostDTO.getContents(), 0, 100) + "……");
+        if (communityPostDTO.getContents().length() > 100) {
+            communityPost.setRemark(StrUtil.sub(communityPostDTO.getContents(), 0, 100) + "……");
+        }else {
+            communityPost.setRemark(communityPostDTO.getContents());
+        }
         communityPostMapper.insertSelective(communityPost);
         Long id = communityPost.getId();
 

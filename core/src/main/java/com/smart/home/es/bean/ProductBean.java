@@ -1,6 +1,7 @@
 package com.smart.home.es.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smart.home.es.common.EsConstant;
 import com.smart.home.es.dto.KeyValueDTO;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -24,11 +25,11 @@ import java.util.List;
 @Builder
 @ToString
 @Accessors(chain = true)
-@Document(indexName = "product_index", type = "product", shards = 3, replicas = 1)
+@Document(indexName = EsConstant.productIndex, type = EsConstant.product, shards = 3, replicas = 1)
 public class ProductBean {
 
-    @Id
-    private Integer id;
+    @Field(type = FieldType.Long, index = true)
+    private Long id;
 
     @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
     private String productName;

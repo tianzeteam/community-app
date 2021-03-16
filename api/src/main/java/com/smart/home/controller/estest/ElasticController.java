@@ -1,13 +1,18 @@
 package com.smart.home.controller.estest;
 
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
+import com.smart.home.common.util.RandomUtils;
 import com.smart.home.dto.APIResponse;
+import com.smart.home.dto.auth.annotation.AnonAccess;
+import com.smart.home.es.bean.CommunityPostBean;
+import com.smart.home.es.bean.ProductBean;
 import com.smart.home.es.bean.SearchKey;
+import com.smart.home.es.common.EsConstant;
+import com.smart.home.es.dto.EsSearchDTO;
 import com.smart.home.es.dto.NameCountDTO;
-import com.smart.home.es.service.ElasticService;
-import com.smart.home.es.service.EsAggregationQueryService;
-import com.smart.home.es.service.EsIndexService;
-import com.smart.home.es.service.EsQueryService;
+import com.smart.home.es.service.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +43,9 @@ public class ElasticController {
     private EsAggregationQueryService esAggregationQueryService;
     @Autowired
     private EsIndexService esIndexService;
+    @Autowired
+    private EsCommonService esCommonService;
+
 
     @GetMapping("/deleteIndex")
     public APIResponse deleteIndex(String indexName){
@@ -77,5 +85,59 @@ public class ElasticController {
         }
         return APIResponse.OK(list);
     }
+
+
+
+    //test
+    @AnonAccess
+    @GetMapping("/save")
+    public Object save(String title, String contents){
+        long l = RandomUtil.randomLong(10000);
+        long w = RandomUtil.randomLong(10000);
+        CommunityPostBean communityPostBean = CommunityPostBean.builder()
+                .id(l)
+                .userId(w)
+                .remark(contents)
+                .title(title)
+                .contents(contents)
+                .build();
+        esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex,EsConstant.communityPost, w,communityPostBean);
+        return 1;
+    }
+
+    @AnonAccess
+    @GetMapping("/saveProduct")
+    public Object savePro(Long id){
+        long l = RandomUtil.randomLong(10000);
+        ProductBean productBean = ProductBean.builder()
+                .id(l)
+                .remark(RandomUtil.randomString(10))
+                .productName("长恨歌")
+                .build();
+
+        esCommonService.insertOrUpdateOne(EsConstant.productIndex,EsConstant.product, id,productBean);
+        return 1;
+    }
+
+
+
+//    @AnonAccess
+//    @GetMapping("/del")
+//    public Object del(Long id){
+//        esCommonService.deleteOne(EsConstant.communityPostIndex, EsConstant.communityPost, id);
+//        return null;
+//    }
+
+    @AnonAccess
+    @GetMapping("/get")
+    public Object get(String contents){
+        EsSearchDTO esSearchDTO = new EsSearchDTO();
+        esSearchDTO.setContents(contents);
+        esSearchDTO.setFrom(0);
+        esSearchDTO.setSize(10);
+        List<CommunityPostBean> list = esCommonService.search(EsConstant.communityPostIndex, esSearchDTO, CommunityPostBean.class);
+        return list;
+    }
+
 
 }
