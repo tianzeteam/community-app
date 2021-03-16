@@ -1,5 +1,6 @@
 package com.smart.home.modules.product.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.exception.DuplicateDataException;
@@ -99,6 +100,13 @@ public class ProductCategoryService {
         }
         if (paramIdList != null && paramIdList.isEmpty()) {
             productCategoryParamService.deleteByProductCategoryId(productCategory.getId());
+        }
+        if (CollUtil.isNotEmpty(paramIdList)) {
+            int sort = 0;
+            for (Integer productParamId : paramIdList) {
+                productCategoryParamService.create(productCategory.getId(), productParamId, sort);
+                sort ++;
+            }
         }
         int affectRow = productCategoryMapper.updateByPrimaryKeySelective(productCategory);
         String icon = productCategory.getIcon();

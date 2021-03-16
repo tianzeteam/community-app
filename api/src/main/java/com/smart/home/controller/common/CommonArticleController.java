@@ -82,12 +82,18 @@ public class CommonArticleController {
         if (userId > 0) {
             // 说明是登陆用户
             article = articleService.queryDetailByIdWhenLogin(articleId, userId);
+            if (Objects.isNull(article)) {
+                return APIResponse.ERROR("数据不存在");
+            }
             BeanUtils.copyProperties(article, articleDetailVO);
             if (StringUtils.isNotBlank(article.getBannerImages())) {
                 articleDetailVO.setImageList(JSON.parseArray(article.getBannerImages(), String.class));
             }
         } else {
             article = articleService.queryDetailByIdNoLogin(articleId);
+            if (Objects.isNull(article)) {
+                return APIResponse.ERROR("数据不存在");
+            }
             BeanUtils.copyProperties(article, articleDetailVO);
             articleDetailVO.setCollectFlag(YesNoEnum.NO.getCode());
             articleDetailVO.setFocusFlag(YesNoEnum.NO.getCode());

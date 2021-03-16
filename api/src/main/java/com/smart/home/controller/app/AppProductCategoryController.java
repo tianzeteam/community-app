@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 /**
@@ -66,7 +67,7 @@ public class AppProductCategoryController {
     })
     @AnonAccess
     @GetMapping("/querySubCategories")
-    public APIResponse<List<ProductCategoryVO>> querySubCategories(Integer pid) {
+    public APIResponse<List<ProductCategoryVO>> querySubCategories(@RequestParam(required = true) Integer pid) {
         List<ProductCategory> list = productCategoryService.queryAllValidByPid(pid);
         List<ProductCategoryVO> resultList = BeanCopyUtils.convertListTo(list, ProductCategoryVO::new, (s, t)->{
             List<ProductCategory> subList = productCategoryService.queryAllValidByPid(s.getId());
