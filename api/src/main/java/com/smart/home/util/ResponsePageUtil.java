@@ -19,19 +19,15 @@ public class ResponsePageUtil {
      */
     @Deprecated
     public static <T> ResponsePageBean<T> restPage(List<T> resultList) {
-        if (resultList instanceof Page) {
-            ResponsePageBean<T> result = new ResponsePageBean<T>();
-            PageInfo<T> pageInfo = new PageInfo<T>(resultList);
-            result.setTotalPage(pageInfo.getPages());
-            result.setPageNum(pageInfo.getPageNum());
-            result.setPageSize(pageInfo.getPageSize());
-            result.setTotalCount(pageInfo.getTotal());
-            result.setList(pageInfo.getList());
-            PageHelper.clearPage();
-            return result;
-        } else {
-            throw new RuntimeException("输入参数必须是Page类型的， 否则请调用restPage(List<T> resultList, List pager)方法");
-        }
+        ResponsePageBean<T> result = new ResponsePageBean<T>();
+        PageInfo<T> pageInfo = new PageInfo<T>(resultList);
+        result.setTotalPage(pageInfo.getPages());
+        result.setPageNum(pageInfo.getPageNum());
+        result.setPageSize(pageInfo.getPageSize());
+        result.setTotalCount(pageInfo.getTotal());
+        result.setList(pageInfo.getList());
+        PageHelper.clearPage();
+        return result;
     }
 
     public static <T> ResponsePageBean<T> restPage(List<T> resultList, List pager) {

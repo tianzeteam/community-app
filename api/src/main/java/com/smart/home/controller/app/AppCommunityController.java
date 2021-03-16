@@ -83,7 +83,7 @@ public class AppCommunityController {
         communityUserMapping.setUserId(UserUtils.getLoginUserId());
         List<CommunityUserMappingDTO> userMappingDTOS = communityUserMappingService.selectByPage(communityUserMapping, pageNum, pageSize);
         List<CommunityUserMappingVO> communityUserMappingVOS = BeanCopyUtils.convertListTo(userMappingDTOS, CommunityUserMappingVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(communityUserMappingVOS, userMappingDTOS));
+        return APIResponse.OK(ResponsePageUtil.restPage(communityUserMappingVOS));
     }
 
     /**

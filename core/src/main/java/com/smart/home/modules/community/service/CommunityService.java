@@ -86,7 +86,7 @@ public class CommunityService {
     }
 
     public List<Community> selectByPage(Community community, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
+
         CommunityExample example = new CommunityExample();
         CommunityExample.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(community.getTitle())) {
@@ -96,6 +96,7 @@ public class CommunityService {
             criteria.andCategoryIdEqualTo(community.getCategoryId());
         }
         example.setOrderByClause("sort desc");
+        PageHelper.startPage(pageNum, pageSize);
         return communityMapper.selectByExample(example);
     }
 
