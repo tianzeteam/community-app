@@ -110,14 +110,6 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.smart.home.modules.article.entity.ArticleCommentReply">
-    insert into article_comment_reply (id, pid, article_id, 
-      article_comment_id, user_id, contents, 
-      created_time)
-    values (#{id,jdbcType=BIGINT}, #{pid,jdbcType=BIGINT}, #{articleId,jdbcType=BIGINT}, 
-      #{articleCommentId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{contents,jdbcType=VARCHAR}, 
-      #{createdTime,jdbcType=TIMESTAMP})
-  </insert>
   <insert id="insertSelective" parameterType="com.smart.home.modules.article.entity.ArticleCommentReply">
     insert into article_comment_reply
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -261,6 +253,8 @@
            acr.article_id as articleId,
            acr.article_comment_id as articleCommentId,
            acr.contents,
+           acr.to_user_id as toUserId,
+           acr.to_user_name as toUserName,
            acr.created_time as createdTime,
            ua.head_url as headUrl,
            ua.nick_name as nickName,

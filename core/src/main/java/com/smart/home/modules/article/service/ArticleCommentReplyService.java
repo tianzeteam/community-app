@@ -5,6 +5,8 @@ import com.smart.home.modules.article.dao.ArticleCommentMapper;
 import com.smart.home.modules.article.dao.ArticleCommentReplyMapper;
 import com.smart.home.modules.article.entity.ArticleCommentReply;
 import com.smart.home.modules.article.entity.ArticleCommentReplyExample;
+import com.smart.home.modules.user.dao.UserAccountMapper;
+import com.smart.home.modules.user.entity.UserAccount;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +61,9 @@ public class ArticleCommentReplyService {
                 .withCreatedTime(new Date())
                 .withPid(0L)
                 .withUserId(loginUserId);
-        articleCommentReply.setToUserId(articleCommentMapper.findUserIdById(articleCommentId));
+        UserAccount userAccount = articleCommentMapper.findUserAccountIdById(articleCommentId);
+        articleCommentReply.setToUserId(userAccount.getId());
+        articleCommentReply.setToUserName(userAccount.getNickName());
         articleCommentReplyMapper.insertSelective(articleCommentReply);
     }
 

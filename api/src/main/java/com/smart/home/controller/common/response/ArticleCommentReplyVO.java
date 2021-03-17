@@ -25,5 +25,9 @@ public class ArticleCommentReplyVO extends UserBaseInfo {
     private Date createdTime;
     @ApiModelProperty("回复内容")
     private String contents;
+    @ApiModelProperty("回复给谁的用户主键id")
+    private Long toUserId;
+    @ApiModelProperty("回复给谁的用户昵称")
+    private String toUserName;
 
 }

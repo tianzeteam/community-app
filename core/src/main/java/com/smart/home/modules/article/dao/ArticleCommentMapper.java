@@ -3,6 +3,8 @@ package com.smart.home.modules.article.dao;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.entity.ArticleCommentExample;
 import java.util.List;
+
+import com.smart.home.modules.user.entity.UserAccount;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -51,6 +53,8 @@ public interface ArticleCommentMapper {
     int updateAuditFlag(@Param("id") long id,@Param("flag") int flag);
 
     Long findUserIdById(@Param("id") Long id);
+
+    UserAccount findUserAccountIdById(@Param("id") Long id);
 
     List<ArticleComment> queryViaUserIdByPageWhenLogin(@Param("userId") Long userId, @Param("loginUserId") Long loginUserId);
 

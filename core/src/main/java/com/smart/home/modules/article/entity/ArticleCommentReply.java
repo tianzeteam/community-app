@@ -28,6 +28,7 @@ public class ArticleCommentReply implements Serializable {
      * 回复给哪个用户的
      */
     private Long toUserId;
+    private String toUserName;
 
     private static final long serialVersionUID = 1L;
 
@@ -89,6 +90,11 @@ public class ArticleCommentReply implements Serializable {
 
     public ArticleCommentReply withUserId(Long userId) {
         this.setUserId(userId);
+        return this;
+    }
+
+    public ArticleCommentReply withToUserName(String toUserName) {
+        this.setToUserName(toUserName);
         return this;
     }
 
@@ -204,6 +210,14 @@ public class ArticleCommentReply implements Serializable {
 
     public void setToUserId(Long toUserId) {
         this.toUserId = toUserId;
+    }
+
+    public String getToUserName() {
+        return toUserName;
+    }
+
+    public void setToUserName(String toUserName) {
+        this.toUserName = toUserName;
     }
 
     /**

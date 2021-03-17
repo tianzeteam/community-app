@@ -59,4 +59,16 @@
             COMMENT ON COLUMN article_comment_reply.to_user_id IS '回复给谁的';
         </sql>
     </changeSet>
+    <changeSet id="addColumnToUserName4ArticleCommentReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article_comment_reply" columnName="to_user_name"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article_comment_reply add column to_user_name varchar(32);
+            COMMENT ON COLUMN article_comment_reply.to_user_name IS '回复给谁的昵称';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
