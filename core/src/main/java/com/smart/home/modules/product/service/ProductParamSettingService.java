@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Date;
 import java.util.Objects;
@@ -95,18 +96,13 @@ public class ProductParamSettingService {
 
     public List<ProductParamSetting> queryAllValid() {
         ProductParamSettingExample example = new ProductParamSettingExample();
+        example.createCriteria().andEnableAllIn(Arrays.asList(YesNoEnum.NO.getCode(), YesNoEnum.YES.getCode()));
         return productParamSettingMapper.selectByExample(example);
     }
 
     public List<ProductParamSetting> queryAllValidExceptEnableAll() {
         ProductParamSettingExample example = new ProductParamSettingExample();
         example.createCriteria().andEnableAllEqualTo(YesNoEnum.NO.getCode());
-        return productParamSettingMapper.selectByExample(example);
-    }
-
-    public List<ProductParamSetting> queryAllValidForEnableAll() {
-        ProductParamSettingExample example = new ProductParamSettingExample();
-        example.createCriteria().andEnableAllEqualTo(YesNoEnum.YES.getCode());
         return productParamSettingMapper.selectByExample(example);
     }
 

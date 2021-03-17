@@ -256,6 +256,7 @@
 
   <select id="queryCommentReplyByPageNoLogin" resultType="com.smart.home.modules.article.entity.ArticleCommentReply">
     select acr.id,
+           acr.user_id as userId,
            acr.article_id as articleId,
            acr.article_comment_id as articleCommentId,
            acr.contents,

@@ -12,6 +12,8 @@ import lombok.ToString;
 @ToString
 public class UserBaseInfo {
 
+    @ApiModelProperty("用户主键id")
+    private Long userId;
     @ApiModelProperty("用户头像地址")
     private String headUrl;
     @ApiModelProperty("用户昵称")

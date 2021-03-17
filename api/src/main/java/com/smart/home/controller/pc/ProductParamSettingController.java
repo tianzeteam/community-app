@@ -120,7 +120,7 @@ public class ProductParamSettingController {
         if (enableAll == 0) {
             list = productParamSettingService.queryAllValidExceptEnableAll();
         } else if (enableAll == 1){
-            list = productParamSettingService.queryAllValidForEnableAll();
+            list = productParamSettingService.queryAllValidWithEnableAll();
         } else if (enableAll == 2) {
             list = productParamSettingService.queryAllValid();
         }

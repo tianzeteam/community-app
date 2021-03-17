@@ -318,6 +318,7 @@
            ac.like_count as likeCount,
            ac.stamp_count as stampCount,
            ac.author_flag as authorFlag,
+           ac.user_id as userId,
            case when alh.id is null then 0 else 1 end as likeFlag,
            case when ash.id is null then 0 else 1 end as stampFlag,
            ua.head_url as headUrl,
