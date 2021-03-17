@@ -21,8 +21,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
-@Accessors(chain = true)
 @Document(indexName = EsConstant.articleIndex, type = EsConstant.article, shards = 3, replicas = 1)
 public class ArticleBean extends PersionalMessageDTO {
 

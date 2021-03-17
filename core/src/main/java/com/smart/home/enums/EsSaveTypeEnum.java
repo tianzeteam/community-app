@@ -18,6 +18,16 @@ public enum EsSaveTypeEnum {
         this.desc = desc;
     }
 
+    public static EsSaveTypeEnum saveTypeEnumByType(Integer type){
+        EsSaveTypeEnum[] values = EsSaveTypeEnum.values();
+        for (EsSaveTypeEnum esSaveTypeEnum : values){
+            if (esSaveTypeEnum.type == type) {
+                return esSaveTypeEnum;
+            }
+        }
+        return null;
+    }
+
     public int getType() {
         return type;
     }

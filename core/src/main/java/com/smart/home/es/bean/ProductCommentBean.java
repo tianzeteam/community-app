@@ -22,8 +22,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
-@Accessors(chain = true)
 @Document(indexName = EsConstant.productCommentIndex, type = EsConstant.productComment, shards = 3, replicas = 1)
 public class ProductCommentBean extends PersionalMessageDTO {
 

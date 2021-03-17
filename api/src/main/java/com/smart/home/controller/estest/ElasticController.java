@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import com.smart.home.common.util.RandomUtils;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.AnonAccess;
+import com.smart.home.enums.EsSaveTypeEnum;
 import com.smart.home.es.bean.ArticleBean;
 import com.smart.home.es.bean.CommunityPostBean;
 import com.smart.home.es.bean.ProductBean;
@@ -92,29 +93,31 @@ public class ElasticController {
     //test
     @AnonAccess
     @GetMapping("/save")
-    public Object save(String title, String contents){
+    public Object save(Long userId, String title, String contents){
         long l = RandomUtil.randomLong(10000);
         long w = RandomUtil.randomLong(10000);
         CommunityPostBean communityPostBean = CommunityPostBean.builder()
                 .id(l)
-                .userId(w)
+                .userId(userId)
                 .remark(contents)
                 .title(title)
                 .contents(contents)
+                .saveType(EsSaveTypeEnum.COMMUNITY_POST.getType())
                 .build();
         esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex,EsConstant.communityPost, w,communityPostBean);
         return 1;
     }
 
     @AnonAccess
-    @GetMapping("/saveProduct")
-    public Object savePro(String details){
+    @GetMapping("/saveArticle")
+    public Object savePro(Long userId, String details){
         long l = RandomUtil.randomLong(10000);
         ArticleBean articleBean = ArticleBean.builder()
                 .id(l)
                 .remark(details)
                 .details(details)
-                .userId(l)
+                .userId(userId)
+                .saveType(EsSaveTypeEnum.ARTICLE.getType())
                 .build();
 
         esCommonService.insertOrUpdateOne(EsConstant.articleIndex,EsConstant.article, l,articleBean);
