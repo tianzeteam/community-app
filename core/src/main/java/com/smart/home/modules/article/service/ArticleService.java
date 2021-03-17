@@ -7,10 +7,7 @@ import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.FileUtils;
-import com.smart.home.enums.ArticleCategoryEnum;
-import com.smart.home.enums.ArticleRecommendTypeEnum;
-import com.smart.home.enums.ArticleStateEnum;
-import com.smart.home.enums.AuditCategoryEnum;
+import com.smart.home.enums.*;
 import com.smart.home.es.bean.ArticleBean;
 import com.smart.home.es.service.ArticleEsService;
 import com.smart.home.modules.article.dao.ArticleMapper;
@@ -80,6 +77,7 @@ public class ArticleService {
         if (AuditStatusEnum.APPROVED.getCode() == dbArticle.getAuditState() && RecordStatusEnum.NORMAL.getStatus() == dbArticle.getOnlineStatus()) {
             ArticleBean articleBean = new ArticleBean();
             BeanUtils.copyProperties(dbArticle, articleBean);
+            articleBean.setSaveType(EsSaveTypeEnum.ARTICLE.getType());
             articleEsServiceImpl.save(articleBean);
         }
         return affectRow;
@@ -205,6 +203,7 @@ public class ArticleService {
                 // 同步到es
                 ArticleBean articleBean = new ArticleBean();
                 BeanUtils.copyProperties(article, articleBean);
+                articleBean.setSaveType(EsSaveTypeEnum.ARTICLE.getType());
                 articleEsServiceImpl.save(articleBean);
             }
         }
@@ -293,6 +292,7 @@ public class ArticleService {
             // 同步es
             ArticleBean articleBean = new ArticleBean();
             BeanUtils.copyProperties(article, articleBean);
+            articleBean.setSaveType(EsSaveTypeEnum.ARTICLE.getType());
             articleEsServiceImpl.save(articleBean);
         }
     }

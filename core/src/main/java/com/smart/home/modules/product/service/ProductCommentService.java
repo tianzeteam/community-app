@@ -14,6 +14,7 @@ import com.smart.home.common.exception.ServiceException;
 import com.smart.home.dto.ContentAdminAuditSearchTO;
 import com.smart.home.dto.ContentAuditAdminRecordTO;
 import com.smart.home.enums.AutoAuditFlagEnum;
+import com.smart.home.enums.EsSaveTypeEnum;
 import com.smart.home.es.bean.ProductCommentBean;
 import com.smart.home.es.service.ProductCommentEsService;
 import com.smart.home.modules.product.dao.ProductCommentMapper;
@@ -271,6 +272,7 @@ public class ProductCommentService {
         productCommentBean.setStarCount(starCount);
         productCommentBean.setProductId(productId);
         productCommentBean.setUserId(userId);
+        productCommentBean.setSaveType(EsSaveTypeEnum.PRODUCT_COMMENT.getType());
         if (!CollectionUtils.isEmpty(imageList)) {
             productCommentBean.setImages(JSON.toJSONString(imageList));
         }

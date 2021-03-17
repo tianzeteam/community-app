@@ -281,7 +281,7 @@ public class CommonArticleController {
                 for (ArticleCommentVO articleCommentVO : resultList) {
                     // 加载二级评论
                     List<ArticleCommentReply> replyList = articleCommentReplyService.queryCommentReplyByPageWhenLogin(userId, articleCommentVO.getId(), pageNum, 5);
-                    List<ArticleCommentReplyVO> replyResultList = BeanCopyUtils.convertListTo(list, ArticleCommentReplyVO::new);
+                    List<ArticleCommentReplyVO> replyResultList = BeanCopyUtils.convertListTo(replyList, ArticleCommentReplyVO::new);
                     articleCommentVO.setReplyResultList(ResponsePageUtil.restPage(replyResultList, replyList));
                 }
             }
@@ -293,7 +293,7 @@ public class CommonArticleController {
                 for (ArticleCommentVO articleCommentVO : resultList) {
                     // 加载二级评论
                     List<ArticleCommentReply> replyList = articleCommentReplyService.queryCommentReplyByPageNoLogin(articleCommentVO.getId(), pageNum, 5);
-                    List<ArticleCommentReplyVO> replyResultList = BeanCopyUtils.convertListTo(list, ArticleCommentReplyVO::new);
+                    List<ArticleCommentReplyVO> replyResultList = BeanCopyUtils.convertListTo(replyList, ArticleCommentReplyVO::new);
                     articleCommentVO.setReplyResultList(ResponsePageUtil.restPage(replyResultList, replyList));
                 }
             }

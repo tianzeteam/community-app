@@ -6,6 +6,7 @@ import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.FileUtils;
+import com.smart.home.enums.EsSaveTypeEnum;
 import com.smart.home.es.bean.ProductBean;
 import com.smart.home.es.dto.KeyValueDTO;
 import com.smart.home.es.service.ProductEsService;
@@ -127,6 +128,7 @@ public class ProductService {
             BeanUtils.copyProperties(product, productBean);
             productBean.setKeyValueDTOList(paramList);
             productBean.setId(Long.valueOf(productId));
+            productBean.setSaveType(EsSaveTypeEnum.PRODUCT.getType());
             productEsServiceImpl.save(productBean);
         }
         syncImages(product);
@@ -176,6 +178,7 @@ public class ProductService {
             BeanUtils.copyProperties(findById(productId), productBean);
             productBean.setKeyValueDTOList(paramList);
             productBean.setId(Long.valueOf(productId));
+            productBean.setSaveType(EsSaveTypeEnum.PRODUCT.getType());
             productEsServiceImpl.update(productBean);
         }
         syncImages(product);
