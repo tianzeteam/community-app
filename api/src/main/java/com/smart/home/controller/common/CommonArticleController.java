@@ -377,6 +377,31 @@ public class CommonArticleController {
         likeService.cancelLike(LikeCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
         return APIResponse.OK();
     }
+    @ApiOperation("点赞/取消赞一级评论-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "articleCommentId", value = "文章一级评论主键id", required = true),
+            @ApiImplicitParam(name = "authorId", value = "评论人的主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0点赞1取消点赞", required = true)
+
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/likeOrCancelLikeComment")
+    public APIResponse likeOrCancelLikeComment(Long articleCommentId, Long authorId, Integer action) {
+        try {
+            Long fromUserId = UserUtils.getLoginUserId();
+            if (action == 0) {
+                likeService.like(LikeCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
+                messageService.createLikeMessage(MessageSubTypeEnum.ARTICLE_COMMENT, articleCommentId, fromUserId, authorId);
+            } else {
+                likeService.cancelLike(LikeCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
+            }
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        return APIResponse.OK();
+    }
+
+
     @ApiOperation("点踩一级评论")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "articleCommentId", value = "文章一级评论主键id", required = true)
@@ -399,6 +424,25 @@ public class CommonArticleController {
     @PostMapping("/cancelStampComment")
     public APIResponse cancelStampComment(Long articleCommentId) {
         stampService.cancelStamp(StampCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
+        return APIResponse.OK();
+    }
+    @ApiOperation("点踩/取消踩一级评论-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "articleCommentId", value = "文章一级评论主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0点踩1取消点踩", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/stampOrCancelStampComment")
+    public APIResponse stampOrCancelStampComment(Long articleCommentId, Integer action) {
+        try {
+            if (action == 0) {
+                stampService.stamp(StampCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
+            } else {
+                stampService.cancelStamp(StampCategoryEnum.ARTICLE_COMMENT, UserUtils.getLoginUserId(), articleCommentId);
+            }
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 
