@@ -344,7 +344,7 @@ public class CommonArticleController {
             return APIResponse.ERROR("评论内容不能超过200字");
         }
         Long fromUserId = UserUtils.getLoginUserId();
-        articleCommentService.create(fromUserId, articleId, contents);
+        articleCommentService.create(fromUserId, articleId, contents, articleAuthorId);
         messageService.createReplyMessage(MessageSubTypeEnum.ARTICLE, articleId, fromUserId, articleAuthorId, contents);
         return APIResponse.OK();
     }

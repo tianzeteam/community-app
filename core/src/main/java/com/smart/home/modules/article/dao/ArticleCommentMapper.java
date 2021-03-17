@@ -16,8 +16,6 @@ public interface ArticleCommentMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(ArticleComment record);
-
     int insertSelective(ArticleComment record);
 
     List<ArticleComment> selectByExample(ArticleCommentExample example);

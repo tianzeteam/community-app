@@ -36,6 +36,9 @@ public class ArticleComment implements Serializable {
     private Integer reportCount;
     private Integer articleCategory;
 
+    private Long toUserId;
+    private String toUserName;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -283,6 +286,22 @@ public class ArticleComment implements Serializable {
 
     public void setPid(Long pid) {
         this.pid = pid;
+    }
+
+    public Long getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(Long toUserId) {
+        this.toUserId = toUserId;
+    }
+
+    public String getToUserName() {
+        return toUserName;
+    }
+
+    public void setToUserName(String toUserName) {
+        this.toUserName = toUserName;
     }
 
     /**

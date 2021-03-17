@@ -161,7 +161,7 @@ public class ProductService {
                 }
                 productMapper.saveParams(productId, JSON.toJSONString(product.getProductParamValueList()));
             } else {
-                productMapper.saveParams(productId, "");
+                productMapper.saveParams(productId, "[]");
             }
             productShopMappingMapper.deleteByProductId(product.getId());
             if (product.getProductShopMappingList() != null) {
@@ -171,7 +171,7 @@ public class ProductService {
                 }
                 productMapper.saveShops(productId, JSON.toJSONString(product.getProductShopMappingList()));
             } else {
-                productMapper.saveShops(productId, "");
+                productMapper.saveShops(productId, "[]");
             }
             // 同步到es
             ProductBean productBean = new ProductBean();

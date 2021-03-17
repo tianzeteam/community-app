@@ -42,7 +42,7 @@ public class ArticleCommentService {
     private UserDataService userDataService;
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void create(Long loginUserId, Long articleId, String contents) {
+    public void create(Long loginUserId, Long articleId, String contents, Long articleAuthorId) {
         ArticleComment articleComment = new ArticleComment();
         articleComment.withArticleId(articleId)
                 .withContents(contents)
@@ -50,6 +50,7 @@ public class ArticleCommentService {
                 .withStampCount(0)
                 .withCreatedTime(new Date())
                 .withUserId(loginUserId);
+        articleComment.setToUserId(articleAuthorId);
         UserIdAndCategoryPO userIdAndCategoryPO = articleMapper.findUserIdAndCategory(articleId);
         Long authorId = userIdAndCategoryPO.getUserId();
         Integer articleCategory = userIdAndCategoryPO.getCategory();

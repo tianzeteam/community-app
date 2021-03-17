@@ -110,14 +110,6 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.smart.home.modules.article.entity.ArticleComment">
-    insert into article_comment (id, article_id, user_id, 
-      contents, author_flag, like_count, 
-      stamp_count, created_time)
-    values (#{id,jdbcType=BIGINT}, #{articleId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
-      #{contents,jdbcType=VARCHAR}, #{authorFlag,jdbcType=INTEGER}, #{likeCount,jdbcType=INTEGER}, 
-      #{stampCount,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP})
-  </insert>
   <insert id="insertSelective" parameterType="com.smart.home.modules.article.entity.ArticleComment"
           useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into article_comment
@@ -149,6 +141,12 @@
       <if test="articleCategory != null">
         article_category,
       </if>
+      <if test="toUserId != null">
+        to_user_id,
+      </if>
+      <if test="toUserName != null">
+        to_user_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -177,6 +175,12 @@
       </if>
       <if test="articleCategory != null">
         #{articleCategory,jdbcType=INTEGER},
+      </if>
+      <if test="toUserId != null">
+        #{toUserId,jdbcType=BIGINT},
+      </if>
+      <if test="toUserName != null">
+        #{toUserName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -299,6 +303,8 @@
            ac.like_count as likeCount,
            ac.stamp_count as stampCount,
            ac.author_flag as authorFlag,
+           ac.user_id as userId,
+           ac.to_user_id as toUserId,
            0 as likeFlag,
            0 as stampFlag,
            ua.head_url as headUrl,
@@ -319,6 +325,7 @@
            ac.stamp_count as stampCount,
            ac.author_flag as authorFlag,
            ac.user_id as userId,
+           ac.to_user_id as toUserId,
            case when alh.id is null then 0 else 1 end as likeFlag,
            case when ash.id is null then 0 else 1 end as stampFlag,
            ua.head_url as headUrl,

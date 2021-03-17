@@ -292,10 +292,10 @@ public class ProductController {
         });
         productUpdateDTO.setCategoryThreeDTO(new ProductCategoryDTO(product.getCategoryThreeId(), product.getCategoryThreeName(), resultList));
         productUpdateDTO.setProductBrandDTO(new ProductBrandDTO(product.getBrandId(), product.getBrandName()));
-        if (StringUtils.isNotBlank(product.getParams())) {
+        if (StringUtils.isNotBlank(product.getParams()) && !"[]".equals(product.getParams())) {
             productUpdateDTO.setParamValueDTOList(JSON.parseArray(product.getParams(), ProductParamValueDTO.class));
         }
-        if (StringUtils.isNotBlank(product.getShops())) {
+        if (StringUtils.isNotBlank(product.getShops()) && !"[]".equals(product.getShops())) {
             productUpdateDTO.setBuyLinkDTOList(JSON.parseArray(product.getShops(), ProductShopBuyLinkDTO.class));
         }
         return APIResponse.OK(productUpdateDTO);

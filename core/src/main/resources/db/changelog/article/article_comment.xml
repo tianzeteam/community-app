@@ -122,4 +122,19 @@
             COMMENT ON COLUMN article_comment.article_category IS '评论的文章类型：0文章1视频';
         </sql>
     </changeSet>
+    <changeSet id="addColumnToUserId4ArticleComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article_comment" columnName="to_user_id"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article_comment add column to_user_id bigint;
+            COMMENT ON COLUMN article_comment.to_user_id IS '给谁评论的主键id';
+
+            alter table article_comment add column to_user_name varchar(32);
+            COMMENT ON COLUMN article_comment.to_user_name IS '给谁评论的昵称';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

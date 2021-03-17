@@ -22,6 +22,8 @@ public class ArticleCommentVO extends UserBaseInfo {
     private Long id;
     @ApiModelProperty("文章主键id")
     private Long articleId;
+    @ApiModelProperty("文章作者主键id")
+    private Long toUserId;
     @ApiModelProperty("评论内容")
     private String contents;
     @ApiModelProperty("评论时间")
