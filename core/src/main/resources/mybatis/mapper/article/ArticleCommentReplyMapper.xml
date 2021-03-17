@@ -137,6 +137,9 @@
       <if test="toUserId != null">
         to_user_id,
       </if>
+      <if test="toUserName != null">
+        to_user_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -162,6 +165,9 @@
       </if>
       <if test="toUserId != null">
         #{toUserId,jdbcType=BIGINT},
+      </if>
+      <if test="toUserName != null">
+        #{toUserName,jdbcType=VARCHAR}
       </if>
     </trim>
   </insert>
