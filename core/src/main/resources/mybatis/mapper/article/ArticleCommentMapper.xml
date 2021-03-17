@@ -287,6 +287,10 @@
     update article_comment set stamp_count = stamp_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <update id="increaseReplyCount">
+    update article_comment set reply_count = reply_count + 1 where id = #{id,jdbcType=BIGINT}
+  </update>
+
   <select id="queryCommentByPageNoLogin" resultType="com.smart.home.modules.article.entity.ArticleComment">
     select ac.id,
            ac.article_id as articleId,
@@ -399,4 +403,5 @@
                  left join user_account ua on ua.id = a.user_id
     where a.id = #{id,jdbcType=BIGINT}
   </select>
+
 </mapper>

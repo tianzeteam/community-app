@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author jason
@@ -24,29 +25,6 @@ public class ArticleCommentReplyService {
     ArticleCommentReplyMapper articleCommentReplyMapper;
     @Resource
     ArticleCommentMapper articleCommentMapper;
-
-    public int update(ArticleCommentReply articleCommentReply) {
-        return articleCommentReplyMapper.updateByPrimaryKeySelective(articleCommentReply);
-    }
-
-    public int deleteById(Long id) {
-        return articleCommentReplyMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            articleCommentReplyMapper.deleteByPrimaryKey(id);
-        }
-    }
-
-    public List<ArticleCommentReply> selectByPage(ArticleCommentReply articleCommentReply, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        ArticleCommentReplyExample example = new ArticleCommentReplyExample();
-        ArticleCommentReplyExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
-        return articleCommentReplyMapper.selectByExample(example);
-    }
 
     public ArticleCommentReply findById(Long id) {
         ArticleCommentReply articleCommentReply = articleCommentReplyMapper.selectByPrimaryKey(id);
@@ -65,6 +43,10 @@ public class ArticleCommentReplyService {
         articleCommentReply.setToUserId(userAccount.getId());
         articleCommentReply.setToUserName(userAccount.getNickName());
         articleCommentReplyMapper.insertSelective(articleCommentReply);
+        CompletableFuture.runAsync(()->{
+            // 回复数量加1
+            articleCommentMapper.increaseReplyCount(articleCommentId);
+        });
     }
 
     public List<ArticleCommentReply> queryCommentReplyByPageNoLogin(Long articleCommentId, int pageNum, int pageSize) {

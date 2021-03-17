@@ -40,6 +40,8 @@ public interface ArticleCommentMapper {
 
     int decreaseStampCount(@Param("id") Long id);
 
+    int increaseReplyCount(@Param("id") Long id);
+
     List<ArticleComment> queryCommentByPageNoLogin(@Param("articleId") Long articleId);
 
     List<ArticleComment> queryCommentByPageWhenLogin(@Param("userId") Long userId,@Param("articleId") Long articleId);
