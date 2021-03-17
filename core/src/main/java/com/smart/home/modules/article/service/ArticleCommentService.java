@@ -244,4 +244,10 @@ public class ArticleCommentService {
         PageHelper.startPage(pageNum, pageSize);
         return articleCommentMapper.queryViaUserIdByPageNoLogin(userId);
     }
+
+    public long countByUserId(Long userId, Long articleId) {
+        ArticleCommentExample example = new ArticleCommentExample();
+        example.createCriteria().andUserIdEqualTo(userId).andArticleIdEqualTo(articleId);
+        return articleCommentMapper.countByExample(example);
+    }
 }

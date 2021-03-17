@@ -93,9 +93,12 @@ public class CommonArticleController {
             if (StringUtils.isNotBlank(article.getBannerImages())) {
                 articleDetailVO.setImageList(JSON.parseArray(article.getBannerImages(), String.class));
             }
-            // 我是否关注了该用户
-            long count = userFocusService.countByFocusUserId(userId, article.getUserId());
+            // 我有没有关注过作者了
+            long count = userFocusService.countByFocusUserId(userId, articleId);
             articleDetailVO.setFocusUserFlag(count > 0 ? YesNoEnum.YES.getCode() : YesNoEnum.NO.getCode());
+            // 我有没有评论过了
+            count = articleCommentService.countByUserId(userId, articleId);
+            articleDetailVO.setCommentFlag(count > 0 ? YesNoEnum.YES.getCode() : YesNoEnum.NO.getCode());
         } else {
             article = articleService.queryDetailByIdNoLogin(articleId);
             if (Objects.isNull(article)) {

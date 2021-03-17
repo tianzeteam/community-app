@@ -54,6 +54,8 @@ public class ArticleDetailVO {
     private Integer stampFlag;
     @ApiModelProperty("我有没有收藏过了：0否1是")
     private Integer collectFlag;
+    @ApiModelProperty("我是否评论过：0否1是")
+    private Integer commentFlag;
 
     @ApiModelProperty("是否原创:0原创1转载")
     private Integer articleType;
