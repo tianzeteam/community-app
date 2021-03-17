@@ -322,6 +322,10 @@
     update product_comment set fun_count = fun_count - 1 where id = #{id,jdbcType=BIGINT}
   </update>
 
+    <update id="increaseReplyCount">
+        update product_comment set reply_count = reply_count + 1 where id = #{id,jdbcType=BIGINT}
+    </update>
+
   <select id="queryCommentByPage" resultType="com.smart.home.modules.product.entity.ProductComment">
     select ua.head_url as headUrl,
            ua.nick_name as nickName,

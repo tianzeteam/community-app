@@ -45,6 +45,8 @@ public interface ProductCommentMapper {
 
     int decreaseFunCount(@Param("id") Long id);
 
+    int increaseReplyCount(@Param("id") Long id);
+
     List<ProductComment> queryCommentByPage(@Param("loginUserId") Long loginUserId,@Param("productId") int productId);
 
     ProductComment queryCommentDetailHead(@Param("loginUserId") Long userId,@Param("productCommentId") Long productCommentId);
@@ -66,4 +68,5 @@ public interface ProductCommentMapper {
     List<ContentAuditAdminRecordTO> selectAllNeedAuditContent(ContentAdminAuditSearchTO to);
 
     List<ProductComment> queryViaUserIdByPageWhenLogin(@Param("userId") Long userId,@Param("loginUserId") Long loginUserId);
+
 }

@@ -1,6 +1,7 @@
 package com.smart.home.modules.product.service;
 
 import com.github.pagehelper.PageHelper;
+import com.smart.home.modules.product.dao.ProductCommentMapper;
 import com.smart.home.modules.product.dao.ProductCommentReplyMapper;
 import com.smart.home.modules.product.entity.ProductCommentReply;
 import com.smart.home.modules.product.entity.ProductCommentReplyExample;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author jason
@@ -19,6 +21,8 @@ public class ProductCommentReplyService {
 
     @Resource
     ProductCommentReplyMapper productCommentReplyMapper;
+    @Resource
+    ProductCommentMapper productCommentMapper;
 
     public void increaseLikeCount(Long id) {
         productCommentReplyMapper.increaseLikeCount(id);
@@ -63,6 +67,10 @@ public class ProductCommentReplyService {
         productCommentReply.setToUserId(userAccount.getId());
         productCommentReply.setToUserName(userAccount.getNickName());
         productCommentReplyMapper.insertSelective(productCommentReply);
+        CompletableFuture.runAsync(()->{
+            // 增加一个回复数量
+            productCommentMapper.increaseReplyCount(productCommentId);
+        });
     }
 
     public Long countReplyByDate(Date startDate, Date endDate) {
