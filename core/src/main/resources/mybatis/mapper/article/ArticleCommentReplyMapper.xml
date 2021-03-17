@@ -268,7 +268,7 @@
     from article_comment_reply acr
                  left join user_account ua on ua.id = acr.user_id
                  left join user_data ud on ud.user_id = ua.id
-    where acr.article_id = #{articleCommentId,jdbcType=BIGINT}
+    where acr.article_comment_id = #{articleCommentId,jdbcType=BIGINT}
   </select>
 
 </mapper>
