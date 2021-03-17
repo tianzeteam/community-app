@@ -19,7 +19,7 @@ public interface EsCommonService<T> {
     /**
      * 多索引查询
      */
-    <T> List<T> searchMultiple(String[] idxNames, EsSearchDTO esSearchDTO, Class<T> c);
+    List searchMultiple(String[] idxNames, EsSearchDTO esSearchDTO);
 
     /**
      * 单索引，多条件查询

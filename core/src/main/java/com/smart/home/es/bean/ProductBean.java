@@ -23,8 +23,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
-@Accessors(chain = true)
 @Document(indexName = EsConstant.productIndex, type = EsConstant.product, shards = 3, replicas = 1)
 public class ProductBean {
 

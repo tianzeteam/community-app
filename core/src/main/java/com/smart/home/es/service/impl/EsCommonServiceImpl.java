@@ -64,7 +64,7 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
 
 
     @Override
-    public <T> List<T> searchMultiple(String[] idxNames, EsSearchDTO esSearchDTO, Class<T> c) {
+    public List<String> searchMultiple(String[] idxNames, EsSearchDTO esSearchDTO) {
         SearchRequest searchRequest = new SearchRequest(idxNames);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -72,16 +72,21 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
             QueryBuilder queryBuilder = QueryBuilders.matchQuery("userId", esSearchDTO.getUserId().toString());
             boolQueryBuilder.must(queryBuilder);
         }
+        if (CollUtil.isNotEmpty(esSearchDTO.getLongList())) {
+            QueryBuilder queryBuilder = QueryBuilders.termsQuery("userId", esSearchDTO.getLongList());
+            boolQueryBuilder.must(queryBuilder);
+        }
         sourceBuilder.query(boolQueryBuilder);//多条件查询
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
         sourceBuilder.size(10000);
+        sourceBuilder.sort("id", SortOrder.DESC);
         searchRequest.source(sourceBuilder);
         try {
             SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
             SearchHit[] hits = response.getHits().getHits();
-            List<T> res = new ArrayList<>(hits.length);
+            List res = new ArrayList<>(hits.length);
             for (SearchHit hit : hits) {
-                res.add(JSON.parseObject(hit.getSourceAsString(), c));
+                res.add(hit.getSourceAsString());
             }
             return res;
         } catch (IOException e) {
