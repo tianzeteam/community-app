@@ -74,4 +74,28 @@
             create index idx_pcr_created_time on product_comment_reply using btree(created_time);
         </sql>
     </changeSet>
+    <changeSet id="addColumnToUserId4ProductCommentReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_comment_reply" columnName="to_user_id"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_comment_reply add column to_user_id bigint;
+            COMMENT ON COLUMN product_comment_reply.to_user_id IS '回复给谁的';
+        </sql>
+    </changeSet>
+    <changeSet id="addColumnToUserName4ProductCommentReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_comment_reply" columnName="to_user_name"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_comment_reply add column to_user_name varchar(32);
+            COMMENT ON COLUMN product_comment_reply.to_user_name IS '回复给谁的昵称';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

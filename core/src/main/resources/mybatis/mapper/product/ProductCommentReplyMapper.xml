@@ -152,6 +152,12 @@
       <if test="createdTime != null">
         created_time,
       </if>
+      <if test="toUserId != null">
+        to_user_id,
+      </if>
+      <if test="toUserName != null">
+        to_user_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -180,6 +186,12 @@
       </if>
       <if test="createdTime != null">
         #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="toUserId != null">
+        #{toUserId,jdbcType=BIGINT},
+      </if>
+      <if test="toUserName != null">
+        #{toUserName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -311,6 +323,8 @@
            pcr.details as details,
            pcr.fun_count as funCount,
            pcr.like_count as likeCount,
+           pcr.to_user_id as toUserId,
+           pcr.to_user_name as toUserName,
            pclh.id as likeId,
            pcsh.id as stampId
     from product_comment_reply pcr
@@ -318,5 +332,13 @@
                  left join product_comment_like_history pclh on pclh.source_id = pc.id and pclh.user_id = #{loginUserId} and pclh.category = 1
                  left join product_comment_stamp_history pcsh on pcsh.source_id = pc.id and pcsh.user_id = #{loginUserId} and pcsh.category = 1
     where pcr.comment_id = #{productCommentId} and pcr.pid = #{pid}
+  </select>
+
+  <select id="findUserAccountByCommentId" resultType="com.smart.home.modules.user.entity.UserAccount">
+    select ua.id,
+           ua.nick_name as nickName
+      from product_comment pc
+    left join user_account ua on ua.id = pc.user_id
+    where pc.id = #{productCommentId,jdbcType=BIGINT}
   </select>
 </mapper>

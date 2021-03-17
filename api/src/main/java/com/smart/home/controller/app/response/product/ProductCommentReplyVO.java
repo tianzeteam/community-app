@@ -36,5 +36,9 @@ public class ProductCommentReplyVO {
     private Integer likeFlag;
     @ApiModelProperty("点过踩0否1是-登陆后才有值")
     private Integer stampFlag;
+    @ApiModelProperty("回复给谁用户主键id")
+    private Long toUserId;
+    @ApiModelProperty("回复给谁用户昵称")
+    private String toUserName;
 
 }

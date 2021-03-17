@@ -3,6 +3,8 @@ package com.smart.home.modules.product.dao;
 import com.smart.home.modules.product.entity.ProductCommentReply;
 import com.smart.home.modules.product.entity.ProductCommentReplyExample;
 import java.util.List;
+
+import com.smart.home.modules.user.entity.UserAccount;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -43,4 +45,6 @@ public interface ProductCommentReplyMapper {
     int decreaseFunCount(@Param("id") Long id);
 
     List<ProductCommentReply> queryCommentDetailReplyByPage(@Param("loginUserId") Long loginUserId,@Param("productCommentId") Long productCommentId,@Param("pid") Long pid);
+
+    UserAccount findUserAccountByCommentId(@Param("productCommentId") Long productCommentId);
 }

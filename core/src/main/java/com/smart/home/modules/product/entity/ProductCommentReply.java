@@ -32,6 +32,14 @@ public class ProductCommentReply implements Serializable {
     private Integer revision;
 
     private Date createdTime;
+    /**
+     * 回复给谁的用户主键id
+     */
+    private Long toUserId;
+    /**
+     * 回复给谁的用户昵称
+     */
+    private String toUserName;
 
     private static final long serialVersionUID = 1L;
 
@@ -256,6 +264,22 @@ public class ProductCommentReply implements Serializable {
 
     public String getHeadUrl() {
         return headUrl;
+    }
+
+    public Long getToUserId() {
+        return toUserId;
+    }
+
+    public void setToUserId(Long toUserId) {
+        this.toUserId = toUserId;
+    }
+
+    public String getToUserName() {
+        return toUserName;
+    }
+
+    public void setToUserName(String toUserName) {
+        this.toUserName = toUserName;
     }
 
     /**
