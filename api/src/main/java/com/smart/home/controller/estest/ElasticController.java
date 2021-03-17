@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import com.smart.home.common.util.RandomUtils;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.AnonAccess;
+import com.smart.home.es.bean.ArticleBean;
 import com.smart.home.es.bean.CommunityPostBean;
 import com.smart.home.es.bean.ProductBean;
 import com.smart.home.es.bean.SearchKey;
@@ -107,15 +108,16 @@ public class ElasticController {
 
     @AnonAccess
     @GetMapping("/saveProduct")
-    public Object savePro(Long id){
+    public Object savePro(String details){
         long l = RandomUtil.randomLong(10000);
-        ProductBean productBean = ProductBean.builder()
+        ArticleBean articleBean = ArticleBean.builder()
                 .id(l)
-                .remark(RandomUtil.randomString(10))
-                .productName("长恨歌")
+                .remark(details)
+                .details(details)
+                .userId(l)
                 .build();
 
-        esCommonService.insertOrUpdateOne(EsConstant.productIndex,EsConstant.product, id,productBean);
+        esCommonService.insertOrUpdateOne(EsConstant.articleIndex,EsConstant.article, l,articleBean);
         return 1;
     }
 

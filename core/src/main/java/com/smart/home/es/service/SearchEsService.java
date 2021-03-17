@@ -14,13 +14,16 @@ import com.smart.home.es.dao.SearchKeyRepository;
 import com.smart.home.es.dto.EsSearchDTO;
 import com.smart.home.es.dto.NameCountDTO;
 import com.smart.home.modules.user.dao.UserDataMapper;
+import com.smart.home.modules.user.dao.UserFocusMapper;
 import com.smart.home.modules.user.dto.UserDataDTO;
+import com.smart.home.modules.user.entity.UserFocus;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +48,8 @@ public class SearchEsService {
     private EsCommonService esCommonService;
     @Resource
     private UserDataMapper userDataMapper;
+    @Resource
+    private UserFocusMapper userFocusMapper;
 
 
     /**
@@ -218,9 +223,18 @@ public class SearchEsService {
     /**
      * 社区-关注
      * 查询关注的人
-     * 查询es
+     * 查询es userid多value，id倒序，分页
+     * 组装用户信息
      */
+    public List focusNewsSearch(Long userId){
+        List<UserFocus> userFocusList = userFocusMapper.selectByUserId(userId);
+        if (CollUtil.isEmpty(userFocusList)) {
+            return Collections.EMPTY_LIST;
+        }
 
+
+        return null;
+    }
 
 
 }

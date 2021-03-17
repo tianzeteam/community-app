@@ -29,4 +29,6 @@ public interface UserFocusMapper {
     int updateByPrimaryKeySelective(UserFocus record);
 
     int updateByPrimaryKey(UserFocus record);
+
+    List<UserFocus> selectByUserId(@Param("userId") Long userId);
 }

@@ -79,4 +79,8 @@ public class ArticleBean extends PersionalMessageDTO {
     @Field(type = FieldType.Integer, index = false)
     private Integer articleType;
 
+    //标签，标记为文章，帖子，评论等 见EsSaveTypeEnum
+    @Field(type = FieldType.Integer, index = false)
+    private Integer saveType;
+
 }

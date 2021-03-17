@@ -50,4 +50,7 @@ public class ProductCommentBean extends PersionalMessageDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createdTime;
 
+    //标签，标记为文章，帖子，评论等 见EsSaveTypeEnum
+    @Field(type = FieldType.Integer, index = false)
+    private Integer saveType;
 }

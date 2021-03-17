@@ -2,6 +2,8 @@ package com.smart.home.modules.community.service;
 
 import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.smart.home.es.common.PageBean;
 import com.smart.home.modules.community.dao.CommunityMapper;
 import com.smart.home.modules.community.dao.CommunityUserMappingMapper;
 import com.smart.home.modules.community.dto.CommunityUserMappingDTO;
@@ -14,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -51,8 +52,7 @@ public class CommunityUserMappingService {
         }
     }
 
-    public List<CommunityUserMappingDTO> selectByPage(CommunityUserMapping communityUserMapping, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
+    public PageBean<List<CommunityUserMappingDTO>> selectByPage(CommunityUserMapping communityUserMapping, int pageNum, int pageSize) {
         CommunityUserMappingExample example = new CommunityUserMappingExample();
         CommunityUserMappingExample.Criteria criteria = example.createCriteria();
         if (communityUserMapping.getUserId() != null) {
@@ -60,13 +60,15 @@ public class CommunityUserMappingService {
         }
         List<CommunityUserMapping> communityUserMappings = communityUserMappingMapper.selectByExample(example);
         if (CollUtil.isEmpty(communityUserMappings)) {
-            return Collections.EMPTY_LIST;
+            return new PageBean<>();
         }
         List<Integer> communityIds = communityUserMappings.parallelStream().map(CommunityUserMapping::getCommunityId).collect(Collectors.toList());
         CommunityExample communityExample = new CommunityExample();
         CommunityExample.Criteria cc = communityExample.createCriteria();
         cc.andIdIn(communityIds);
+        PageHelper.startPage(pageNum, pageSize);
         List<Community> communities = communityMapper.selectByExample(communityExample);
+        PageInfo pageInfo = new PageInfo(communities);
         List<CommunityUserMappingDTO> userMappingDTOS = new ArrayList<>();
         if (CollUtil.isNotEmpty(communities)) {
             communityUserMappings.stream().forEach(x->{
@@ -86,7 +88,7 @@ public class CommunityUserMappingService {
                 userMappingDTOS.add(userMappingDTO);
             });
         }
-        return userMappingDTOS;
+        return PageBean.info2Bean(pageInfo, userMappingDTOS);
     }
 
     public CommunityUserMapping findById(Long id) {

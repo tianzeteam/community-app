@@ -8,6 +8,7 @@ import com.smart.home.controller.pc.response.community.CommunityUserMappingVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
+import com.smart.home.es.common.PageBean;
 import com.smart.home.es.dto.CommunitySearchDTO;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.dto.CommunityUserMappingDTO;
@@ -81,9 +82,9 @@ public class AppCommunityController {
     public APIResponse<ResponsePageBean<CommunityUserMappingVO>> myQueryList(Integer pageNum, Integer pageSize) {
         CommunityUserMapping communityUserMapping = new CommunityUserMapping();
         communityUserMapping.setUserId(UserUtils.getLoginUserId());
-        List<CommunityUserMappingDTO> userMappingDTOS = communityUserMappingService.selectByPage(communityUserMapping, pageNum, pageSize);
-        List<CommunityUserMappingVO> communityUserMappingVOS = BeanCopyUtils.convertListTo(userMappingDTOS, CommunityUserMappingVO::new);
-        return APIResponse.OK(ResponsePageUtil.restPage(communityUserMappingVOS));
+        PageBean<List<CommunityUserMappingDTO>> listPageBean = communityUserMappingService.selectByPage(communityUserMapping, pageNum, pageSize);
+        List<CommunityUserMappingVO> communityUserMappingVOS = BeanCopyUtils.convertListTo(listPageBean.getList(), CommunityUserMappingVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(communityUserMappingVOS, listPageBean));
     }
 
     /**

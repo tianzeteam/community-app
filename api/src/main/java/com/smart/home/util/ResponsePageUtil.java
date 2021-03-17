@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.smart.home.dto.ResponsePageBean;
+import com.smart.home.es.common.PageBean;
 
 import java.util.List;
 
@@ -26,6 +27,17 @@ public class ResponsePageUtil {
         result.setPageSize(pageInfo.getPageSize());
         result.setTotalCount(pageInfo.getTotal());
         result.setList(pageInfo.getList());
+        PageHelper.clearPage();
+        return result;
+    }
+
+    public static <T> ResponsePageBean<T> restPage(List<T> resultList, PageBean pageBean) {
+        ResponsePageBean<T> result = new ResponsePageBean<T>();
+        result.setTotalPage(pageBean.getTotalPage());
+        result.setPageNum(pageBean.getPageNum());
+        result.setPageSize(pageBean.getPageSize());
+        result.setTotalCount(pageBean.getTotalCount());
+        result.setList(resultList);
         PageHelper.clearPage();
         return result;
     }
