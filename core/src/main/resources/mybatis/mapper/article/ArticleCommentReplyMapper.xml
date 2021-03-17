@@ -269,6 +269,7 @@
                  left join user_account ua on ua.id = acr.user_id
                  left join user_data ud on ud.user_id = ua.id
     where acr.article_comment_id = #{articleCommentId,jdbcType=BIGINT}
+    order by acr.id desc
   </select>
 
 </mapper>
