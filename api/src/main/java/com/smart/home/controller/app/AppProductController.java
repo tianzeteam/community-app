@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
-import com.smart.home.controller.app.request.PrimaryKeyPageDTO;
 import com.smart.home.controller.app.request.ProductSearchDTO;
 import com.smart.home.controller.app.response.product.*;
 import com.smart.home.dto.APIResponse;
@@ -16,6 +15,8 @@ import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.service.ArticleService;
 import com.smart.home.modules.product.entity.Product;
 import com.smart.home.modules.product.entity.ProductComment;
+import com.smart.home.modules.product.entity.ProductParamValue;
+import com.smart.home.modules.product.entity.ProductShopMapping;
 import com.smart.home.modules.product.service.ProductCommentService;
 import com.smart.home.modules.product.service.ProductService;
 import com.smart.home.service.CollectService;
@@ -71,7 +72,20 @@ public class AppProductController {
     public APIResponse<ProductDetailVO> queryProductDetail(Integer productId) {
         Product product = productService.queryDetailById(productId, UserUtils.getLoginUserId());
         ProductDetailVO productDetailVO = new ProductDetailVO();
-        BeanUtils.copyProperties(product, productDetailVO);
+        BeanCopyUtils.convertTo(product, ProductDetailVO::new, (s, t)->{
+           if (StringUtils.isNotBlank(s.getBannerImages())) {
+               t.setBannerImageList(JSON.parseArray(s.getBannerImages(), String.class));
+           }
+           if (StringUtils.isNotBlank(s.getTag())) {
+               t.setTagList(JSON.parseArray(s.getTag(), String.class));
+           }
+           if (StringUtils.isNotBlank(s.getParams()) && !"[]".equals(s.getParams())) {
+               t.setProductParamValueList(JSON.parseArray(s.getParams(), ProductParamValue.class));
+           }
+           if (StringUtils.isNotBlank(s.getShops()) && !"[]".equals(s.getShops())) {
+              t.setProductShopMappingList(JSON.parseArray(s.getShops(), ProductShopMapping.class));
+           }
+        });
         return APIResponse.OK(productDetailVO);
     }
 
