@@ -16,6 +16,8 @@ import com.smart.home.enums.CollectTypeEnum;
 import com.smart.home.enums.LikeCategoryEnum;
 import com.smart.home.enums.MessageSubTypeEnum;
 import com.smart.home.enums.StampCategoryEnum;
+import com.smart.home.es.common.EsConstant;
+import com.smart.home.es.service.EsCommonService;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.entity.ArticleCommentReply;
 import com.smart.home.modules.community.entity.CommunityPost;
@@ -56,6 +58,8 @@ public class CommonPostController {
     private LikeService likeService;
     @Autowired
     private StampService stampService;
+    @Autowired
+    private EsCommonService esCommonService;
 
 
     @ApiOperation("设置为精华")
@@ -113,6 +117,7 @@ public class CommonPostController {
         communityPost.setState(2);
         communityPost.setReason(JSON.toJSONString(communityPostReq.getList()));
         int ret = communityPostService.update(communityPost);
+        esCommonService.deleteOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPostReq.getId());
         return APIResponse.OK(ret);
     }
 

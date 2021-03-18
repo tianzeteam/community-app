@@ -501,8 +501,8 @@
     update community_post set hit_sensitive_count = #{count} where id = #{id}
   </update>
 
-  <update id="updateAuditStatus">
-    update community_post set audit_status = #{flag} where id = #{id} and audit_status = 0
+  <update id="updateAuditStatusState">
+    update community_post set audit_status = #{flag}, state = #{state} where id = #{id} and audit_status = 0
   </update>
 
   <select id="findUserIdById" resultType="java.lang.Long">
