@@ -20,6 +20,9 @@ import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.enums.AutoAuditFlagEnum;
+import com.smart.home.es.bean.CommunityPostBean;
+import com.smart.home.es.common.EsConstant;
+import com.smart.home.es.service.EsCommonService;
 import com.smart.home.modules.community.dao.CommunityMapper;
 import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
@@ -65,9 +68,11 @@ public class CommunityPostService {
     private SysFileService sysFileService;
     @Resource
     private UserCommunityAuthMapper userCommunityAuthMapper;
-
+    @Autowired
+    private EsCommonService esCommonService;
     @Resource
     private CommunityPostReplyMapper communityPostReplyMapper;
+
 
     public int create(CommunityPost communityPost) {
         communityPost.setTopFlag(YesNoEnum.NO.getCode());
@@ -96,6 +101,7 @@ public class CommunityPostService {
         for (Long id : idList) {
             // 软删除
             communityPostMapper.updateState(id, RecordStatusEnum.DELETE.getStatus());
+            esCommonService.deleteOne(EsConstant.communityPostIndex, EsConstant.communityPost, id);
         }
     }
 
@@ -209,12 +215,19 @@ public class CommunityPostService {
     public void manuallyReject(Long id) {
         Long userId = communityPostMapper.findUserIdById(id);
         userDataService.increaseManuallyExceptionCount(userId);
-        communityPostMapper.updateAuditStatus(id, AuditStatusEnum.REJECT.getCode());
+        communityPostMapper.updateAuditStatusState(id, AuditStatusEnum.REJECT.getCode(), 0);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public void manuallyApprove(Long id) {
-        int affectRow = communityPostMapper.updateAuditStatus(id, AuditStatusEnum.APPROVED.getCode());
+        int affectRow = communityPostMapper.updateAuditStatusState(id, AuditStatusEnum.APPROVED.getCode(), 1);
         if (affectRow > 0) {
+            CompletableFuture.runAsync(()->{
+                CommunityPost communityPost = communityPostMapper.selectByPrimaryKey(id);
+                CommunityPostBean communityPostBean = new CommunityPostBean();
+                BeanUtils.copyProperties(communityPost, communityPostBean);
+                esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
+            });
             // 增加用户的发帖数量
             Long userId = communityPostMapper.findUserIdById(id);
             userDataService.increasePostCount(userId);

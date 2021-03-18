@@ -63,7 +63,7 @@ public interface CommunityPostMapper {
 
     int updateHitSensitiveCount(@Param("id") long id,@Param("count") int count);
 
-    int updateAuditStatus(@Param("id") Long id,@Param("flag") int flag);
+    int updateAuditStatusState(@Param("id") Long id,@Param("flag") int flag, @Param("state") int state);
 
     Long findUserIdById(@Param("id") Long id);
 

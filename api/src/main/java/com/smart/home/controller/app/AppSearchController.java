@@ -54,6 +54,7 @@ public class AppSearchController {
     @GetMapping("/multiple")
     public APIResponse multiple(String contents) {
         log.info("multiple综合搜索:{}", contents);
+        searchEsService.saveKeyword(contents);
         Map<String, Object> multiple = searchEsService.multiple(contents);
         return APIResponse.OK(multiple);
     }
