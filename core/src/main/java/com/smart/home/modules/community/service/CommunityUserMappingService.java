@@ -72,20 +72,20 @@ public class CommunityUserMappingService {
         List<CommunityUserMappingDTO> userMappingDTOS = new ArrayList<>();
         if (CollUtil.isNotEmpty(communities)) {
             communityUserMappings.stream().forEach(x->{
-                CommunityUserMappingDTO userMappingDTO = new CommunityUserMappingDTO();
-                userMappingDTO.setId(x.getId());
-                userMappingDTO.setCommunityId(x.getCommunityId());
-                userMappingDTO.setCreatedTime(x.getCreatedTime());
-                userMappingDTO.setUserId(x.getUserId());
                 communities.stream().forEach(y->{
                     if (x.getCommunityId().equals(y.getId())) {
+                        CommunityUserMappingDTO userMappingDTO = new CommunityUserMappingDTO();
+                        userMappingDTO.setId(x.getId());
+                        userMappingDTO.setCommunityId(x.getCommunityId());
+                        userMappingDTO.setCreatedTime(x.getCreatedTime());
+                        userMappingDTO.setUserId(x.getUserId());
                         userMappingDTO.setCommunityTitle(y.getTitle());
                         userMappingDTO.setRemark(y.getRemark());
                         userMappingDTO.setSort(y.getSort());
                         userMappingDTO.setTopFlag(y.getTopFlag());
+                        userMappingDTOS.add(userMappingDTO);
                     }
                 });
-                userMappingDTOS.add(userMappingDTO);
             });
         }
         return PageBean.info2Bean(pageInfo, userMappingDTOS);

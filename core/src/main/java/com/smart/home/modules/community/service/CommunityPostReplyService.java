@@ -139,13 +139,13 @@ public class CommunityPostReplyService {
     }
 
     public List<CommunityPostReply> selectByPage(CommunityPostReply communityPostReply, int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
         CommunityPostReplyExample example = new CommunityPostReplyExample();
         CommunityPostReplyExample.Criteria criteria = example.createCriteria();
         if (communityPostReply.getUserId() != null) {
             criteria.andUserIdEqualTo(communityPostReply.getUserId());
         }
         example.setOrderByClause("created_time desc");
+        PageHelper.startPage(pageNum, pageSize);
         List<CommunityPostReply> list = communityPostReplyMapper.selectByExample(example);
         for (CommunityPostReply postReply : list) {
             postReply.setNickName(userAccountService.findNicknameByUserId(postReply.getUserId()));

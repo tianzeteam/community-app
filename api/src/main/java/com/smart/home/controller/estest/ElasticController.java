@@ -93,7 +93,7 @@ public class ElasticController {
     //test
     @AnonAccess
     @GetMapping("/save")
-    public Object save(Long userId, String title, String contents){
+    public Object save(Long userId, Long id, String title, String contents){
         long l = RandomUtil.randomLong(10000);
         long w = RandomUtil.randomLong(10000);
         CommunityPostBean communityPostBean = CommunityPostBean.builder()
@@ -104,7 +104,7 @@ public class ElasticController {
                 .contents(contents)
                 .saveType(EsSaveTypeEnum.COMMUNITY_POST.getType())
                 .build();
-        esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex,EsConstant.communityPost, w,communityPostBean);
+        esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex,EsConstant.communityPost, id,communityPostBean);
         return 1;
     }
 

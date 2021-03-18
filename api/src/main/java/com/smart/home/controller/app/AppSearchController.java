@@ -1,9 +1,7 @@
 package com.smart.home.controller.app;
 
-import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.AnonAccess;
-import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.es.dto.NameCountDTO;
 import com.smart.home.es.service.SearchEsService;
 import com.smart.home.util.UserUtils;
@@ -65,7 +63,6 @@ public class AppSearchController {
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
     })
-    @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @GetMapping("/focus/news")
     public APIResponse focusNews(Integer pageNum, Integer pageSize) {
         Long loginUserId = UserUtils.getLoginUserId();
