@@ -706,6 +706,7 @@
            a.cover_image as coverImage,
            a.banner_images as bannerImages,
            a.title,
+           a.remark,
            a.details,
            a.user_id as userId,
            a.like_count as likeCount,

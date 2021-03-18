@@ -42,6 +42,8 @@ public class ArticleDetailVO {
     private Integer focusFlag;
     @ApiModelProperty("频道吗？ 全屋方案")
     private String channelName;
+    @ApiModelProperty("简介")
+    private String remark;
     @ApiModelProperty("正文")
     private String details;
     @ApiModelProperty("获赞数量")
