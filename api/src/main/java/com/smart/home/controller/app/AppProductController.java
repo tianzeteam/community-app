@@ -71,8 +71,7 @@ public class AppProductController {
     @GetMapping("/queryProductDetail")
     public APIResponse<ProductDetailVO> queryProductDetail(Integer productId) {
         Product product = productService.queryDetailById(productId, UserUtils.getLoginUserId());
-        ProductDetailVO productDetailVO = new ProductDetailVO();
-        BeanCopyUtils.convertTo(product, ProductDetailVO::new, (s, t)->{
+        ProductDetailVO productDetailVO = BeanCopyUtils.convertTo(product, ProductDetailVO::new, (s, t)->{
            if (StringUtils.isNotBlank(s.getBannerImages())) {
                t.setBannerImageList(JSON.parseArray(s.getBannerImages(), String.class));
            }
