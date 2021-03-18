@@ -2,6 +2,7 @@ package com.smart.home.controller.app;
 
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.request.ProductSearchDTO;
@@ -85,6 +86,14 @@ public class AppProductController {
               t.setProductShopMappingList(JSON.parseArray(s.getShops(), ProductShopMapping.class));
            }
         });
+        // 我有没有收藏过
+        Long userId = UserUtils.getLoginUserId();
+        if (userId > 0) {
+            boolean hasCollect = collectService.hasCollect(CollectTypeEnum.PRODUCT, userId, Long.valueOf(productId));
+            productDetailVO.setCollectFlag(hasCollect ? YesNoEnum.YES.getCode() : YesNoEnum.NO.getCode());
+        } else {
+            productDetailVO.setCollectFlag(YesNoEnum.NO.getCode());
+        }
         return APIResponse.OK(productDetailVO);
     }
 
