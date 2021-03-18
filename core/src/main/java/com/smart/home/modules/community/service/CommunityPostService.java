@@ -275,7 +275,7 @@ public class CommunityPostService {
      */
     public List<CommunityPostDTO> queryHotPostList(int pageNum, int pageSize){
         PageHelper.startPage(pageNum, pageSize);
-        List<CommunityPost> communityPosts = communityPostMapper.getHotPost(DateUtil.offsetDay(DateUtil.date(), -7).toString(), DateUtil.date().toString());
+        List<CommunityPost> communityPosts = communityPostMapper.getHotPost(DateUtil.offsetDay(DateUtil.date(), -7), DateUtil.date());
         List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(communityPosts);
         return toPageList((Page) communityPosts, communityPostDTOS);
     }

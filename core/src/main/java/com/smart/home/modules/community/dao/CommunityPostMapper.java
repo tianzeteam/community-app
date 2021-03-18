@@ -3,6 +3,8 @@ package com.smart.home.modules.community.dao;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
+
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -75,7 +77,7 @@ public interface CommunityPostMapper {
 
     List<CommunityPost> getSortRecommend();
 
-    List<CommunityPost> getHotPost(@Param("startTime") String startTime, @Param("endTime") String endTime);
+    List<CommunityPost> getHotPost(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
     List<CommunityPost> getCommunityDetail(@Param("communityId") Long communityId, @Param("boutiqueFlag") Integer boutiqueFlag);
 
