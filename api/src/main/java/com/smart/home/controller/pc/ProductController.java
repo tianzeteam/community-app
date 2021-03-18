@@ -30,7 +30,9 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author jason
@@ -296,9 +298,20 @@ public class ProductController {
         productUpdateDTO.setProductBrandDTO(new ProductBrandDTO(product.getBrandId(), product.getBrandName()));
         if (StringUtils.isNotBlank(product.getParams()) && !"[]".equals(product.getParams())) {
             List<ProductParamValue> productParamValueList = JSON.parseArray(product.getParams(), ProductParamValue.class);
+            List<Integer> paramIdList = new ArrayList<>();
+            productParamValueList.forEach(x->{paramIdList.add(x.getParamId());});
+            List<ProductParamSetting> productParamSettingList = productParamSettingService.queryByIdList(paramIdList);
+            Map<Integer, ProductParamSetting> paramSettingMap = productParamSettingList.parallelStream().collect(Collectors.toMap(ProductParamSetting::getId, productParamSetting -> productParamSetting));
             List<ProductParamValueDTO> paramValueDTOList = BeanCopyUtils.convertListTo(productParamValueList, ProductParamValueDTO::new, (s, t)->{
                t.setId(s.getParamId());
+                ProductParamSetting productParamSetting = paramSettingMap.get(s.getParamId());
+                if (productParamSetting != null) {
+                    t.setDefaultValue(productParamSetting.getDefaultValue());
+                    t.setEnumValues(productParamSetting.getEnumValues());
+                    t.setRemark(productParamSetting.getRemark());
+                }
             });
+
             productUpdateDTO.setParamValueDTOList(paramValueDTOList);
         }
         if (StringUtils.isNotBlank(product.getShops()) && !"[]".equals(product.getShops())) {

@@ -1,5 +1,6 @@
 package com.smart.home.modules.product.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.DuplicateDataException;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author jason
@@ -114,6 +112,15 @@ public class ProductParamSettingService {
 
     public List<ProductParamSetting> queryAllValidExceptEnableAll(Integer categoryId) {
         List<Integer> paramIdList = productCategoryParamMapper.findParamIdListByCategoryId(categoryId);
+        ProductParamSettingExample example = new ProductParamSettingExample();
+        example.createCriteria().andIdIn(paramIdList);
+        return productParamSettingMapper.selectByExample(example);
+    }
+
+    public List<ProductParamSetting> queryByIdList(List<Integer> paramIdList) {
+        if (CollUtil.isEmpty(paramIdList)) {
+            return Collections.EMPTY_LIST;
+        }
         ProductParamSettingExample example = new ProductParamSettingExample();
         example.createCriteria().andIdIn(paramIdList);
         return productParamSettingMapper.selectByExample(example);
