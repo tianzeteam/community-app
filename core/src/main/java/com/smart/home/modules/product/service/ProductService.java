@@ -103,7 +103,9 @@ public class ProductService {
                         // 添加到参数库
                         ProductParamSetting productParamSetting = new ProductParamSetting();
                         productParamSetting.withParamName(productParamValue.getParamName())
-                                .withRevision(0);
+                                .withRevision(0)
+                                .withCreatedTime(new Date())
+                                .withCreatedBy(product.getCreatedBy());
                         productParamSettingMapper.insertSelective(productParamSetting);
                         productParamValue.setParamId(productParamSetting.getId());
                     }
