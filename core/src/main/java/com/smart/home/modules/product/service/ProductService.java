@@ -101,9 +101,12 @@ public class ProductService {
                 for (ProductParamValue productParamValue : product.getProductParamValueList()) {
                     if (productParamValue.getParamId() == null) {
                         // 添加到参数库
+                        productParamValue.setEnableAll(3);
                         ProductParamSetting productParamSetting = new ProductParamSetting();
                         productParamSetting.withParamName(productParamValue.getParamName())
                                 .withRevision(0)
+                                // 说明是自定义的
+                                .withEnableAll(3)
                                 .withCreatedTime(new Date())
                                 .withCreatedBy(product.getCreatedBy());
                         productParamSettingMapper.insertSelective(productParamSetting);
@@ -148,9 +151,11 @@ public class ProductService {
                 for (ProductParamValue productParamValue : product.getProductParamValueList()) {
                     if (productParamValue.getParamId() == null) {
                         // 添加到参数库
+                        productParamValue.setEnableAll(3);
                         ProductParamSetting productParamSetting = new ProductParamSetting();
                         productParamSetting.withParamName(productParamValue.getParamName())
-                                .withRevision(0);
+                                .withRevision(0)
+                                .withEnableAll(3);
                         productParamSettingMapper.insertSelective(productParamSetting);
                         productParamValue.setParamId(productParamSetting.getId());
                     }

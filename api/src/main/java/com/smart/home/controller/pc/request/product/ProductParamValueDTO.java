@@ -29,5 +29,7 @@ public class ProductParamValueDTO {
     private String paramValue;
     @ApiModelProperty("排序")
     private Integer sort;
+    @ApiModelProperty("是否是自定义：3是，其他值或null值为否")
+    private Integer enableAll;
 
 }

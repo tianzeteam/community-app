@@ -110,6 +110,11 @@ public class ProductParamSetting implements Serializable {
         return this;
     }
 
+    public ProductParamSetting withEnableAll(Integer enableAll) {
+        this.setEnableAll(enableAll);
+        return this;
+    }
+
     public void setRevision(Integer revision) {
         this.revision = revision;
     }

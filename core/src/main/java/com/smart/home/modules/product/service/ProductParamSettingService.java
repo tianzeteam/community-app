@@ -110,6 +110,13 @@ public class ProductParamSettingService {
         return productParamSettingMapper.selectByExample(example);
     }
 
+    public List<ProductParamSetting> queryAllWithCustomDefine() {
+        ProductParamSettingExample example = new ProductParamSettingExample();
+        // 说明是产品自定义的
+        example.createCriteria().andEnableAllEqualTo(3);
+        return productParamSettingMapper.selectByExample(example);
+    }
+
     public List<ProductParamSetting> queryAllValidExceptEnableAll(Integer categoryId) {
         List<Integer> paramIdList = productCategoryParamMapper.findParamIdListByCategoryId(categoryId);
         ProductParamSettingExample example = new ProductParamSettingExample();

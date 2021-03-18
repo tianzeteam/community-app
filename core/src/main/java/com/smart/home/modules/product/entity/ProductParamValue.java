@@ -17,6 +17,8 @@ public class ProductParamValue implements Serializable {
 
     private String paramName;
 
+    private Integer enableAll;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -141,6 +143,14 @@ public class ProductParamValue implements Serializable {
 
     public void setParamName(String paramName) {
         this.paramName = paramName;
+    }
+
+    public Integer getEnableAll() {
+        return enableAll;
+    }
+
+    public void setEnableAll(Integer enableAll) {
+        this.enableAll = enableAll;
     }
 
     /**

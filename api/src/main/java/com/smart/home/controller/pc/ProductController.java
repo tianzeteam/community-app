@@ -264,7 +264,7 @@ public class ProductController {
     })
     @RoleAccess(RoleConsts.ADMIN)
     @GetMapping("/selectToUpdate")
-    public APIResponse<ProductUpdateDTO> selectById(Integer id) {
+    public APIResponse<ProductUpdateDTO> selectToUpdate(Integer id) {
         Product product = productService.findById(id);
         ProductUpdateDTO productUpdateDTO = new ProductUpdateDTO();
         BeanUtils.copyProperties(product, productUpdateDTO);
@@ -309,6 +309,10 @@ public class ProductController {
                     t.setDefaultValue(productParamSetting.getDefaultValue());
                     t.setEnumValues(productParamSetting.getEnumValues());
                     t.setRemark(productParamSetting.getRemark());
+                    if (s.getEnableAll() == null) {
+                        // 说明是自定义的
+                        t.setEnableAll(3);
+                    }
                 }
             });
 
