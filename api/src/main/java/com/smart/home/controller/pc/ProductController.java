@@ -156,6 +156,7 @@ public class ProductController {
                         .withShopId(productShopBuyLinkDTO.getId())
                         .withShopName(productShopBuyLinkDTO.getShopName())
                         .withUrl(productShopBuyLinkDTO.getUrl());
+                productShopMapping.setTitle(productShopBuyLinkDTO.getTitle());
                 productShopMappingList.add(productShopMapping);
             }
             product.setProductShopMappingList(productShopMappingList);
@@ -217,6 +218,7 @@ public class ProductController {
                         .withShopName(productShopBuyLinkDTO.getShopName())
                         .withProductId(productUpdateDTO.getId())
                         .withUrl(productShopBuyLinkDTO.getUrl());
+                productShopMapping.setTitle(productShopBuyLinkDTO.getTitle());
                 productShopMappingList.add(productShopMapping);
             }
             product.setProductShopMappingList(productShopMappingList);
@@ -293,10 +295,20 @@ public class ProductController {
         productUpdateDTO.setCategoryThreeDTO(new ProductCategoryDTO(product.getCategoryThreeId(), product.getCategoryThreeName(), resultList));
         productUpdateDTO.setProductBrandDTO(new ProductBrandDTO(product.getBrandId(), product.getBrandName()));
         if (StringUtils.isNotBlank(product.getParams()) && !"[]".equals(product.getParams())) {
-            productUpdateDTO.setParamValueDTOList(JSON.parseArray(product.getParams(), ProductParamValueDTO.class));
+            List<ProductParamValue> productParamValueList = JSON.parseArray(product.getParams(), ProductParamValue.class);
+            List<ProductParamValueDTO> paramValueDTOList = BeanCopyUtils.convertListTo(productParamValueList, ProductParamValueDTO::new, (s, t)->{
+               t.setId(s.getParamId());
+            });
+            productUpdateDTO.setParamValueDTOList(paramValueDTOList);
         }
         if (StringUtils.isNotBlank(product.getShops()) && !"[]".equals(product.getShops())) {
-            productUpdateDTO.setBuyLinkDTOList(JSON.parseArray(product.getShops(), ProductShopBuyLinkDTO.class));
+            List<ProductShopMapping> productShopMappingList = JSON.parseArray(product.getShops(), ProductShopMapping.class);
+            List<ProductShopBuyLinkDTO> buyLinkDTOList = BeanCopyUtils.convertListTo(productShopMappingList, ProductShopBuyLinkDTO::new,(s, t)->{
+               t.setId(s.getShopId());
+               t.setCoverImage(s.getShopIcon());
+               t.setTitle(s.getTitle());
+            });
+            productUpdateDTO.setBuyLinkDTOList(buyLinkDTOList);
         }
         return APIResponse.OK(productUpdateDTO);
     }

@@ -17,6 +17,8 @@ public class ProductShopMapping implements Serializable {
 
     private String url;
 
+    private String title;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -144,6 +146,14 @@ public class ProductShopMapping implements Serializable {
         result = prime * result + ((getShopName() == null) ? 0 : getShopName().hashCode());
         result = prime * result + ((getUrl() == null) ? 0 : getUrl().hashCode());
         return result;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**

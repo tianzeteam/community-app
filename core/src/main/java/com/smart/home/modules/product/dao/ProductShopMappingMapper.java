@@ -14,8 +14,6 @@ public interface ProductShopMappingMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(ProductShopMapping record);
-
     int insertSelective(ProductShopMapping record);
 
     List<ProductShopMapping> selectByExample(ProductShopMappingExample example);

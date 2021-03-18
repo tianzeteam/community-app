@@ -41,4 +41,16 @@
             create index idx_prdshop_product_id on product_shop_mapping using btree (PRODUCT_ID);
         </sql>
     </changeSet>
+    <changeSet id="addColumnTitle4ProductShopMapping" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_shop_mapping" columnName="title"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_shop_mapping add column title varchar(32);
+            COMMENT ON COLUMN product_shop_mapping.title IS '标题';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
