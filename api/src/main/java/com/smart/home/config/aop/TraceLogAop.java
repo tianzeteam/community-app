@@ -2,6 +2,7 @@ package com.smart.home.config.aop;
 
 import com.smart.home.common.bean.RequestErrorInfo;
 import com.smart.home.common.bean.RequestInfo;
+import com.smart.home.common.contants.SecurityConsts;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.modules.system.service.SysTraceLogService;
 import com.smart.home.config.interceptor.TraceLogInterceptor;
@@ -83,6 +84,7 @@ public class TraceLogAop {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         RequestErrorInfo requestErrorInfo = new RequestErrorInfo();
+        requestErrorInfo.setAuthorization(request.getHeader(SecurityConsts.SECURITY_HEAD_NAME));
         requestErrorInfo.setIp(request.getRemoteAddr());
         requestErrorInfo.setUrl(request.getRequestURL().toString());
         requestErrorInfo.setHttpMethod(request.getMethod());

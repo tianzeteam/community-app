@@ -16,5 +16,6 @@ public class TraceLogInfo {
     private String httpMethod;
     private String classMethod;
     private Object requestParams;
+    private String authorization;
 
 }

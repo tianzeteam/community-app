@@ -41,6 +41,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 import java.util.Objects;
@@ -221,6 +222,7 @@ public class CommonArticleController {
         return APIResponse.OK();
     }
 
+    @ApiIgnore
     @ApiOperation("收藏文章")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true)
@@ -235,6 +237,7 @@ public class CommonArticleController {
         }
         return APIResponse.OK();
     }
+    @ApiIgnore
     @ApiOperation("取消收藏文章")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true)
