@@ -1,5 +1,6 @@
 package com.smart.home.controller.app;
 
+import com.alibaba.fastjson.JSON;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.product.ProductPageTestVO;
 import com.smart.home.dto.APIResponse;
@@ -12,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +42,11 @@ public class AppProductTestController {
     @GetMapping("/queryByPage")
     public APIResponse<ResponsePageBean<ProductPageTestVO>> queryByPage(Integer productId, Integer pageNum, Integer pageSize) {
         List<Article> list = articleService.queryTestForProductByPage(productId, pageNum, pageSize);
-        List<ProductPageTestVO> resultList = BeanCopyUtils.convertListTo(list, ProductPageTestVO::new);
+        List<ProductPageTestVO> resultList = BeanCopyUtils.convertListTo(list, ProductPageTestVO::new,(s,t)->{
+            if (StringUtils.isNotBlank(s.getBannerImages())) {
+                t.setImageList(JSON.parseArray(s.getBannerImages(), String.class));
+            }
+        });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 

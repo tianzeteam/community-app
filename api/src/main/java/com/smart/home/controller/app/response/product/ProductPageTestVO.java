@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.util.Date;
-
+import java.util.List;
 /**
  * @author jason
  * @date 2021/2/25
@@ -29,7 +29,7 @@ public class ProductPageTestVO {
     @ApiModelProperty("正文")
     private String testResult;
     @ApiModelProperty("晒图")
-    private String bannerImages;
+    private List<String> imageList;
     @ApiModelProperty("发布时间")
     private Date createdTime;
 
