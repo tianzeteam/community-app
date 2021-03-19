@@ -104,7 +104,7 @@ public class AppProductCommentController {
         });
         if (CollUtil.isNotEmpty(resultList)) {
             for (ProductCommentVO productCommentVO : resultList) {
-                List<ProductCommentReply> replyList = productCommentReplyService.queryCommentDetailReplyByPage(userId, productCommentVO.getId(), 0L, pageNum, pageSize);
+                List<ProductCommentReply> replyList = productCommentReplyService.queryCommentDetailReplyByPage(userId, productCommentVO.getId(), 0L, pageNum, 5);
                 List<ProductCommentReplyVO> replyResultList = BeanCopyUtils.convertListTo(replyList, ProductCommentReplyVO::new, (s,t)->{
                     t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
                     t.setStampFlag(s.getStampId() == null ? 0 : 1);
