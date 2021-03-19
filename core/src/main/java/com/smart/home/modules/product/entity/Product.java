@@ -95,6 +95,10 @@ public class Product implements Serializable {
      * 删除标记：0未删除1已删除
      */
     private Integer deleteFlag;
+    /**
+     * 排序，越大越靠前
+     */
+    private Integer sort;
 
     private static final long serialVersionUID = 1L;
 
@@ -711,6 +715,14 @@ public class Product implements Serializable {
 
     public void setQueryType(Integer queryType) {
         this.queryType = queryType;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     /**

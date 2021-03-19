@@ -40,6 +40,8 @@
     <result column="support_platform" jdbcType="VARCHAR" property="supportPlatform" />
     <result column="params" jdbcType="VARCHAR" property="params" />
     <result column="shops" jdbcType="VARCHAR" property="shops" />
+    <result column="delete_flag" jdbcType="INTEGER" property="deleteFlag" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -105,7 +107,7 @@
     category_two_id, category_two_name, category_three_id, category_three_name, average_score, 
     praise_rate, comment_count, test_count, hot_rate, tag, revision, created_by, created_time, 
     updated_by, updated_time,collect_count,one_star_count,two_star_count,
-    three_star_count,four_star_count,five_star_count,support_platform,params,shops
+    three_star_count,four_star_count,five_star_count,support_platform,params,shops,delete_flag,sort
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.product.entity.ProductExample" resultMap="BaseResultMap">
     select
@@ -279,6 +281,9 @@
       <if test="supportPlatform != null">
         support_platform,
       </if>
+      <if test="sort != null">
+        sort,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -388,6 +393,9 @@
       </if>
       <if test="supportPlatform != null">
         #{supportPlatform,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -629,6 +637,12 @@
       <if test="fiveStarCount != null">
         five_star_count = #{fiveStarCount,jdbcType=INTEGER},
       </if>
+      <if test="supportPlatform != null">
+        support_platform = #{supportPlatform,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -728,7 +742,8 @@
            category_two_name as categoryTwoName,
            category_three_name as categoryThreeName,
            online_flag as onlineFlag,
-           created_time as createdTime
+           created_time as createdTime,
+           sort
     from product
     where 1 = 1
       <if test="id != null">

@@ -30,5 +30,7 @@ public class ProductPageVO {
     private Integer onlineFlag;
     @ApiModelProperty("创建时间")
     private Date createdTime;
+    @ApiModelProperty("排序，越大越靠前")
+    private Integer sort;
 
 }

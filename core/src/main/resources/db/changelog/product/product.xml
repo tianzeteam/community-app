@@ -159,4 +159,16 @@
             alter table product alter column tag type text;
         </sql>
     </changeSet>
+    <changeSet id="addColumnSort4Product" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product" columnName="sort"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product add column sort int default 0;
+            comment on column product.sort is '排序，越大越靠前';
+        </sql>
+    </changeSet>
 </databaseChangeLog>
