@@ -67,7 +67,7 @@ public class ProductCreateDTO {
     @ApiModelProperty("状态：0正常1隐藏")
     @NotNull(message = "状态不能为空")
     private Integer onlineFlag;
-    @ApiModelProperty("排序，越大越靠前")
+    @ApiModelProperty(value = "排序，越大越靠前", hidden = true)
     private Integer sort;
 
 }

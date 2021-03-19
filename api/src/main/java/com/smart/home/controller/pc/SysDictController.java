@@ -77,4 +77,16 @@ public class SysDictController {
         return APIResponse.OK(ResponsePageUtil.restPage(list, list));
     }
 
+    @ApiOperation("按照字段编码查询字典值")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "code", value = "字典编码", required = true)
+    })
+    @GetMapping("/selectByCode")
+    public APIResponse<SysDictUpdateDTO> selectByCode(@RequestParam(required = true) String code) {
+        SysDict sysDict = sysDictService.queryByDictCode(code);
+        SysDictUpdateDTO to = new SysDictUpdateDTO();
+        BeanUtils.copyProperties(sysDict, to);
+        return APIResponse.OK(to);
+    }
+
 }
