@@ -26,7 +26,7 @@ public class ProductCommentVO {
     @ApiModelProperty("用户等级")
     private Integer userLevel;
     @ApiModelProperty("评价星等")
-    private BigDecimal startCount;
+    private BigDecimal starCount;
     @ApiModelProperty("评价内容")
     private String details;
     @ApiModelProperty("图片数组")

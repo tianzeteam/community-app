@@ -98,6 +98,9 @@ public class AppProductCommentController {
             t.setFunFlag(s.getFunId() == null ? 0 : 1);
             t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
             t.setStampFlag(s.getStampId() == null ? 0 : 1);
+            if (StringUtils.isNotBlank(s.getImages())) {
+                t.setImageList(JSON.parseArray(s.getImages(), String.class));
+            }
         });
         if (CollUtil.isNotEmpty(resultList)) {
             for (ProductCommentVO productCommentVO : resultList) {

@@ -331,6 +331,7 @@
            ua.nick_name as nickName,
            ud.user_level as userLevel,
            pc.id,
+           pc.images,
            pc.star_count as starCount,
            pc.details as details,
            pc.fun_count as funCount,
