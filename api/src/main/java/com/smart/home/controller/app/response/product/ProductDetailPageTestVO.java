@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.util.Date;
-
+import java.util.List;
 /**
  * @author jason
  * @date 2021/2/25
@@ -24,5 +24,7 @@ public class ProductDetailPageTestVO extends UserBaseInfo {
     private String testResult;
     @ApiModelProperty("创建时间")
     private Date createdTime;
+    @ApiModelProperty("图片数组")
+    private List<String> imageList;
 
 }

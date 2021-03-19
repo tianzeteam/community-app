@@ -121,7 +121,11 @@ public class AppProductController {
     @PostMapping("/queryProductTestByPage")
     public APIResponse<ResponsePageBean<ProductDetailPageTestVO>> queryProductTestByPage(Integer productId, int pageNum, int pageSize) {
         List<Article> list = articleService.queryViaProductIdByPage(productId, pageNum, pageSize);
-        List<ProductDetailPageTestVO> resultList = BeanCopyUtils.convertListTo(list, ProductDetailPageTestVO::new);
+        List<ProductDetailPageTestVO> resultList = BeanCopyUtils.convertListTo(list, ProductDetailPageTestVO::new,(s,t)->{
+            if (StringUtils.isNotBlank(s.getBannerImages())) {
+                t.setImageList(JSON.parseArray(s.getBannerImages(), String.class));
+            }
+        });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 

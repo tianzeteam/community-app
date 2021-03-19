@@ -794,6 +794,7 @@
            ud.user_level as userLevel,
            a.created_time as createdTime,
            a.title,
+           a.banner_images as bannerImages,
            a.test_result as testResult,
            a.recommend_flag as recommendFlag
     from article_product_mapping apm
