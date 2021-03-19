@@ -70,7 +70,7 @@ public class AppProductController {
     })
     @AnonAccess
     @GetMapping("/queryProductDetail")
-    public APIResponse<ProductDetailVO> queryProductDetail(Integer productId) {
+    public APIResponse<ProductDetailVO> queryProductDetail(@RequestParam(required = true) Integer productId) {
         Product product = productService.queryDetailById(productId, UserUtils.getLoginUserId());
         ProductDetailVO productDetailVO = BeanCopyUtils.convertTo(product, ProductDetailVO::new, (s, t)->{
            if (StringUtils.isNotBlank(s.getBannerImages())) {

@@ -4,12 +4,12 @@ import com.smart.home.cloud.qcloud.QcloudProperties;
 import com.smart.home.cloud.qcloud.enums.ImageAuditorLabelEnum;
 import com.smart.home.cloud.qcloud.enums.ImageAuditorSuggestionEnum;
 import com.tencentcloudapi.common.Credential;
-import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
-import com.tencentcloudapi.ims.v20200713.ImsClient;
-import com.tencentcloudapi.ims.v20200713.models.ImageModerationRequest;
-import com.tencentcloudapi.ims.v20200713.models.ImageModerationResponse;
+import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+
+import com.tencentcloudapi.ims.v20201229.ImsClient;
+import com.tencentcloudapi.ims.v20201229.models.*;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -25,11 +25,10 @@ public class ImageAuditor {
             Credential cred = new Credential(QcloudProperties.secretId, QcloudProperties.secretKey);
 
             HttpProfile httpProfile = new HttpProfile();
-            httpProfile.setEndpoint(QcloudProperties.auditorEndpoint);
+            httpProfile.setEndpoint("ims.tencentcloudapi.com");
 
             ClientProfile clientProfile = new ClientProfile();
             clientProfile.setHttpProfile(httpProfile);
-
             ImsClient client = new ImsClient(cred, QcloudProperties.region, clientProfile);
 
             ImageModerationRequest req = new ImageModerationRequest();
