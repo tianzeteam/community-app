@@ -1,6 +1,7 @@
 package com.smart.home.controller.app;
 
 import com.alibaba.fastjson.JSONObject;
+import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.community.CommunityDetailVO;
 import com.smart.home.controller.pc.response.community.CommunitySelectVO;
@@ -8,6 +9,7 @@ import com.smart.home.controller.pc.response.community.CommunityUserMappingVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
+import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.es.common.PageBean;
 import com.smart.home.es.dto.CommunitySearchDTO;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
@@ -59,15 +61,20 @@ public class AppCommunityController {
         return APIResponse.OK(ResponsePageUtil.restPage(communitySelectVOS, communities));
     }
 
-    @AnonAccess
+    @RoleAccess(RoleConsts.REGISTER)
     @ApiOperation("加入")
     @PostMapping("/userMapping/join")
     public APIResponse add(@RequestBody String idStr) {
         log.info("社区，加入：{}", idStr);
+        Long loginUserId = UserUtils.getLoginUserId();
         CommunityUserMapping communityUserMapping = new CommunityUserMapping();
         JSONObject jsonObject = JSONObject.parseObject(idStr);
+        CommunityUserMapping userMapping = communityUserMappingService.getByUserIdAndCommunityId(loginUserId, jsonObject.getInteger("id"));
+        if (userMapping != null) {
+            return APIResponse.OK("已经加入过");
+        }
         communityUserMapping.setCommunityId(jsonObject.getInteger("id"));
-        communityUserMapping.setUserId(UserUtils.getLoginUserId());
+        communityUserMapping.setUserId(loginUserId);
         int i = communityUserMappingService.create(communityUserMapping);
         return APIResponse.OK(i);
     }

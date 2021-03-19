@@ -89,7 +89,7 @@
   <sql id="Base_Column_List">
     id, community, user_id, title, contents, images, top_flag, boutique_flag, like_count, 
     comment_flag, report_count, audit_status, revision, created_time, updated_by, updated_time, 
-    stamp_count,collect_count,state,reply_count,visit_count,share_count,reason
+    stamp_count,collect_count,state,reply_count,visit_count,share_count,reason, remark
   </sql>
   <sql id="Base_Column_List_NO_CONTENTS">
     id, community, user_id, title, images, top_flag, boutique_flag, like_count,
@@ -209,6 +209,9 @@
       <if test="state != null">
         state,
       </if>
+      <if test="remark != null">
+        remark,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -267,6 +270,9 @@
       </if>
       <if test="state != null">
         #{state,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark}
       </if>
     </trim>
   </insert>
@@ -502,7 +508,7 @@
   </update>
 
   <update id="updateAuditStatusState">
-    update community_post set audit_status = #{flag}, state = #{state} where id = #{id} and audit_status = 0
+    update community_post set audit_status = #{flag}, state = #{state} where id = #{id}
   </update>
 
   <select id="findUserIdById" resultType="java.lang.Long">

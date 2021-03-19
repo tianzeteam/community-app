@@ -21,10 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -105,7 +102,7 @@ public class AppCommunityPostController {
 
     @RoleAccess(RoleConsts.REGISTER)
     @ApiOperation("发帖")
-    @GetMapping("/release")
+    @PostMapping("/release")
     public APIResponse release(@RequestBody CommunityPostReq communityPostReq){
         log.info("发帖params：{}", JSON.toJSONString(communityPostReq));
         //用户是否存在，检查是否禁言

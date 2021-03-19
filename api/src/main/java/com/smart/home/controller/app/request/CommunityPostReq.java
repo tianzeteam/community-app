@@ -20,7 +20,7 @@ public class CommunityPostReq {
     private String contents;
 
     @ApiModelProperty("社区主键id")
-    private Long community;
+    private Integer community;
 
     @ApiModelProperty("标题")
     private String title;

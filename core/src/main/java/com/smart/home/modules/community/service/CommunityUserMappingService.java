@@ -32,6 +32,10 @@ public class CommunityUserMappingService {
     private CommunityMapper communityMapper;
 
 
+    public CommunityUserMapping getByUserIdAndCommunityId(long userId, int communityId){
+        return communityUserMappingMapper.selectByUserIdAndCommunityId(userId, communityId);
+    }
+
     public int create(CommunityUserMapping communityUserMapping) {
         communityUserMapping.setCreatedTime(new Date());
         return communityUserMappingMapper.insertSelective(communityUserMapping);

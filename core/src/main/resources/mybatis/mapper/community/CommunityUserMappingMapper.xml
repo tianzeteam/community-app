@@ -201,4 +201,9 @@
       created_time = #{createdTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectByUserIdAndCommunityId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from community_user_mapping where user_id = #{userId} and community_id = #{communityId}
+  </select>
 </mapper>

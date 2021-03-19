@@ -146,9 +146,15 @@ public class SearchEsService {
             List<ArticleBean> articleBeans = arFutureTask.get();
             List<ProductBean> productBeans = productFutureTask.get();
             List<ProductCommentBean> productCommentBeans = productCommentFutureTask.get();
-            communityPostUserMsg(communityPostBeans);
-            articleUserMsg(articleBeans);
-            productCommentUserMsg(productCommentBeans);
+            if (CollUtil.isNotEmpty(communityPostBeans)) {
+                communityPostUserMsg(communityPostBeans);
+            }
+            if (CollUtil.isNotEmpty(articleBeans)) {
+                articleUserMsg(articleBeans);
+            }
+            if (CollUtil.isNotEmpty(productCommentBeans)) {
+                productCommentUserMsg(productCommentBeans);
+            }
             map.put("communityPosts", communityPostBeans);
             map.put("articles", articleBeans);
             map.put("products", productBeans);

@@ -20,6 +20,7 @@ import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.enums.AutoAuditFlagEnum;
+import com.smart.home.enums.EsSaveTypeEnum;
 import com.smart.home.es.bean.CommunityPostBean;
 import com.smart.home.es.common.EsConstant;
 import com.smart.home.es.service.EsCommonService;
@@ -225,6 +226,7 @@ public class CommunityPostService {
             CompletableFuture.runAsync(()->{
                 CommunityPost communityPost = communityPostMapper.selectByPrimaryKey(id);
                 CommunityPostBean communityPostBean = new CommunityPostBean();
+                communityPostBean.setSaveType(EsSaveTypeEnum.COMMUNITY_POST.getType());
                 BeanUtils.copyProperties(communityPost, communityPostBean);
                 esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
             });
@@ -339,7 +341,7 @@ public class CommunityPostService {
         }
 
         CommunityPost communityPost = new CommunityPost();
-        communityPost.setUserId(communityPost.getUserId());
+        communityPost.setUserId(communityPostDTO.getUserId());
         communityPost.setCommunity(communityPostDTO.getCommunity());
         communityPost.setTitle(communityPostDTO.getTitle());
         communityPost.setContents(communityPostDTO.getContents());
@@ -347,6 +349,12 @@ public class CommunityPostService {
         communityPost.setTopFlag(communityPostDTO.getTopFlag());
         communityPost.setBoutiqueFlag(communityPostDTO.getBoutiqueFlag());
         communityPost.setCommentFlag(communityPostDTO.getCommentFlag());
+        communityPost.setLikeCount(0);
+        communityPost.setRevision(1);
+        communityPost.setCreatedTime(DateUtil.date());
+        communityPost.setStampCount(0);
+        communityPost.setCollectCount(0);
+        communityPost.setState(0);
         if (communityPostDTO.getContents().length() > 100) {
             communityPost.setRemark(StrUtil.sub(communityPostDTO.getContents(), 0, 100) + "……");
         }else {
