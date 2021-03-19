@@ -117,6 +117,11 @@ public class ProductCommentReply implements Serializable {
         return this;
     }
 
+    public ProductCommentReply withFunCount(Integer funCount) {
+        this.setFunCount(funCount);
+        return this;
+    }
+
     public void setLikeCount(Integer likeCount) {
         this.likeCount = likeCount;
     }

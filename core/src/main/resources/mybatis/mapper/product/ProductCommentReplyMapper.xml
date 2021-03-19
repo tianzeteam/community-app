@@ -152,6 +152,9 @@
       <if test="createdTime != null">
         created_time,
       </if>
+      <if test="funCount != null">
+        fun_count,
+      </if>
       <if test="toUserId != null">
         to_user_id,
       </if>
@@ -186,6 +189,9 @@
       </if>
       <if test="createdTime != null">
         #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="funCount != null">
+        #{funCount,jdbcType=INTEGER},
       </if>
       <if test="toUserId != null">
         #{toUserId,jdbcType=BIGINT},

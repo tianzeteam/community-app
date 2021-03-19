@@ -59,6 +59,7 @@ public class ProductCommentReplyService {
                 .withCreatedTime(new Date())
                 .withDetails(details)
                 .withLikeCount(0)
+                .withFunCount(0)
                 .withPid(pid)
                 .withRevision(0)
                 .withStampCount(0)
