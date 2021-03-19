@@ -790,12 +790,16 @@
   <select id="queryViaProductIdByPage" resultType="com.smart.home.modules.article.entity.Article">
     select ua.head_url as headUrl,
            ua.nick_name as nickName,
+           ua.id as userId,
+           ud.user_level as userLevel,
+           a.created_time as createdTime,
            a.title,
            a.test_result as testResult,
            a.recommend_flag as recommendFlag
     from article_product_mapping apm
                  left join article a on a.id = apm.article_id
                  left join user_account ua on ua.id = a.user_id
+                 left join user_data ud on ud.user_id = ua.id
     where apm.product_id = #{productId,jdbcType=INTEGER}
     order by a.created_time desc
   </select>
