@@ -324,6 +324,7 @@
            pcr.details as details,
            pcr.fun_count as funCount,
            pcr.like_count as likeCount,
+           pcr.stamp_count as stampCount,
            pcr.to_user_id as toUserId,
            pcr.to_user_name as toUserName,
            pclh.id as likeId,
