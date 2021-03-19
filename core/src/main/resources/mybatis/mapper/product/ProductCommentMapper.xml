@@ -371,15 +371,18 @@
   </select>
 
   <select id="queryViaProductIdByPage" resultType="com.smart.home.modules.product.entity.ProductComment">
-    select ua.head_url as headUrl,
-           ua.nick_name as nickName,
-           pc.star_count as starCount,
-           pc.created_time as createdTime,
-           pc.details as details
-    from product_comment pc
-                 left join user_account ua on ua.id = pc.user_id
-    where pc.product_id = #{productId,jdbcType=INTEGER}
-    order by pc.created_time desc
+        select ua.head_url as headUrl,
+               ua.nick_name as nickName,
+               ud.user_level as userLevel,
+               pc.user_id as userId,
+               pc.star_count as starCount,
+               pc.created_time as createdTime,
+               pc.details as details
+        from product_comment pc
+                     left join user_account ua on ua.id = pc.user_id
+                     left join user_data ud on ud.user_id = ua.id
+        where pc.product_id = #{productId,jdbcType=INTEGER}
+        order by pc.created_time desc
     </select>
 
   <update id="updateAutoAuditFlag">
