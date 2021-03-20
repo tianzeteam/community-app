@@ -177,82 +177,68 @@ public class AppProductCommentController {
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
-    @ApiOperation("产品评价-点有用")
+    @ApiOperation("产品评价-点有用/取消点有用-二合一")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true),
-            @ApiImplicitParam(name = "authorId",value = "评价人的主键ID", required = true)
+            @ApiImplicitParam(name = "authorId",value = "评价人的主键ID", required = true),
+            @ApiImplicitParam(name = "action",value = "0点有用1取消点有用", required = true)
 
     })
     @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/clickUseful")
-    public APIResponse clickUseful(Long productCommentId, Long authorId) {
+    @PostMapping("/clickOrCancelClickUseful")
+    public APIResponse clickOrCancelClickUseful(Long productCommentId, Long authorId, Integer action) {
         try {
-            Long fromUserId = UserUtils.getLoginUserId();
-            likeService.like(LikeCategoryEnum.PRODUCT_COMMENT, fromUserId, productCommentId);
-            messageService.createLikeMessage(MessageSubTypeEnum.PRODUCT_COMMENT, productCommentId, fromUserId, authorId);
+            if (action == 0) {
+                Long fromUserId = UserUtils.getLoginUserId();
+                likeService.like(LikeCategoryEnum.PRODUCT_COMMENT, fromUserId, productCommentId);
+                messageService.createLikeMessage(MessageSubTypeEnum.PRODUCT_COMMENT, productCommentId, fromUserId, authorId);
+            } else {
+                likeService.cancelLike(LikeCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+
+            }
         } catch (ServiceException e) {
             return APIResponse.ERROR(e.getMessage());
         }
         return APIResponse.OK();
     }
-    @ApiOperation("产品评价-取消点有用")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
-    })
-    @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/cancelClickUseful")
-    public APIResponse cancelClickUseful(Long productCommentId) {
-        likeService.cancelLike(LikeCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
-        return APIResponse.OK();
-    }
 
-    @ApiOperation("产品评价-点无用")
+    @ApiOperation("产品评价-点无用/取消点无用-二合一")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
+            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true),
+            @ApiImplicitParam(name = "action",value = "0点无用1取消点无用", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/clickUseless")
-    public APIResponse clickUseless(Long productCommentId) {
+    @PostMapping("/clickOrCancelClickUseless")
+    public APIResponse clickOrCancelClickUseless(Long productCommentId, Integer action) {
         try {
-            stampService.stamp(StampCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+            if (action == 0) {
+                stampService.stamp(StampCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+            } else {
+                stampService.cancelStamp(StampCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+            }
         } catch (ServiceException e) {
             return APIResponse.ERROR(e.getMessage());
         }
         return APIResponse.OK();
     }
-    @ApiOperation("产品评价-取消点无用")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
-    })
-    @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/cancelClickUseless")
-    public APIResponse cancelClickUseless(Long productCommentId) {
-        stampService.cancelStamp(StampCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
-        return APIResponse.OK();
-    }
 
-    @ApiOperation("产品评价-点有趣")
+    @ApiOperation("产品评价-点有趣/取消点有趣-二合一")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
+            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true),
+            @ApiImplicitParam(name = "action",value = "0点有趣1取消点有趣", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/clickFun")
-    public APIResponse clickFun(Long productCommentId) {
+    @PostMapping("/clickOrCancelFun")
+    public APIResponse clickOrCancelFun(Long productCommentId, Integer action) {
         try {
-            funService.fun(FunCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+            if (action == 0) {
+                funService.fun(FunCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+            } else {
+                funService.cancelFun(FunCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
+            }
         } catch (ServiceException e) {
             return APIResponse.ERROR(e.getMessage());
         }
-        return APIResponse.OK();
-    }
-    @ApiOperation("产品评价-取消点有趣")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "productCommentId",value = "评价主键ID", required = true)
-    })
-    @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/cancelClickFun")
-    public APIResponse cancelClickFun(Long productCommentId) {
-        funService.cancelFun(FunCategoryEnum.PRODUCT_COMMENT, UserUtils.getLoginUserId(), productCommentId);
         return APIResponse.OK();
     }
 
@@ -270,53 +256,43 @@ public class AppProductCommentController {
         return APIResponse.OK();
     }
 
-    @ApiOperation("评价的回复-点赞别人的回复")
+    @ApiOperation("评价的回复-点赞/取消赞别人的回复-二合一")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "productCommentReplyId", value = "产品回复主键id", required = true)
+            @ApiImplicitParam(name = "productCommentReplyId", value = "产品回复主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0点赞1取消点赞", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/likeCommentReply")
-    public APIResponse likeCommentReply(Long productCommentReplyId) {
+    @PostMapping("/likeOrCancelLikeCommentReply")
+    public APIResponse likeOrCancelLikeCommentReply(Long productCommentReplyId, Integer action) {
         try {
-            likeService.like(LikeCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+            if (action == 0) {
+                likeService.like(LikeCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+            } else {
+                likeService.cancelLike(LikeCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+            }
         } catch (ServiceException e) {
             return APIResponse.ERROR(e.getMessage());
         }
-        return APIResponse.OK();
-    }
-    @ApiOperation("评价的回复-取消点赞别人的回复")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "productCommentReplyId", value = "产品回复主键id", required = true)
-    })
-    @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/cancelLikeCommentReply")
-    public APIResponse cancelLikeCommentReply(Long productCommentReplyId) {
-        likeService.cancelLike(LikeCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
         return APIResponse.OK();
     }
 
-    @ApiOperation("评价的回复-点踩别人的回复")
+    @ApiOperation("评价的回复-点踩/取消点踩别人的回复-二合一")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "productCommentReplyId", value = "产品回复主键id", required = true)
+            @ApiImplicitParam(name = "productCommentReplyId", value = "产品回复主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0点踩1取消点踩", required = true)
     })
     @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/stampCommentReply")
-    public APIResponse stampCommentReply(Long productCommentReplyId) {
+    @PostMapping("/stampOrCancelStampCommentReply")
+    public APIResponse stampOrCancelStampCommentReply(Long productCommentReplyId, Integer action) {
         try {
-            stampService.stamp(StampCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+            if (action == 0) {
+                stampService.stamp(StampCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+            } else {
+                stampService.cancelStamp(StampCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
+            }
         } catch (ServiceException e) {
             return APIResponse.ERROR(e.getMessage());
         }
-        return APIResponse.OK();
-    }
-    @ApiOperation("评价的回复-取消点踩别人的回复")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "productCommentReplyId", value = "产品回复主键id", required = true)
-    })
-    @RoleAccess(RoleConsts.REGISTER)
-    @PostMapping("/cancelStampCommentReply")
-    public APIResponse cancelStampCommentReply(Long productCommentReplyId) {
-        stampService.cancelStamp(StampCategoryEnum.PRODUCT_REPLY, UserUtils.getLoginUserId(), productCommentReplyId);
         return APIResponse.OK();
     }
 
