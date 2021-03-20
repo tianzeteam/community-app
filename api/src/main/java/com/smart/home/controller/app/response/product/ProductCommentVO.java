@@ -1,12 +1,12 @@
 package com.smart.home.controller.app.response.product;
 
 import com.smart.home.dto.ResponsePageBean;
-import com.smart.home.util.ResponsePageUtil;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 /**
  * @author jason
@@ -32,6 +32,8 @@ public class ProductCommentVO {
     private BigDecimal starCount;
     @ApiModelProperty("评价内容")
     private String details;
+    @ApiModelProperty("创建时间")
+    private Date createdTime;
     @ApiModelProperty("图片数组")
     private List<String> imageList;
     @ApiModelProperty("有趣数量")
