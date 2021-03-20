@@ -16,6 +16,9 @@ import java.util.List;
 @ToString
 public class ProductCommentVO {
 
+    @ApiModelProperty("顶部产品信息对象")
+    private ProductHeadInfoVO productHeadInfoVO;
+
     @ApiModelProperty("主键id")
     private Long id;
 

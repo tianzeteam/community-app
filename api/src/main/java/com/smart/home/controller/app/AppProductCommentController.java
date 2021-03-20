@@ -10,6 +10,7 @@ import com.smart.home.controller.app.request.ProductCommentCreateDTO;
 import com.smart.home.controller.app.request.ProductCommentReplyCreateDTO;
 import com.smart.home.controller.app.response.product.ProductCommentReplyVO;
 import com.smart.home.controller.app.response.product.ProductCommentVO;
+import com.smart.home.controller.app.response.product.ProductHeadInfoVO;
 import com.smart.home.controller.app.response.product.ProductPageCommentTabHeadVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
@@ -36,6 +37,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.BindingResult;
@@ -148,6 +150,11 @@ public class AppProductCommentController {
                 t.setImageList(JSON.parseArray(s.getImages(), String.class));
             }
         });
+        int productId = productComment.getProductId();
+        Product product = productService.findById(productId);
+        ProductHeadInfoVO productHeadInfoVO = new ProductHeadInfoVO();
+        BeanUtils.copyProperties(product, productHeadInfoVO);
+        vo.setProductHeadInfoVO(productHeadInfoVO);
         return APIResponse.OK(vo);
     }
 
