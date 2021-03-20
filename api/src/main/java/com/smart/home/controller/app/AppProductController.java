@@ -106,8 +106,16 @@ public class AppProductController {
     @AnonAccess
     @PostMapping("/queryProductCommentByPage")
     public APIResponse<ResponsePageBean<ProductPageCommentVO>> queryProductCommentByPage(Integer productId, int pageNum, int pageSize) {
-        List<ProductComment> list = productCommentService.queryViaProductIdByPage(productId, pageNum, pageSize);
-        List<ProductPageCommentVO> resultList = BeanCopyUtils.convertListTo(list, ProductPageCommentVO::new);
+        Long userId = UserUtils.getLoginUserId();
+        List<ProductComment> list = productCommentService.queryViaProductIdByPage(productId,userId, pageNum, pageSize);
+        List<ProductPageCommentVO> resultList = BeanCopyUtils.convertListTo(list, ProductPageCommentVO::new, (s,t)->{
+            t.setFunFlag(s.getFunId() == null ? 0 : 1);
+            t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
+            t.setStampFlag(s.getStampId() == null ? 0 : 1);
+            if (StringUtils.isNotBlank(s.getImages())) {
+                t.setImageList(JSON.parseArray(s.getImages(), String.class));
+            }
+        });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 

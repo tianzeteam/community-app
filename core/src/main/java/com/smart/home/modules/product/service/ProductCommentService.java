@@ -133,9 +133,9 @@ public class ProductCommentService {
         processAutoAudit(loginUserId, startCount, details, productId, id, imageList);
     }
 
-    public List<ProductComment> queryViaProductIdByPage(Integer productId, int pageNum, int pageSize) {
+    public List<ProductComment> queryViaProductIdByPage(Integer productId,Long loginUserId, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        return productCommentMapper.queryViaProductIdByPage(productId);
+        return productCommentMapper.queryViaProductIdByPage(productId, loginUserId);
     }
 
     private void processAutoAudit(Long loginUserId, BigDecimal startCount, String details, Integer productId, long id, List<String> imageList) {

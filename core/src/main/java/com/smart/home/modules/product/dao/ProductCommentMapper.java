@@ -51,7 +51,7 @@ public interface ProductCommentMapper {
 
     ProductComment queryCommentDetailHead(@Param("loginUserId") Long userId,@Param("productCommentId") Long productCommentId);
 
-    List<ProductComment> queryViaProductIdByPage(@Param("productId") Integer productId);
+    List<ProductComment> queryViaProductIdByPage(@Param("productId") Integer productId, @Param("loginUserId") Long loginUserId);
 
     int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag, @Param("textExceptionReason") String textExceptionReason);
 

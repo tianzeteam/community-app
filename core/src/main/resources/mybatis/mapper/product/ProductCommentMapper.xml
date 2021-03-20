@@ -384,10 +384,18 @@
                pc.user_id as userId,
                pc.star_count as starCount,
                pc.created_time as createdTime,
-               pc.details as details
+               pc.details as details,
+               pc.fun_count as funCount,
+               pc.like_count as likeCount,
+               pc.stamp_count as stampCount,
+               pc.reply_count as replyCount,
+               pc.images
         from product_comment pc
                      left join user_account ua on ua.id = pc.user_id
                      left join user_data ud on ud.user_id = ua.id
+                     left join product_comment_like_history alh on alh.source_id = pc.id and alh.category = 0 and alh.user_id = #{loginUserId,jdbcType=BIGINT}
+                     left join product_comment_stamp_history ash on ash.source_id = pc.id and ash.category = 0 and ash.user_id = #{loginUserId,jdbcType=BIGINT}
+                     left join product_comment_fun_history pcfh on pcfh.source_id = pc.id and pcfh.category = 0 and pcfh.user_id = #{loginUserId,jdbcType=BIGINT}
         where pc.product_id = #{productId,jdbcType=INTEGER}
         order by pc.created_time desc
     </select>
