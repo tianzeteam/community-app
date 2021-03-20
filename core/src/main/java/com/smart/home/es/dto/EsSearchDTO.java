@@ -21,6 +21,8 @@ public class EsSearchDTO {
 
     private String contents;
 
+    private Integer saveType;
+
     //
     private List<Long> longList;
 
