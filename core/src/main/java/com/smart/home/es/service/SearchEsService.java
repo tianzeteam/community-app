@@ -239,7 +239,7 @@ public class SearchEsService {
         if (CollUtil.isEmpty(userFocusList)) {
             return Collections.EMPTY_LIST;
         }
-        List<Long> collect = userFocusList.parallelStream().map(UserFocus::getId).collect(Collectors.toList());
+        List<Long> collect = userFocusList.parallelStream().map(UserFocus::getFocusUserId).collect(Collectors.toList());
         EsSearchDTO esSearchDTO = new EsSearchDTO();
         esSearchDTO.setLongList(collect);
         esSearchDTO.setFrom(pageNum);
