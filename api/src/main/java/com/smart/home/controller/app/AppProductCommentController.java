@@ -139,7 +139,7 @@ public class AppProductCommentController {
     })
     @AnonAccess
     @GetMapping("/queryCommentDetailHead")
-    public APIResponse<ProductCommentVO> queryCommentDetailHead(Long productCommentId) {
+    public APIResponse<ProductCommentVO> queryCommentDetailHead(@RequestParam(required = true) Long productCommentId) {
         Long userId = UserUtils.getLoginUserId();
         ProductComment productComment = productCommentService.queryCommentDetailHead(userId, productCommentId);
         ProductCommentVO vo = BeanCopyUtils.convertTo(productComment, ProductCommentVO::new, (s, t) -> {
