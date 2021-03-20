@@ -109,6 +109,7 @@ public class AppProductController {
         Long userId = UserUtils.getLoginUserId();
         List<ProductComment> list = productCommentService.queryViaProductIdByPage(productId,userId, pageNum, pageSize);
         List<ProductPageCommentVO> resultList = BeanCopyUtils.convertListTo(list, ProductPageCommentVO::new, (s,t)->{
+            t.setCommentId(s.getId());
             t.setFunFlag(s.getFunId() == null ? 0 : 1);
             t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
             t.setStampFlag(s.getStampId() == null ? 0 : 1);

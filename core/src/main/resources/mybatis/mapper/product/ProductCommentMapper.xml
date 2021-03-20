@@ -390,7 +390,8 @@
                pc.like_count as likeCount,
                pc.stamp_count as stampCount,
                pc.reply_count as replyCount,
-               pc.images
+               pc.images,
+               pc.id
         from product_comment pc
                      left join user_account ua on ua.id = pc.user_id
                      left join user_data ud on ud.user_id = ua.id

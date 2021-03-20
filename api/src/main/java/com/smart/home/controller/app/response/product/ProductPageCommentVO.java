@@ -18,6 +18,9 @@ import java.util.List;
 @ToString
 public class ProductPageCommentVO extends UserBaseInfo {
 
+    @ApiModelProperty("评价主键id")
+    private Long commentId;
+
     @ApiModelProperty("评价星等")
     private BigDecimal starCount;
     @ApiModelProperty("评价时间")
