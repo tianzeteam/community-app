@@ -31,4 +31,6 @@ public interface CommunityMapper {
     int updateByPrimaryKey(Community record);
 
     long countByCategoryId(@Param("categoryId") Long categoryId);
+
+    int increaseFollowerCount(@Param("id") Long id);
 }
