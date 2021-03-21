@@ -367,6 +367,7 @@
            pc.images,
            pc.product_id as productId,
            pc.created_time as createdTime,
+           pc.id,
            pcfh.id as funId,
            pclh.id as likeId,
            pcsh.id as stampId
