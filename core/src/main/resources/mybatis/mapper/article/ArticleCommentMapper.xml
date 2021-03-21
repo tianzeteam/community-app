@@ -147,6 +147,9 @@
       <if test="toUserName != null">
         to_user_name,
       </if>
+      <if test="images != null">
+        images,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -181,6 +184,9 @@
       </if>
       <if test="toUserName != null">
         #{toUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null">
+        #{images,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -326,6 +332,7 @@
            ac.author_flag as authorFlag,
            ac.user_id as userId,
            ac.to_user_id as toUserId,
+           ac.images,
            case when alh.id is null then 0 else 1 end as likeFlag,
            case when ash.id is null then 0 else 1 end as stampFlag,
            ua.head_url as headUrl,
@@ -412,4 +419,9 @@
     where a.id = #{id,jdbcType=BIGINT}
   </select>
 
+  <update id="updateAutoAuditFlag4ImageAudit">
+    update article_comment
+    set auto_audit_flag = #{autoAuditFlag},image_exception_reason=#{imageExceptionReason}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

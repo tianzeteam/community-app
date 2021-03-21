@@ -42,15 +42,15 @@ public interface ArticleCommentMapper {
 
     List<ArticleComment> queryCommentByPageNoLogin(@Param("articleId") Long articleId);
 
-    List<ArticleComment> queryCommentByPageWhenLogin(@Param("userId") Long userId,@Param("articleId") Long articleId);
+    List<ArticleComment> queryCommentByPageWhenLogin(@Param("userId") Long userId, @Param("articleId") Long articleId);
 
-    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("textExceptionReason") String textExceptionReason);
+    int updateAutoAuditFlag(@Param("id") Long id, @Param("autoAuditFlag") int autoAuditFlag, @Param("textExceptionReason") String textExceptionReason);
 
-    int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
+    int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id, @Param("autoAuditFlag") int autoAuditFlag, @Param("auditFlag") int auditFlag);
 
-    int updateHitSensitiveCount(@Param("id") long id,@Param("count") int count);
+    int updateHitSensitiveCount(@Param("id") long id, @Param("count") int count);
 
-    int updateAuditFlag(@Param("id") long id,@Param("flag") int flag);
+    int updateAuditFlag(@Param("id") long id, @Param("flag") int flag);
 
     Long findUserIdById(@Param("id") Long id);
 
@@ -59,5 +59,7 @@ public interface ArticleCommentMapper {
     List<ArticleComment> queryViaUserIdByPageWhenLogin(@Param("userId") Long userId, @Param("loginUserId") Long loginUserId);
 
     List<ArticleComment> queryViaUserIdByPageNoLogin(@Param("userId") Long userId);
+
+    int updateAutoAuditFlag4ImageAudit(@Param("id") Long id, @Param("autoAuditFlag") int autoAuditFlag, @Param("imageExceptionReason") String imageExceptionReason);
 
 }

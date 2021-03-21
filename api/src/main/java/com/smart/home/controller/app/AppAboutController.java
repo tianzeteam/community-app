@@ -5,7 +5,9 @@ import com.smart.home.controller.app.response.AboutVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.modules.system.entity.SysAgreement;
+import com.smart.home.modules.system.entity.SysDict;
 import com.smart.home.modules.system.service.SysAgreementService;
+import com.smart.home.modules.system.service.SysDictService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +28,8 @@ public class AppAboutController {
 
     @Autowired
     private SysAgreementService sysAgreementService;
+    @Autowired
+    private SysDictService sysDictService;
 
     @ApiOperation("查询关于分类记录")
     @AnonAccess
@@ -59,8 +63,11 @@ public class AppAboutController {
     @AnonAccess
     @GetMapping("/queryAppVersion")
     public APIResponse queryAppVersion() {
-        // TODO 这个后续从数据库配置拿
-        return APIResponse.OK("v1.0");
+        SysDict sysDict = sysDictService.queryByDictCode("app.version");
+        if (Objects.isNull(sysDict)) {
+            return APIResponse.ERROR("app.version的数据字段未配置");
+        }
+        return APIResponse.OK(sysDict.getDictValue());
     }
 
 }

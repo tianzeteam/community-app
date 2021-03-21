@@ -26,6 +26,8 @@ public class ArticleCommentVO extends UserBaseInfo {
     private Long toUserId;
     @ApiModelProperty("评论内容")
     private String contents;
+    @ApiModelProperty("评价图片数组")
+    private List<String> imageList;
     @ApiModelProperty("评论时间")
     private Date createdTime;
     @ApiModelProperty("点赞数量")

@@ -137,4 +137,16 @@
             COMMENT ON COLUMN article_comment.to_user_name IS '给谁评论的昵称';
         </sql>
     </changeSet>
+    <changeSet id="addColumnImage4ArticleComment" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="article_comment" columnName="images"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table article_comment add column images text;
+            COMMENT ON COLUMN article_comment.images IS '机审图片异常原因';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

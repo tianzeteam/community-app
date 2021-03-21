@@ -39,6 +39,8 @@ public class ArticleComment implements Serializable {
     private Long toUserId;
     private String toUserName;
 
+    private String images;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -302,6 +304,14 @@ public class ArticleComment implements Serializable {
 
     public void setToUserName(String toUserName) {
         this.toUserName = toUserName;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 
     /**

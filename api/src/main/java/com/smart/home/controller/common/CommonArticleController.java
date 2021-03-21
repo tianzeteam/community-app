@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -282,7 +283,11 @@ public class CommonArticleController {
         if (userId > 0) {
             // 说明是登陆的
             List<ArticleComment> list = articleCommentService.queryCommentByPageWhenLogin(userId, articleId, pageNum, pageSize);
-            List<ArticleCommentVO> resultList = BeanCopyUtils.convertListTo(list, ArticleCommentVO::new);
+            List<ArticleCommentVO> resultList = BeanCopyUtils.convertListTo(list, ArticleCommentVO::new, (s,t)->{
+                if (StringUtils.isNotBlank(s.getImages())) {
+                    t.setImageList(JSON.parseArray(s.getImages(), String.class));
+                }
+            });
             if (CollUtil.isNotEmpty(resultList)) {
                 for (ArticleCommentVO articleCommentVO : resultList) {
                     // 加载二级评论
@@ -307,6 +312,7 @@ public class CommonArticleController {
         }
     }
 
+    @ApiIgnore
     @ApiOperation("获取一级评论的回复-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "articleCommentId", value = "文章一级评论主键id", required = true),
@@ -333,11 +339,12 @@ public class CommonArticleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "articleId", value = "文章主键id", required = true),
             @ApiImplicitParam(name = "articleAuthorId", value = "文章作者主键id", required = true),
-            @ApiImplicitParam(name = "contents", value = "评论内容", required = true)
+            @ApiImplicitParam(name = "contents", value = "评论内容", required = true),
+            @ApiImplicitParam(name = "image", value = "评论图片", required = false)
     })
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/addComment")
-    public APIResponse addComment(Long articleId,Long articleAuthorId, String contents) {
+    public APIResponse addComment(Long articleId,Long articleAuthorId, String contents,@RequestParam(required = false) String image) {
         if (Objects.isNull(articleId)) {
             return APIResponse.ERROR("文章主键id不能为空");
         }
@@ -347,7 +354,11 @@ public class CommonArticleController {
             return APIResponse.ERROR("评论内容不能超过200字");
         }
         Long fromUserId = UserUtils.getLoginUserId();
-        articleCommentService.create(fromUserId, articleId, contents, articleAuthorId);
+        List<String> imageList = new ArrayList<>();
+        if (image != null) {
+            imageList.add(image);
+        }
+        articleCommentService.create(fromUserId, articleId, contents, articleAuthorId, imageList);
         messageService.createReplyMessage(MessageSubTypeEnum.ARTICLE, articleId, fromUserId, articleAuthorId, contents);
         return APIResponse.OK();
     }

@@ -1,10 +1,15 @@
 package com.smart.home.modules.article.service;
 
+import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditor;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditorResult;
+import com.smart.home.cloud.qcloud.auditor.ImageAuditor;
+import com.smart.home.cloud.qcloud.auditor.ImageAuditorResult;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorEvilEnum;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
+import com.smart.home.cloud.qcloud.enums.ImageAuditorSuggestionEnum;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.enums.ArticleCategoryEnum;
@@ -14,6 +19,7 @@ import com.smart.home.modules.article.dao.ArticleMapper;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.entity.ArticleCommentExample;
 import com.smart.home.modules.article.po.UserIdAndCategoryPO;
+import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +31,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -40,9 +47,11 @@ public class ArticleCommentService {
     private UserAccountService userAccountService;
     @Autowired
     private UserDataService userDataService;
+    @Autowired
+    private SysFileService sysFileService;
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void create(Long loginUserId, Long articleId, String contents, Long articleAuthorId) {
+    public void create(Long loginUserId, Long articleId, String contents, Long articleAuthorId, List<String> imageList) {
         ArticleComment articleComment = new ArticleComment();
         articleComment.withArticleId(articleId)
                 .withContents(contents)
@@ -51,6 +60,10 @@ public class ArticleCommentService {
                 .withCreatedTime(new Date())
                 .withUserId(loginUserId);
         articleComment.setToUserId(articleAuthorId);
+        if (CollUtil.isNotEmpty(imageList)) {
+            articleComment.setImages(JSON.toJSONString(imageList));
+            sysFileService.syncImageFileList(imageList);
+        }
         UserIdAndCategoryPO userIdAndCategoryPO = articleMapper.findUserIdAndCategory(articleId);
         Long authorId = userIdAndCategoryPO.getUserId();
         Integer articleCategory = userIdAndCategoryPO.getCategory();
@@ -62,14 +75,15 @@ public class ArticleCommentService {
         articleComment.setArticleCategory(articleCategory);
         articleCommentMapper.insertSelective(articleComment);
         final long id = articleComment.getId();
-        processAutoAudit(id, articleId, contents, loginUserId);
+        processAutoAudit(id, articleId, contents, loginUserId, imageList);
 
     }
 
-    private void processAutoAudit(long id, Long articleId, String contents, Long loginUserId) {
+    private void processAutoAudit(long id, Long articleId, String contents, Long loginUserId, List<String> imageList) {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                boolean contentPass = false;
                 ContentAuditorResult contentAuditorResult = ContentAuditor.auditorResult(contents);
                 if (contentAuditorResult == null) {
                     // 机审失败，进入人工审核
@@ -77,12 +91,47 @@ public class ArticleCommentService {
                     return;
                 }
                 if (contentAuditorResult.getContentAuditorEvilEnum() == ContentAuditorEvilEnum.NORMAL) {
-                    // 机审成功， 直接通过
-                    articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                    // 文章增加一次评论数量
-                    articleMapper.increaseCommentCount(articleId);
-                    userDataService.increaseCommentCount(loginUserId);
-                    return;
+                    // 机审成功， 标记为成功， 还要等图片审核结果
+                    contentPass = true;
+                }
+                // 图片审核，如果有的话
+                boolean hasImage = false;
+                ImageAuditorResult imageAuditorResult = null;
+                if (!CollectionUtils.isEmpty(imageList)) {
+                    hasImage = true;
+                    for (String image : imageList) {
+                        imageAuditorResult = ImageAuditor.auditorResult(image);
+                        if (imageAuditorResult == null) {
+                            break;
+                        }
+                        if (imageAuditorResult.getImageAuditorSuggestionEnum() != ImageAuditorSuggestionEnum.Pass) {
+                            break;
+                        }
+                    }
+                    if (Objects.isNull(imageAuditorResult)) {
+                        // 机审图片失败，进入人工审核
+                        articleCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "请求云服务失败");
+                        return;
+                    }
+                    if (imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Pass) {
+                        // 图片机审成功 加上 文本审核成功
+                        if (contentPass) {
+                            articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                            // 文章增加一次评论数量
+                            articleMapper.increaseCommentCount(articleId);
+                            userDataService.increaseCommentCount(loginUserId);
+                            return;
+                        }
+                    }
+                } else {
+                    // 没有图片的话判断机审结果，成功的话直接更新成成功
+                    if (contentPass) {
+                        articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                        // 文章增加一次评论数量
+                        articleMapper.increaseCommentCount(articleId);
+                        userDataService.increaseCommentCount(loginUserId);
+                        return;
+                    }
                 }
                 // 机器审核不通过，文本异常
                 // 先看看建议通过不通过
@@ -99,14 +148,29 @@ public class ArticleCommentService {
                     }
                     userDataService.increaseTextExceptionCount(loginUserId);
                     return;
+                } else if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
+                    contentPass = true;
                 }
-                if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
+                if (hasImage) {
+                    // 机器审核不通过，图片异常
+                    if (imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Block
+                            || imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Review) {
+                        String reason = imageAuditorResult.getImageAuditorLabelEnum().getDesc();
+                        if (contentPass) {
+                            articleCommentMapper.updateAutoAuditFlag4ImageAudit(id, AutoAuditFlagEnum.IMAGE_EXCEPTION.getCode(), reason);
+                        } else {
+                            articleCommentMapper.updateAutoAuditFlag4ImageAudit(id, AutoAuditFlagEnum.IMAGE_AND_CONTENT_EXCEPTION.getCode(), reason);
+                        }
+                        userDataService.increaseImageExceptionCount(loginUserId);
+                    }
+                } else if (contentPass) {
                     // 正常，视为通过
                     articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
                     // 文章增加一次评论数量
                     articleMapper.increaseCommentCount(articleId);
                     userDataService.increaseCommentCount(loginUserId);
                 }
+
             }
         }).start();
     }
