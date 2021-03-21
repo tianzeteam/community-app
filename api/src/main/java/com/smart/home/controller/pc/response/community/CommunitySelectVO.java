@@ -17,4 +17,12 @@ public class CommunitySelectVO {
     @ApiModelProperty("名称")
     private String title;
 
+    @ApiModelProperty("图片")
+    private String coverImage;
+    @ApiModelProperty("简介")
+    private String remark;
+
+    @ApiModelProperty("粉丝数量")
+    private Integer followerCount;
+
 }

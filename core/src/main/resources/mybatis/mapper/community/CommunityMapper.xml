@@ -379,4 +379,8 @@
   <select id="countByCategoryId" resultType="long">
     select count(1) from community where category_id = #{categoryId}
   </select>
+
+  <update id="increaseFollowerCount" parameterType="long" >
+    update community set follower_count = follower_count + 1 where id = #{id}
+  </update>
 </mapper>
