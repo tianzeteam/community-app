@@ -25,7 +25,6 @@ public class ProductCommentCreateDTO {
 
     @ApiModelProperty("评价内容")
     @NotBlank(message = "评价内容不能为空")
-    @Size(max = 100, message = "评价内容不得超过100字")
     private String details;
     @ApiModelProperty("图片数组")
     private List<String> imageList;

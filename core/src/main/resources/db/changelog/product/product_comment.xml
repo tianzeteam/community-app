@@ -153,4 +153,10 @@
             COMMENT ON COLUMN product_comment.images IS '图片json数组';
         </sql>
     </changeSet>
+    <changeSet id="modifyColumnDetails4ProductComment" author="jason">
+        <comment>修改字段类型</comment>
+        <sql>
+            alter table product_comment alter column details type text;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
