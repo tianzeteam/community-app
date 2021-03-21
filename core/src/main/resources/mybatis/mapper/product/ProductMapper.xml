@@ -689,7 +689,7 @@
   <select id="queryProductCommentCountInfo" resultType="com.smart.home.modules.product.entity.Product">
     select average_score as averageScore,
            one_star_count as oneStarCount,
-           two_star_count as twoStartCount,
+           two_star_count as twoStarCount,
            three_star_count as threeStarCount,
            four_star_count as fourStarCount,
            five_star_count as fiveStarCount

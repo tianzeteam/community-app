@@ -124,7 +124,7 @@ public class AppProductCommentController {
         Integer productId = productCommentCreateDTO.getProductId();
         String details = productCommentCreateDTO.getDetails();
         Long userId = UserUtils.getLoginUserId();
-        BigDecimal starCount = productCommentCreateDTO.getStartCount();
+        BigDecimal starCount = productCommentCreateDTO.getStarCount();
         try {
             productCommentService.create(userId, starCount, details,productId, productCommentCreateDTO.getImageList());
         } catch (ServiceException e) {

@@ -108,7 +108,7 @@ public class ProductCommentService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void create(Long loginUserId, BigDecimal startCount, String details, Integer productId, List<String> imageList) throws ServiceException {
+    public void create(Long loginUserId, BigDecimal starCount, String details, Integer productId, List<String> imageList) throws ServiceException {
         ProductComment productComment = new ProductComment();
         productComment.withCreatedTime(new Date())
                 .withDetails(details)
@@ -117,7 +117,7 @@ public class ProductCommentService {
                 .withProductId(productId)
                 .withReplyCount(0)
                 .withStampCount(0)
-                .withStarCount(startCount)
+                .withStarCount(starCount)
                 .withUserId(loginUserId);
         if (!CollectionUtils.isEmpty(imageList)) {
             if (imageList.size() > 6) {
@@ -130,7 +130,7 @@ public class ProductCommentService {
         // 同步图片
         sysFileService.syncImageFileList(imageList);
         // 对评论进行审核，审核通过后计算平均分
-        processAutoAudit(loginUserId, startCount, details, productId, id, imageList);
+        processAutoAudit(loginUserId, starCount, details, productId, id, imageList);
     }
 
     public List<ProductComment> queryViaProductIdByPage(Integer productId,Long loginUserId, int pageNum, int pageSize) {
@@ -138,7 +138,7 @@ public class ProductCommentService {
         return productCommentMapper.queryViaProductIdByPage(productId, loginUserId);
     }
 
-    private void processAutoAudit(Long loginUserId, BigDecimal startCount, String details, Integer productId, long id, List<String> imageList) {
+    private void processAutoAudit(Long loginUserId, BigDecimal starCount, String details, Integer productId, long id, List<String> imageList) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -176,7 +176,7 @@ public class ProductCommentService {
                         // 图片机审成功 加上 文本审核成功
                         if (contentPass) {
                             productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                            calculateProductAverageScore(productId, startCount, loginUserId,id, details, imageList);
+                            calculateProductAverageScore(productId, starCount, loginUserId,id, details, imageList);
                             return;
                         }
                     }
@@ -184,7 +184,7 @@ public class ProductCommentService {
                     // 没有图片的话判断机审结果，成功的话直接更新成成功
                     if (contentPass) {
                         productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                        calculateProductAverageScore(productId, startCount, loginUserId,id, details, imageList);
+                        calculateProductAverageScore(productId, starCount, loginUserId,id, details, imageList);
                         return;
                     }
                 }
@@ -221,7 +221,7 @@ public class ProductCommentService {
                     }
                 } else if (contentPass) {
                     productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                    calculateProductAverageScore(productId, startCount, loginUserId, id, details, imageList);
+                    calculateProductAverageScore(productId, starCount, loginUserId, id, details, imageList);
                 }
             }
         }).start();

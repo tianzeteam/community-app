@@ -21,7 +21,7 @@ public class ProductCommentCreateDTO {
     private Integer productId;
 
     @ApiModelProperty("评价星等")
-    private BigDecimal startCount;
+    private BigDecimal starCount;
 
     @ApiModelProperty("评价内容")
     @NotBlank(message = "评价内容不能为空")
