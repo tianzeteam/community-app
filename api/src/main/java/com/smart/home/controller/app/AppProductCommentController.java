@@ -90,7 +90,7 @@ public class AppProductCommentController {
     @ApiOperation("获取产品评价卡片下的评价列表-分页")
     @AnonAccess
     @PostMapping("/queryCommentByPage")
-    public APIResponse<ResponsePageBean<ProductCommentVO>> queryCommentByPage(@RequestBody PrimaryKeyPageDTO primaryKeyPageDTO) {
+    public APIResponse<ResponsePageBean<ProductCommentVO>> queryCommentByPage(@Valid @RequestBody PrimaryKeyPageDTO primaryKeyPageDTO, BindingResult bindingResult) {
         Long userId = UserUtils.getLoginUserId();
         int productId = primaryKeyPageDTO.getId().intValue();
         int pageNum = primaryKeyPageDTO.getPageNum();
