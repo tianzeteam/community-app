@@ -18,7 +18,8 @@ public class ProductCommentVO {
 
     @ApiModelProperty("顶部产品信息对象")
     private ProductHeadInfoVO productHeadInfoVO;
-
+    @ApiModelProperty("产品评论数量")
+    private Integer productCommentCount;
     @ApiModelProperty("主键id")
     private Long id;
 

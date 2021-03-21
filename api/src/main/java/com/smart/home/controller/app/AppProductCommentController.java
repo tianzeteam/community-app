@@ -155,6 +155,7 @@ public class AppProductCommentController {
         ProductHeadInfoVO productHeadInfoVO = new ProductHeadInfoVO();
         BeanUtils.copyProperties(product, productHeadInfoVO);
         vo.setProductHeadInfoVO(productHeadInfoVO);
+        vo.setProductCommentCount(product.getCommentCount());
         return APIResponse.OK(vo);
     }
 
