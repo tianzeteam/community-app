@@ -11,6 +11,9 @@ import java.util.List;
 @Data
 public class CommunityPostDetailVO {
 
+
+    @ApiModelProperty("用户id")
+    private Long userId;
     //头像
     @ApiModelProperty("头像")
     private String headUrl;

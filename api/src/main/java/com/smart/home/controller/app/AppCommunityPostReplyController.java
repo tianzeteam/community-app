@@ -13,6 +13,7 @@ import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
+import com.smart.home.enums.CollectTypeEnum;
 import com.smart.home.enums.LikeCategoryEnum;
 import com.smart.home.enums.MessageSubTypeEnum;
 import com.smart.home.enums.StampCategoryEnum;
@@ -106,6 +107,33 @@ public class AppCommunityPostReplyController {
     }
 
 
+
+    @ApiOperation("设置/取消点赞一级评论-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "评论主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0设置1取消", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/addOrCancelCommentLike")
+    public APIResponse addOrCancelCommentLike(Long id, Integer action) {
+        try {
+            CommunityPostReply communityPostReply = communityPostReplyService.getById(id);
+            if (communityPostReply == null) {
+                return APIResponse.ERROR("没有此帖子");
+            }
+            if (action == 0) {
+                likeService.like(LikeCategoryEnum.POST_REPLY, UserUtils.getLoginUserId(), id);
+            } else {
+                likeService.cancelLike(LikeCategoryEnum.POST_REPLY, UserUtils.getLoginUserId(), id);
+            }
+            messageService.createLikeMessage(MessageSubTypeEnum.COMMUNITY_POST_REPLY, id, UserUtils.getLoginUserId(), communityPostReply.getUserId());
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        return APIResponse.OK();
+    }
+
+
     @ApiOperation("点踩一级评论")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "commentId", value = "一级评论主键id", required = true)
@@ -130,6 +158,26 @@ public class AppCommunityPostReplyController {
     @PostMapping("/cancelStampComment")
     public APIResponse cancelStampComment(Long commentId) {
         stampService.cancelStamp(StampCategoryEnum.POST_REPLY, UserUtils.getLoginUserId(), commentId);
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("设置/取消点踩一级评论-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "评论主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0设置1取消", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/addOrCancelCommentStamp")
+    public APIResponse addOrCancelCommentStamp(Long id, Integer action) {
+        try {
+            if (action == 0) {
+                stampService.stamp(StampCategoryEnum.POST_REPLY, UserUtils.getLoginUserId(), id);
+            } else {
+                stampService.cancelStamp(StampCategoryEnum.POST_REPLY, UserUtils.getLoginUserId(), id);
+            }
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
         return APIResponse.OK();
     }
 

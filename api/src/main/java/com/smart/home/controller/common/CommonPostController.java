@@ -174,6 +174,24 @@ public class CommonPostController {
         likeService.cancelLike(LikeCategoryEnum.POST, UserUtils.getLoginUserId(), id);
         return APIResponse.OK();
     }
+
+    @ApiOperation("设置/取消点赞-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "postId", value = "帖子主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0设置1取消设置", required = true)
+    })
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @PostMapping("/setOrCancelLike")
+    public APIResponse setOrCancelSetLike(Long postId, Integer action) {
+        if (action == 0) {
+            likeService.like(LikeCategoryEnum.POST, UserUtils.getLoginUserId(), postId);
+        } else {
+            likeService.cancelLike(LikeCategoryEnum.POST, UserUtils.getLoginUserId(), postId);
+        }
+        return APIResponse.OK();
+    }
+
+
     @ApiOperation("点踩帖子")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "帖子主键id", required = true)
@@ -198,6 +216,25 @@ public class CommonPostController {
         stampService.cancelStamp(StampCategoryEnum.POST, UserUtils.getLoginUserId(), id);
         return APIResponse.OK();
     }
+
+
+    @ApiOperation("设置/取消点踩-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "postId", value = "帖子主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0设置1取消设置", required = true)
+    })
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @PostMapping("/setOrCancelStamp")
+    public APIResponse setOrCancelSetStamp(Long postId, Integer action) {
+        if (action == 0) {
+            stampService.stamp(StampCategoryEnum.POST, UserUtils.getLoginUserId(), postId);
+        } else {
+            stampService.cancelStamp(StampCategoryEnum.POST, UserUtils.getLoginUserId(), postId);
+        }
+        return APIResponse.OK();
+    }
+
+
     @ApiOperation("收藏帖子")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "帖子主键id", required = true)
