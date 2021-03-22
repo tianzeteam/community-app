@@ -25,4 +25,7 @@ public class CommunitySelectVO {
     @ApiModelProperty("粉丝数量")
     private Integer followerCount;
 
+    @ApiModelProperty("是否加入过：0未，1已加入")
+    private Integer joinFlag = 0;
+
 }

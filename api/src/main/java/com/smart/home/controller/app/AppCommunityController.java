@@ -1,5 +1,6 @@
 package com.smart.home.controller.app;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.BeanCopyUtils;
@@ -31,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Api(tags = "app-社区")
@@ -58,6 +60,22 @@ public class AppCommunityController {
         BeanUtils.copyProperties(communitySearchDTO, community);
         List<Community> communities = communityService.selectByPage(community, pageNum, pageSize);
         List<CommunitySelectVO> communitySelectVOS = BeanCopyUtils.convertListTo(communities, CommunitySelectVO::new);
+        if (CollUtil.isEmpty(communitySelectVOS)) {
+            return APIResponse.OK(ResponsePageUtil.restPage(communitySelectVOS, communities));
+        }
+        Long loginUserId = UserUtils.getLoginUserId();
+        if (loginUserId != null) {
+            List<CommunityUserMapping> communityUserMappings = communityUserMappingService.getByUserId(loginUserId);
+            if (CollUtil.isNotEmpty(communityUserMappings)) {
+                communitySelectVOS.stream().forEach(x->{
+                    communityUserMappings.stream().forEach(y->{
+                        if (x.getId().equals(y.getCommunityId())) {
+                            x.setJoinFlag(1);
+                        }
+                    });
+                });
+            }
+        }
         return APIResponse.OK(ResponsePageUtil.restPage(communitySelectVOS, communities));
     }
 

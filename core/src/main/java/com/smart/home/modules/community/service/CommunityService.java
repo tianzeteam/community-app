@@ -86,7 +86,6 @@ public class CommunityService {
     }
 
     public List<Community> selectByPage(Community community, int pageNum, int pageSize) {
-
         CommunityExample example = new CommunityExample();
         CommunityExample.Criteria criteria = example.createCriteria();
         if (StringUtils.isNotBlank(community.getTitle())) {

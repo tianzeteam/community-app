@@ -206,4 +206,9 @@
     select <include refid="Base_Column_List"/>
     from community_user_mapping where user_id = #{userId} and community_id = #{communityId}
   </select>
+
+  <select id="selectByUserId" parameterType="long" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from community_user_mapping where user_id = #{userId}
+  </select>
 </mapper>

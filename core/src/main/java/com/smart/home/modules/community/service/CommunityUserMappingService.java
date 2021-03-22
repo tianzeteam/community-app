@@ -36,6 +36,10 @@ public class CommunityUserMappingService {
         return communityUserMappingMapper.selectByUserIdAndCommunityId(userId, communityId);
     }
 
+    public List<CommunityUserMapping> getByUserId(Long userId){
+        return communityUserMappingMapper.selectByUserId(userId);
+    }
+
     @Transactional(rollbackFor = RuntimeException.class)
     public int create(CommunityUserMapping communityUserMapping) {
         communityUserMapping.setCreatedTime(new Date());

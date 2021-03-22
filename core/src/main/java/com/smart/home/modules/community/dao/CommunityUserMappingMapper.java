@@ -31,4 +31,8 @@ public interface CommunityUserMappingMapper {
     int updateByPrimaryKey(CommunityUserMapping record);
 
     CommunityUserMapping selectByUserIdAndCommunityId(@Param("userId") long userId, @Param("communityId") int id);
+
+    List<CommunityUserMapping> selectByUserId(@Param("userId") Long userId);
+
+
 }
