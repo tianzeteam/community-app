@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ProductCommentCreateDTO {
     private Integer productId;
 
     @ApiModelProperty("评价星等")
+    @NotNull(message = "评价星等不能为空")
     private BigDecimal starCount;
 
     @ApiModelProperty("评价内容")
