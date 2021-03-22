@@ -99,6 +99,13 @@ public class CommunityService {
         return communityMapper.selectByExample(example);
     }
 
+    public List<Community> selectAll(){
+        CommunityExample example = new CommunityExample();
+        CommunityExample.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("sort desc");
+        return communityMapper.selectByExample(example);
+    }
+
     public Community findById(Long id) {
         Community community = communityMapper.selectByPrimaryKey(id.intValue());
         return community;

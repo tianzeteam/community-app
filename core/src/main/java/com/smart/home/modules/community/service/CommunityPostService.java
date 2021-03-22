@@ -338,7 +338,7 @@ public class CommunityPostService {
      * 保存
      */
     @Transactional(rollbackFor = RuntimeException.class)
-    public void executeSavePost(CommunityPostDTO communityPostDTO){
+    public Long executeSavePost(CommunityPostDTO communityPostDTO){
         UserCommunityAuth userCommunityAuth = userCommunityAuthMapper.selectByUserId(communityPostDTO.getUserId());
         if (userCommunityAuth == null) {
             throw new ServiceException("您无社区权限");
@@ -370,8 +370,10 @@ public class CommunityPostService {
         if (communityPostDTO.getId() != null && communityPostDTO.getId() != 0) {
             communityPost.setId(communityPostDTO.getId());
             communityPostMapper.updateByPrimaryKeySelective(communityPost);
+            return communityPostDTO.getId();
         }else {
-            communityPostMapper.insertSelective(communityPost);
+            int i = communityPostMapper.insertSelective(communityPost);
+            return Long.valueOf(i);
         }
     }
 
