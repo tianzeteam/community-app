@@ -79,6 +79,15 @@ public class AppCommunityController {
         return APIResponse.OK(ResponsePageUtil.restPage(communitySelectVOS, communities));
     }
 
+    @AnonAccess
+    @ApiOperation(value = "获取所有社区")
+    @GetMapping("/query/all")
+    public APIResponse<List<CommunitySelectVO>> queryAll(){
+        List<Community> communities = communityService.selectAll();
+        List<CommunitySelectVO> communitySelectVOS = BeanCopyUtils.convertListTo(communities, CommunitySelectVO::new);
+        return APIResponse.OK(communitySelectVOS);
+    }
+
     @RoleAccess(RoleConsts.REGISTER)
     @ApiOperation("加入")
     @PostMapping("/userMapping/join")
