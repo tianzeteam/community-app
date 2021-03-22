@@ -82,7 +82,7 @@ public class AppCommunityPostController {
     }
 
     @RoleAccess(RoleConsts.REGISTER)
-    @ApiOperation(value = "我的帖子列表(草稿/非草稿)", tags = "state 0草稿，1已发布 2已删除")
+    @ApiOperation(value = "我的帖子列表(草稿/非草稿)", notes = "state 0草稿，1已发布 2已删除")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
@@ -116,7 +116,7 @@ public class AppCommunityPostController {
     }
 
     @RoleAccess(RoleConsts.REGISTER)
-    @ApiOperation(value = "保存帖子为草稿", tags = "注意：传帖子id代表原草稿更新，不传id代表新生成一条草稿记录。用于控制是新建保存或者是修改保存")
+    @ApiOperation(value = "保存帖子为草稿", notes = "注意：传帖子id代表原草稿更新，不传id代表新生成一条草稿记录。用于控制是新建保存或者是修改保存")
     @PostMapping("/draft/save")
     public APIResponse draftSave(@RequestBody CommunityPostReq communityPostReq){
         log.info("发帖params：{}", JSON.toJSONString(communityPostReq));
@@ -126,13 +126,13 @@ public class AppCommunityPostController {
         communityPostDTO.setUserId(UserUtils.getLoginUserId());
         communityPostDTO.setImages(JSON.toJSONString(communityPostReq.getList()));
         communityPostDTO.setImagesList(communityPostReq.getList());
-        communityPostService.executeSavePost(communityPostDTO);
-        return APIResponse.OK();
+        Long id = communityPostService.executeSavePost(communityPostDTO);
+        return APIResponse.OK(id);
     }
 
 
     @RoleAccess(RoleConsts.REGISTER)
-    @ApiOperation(value = "发布帖子", tags = "注意：在点击发布帖子前需要最后一次调用保存帖子的接口")
+    @ApiOperation(value = "发布帖子", notes = "注意：在点击发布帖子前需要最后一次调用保存帖子的接口")
     @PostMapping("/release/{id}")
     public APIResponse release(@PathVariable Long id){
         log.info("发布帖子接受：{}", id);

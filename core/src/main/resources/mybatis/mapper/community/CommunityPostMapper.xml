@@ -607,6 +607,7 @@
            a.collect_count as collectCount,
            ua.head_url as headUrl,
            ua.nick_name as nickName,
+           ud.user_id as userId,
            ud.remark as userRemark,
            ud.sign,
            ud.user_level as userLevel,
@@ -639,6 +640,7 @@
            ua.head_url as headUrl,
            ua.nick_name as nickName,
            ud.remark as userRemark,
+           ud.user_id as userId,
            ud.sign,
            ud.user_level as userLevel
     from community_post a
