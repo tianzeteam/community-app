@@ -83,6 +83,21 @@ public class CommonPostController {
         communityPostService.updateBoutiqueFlag(postId, YesNoEnum.NO.getCode());
         return APIResponse.OK();
     }
+    @ApiOperation("设置/取消精华-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "postId", value = "帖子主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0设置1取消设置", required = true)
+    })
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @PostMapping("/setOrCancelSetBoutique")
+    public APIResponse setOrCancelSetBoutique(Long postId, Integer action) {
+        if (action == 0) {
+            communityPostService.updateBoutiqueFlag(postId, YesNoEnum.YES.getCode());
+        } else {
+            communityPostService.updateBoutiqueFlag(postId, YesNoEnum.NO.getCode());
+        }
+        return APIResponse.OK();
+    }
 
     @ApiOperation("设置为置顶")
     @ApiImplicitParams({
@@ -94,7 +109,6 @@ public class CommonPostController {
         communityPostService.updateTopFlag(postId, YesNoEnum.YES.getCode());
         return APIResponse.OK();
     }
-
     @ApiOperation("取消置顶")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "postId", value = "帖子主键id", required = true)
@@ -106,6 +120,21 @@ public class CommonPostController {
         return APIResponse.OK();
     }
 
+    @ApiOperation("设置/取消置顶-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "postId", value = "帖子主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0设置1取消设置", required = true)
+    })
+    @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
+    @PostMapping("/setOrCancelSetTop")
+    public APIResponse setOrCancelSetTop(Long postId, Integer action) {
+        if (action == 0) {
+            communityPostService.updateTopFlag(postId, YesNoEnum.YES.getCode());
+        } else {
+            communityPostService.updateTopFlag(postId, YesNoEnum.NO.getCode());
+        }
+        return APIResponse.OK();
+    }
 
     @ApiOperation("删除帖子-软删除")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
@@ -194,5 +223,24 @@ public class CommonPostController {
         return APIResponse.OK();
     }
 
+    @ApiOperation("收藏/取消收藏帖子-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "帖子主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0收藏1取消收藏", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/addOrCancelAddCollect")
+    public APIResponse addOrCancelAddCollect(Long id, Integer action) {
+        try {
+            if (action == 0) {
+                collectService.addCollect(CollectTypeEnum.POST, UserUtils.getLoginUserId(), id);
+            } else {
+                collectService.cancelCollect(CollectTypeEnum.POST, UserUtils.getLoginUserId(), id);
+            }
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        return APIResponse.OK();
+    }
 
 }
