@@ -325,6 +325,7 @@
 
   <select id="queryCommentDetailReplyByPage" resultType="com.smart.home.modules.product.entity.ProductCommentReply">
     select pcr.id,
+           ua.id as userId,
            ua.head_url as headUrl,
            ua.nick_name as nickName,
            pcr.details as details,

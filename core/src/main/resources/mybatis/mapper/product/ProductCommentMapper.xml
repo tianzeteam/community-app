@@ -335,6 +335,7 @@
   <select id="queryCommentByPage" resultType="com.smart.home.modules.product.entity.ProductComment">
     select ua.head_url as headUrl,
            ua.nick_name as nickName,
+           ua.id as userId,
            ud.user_level as userLevel,
            pc.id,
            pc.images,

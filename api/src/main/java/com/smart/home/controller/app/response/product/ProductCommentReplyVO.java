@@ -17,6 +17,8 @@ public class ProductCommentReplyVO {
 
     @ApiModelProperty("回复主键id")
     private Long id;
+    @ApiModelProperty("用户主键id")
+    private Long userId;
     @ApiModelProperty("用户头像")
     private String headUrl;
     @ApiModelProperty("用户昵称")
