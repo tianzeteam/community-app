@@ -5,12 +5,14 @@ import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.request.CommunityPostReq;
 import com.smart.home.controller.app.response.community.CommunityPostDetailVO;
+import com.smart.home.controller.app.response.community.CommunityPostVO;
 import com.smart.home.controller.app.response.community.RecommendCommunityPostVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.ResponsePageBean;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
+import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
@@ -79,8 +81,21 @@ public class AppCommunityPostController {
         return APIResponse.OK(ResponsePageUtil.restPage(recommendCommunityPostVOS, communityPosts));
     }
 
+    @RoleAccess(RoleConsts.REGISTER)
+    @ApiOperation(value = "我的帖子列表(草稿/非草稿)", tags = "state 0草稿，1已发布 2已删除")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
+    })
+    @GetMapping("/mine/page/{state}")
+    public APIResponse<ResponsePageBean<CommunityPostVO>> draftList(@PathVariable Integer state, int pageNum, int pageSize){
+        List<CommunityPost> page = communityPostService.page(UserUtils.getLoginUserId(), state, pageNum, pageSize);
+        List<CommunityPostVO> communityPostVOS = BeanCopyUtils.convertListTo(page, CommunityPostVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(communityPostVOS, page));
+    }
+
     @AnonAccess
-    @ApiOperation("帖子详情")
+    @ApiOperation("帖子详情（草稿/发布都可查询）")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "帖子id", required = true)
     })
@@ -101,9 +116,9 @@ public class AppCommunityPostController {
     }
 
     @RoleAccess(RoleConsts.REGISTER)
-    @ApiOperation("发帖")
-    @PostMapping("/release")
-    public APIResponse release(@RequestBody CommunityPostReq communityPostReq){
+    @ApiOperation(value = "保存帖子为草稿", tags = "注意：传帖子id代表原草稿更新，不传id代表新生成一条草稿记录。用于控制是新建保存或者是修改保存")
+    @PostMapping("/draft/save")
+    public APIResponse draftSave(@RequestBody CommunityPostReq communityPostReq){
         log.info("发帖params：{}", JSON.toJSONString(communityPostReq));
         //用户是否存在，检查是否禁言
         CommunityPostDTO communityPostDTO = new CommunityPostDTO();
@@ -111,9 +126,20 @@ public class AppCommunityPostController {
         communityPostDTO.setUserId(UserUtils.getLoginUserId());
         communityPostDTO.setImages(JSON.toJSONString(communityPostReq.getList()));
         communityPostDTO.setImagesList(communityPostReq.getList());
-        communityPostService.executePost(communityPostDTO);
+        communityPostService.executeSavePost(communityPostDTO);
         return APIResponse.OK();
     }
+
+
+    @RoleAccess(RoleConsts.REGISTER)
+    @ApiOperation(value = "发布帖子", tags = "注意：在点击发布帖子前需要最后一次调用保存帖子的接口")
+    @PostMapping("/release/{id}")
+    public APIResponse release(@PathVariable Long id){
+        log.info("发布帖子接受：{}", id);
+        communityPostService.release(id);
+        return APIResponse.OK();
+    }
+
 
 
 }

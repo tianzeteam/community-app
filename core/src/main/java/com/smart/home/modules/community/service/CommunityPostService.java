@@ -99,10 +99,16 @@ public class CommunityPostService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     public void delete(List<Long> idList) {
-        for (Long id : idList) {
+        List<CommunityPost> communityPosts = communityPostMapper.selectByIds(idList);
+        if (CollUtil.isEmpty(communityPosts)) {
+            return;
+        }
+        for (CommunityPost communityPost : communityPosts) {
             // 软删除
-            communityPostMapper.updateState(id, RecordStatusEnum.DELETE.getStatus());
-            esCommonService.deleteOne(EsConstant.communityPostIndex, EsConstant.communityPost, id);
+            communityPostMapper.updateState(communityPost.getId(), RecordStatusEnum.DELETE.getStatus());
+            if (communityPost.getState() == 1) {
+                esCommonService.deleteOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId());
+            }
         }
     }
 
@@ -298,11 +304,13 @@ public class CommunityPostService {
      * 登录用户
      */
     public CommunityPostDTO queryDetailWithLogin(Long id, Long userId){
-        //增加一次浏览
-        syncClick(id);
         CommunityPostDTO communityPostDTO = communityPostMapper.selectByIdEffetive(id, userId);
         if (communityPostDTO == null) {
             return null;
+        }
+        if (communityPostDTO.getState() == 1) {
+            //增加一次浏览
+            syncClick(id);
         }
         //处理图片
         if (StrUtil.isNotEmpty(communityPostDTO.getImages())) {
@@ -312,10 +320,12 @@ public class CommunityPostService {
     }
 
     public CommunityPostDTO queryDetailNotLogin(Long id){
-        syncClick(id);
         CommunityPostDTO communityPostDTO = communityPostMapper.selectById(id);
         if (communityPostDTO == null) {
             return null;
+        }
+        if (communityPostDTO.getState() == 1) {
+            syncClick(id);
         }
         //处理图片
         if (StrUtil.isNotEmpty(communityPostDTO.getImages())) {
@@ -325,16 +335,13 @@ public class CommunityPostService {
     }
 
     /**
-     * 发帖
+     * 保存
      */
     @Transactional(rollbackFor = RuntimeException.class)
-    public void executePost(CommunityPostDTO communityPostDTO){
+    public void executeSavePost(CommunityPostDTO communityPostDTO){
         UserCommunityAuth userCommunityAuth = userCommunityAuthMapper.selectByUserId(communityPostDTO.getUserId());
         if (userCommunityAuth == null) {
             throw new ServiceException("您无社区权限");
-        }
-        if (userCommunityAuth.getSpeakFlag() == 1) {
-            throw new ServiceException("您已被禁言");
         }
         if (userCommunityAuth.getBlackFlag() == 1) {
             throw new ServiceException("您已被封禁");
@@ -360,14 +367,49 @@ public class CommunityPostService {
         }else {
             communityPost.setRemark(communityPostDTO.getContents());
         }
-        communityPostMapper.insertSelective(communityPost);
-        Long id = communityPost.getId();
-
-        // 同步图片
-        sysFileService.syncImageFileList(communityPostDTO.getImagesList());
-        processAutoAudit(communityPostDTO.getUserId(), id, communityPostDTO.getContents(), communityPostDTO.getImagesList());
+        if (communityPostDTO.getId() != null && communityPostDTO.getId() != 0) {
+            communityPost.setId(communityPostDTO.getId());
+            communityPostMapper.updateByPrimaryKeySelective(communityPost);
+        }else {
+            communityPostMapper.insertSelective(communityPost);
+        }
     }
 
+    /**
+     * 发布帖子
+     */
+    public void release(Long id){
+        CommunityPost communityPost = communityPostMapper.selectByPrimaryKey(id);
+        if (communityPost == null) {
+            throw new ServiceException("没有此帖子");
+        }
+        if (communityPost.getState() != 0) {
+            throw new ServiceException("该帖子非草稿状态，请刷新重试");
+        }
+        int i = communityPostMapper.updateState(id, 1);
+        if (i > 0) {
+            // 同步图片
+            List<String> images = JSON.parseArray(communityPost.getImages(), String.class);
+            sysFileService.syncImageFileList(images);
+            processAutoAudit(communityPost.getUserId(), id, communityPost.getContents(), images);
+        }
+    }
+
+    /**
+     * 我的分页帖子
+     */
+    public List<CommunityPost> page(Long userId, Integer state, int pageNum, int pageSize){
+        CommunityPostExample example = new CommunityPostExample();
+        CommunityPostExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        if (state != null) {
+            criteria.andStateEqualTo(state);
+        }
+        example.orderBy("id desc");
+        PageHelper.startPage(pageNum, pageSize);
+        List<CommunityPost> communityPosts = communityPostMapper.selectByExample(example);
+        return communityPosts;
+    }
 
 
     private void processAutoAudit(Long loginUserId, long id, String details, List<String> imageList) {

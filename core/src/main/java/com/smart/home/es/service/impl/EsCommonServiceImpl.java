@@ -222,7 +222,7 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
         try {
             restHighLevelClient.delete(request, RequestOptions.DEFAULT);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("delete es error:{}", e.toString());
         }
     }
 

@@ -1678,6 +1678,11 @@ public class CommunityPostExample {
             return (Criteria) this;
         }
 
+        public Criteria andStateEqualTo(Integer value) {
+            addCriterion("state =", value, "state");
+            return (Criteria) this;
+        }
+
         public Criteria andAutoAuditFlagEqualTo(Integer value) {
             addCriterion("auto_audit_flag =", value, "autoAuditFlag");
             return (Criteria) this;

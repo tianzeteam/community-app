@@ -51,7 +51,7 @@ public class CommunityPostController {
         return APIResponse.OK(communityPostService.update(communityPost));
     }
 
-    @ApiOperation("删除社区帖子")
+    @ApiOperation("删除社区帖子(包括草稿)")
     @PostMapping("/delete")
     public APIResponse delete(@RequestBody IdListBean idListBean) {
         communityPostService.delete(idListBean.getIdList());
