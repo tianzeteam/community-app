@@ -204,6 +204,11 @@ public class ArticleService {
                 ArticleBean articleBean = new ArticleBean();
                 BeanUtils.copyProperties(article, articleBean);
                 articleBean.setSaveType(EsSaveTypeEnum.ARTICLE.getType());
+                if (article.getCreatedTime() == null) {
+                    articleBean.setCreatedTime(new Date());
+                } else {
+                    articleBean.setCreatedTime(article.getCreatedTime());
+                }
                 articleEsServiceImpl.save(articleBean);
             }
         }
