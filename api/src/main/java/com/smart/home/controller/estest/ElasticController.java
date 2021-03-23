@@ -88,5 +88,4 @@ public class ElasticController {
         return APIResponse.OK(list);
     }
 
-
 }

@@ -228,14 +228,13 @@ public class CommunityPostService {
     @Transactional(rollbackFor = RuntimeException.class)
     public void manuallyApprove(Long id) {
         int affectRow = communityPostMapper.updateAuditStatusState(id, AuditStatusEnum.APPROVED.getCode(), 1);
+        CommunityPost communityPost = communityPostMapper.selectByPrimaryKey(id);
+        CommunityPostBean communityPostBean = new CommunityPostBean();
+        communityPostBean.setSaveType(EsSaveTypeEnum.COMMUNITY_POST.getType());
+        BeanUtils.copyProperties(communityPost, communityPostBean);
+        communityPostBean.setCreatedTime(DateUtil.date());
+        esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
         if (affectRow > 0) {
-            CompletableFuture.runAsync(()->{
-                CommunityPost communityPost = communityPostMapper.selectByPrimaryKey(id);
-                CommunityPostBean communityPostBean = new CommunityPostBean();
-                communityPostBean.setSaveType(EsSaveTypeEnum.COMMUNITY_POST.getType());
-                BeanUtils.copyProperties(communityPost, communityPostBean);
-                esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
-            });
             // 增加用户的发帖数量
             Long userId = communityPostMapper.findUserIdById(id);
             userDataService.increasePostCount(userId);
