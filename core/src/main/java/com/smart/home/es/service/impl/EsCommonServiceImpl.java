@@ -242,7 +242,7 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
         }
         if (StrUtil.isNotEmpty(esSearchDTO.getContents())) {
             sourceBuilder.sort("id", SortOrder.DESC);
-            QueryBuilder queryBuilder = QueryBuilders.matchPhraseQuery("details", esSearchDTO.getContents());
+            QueryBuilder queryBuilder = QueryBuilders.matchQuery("details", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder);
         }
         return boolQueryBuilder;
