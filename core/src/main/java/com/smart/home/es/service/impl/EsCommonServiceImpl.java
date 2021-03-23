@@ -1,8 +1,10 @@
 package com.smart.home.es.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.smart.home.es.common.EsConstant;
 import com.smart.home.es.dto.CommunityPostEsDTO;
 import com.smart.home.es.dto.EsSearchDTO;
@@ -17,6 +19,9 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
+import org.elasticsearch.common.document.DocumentField;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -37,10 +42,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.Struct;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -67,11 +69,13 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
 
     @Override
     public List<String> searchMultiple(String[] idxNames, EsSearchDTO esSearchDTO) {
-        SearchRequest searchRequest = new SearchRequest(idxNames);
+        CountRequest countRequest = new CountRequest(idxNames);
+        CountResponse countResponse = null;
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        SearchRequest searchRequest = new SearchRequest(idxNames);
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         if (esSearchDTO.getUserId() != null) {
-            QueryBuilder queryBuilder = QueryBuilders.matchQuery("userId", esSearchDTO.getUserId().toString());
+            QueryBuilder queryBuilder = QueryBuilders.matchQuery("userId.keyword", esSearchDTO.getUserId().toString());
             boolQueryBuilder.must(queryBuilder);
         }
         if (CollUtil.isNotEmpty(esSearchDTO.getLongList())) {
@@ -79,18 +83,43 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
             boolQueryBuilder.must(queryBuilder);
         }
         sourceBuilder.query(boolQueryBuilder);//多条件查询
-        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
-        sourceBuilder.size(10000);
-        sourceBuilder.sort("id", SortOrder.DESC);
 
+        try {
+            countRequest.source(sourceBuilder);
+            countResponse = restHighLevelClient.count(countRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            log.error("count error " + e);
+            return Collections.EMPTY_LIST;
+        }
+        int count = (int) countResponse.getCount();
+        log.info("multiple count :{}", count);
+        if (count == 0) {
+            return Collections.EMPTY_LIST;
+        }
+        //此处多重索引会报错，除非使用_id或者_score 暂时可以通过count后取最后几条 后续寻求多索引查询解决方案 下面是sort解决
+//        sourceBuilder.sort("_id", SortOrder.DESC);
+        //不满10取10条，满10：计算起始位置
+        sourceBuilder.from(count > 10 ? count - esSearchDTO.getFrom() * esSearchDTO.getSize() : 0);
+        sourceBuilder.size(esSearchDTO.getSize());
+        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
         searchRequest.source(sourceBuilder);
         try {
             SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
             SearchHit[] hits = response.getHits().getHits();
-            List res = new ArrayList<>(hits.length);
+            List<String> res = new ArrayList<>(hits.length);
             for (SearchHit hit : hits) {
                 res.add(hit.getSourceAsString());
             }
+            Collections.sort(res, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    JSONObject jsonObject = JSONObject.parseObject(o1);
+                    JSONObject jsonObject2 = JSONObject.parseObject(o2);
+                    Date createdTime = jsonObject.getDate("createdTime");
+                    Date createdTime2 = jsonObject2.getDate("createdTime");
+                    return DateUtil.compare(createdTime2, createdTime);
+                }
+            });
             return res;
         } catch (IOException e) {
             log.error("es 查询异常：{}", e.toString());

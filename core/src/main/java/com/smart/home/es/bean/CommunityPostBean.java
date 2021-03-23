@@ -48,10 +48,6 @@ public class CommunityPostBean  extends PersionalMessageDTO {
     @Field(type = FieldType.Integer, index = false)
     private Integer auditStatus;
 
-    @Field(type = FieldType.Date, format = DateFormat.custom, pattern = "yyyy-MM-dd HH:mm:ss", index = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date updatedTime;
-
     @Field(type = FieldType.Integer, index = true)
     private Integer state;
     /**
