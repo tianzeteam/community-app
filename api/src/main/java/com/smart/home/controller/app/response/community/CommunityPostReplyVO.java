@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @ApiModel("帖子评论")
 @Data
@@ -64,5 +65,8 @@ public class CommunityPostReplyVO {
      */
     @ApiModelProperty("回复给谁：用户主键id")
     private Long toUserId;
+
+    @ApiModelProperty("下级集合")
+    private List<CommunityPostReplyVO> list;
 
 }

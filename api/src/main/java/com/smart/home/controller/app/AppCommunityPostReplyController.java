@@ -223,7 +223,7 @@ public class AppCommunityPostReplyController {
     }
 
 
-    @ApiOperation("获取一级评论-分页")
+    @ApiOperation("获取一级和二级评论-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "postId", value = "帖子主键id", required = true),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
@@ -241,16 +241,30 @@ public class AppCommunityPostReplyController {
         communityPostReplyDTO.setUserId(userId);
         communityPostReplyDTO.setPostId(postId);
         communityPostReplyDTO.setReplyType(0);
+        List<CommunityPostReply> list = null;
+        List<CommunityPostReplyVO> resultList = null;
         if (userId > 0) {
             // 说明是登陆的
-            List<CommunityPostReply> list = communityPostReplyService.queryPageById(communityPostReplyDTO, pageNum, pageSize, true);
-            List<CommunityPostReplyVO> resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
+            list = communityPostReplyService.queryPageById(communityPostReplyDTO, pageNum, pageSize, true);
+            resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);
+            communityPostReplyDTO.setReplyType(1);
+            resultList.stream().forEach(x->{
+                communityPostReplyDTO.setPostReplyId(x.getId());
+                List<CommunityPostReply> twoLevelPostReplys = communityPostReplyService.queryPageByCommentId(communityPostReplyDTO, 1, 2, true);
+                List<CommunityPostReplyVO> twoResultList = BeanCopyUtils.convertListTo(twoLevelPostReplys, CommunityPostReplyVO::new);
+                x.setList(twoResultList);
+            });
         } else {
-            List<CommunityPostReply> list = communityPostReplyService.queryPageById(communityPostReplyDTO, pageNum, pageSize, false);
-            List<CommunityPostReplyVO> resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);
-            return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
+            list = communityPostReplyService.queryPageById(communityPostReplyDTO, pageNum, pageSize, false);
+            resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);
+            resultList.stream().forEach(x->{
+                communityPostReplyDTO.setPostReplyId(x.getId());
+                List<CommunityPostReply> twoLevelPostReplys = communityPostReplyService.queryPageByCommentId(communityPostReplyDTO, 1, 2, false);
+                List<CommunityPostReplyVO> twoResultList = BeanCopyUtils.convertListTo(twoLevelPostReplys, CommunityPostReplyVO::new);
+                x.setList(twoResultList);
+            });
         }
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
     @ApiOperation("获取一级评论的回复-分页")

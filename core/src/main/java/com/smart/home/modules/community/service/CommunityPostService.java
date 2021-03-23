@@ -372,8 +372,8 @@ public class CommunityPostService {
             communityPostMapper.updateByPrimaryKeySelective(communityPost);
             return communityPostDTO.getId();
         }else {
-            int i = communityPostMapper.insertSelective(communityPost);
-            return Long.valueOf(i);
+            communityPostMapper.insertSelective(communityPost);
+            return communityPost.getId();
         }
     }
 
