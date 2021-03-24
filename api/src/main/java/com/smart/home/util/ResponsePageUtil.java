@@ -1,5 +1,6 @@
 package com.smart.home.util;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -44,6 +45,9 @@ public class ResponsePageUtil {
 
     public static <T> ResponsePageBean<T> restPage(List<T> resultList, List pager) {
         ResponsePageBean<T> result = new ResponsePageBean<T>();
+        if (CollUtil.isEmpty(pager)) {
+            return result;
+        }
         if (resultList instanceof Page) {
             PageInfo<T> pageInfo = new PageInfo<T>(resultList);
             result.setTotalPage(pageInfo.getPages());

@@ -14,7 +14,7 @@ public enum CollectTypeEnum {
     private int type;
     private String desc;
 
-    CollectTypeEnum(int code, String desc) {
+    CollectTypeEnum(int type, String desc) {
         this.type = type;
         this.desc = desc;
     }

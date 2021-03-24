@@ -9,6 +9,8 @@ public class CommunityPostReplyDTO {
 
     private Long userId;
 
+    private Long authorUserId;
+
     private Long postId;
 
     private Long postReplyId;

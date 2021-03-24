@@ -25,6 +25,8 @@ public class CommunityPostReplyVO {
     @ApiModelProperty("评论id")
     private Long id;
 
+    @ApiModelProperty("评论人id")
+    private Long userId;
 
     @ApiModelProperty("帖子id")
     private Long postId;
@@ -46,6 +48,12 @@ public class CommunityPostReplyVO {
 
     @ApiModelProperty("踩数量")
     private Integer stampCount;
+
+    @ApiModelProperty("是否赞过")
+    private Integer likeFlag;
+
+    @ApiModelProperty("是否踩过")
+    private Integer stampFlag;
 
     @ApiModelProperty("机审标记:0还未机审1机审通过2机审图片异常3机审文本异常")
     private Integer autoAuditFlag;

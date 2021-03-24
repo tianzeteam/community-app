@@ -358,6 +358,9 @@
            ua.head_url as headUrl,
            ua.nick_name as nickName,
            ud.user_level as userLevel,
+            cpr.user_id as userId,
+            cpr.post_reply_id as postReplyId,
+            cpr.post_id as postId,
            cpr.contents,
            cpr.to_user_id as toUserId,
            cpr.created_time as createdTime,
@@ -372,6 +375,9 @@
                  left join community_like_history alh on alh.post_id = cpr.id and alh.type = 1 and alh.user_id = #{userId,jdbcType=BIGINT}
                  left join community_stamp_history ash on ash.post_id = cpr.id and ash.type = 1 and ash.user_id = #{userId,jdbcType=BIGINT}
     where cpr.post_id = #{postId,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
+    <if test="authorUserId != null">
+      and cpr.user_id = #{authorUserId}
+    </if>
     <choose>
       <when test="hotSortFlag != null">
         order by cpr.reply_count desc
@@ -390,6 +396,9 @@
       ua.head_url as headUrl,
       ua.nick_name as nickName,
       ud.user_level as userLevel,
+    cpr.user_id as userId,
+    cpr.post_reply_id as postReplyId,
+    cpr.post_id as postId,
       cpr.contents,
       cpr.to_user_id as toUserId,
       cpr.created_time as createdTime,
@@ -400,6 +409,9 @@
     left join user_account ua on ua.id = cpr.user_id
     left join user_data ud on ud.user_id = ua.id
     where cpr.post_id = #{postId,jdbcType=BIGINT} and cpr.reply_type = #{replyType} and cpr.audit_flag = 1
+    <if test="authorUserId != null">
+      and cpr.user_id = #{authorUserId}
+    </if>
     <choose>
       <when test="hotSortFlag != null">
         order by cpr.reply_count desc
@@ -423,6 +435,9 @@
     ua.head_url as headUrl,
     ua.nick_name as nickName,
     ud.user_level as userLevel,
+    cpr.user_id as userId,
+    cpr.post_reply_id as postReplyId,
+    cpr.post_id as postId,
     cpr.contents,
     cpr.to_user_id as toUserId,
     cpr.created_time as createdTime,
@@ -445,6 +460,9 @@
     ua.head_url as headUrl,
     ua.nick_name as nickName,
     ud.user_level as userLevel,
+    cpr.user_id as userId,
+    cpr.post_reply_id as postReplyId,
+    cpr.post_id as postId,
     cpr.contents,
     cpr.to_user_id as toUserId,
     cpr.created_time as createdTime,

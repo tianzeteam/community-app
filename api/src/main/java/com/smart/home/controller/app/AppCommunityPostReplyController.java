@@ -1,5 +1,6 @@
 package com.smart.home.controller.app;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.exception.ServiceException;
@@ -226,6 +227,7 @@ public class AppCommunityPostReplyController {
     @ApiOperation("获取一级和二级评论-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "postId", value = "帖子主键id", required = true),
+            @ApiImplicitParam(name = "userId", value = "只看作者的userId", required = false),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true),
             @ApiImplicitParam(name = "hotSortFlag", value = "热门", required = false),
@@ -233,17 +235,18 @@ public class AppCommunityPostReplyController {
     })
     @AnonAccess
     @GetMapping("/queryCommentByPage")
-    public APIResponse<ResponsePageBean<CommunityPostReplyVO>> queryCommentByPage(Long postId, Integer hotSortFlag, Integer sortFlag, int pageNum, int pageSize) {
+    public APIResponse<ResponsePageBean<CommunityPostReplyVO>> queryCommentByPage(Long userId, Long postId, Integer hotSortFlag, Integer sortFlag, int pageNum, int pageSize) {
         CommunityPostReplyDTO communityPostReplyDTO = new CommunityPostReplyDTO();
-        Long userId = UserUtils.getLoginUserId();
+        Long loginUserId = UserUtils.getLoginUserId();
         communityPostReplyDTO.setHotSortFlag(hotSortFlag);
         communityPostReplyDTO.setSortFlag(sortFlag);
-        communityPostReplyDTO.setUserId(userId);
+        communityPostReplyDTO.setUserId(loginUserId);
+        communityPostReplyDTO.setAuthorUserId(userId);
         communityPostReplyDTO.setPostId(postId);
         communityPostReplyDTO.setReplyType(0);
         List<CommunityPostReply> list = null;
         List<CommunityPostReplyVO> resultList = null;
-        if (userId > 0) {
+        if (loginUserId > 0) {
             // 说明是登陆的
             list = communityPostReplyService.queryPageById(communityPostReplyDTO, pageNum, pageSize, true);
             resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);

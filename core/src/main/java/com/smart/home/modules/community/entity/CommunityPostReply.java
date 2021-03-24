@@ -30,6 +30,10 @@ public class CommunityPostReply implements Serializable {
 
     private Integer stampCount;
 
+    private Integer likeFlag;
+
+    private Integer stampFlag;
+
     private Integer autoAuditFlag;
     private Integer auditFlag;
     private Integer hitSensitiveCount;
@@ -44,6 +48,25 @@ public class CommunityPostReply implements Serializable {
     private Long toUserId;
 
     private static final long serialVersionUID = 1L;
+
+
+    public Integer getLikeFlag() {
+        return likeFlag;
+    }
+
+    public CommunityPostReply setLikeFlag(Integer likeFlag) {
+        this.likeFlag = likeFlag;
+        return this;
+    }
+
+    public Integer getStampFlag() {
+        return stampFlag;
+    }
+
+    public CommunityPostReply setStampFlag(Integer stampFlag) {
+        this.stampFlag = stampFlag;
+        return this;
+    }
 
     public Long getId() {
         return id;

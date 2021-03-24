@@ -100,4 +100,7 @@ public class CommunityPostDetailVO {
     @ApiModelProperty("是否被当前用户关注")
     private Integer focusFlag;
 
+    @ApiModelProperty("全部回复数")
+    private Integer allReplyCount;
+
 }

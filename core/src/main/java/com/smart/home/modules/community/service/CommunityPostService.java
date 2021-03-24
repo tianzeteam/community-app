@@ -32,6 +32,7 @@ import com.smart.home.modules.community.entity.Community;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
 import com.smart.home.modules.system.service.SysFileService;
+import com.smart.home.modules.user.dao.UserCollectMapper;
 import com.smart.home.modules.user.dao.UserCommunityAuthMapper;
 import com.smart.home.modules.user.dao.UserDataMapper;
 import com.smart.home.modules.user.dto.UserDataDTO;
@@ -73,6 +74,8 @@ public class CommunityPostService {
     private EsCommonService esCommonService;
     @Resource
     private CommunityPostReplyMapper communityPostReplyMapper;
+    @Resource
+    private UserCollectMapper userCollectMapper;
 
 
     public int create(CommunityPost communityPost) {
@@ -148,7 +151,9 @@ public class CommunityPostService {
         communityPostMapper.decreaseStampCount(id);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
     public void increaseCollectCount(Long id) {
+
         communityPostMapper.increaseCollectCount(id);
     }
 
