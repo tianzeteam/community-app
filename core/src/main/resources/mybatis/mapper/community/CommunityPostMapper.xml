@@ -612,6 +612,7 @@
            ud.remark as userRemark,
            ud.sign,
            ud.user_level as userLevel,
+           cc.title as communityTitle,
            case when uc.id is null then 0 else 1 end as collectFlag,
            case when clh.id is null then 0 else 1 end as likeFlag,
            case when csh.id is null then 0 else 1 end as stampFlag,
@@ -623,6 +624,7 @@
                  left join community_like_history clh on clh.post_id = a.id and clh.type = 0 and clh.user_id = #{userId,jdbcType=BIGINT}
                  left join community_stamp_history csh on csh.post_id = a.id and csh.type = 0 and csh.user_id = #{userId,jdbcType=BIGINT}
                  left join user_follower uf on ua.id = uf.user_id and uf.follower_user_id = #{userId,jdbcType=BIGINT}
+                 left join community cc on a.community = cc.id
     where a.id = #{id,jdbcType=BIGINT} and a.audit_status = 1 and ua.state = 0
   </select>
 
@@ -639,6 +641,7 @@
            a.comment_flag as commentFlag,
            a.collect_count as collectCount,
            a.stamp_count as stampCount,
+           cc.title as communityTitle,
            ua.head_url as headUrl,
            ua.nick_name as nickName,
            ud.remark as userRemark,
@@ -648,6 +651,7 @@
     from community_post a
                  left join user_account ua on a.user_id = ua.id
                  left join user_data ud on ua.id = ud.user_id
+                 left join community cc on a.community = cc.id
     where a.id = #{id,jdbcType=BIGINT} and a.audit_status = 1 and ua.state = 0
   </select>
 
