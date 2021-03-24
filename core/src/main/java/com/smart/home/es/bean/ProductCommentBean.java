@@ -49,6 +49,6 @@ public class ProductCommentBean extends PersionalMessageDTO {
     private Date createdTime;
 
     //标签，标记为文章，帖子，评论等 见EsSaveTypeEnum
-    @Field(type = FieldType.Integer, index = false)
+    @Field(type = FieldType.Integer, index = true)
     private Integer saveType;
 }

@@ -146,7 +146,7 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
 
         sourceBuilder.query(boolQueryBuilder);//多条件查询
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
-        sourceBuilder.from(esSearchDTO.getFrom() <= 0 ? 0 : esSearchDTO.getFrom() * esSearchDTO.getSize());
+        sourceBuilder.from(esSearchDTO.getFrom() <= 1 ? 0 : (esSearchDTO.getFrom()-1) * esSearchDTO.getSize());
         sourceBuilder.size(esSearchDTO.getSize());
         searchRequest.source(sourceBuilder);
         try {
@@ -180,7 +180,7 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
             sourceBuilder.sort("id", SortOrder.DESC);
             QueryBuilder queryBuilder = QueryBuilders.termQuery("title.keyword", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder);
-            if (esSearchDTO.getContents().length() < 3) {
+            if (esSearchDTO.getContents().length() < 2) {
                 return boolQueryBuilder;
             }
             QueryBuilder queryBuilder1 = QueryBuilders.matchQuery("contents", esSearchDTO.getContents());
@@ -201,17 +201,13 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
         }
         if (StrUtil.isNotEmpty(esSearchDTO.getContents())) {
             sourceBuilder.sort("id", SortOrder.DESC);
-            QueryBuilder queryBuilder = QueryBuilders.matchPhraseQuery("title.keyword", esSearchDTO.getContents());
+            QueryBuilder queryBuilder = QueryBuilders.termQuery("title.keyword", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder);
-            if (esSearchDTO.getContents().length() < 3) {
+            if (esSearchDTO.getContents().length() < 2) {
                 return boolQueryBuilder;
             }
             QueryBuilder queryBuilder1 = QueryBuilders.matchQuery("details", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder1);
-        }
-        if (esSearchDTO.getSaveType() != null) {
-            QueryBuilder queryBuilder = QueryBuilders.matchQuery("saveType", esSearchDTO.getSaveType().toString());
-            boolQueryBuilder.must(queryBuilder);
         }
         return boolQueryBuilder;
     }

@@ -173,7 +173,29 @@ public class SearchEsService {
         return map;
     }
 
+    public List searchMore(EsSearchDTO esSearchDTO){
+        EsSaveTypeEnum esSaveTypeEnum = EsSaveTypeEnum.saveTypeEnumByType(esSearchDTO.getSaveType());
+        switch (esSaveTypeEnum){
+            case COMMUNITY_POST:
+                List<CommunityPostBean> search = esCommonService.search(EsConstant.communityPostIndex, esSearchDTO, CommunityPostBean.class);
+                communityPostUserMsg(search);
+                return search;
+            case ARTICLE:
+                List<ArticleBean> searchArticle = esCommonService.search(EsConstant.articleIndex, esSearchDTO, ArticleBean.class);
+                articleUserMsg(searchArticle);
+                return searchArticle;
+            case PRODUCT_COMMENT:
+                List<ProductCommentBean> searchPC = esCommonService.search(EsConstant.productCommentIndex, esSearchDTO, ProductCommentBean.class);
+                productCommentUserMsg(searchPC);
+                return searchPC;
+        }
+        return Collections.EMPTY_LIST;
+    }
+
     private void communityPostUserMsg(List<CommunityPostBean> list) {
+        if (CollUtil.isEmpty(list)) {
+            return;
+        }
         List<Long> collect = list.parallelStream().map(CommunityPostBean::getUserId).collect(Collectors.toList());
         List<UserDataDTO> userDataDTOS = userDataMapper.selectByUserIds(collect);
         if (CollUtil.isEmpty(userDataDTOS)) {
@@ -192,6 +214,9 @@ public class SearchEsService {
     }
 
     private void articleUserMsg(List<ArticleBean> list) {
+        if (CollUtil.isEmpty(list)) {
+            return;
+        }
         List<Long> collect = list.parallelStream().map(ArticleBean::getUserId).collect(Collectors.toList());
         List<UserDataDTO> userDataDTOS = userDataMapper.selectByUserIds(collect);
         if (CollUtil.isEmpty(userDataDTOS)) {
@@ -210,6 +235,9 @@ public class SearchEsService {
     }
 
     private void productCommentUserMsg(List<ProductCommentBean> list) {
+        if (CollUtil.isEmpty(list)) {
+            return;
+        }
         List<Long> collect = list.parallelStream().map(ProductCommentBean::getUserId).collect(Collectors.toList());
         List<UserDataDTO> userDataDTOS = userDataMapper.selectByUserIds(collect);
         if (CollUtil.isEmpty(userDataDTOS)) {

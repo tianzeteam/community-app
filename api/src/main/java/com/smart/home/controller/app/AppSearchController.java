@@ -79,26 +79,13 @@ public class AppSearchController {
     @AnonAccess
     @GetMapping("/multipleMore")
     public APIResponse multipleMore(String contents, int saveType, int pageNum, int pageSize) {
-
-        EsSaveTypeEnum esSaveTypeEnum = EsSaveTypeEnum.saveTypeEnumByType(saveType);
         EsSearchDTO esSearchDTO = new EsSearchDTO();
         esSearchDTO.setFrom(pageNum);
         esSearchDTO.setSize(pageSize);
         esSearchDTO.setContents(contents);
         esSearchDTO.setSaveType(saveType);
-        switch (esSaveTypeEnum){
-            case COMMUNITY_POST:
-                List<CommunityPostBean> search = esCommonService.search(EsConstant.communityPostIndex, esSearchDTO, CommunityPostBean.class);
-                return APIResponse.OK(search);
-            case ARTICLE:
-                List<ArticleBean> searchArticle = esCommonService.search(EsConstant.articleIndex, esSearchDTO, ArticleBean.class);
-                return APIResponse.OK(searchArticle);
-            case PRODUCT_COMMENT:
-                List<ProductCommentBean> searchPC = esCommonService.search(EsConstant.articleIndex, esSearchDTO, ProductCommentBean.class);
-                return APIResponse.OK(searchPC);
-        }
-        return APIResponse.ERROR("type错误");
-
+        List list = searchEsService.searchMore(esSearchDTO);
+        return APIResponse.OK(list);
     }
 
     @ApiOperation("关注人已发布搜索")

@@ -237,7 +237,7 @@ public class CommunityPostService {
         CommunityPostBean communityPostBean = new CommunityPostBean();
         communityPostBean.setSaveType(EsSaveTypeEnum.COMMUNITY_POST.getType());
         BeanUtils.copyProperties(communityPost, communityPostBean);
-        communityPostBean.setCreatedTime(DateUtil.date());
+        communityPostBean.setCreatedTime(new Date());
         esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
         if (affectRow > 0) {
             // 增加用户的发帖数量

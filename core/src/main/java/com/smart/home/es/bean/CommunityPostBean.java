@@ -24,6 +24,7 @@ import java.util.Date;
 @Document(indexName = EsConstant.communityPostIndex, type = EsConstant.communityPost, shards = 3, replicas = 1)
 public class CommunityPostBean  extends PersionalMessageDTO {
 
+    @Id
     @Field(type = FieldType.Long, index = true)
     private Long id;
 
@@ -95,7 +96,7 @@ public class CommunityPostBean  extends PersionalMessageDTO {
 
 
     //标签，标记为文章，帖子，评论等 见EsSaveTypeEnum
-    @Field(type = FieldType.Integer, index = false)
+    @Field(type = FieldType.Integer, index = true)
     private Integer saveType;
 
 
