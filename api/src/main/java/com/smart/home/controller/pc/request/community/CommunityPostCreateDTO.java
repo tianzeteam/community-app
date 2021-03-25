@@ -30,4 +30,7 @@ public class CommunityPostCreateDTO {
     @NotNull(message = "状态不能为空")
     private Integer state;
 
+    @ApiModelProperty("所属社区主键id")
+    private Integer communityId;
+
 }

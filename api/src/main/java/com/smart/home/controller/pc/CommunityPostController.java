@@ -38,6 +38,7 @@ public class CommunityPostController {
         CommunityPost communityPost = new CommunityPost();
         BeanUtils.copyProperties(communityPostCreateDTO, communityPost);
         communityPost.setUserId(UserUtils.getLoginUserId());
+        communityPost.setCommunity(communityPostCreateDTO.getCommunityId());
         return APIResponse.OK(communityPostService.create(communityPost));
     }
 
