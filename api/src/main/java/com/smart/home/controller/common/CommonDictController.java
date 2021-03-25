@@ -37,4 +37,26 @@ public class CommonDictController {
         return APIResponse.OK(Splitter.on(",").splitToList(sysDict.getDictValue()));
     }
 
+    @ApiOperation("获取安卓下载地址")
+    @AnonAccess
+    @GetMapping("/androidDownloadUrl")
+    public APIResponse androidDownloadUrl() {
+        SysDict sysDict = sysDictService.queryByDictCode("android.download.url");
+        if (Objects.isNull(sysDict)) {
+            return APIResponse.ERROR("android.download.url数据字典还未配置");
+        }
+        return APIResponse.OK(sysDict.getDictValue());
+    }
+
+    @ApiOperation("获取苹果市场地址")
+    @AnonAccess
+    @GetMapping("/appleStoreUrl")
+    public APIResponse appleStoreUrl() {
+        SysDict sysDict = sysDictService.queryByDictCode("apple.appstore.url");
+        if (Objects.isNull(sysDict)) {
+            return APIResponse.ERROR("apple.appstore.url数据字典还未配置");
+        }
+        return APIResponse.OK(sysDict.getDictValue());
+    }
+
 }

@@ -36,6 +36,9 @@ public class ArticleCreateDTO {
     @ApiModelProperty("轮播图片列表")
     private List<String> bannerImagesList;
 
+    @ApiModelProperty("如果正文内有图片的，另外组装成数组传给后台,同步图片用的，不然图片第二天会自动删除")
+    private List<String> imageList;
+
     @ApiModelProperty("下拉选择的频道主键id")
     @NotNull(message = "请选择频道")
     private Long channelId;
