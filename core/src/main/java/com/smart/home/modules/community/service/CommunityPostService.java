@@ -78,7 +78,8 @@ public class CommunityPostService {
     private UserCollectMapper userCollectMapper;
 
 
-    public int create(CommunityPost communityPost) {
+    public void create(CommunityPost communityPost) {
+        CommunityPostDTO communityPostDTO = new CommunityPostDTO();
         communityPost.setTopFlag(YesNoEnum.NO.getCode());
         communityPost.setBoutiqueFlag(YesNoEnum.NO.getCode());
         communityPost.setLikeCount(0);
@@ -88,7 +89,8 @@ public class CommunityPostService {
         communityPost.setStampCount(0);
         communityPost.setCollectCount(0);
         communityPost.setCreatedTime(new Date());
-        return communityPostMapper.insertSelective(communityPost);
+        BeanUtils.copyProperties(communityPost, communityPostDTO);
+        executeSavePost(communityPostDTO);
     }
 
     public int update(CommunityPost communityPost) {
@@ -349,6 +351,9 @@ public class CommunityPostService {
         }
         if (userCommunityAuth.getBlackFlag() == 1) {
             throw new ServiceException("您已被封禁");
+        }
+        if (userCommunityAuth.getSpeakFlag() == 1) {
+            throw new ServiceException("您已被禁言");
         }
 
         CommunityPost communityPost = new CommunityPost();

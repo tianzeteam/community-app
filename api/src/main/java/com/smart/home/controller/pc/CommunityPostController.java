@@ -39,7 +39,8 @@ public class CommunityPostController {
         BeanUtils.copyProperties(communityPostCreateDTO, communityPost);
         communityPost.setUserId(UserUtils.getLoginUserId());
         communityPost.setCommunity(communityPostCreateDTO.getCommunityId());
-        return APIResponse.OK(communityPostService.create(communityPost));
+        communityPostService.create(communityPost);
+        return APIResponse.OK();
     }
 
     @ApiOperation("修改发帖")
