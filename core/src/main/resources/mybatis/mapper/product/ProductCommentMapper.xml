@@ -575,8 +575,7 @@
                    left join product_comment_stamp_history ash on ash.source_id = pc.id and ash.category = 0 and ash.user_id = #{loginUserId,jdbcType=BIGINT}
                    left join product_comment_fun_history pcfh on pcfh.source_id = pc.id and pcfh.category = 0 and pcfh.user_id = #{loginUserId,jdbcType=BIGINT}
       where pc.user_id = #{userId,jdbcType=BIGINT}
-      order by pc.created_time desc;
-
+      order by pc.created_time desc
     </select>
 
 </mapper>
