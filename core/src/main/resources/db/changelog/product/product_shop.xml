@@ -37,4 +37,26 @@
             COMMENT ON COLUMN product_shop.UPDATED_TIME IS '更新时间';
         </sql>
     </changeSet>
+    <changeSet id="initData4ProductShop1" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from product_shop where id = 1;
+            </sqlCheck>
+        </preConditions>
+        <comment>新增记录</comment>
+        <sql>
+            insert into product_shop (id, shop_name, revision) values (1, '京东',0);
+        </sql>
+    </changeSet>
+    <changeSet id="initData4ProductShop2" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from product_shop where id = 2;
+            </sqlCheck>
+        </preConditions>
+        <comment>新增记录</comment>
+        <sql>
+            insert into product_shop (id, shop_name, revision) values (2, '淘宝',0);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

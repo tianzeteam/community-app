@@ -65,14 +65,13 @@ public class ProductShopService {
         return affectRow;
     }
 
-    public int deleteById(Long id) {
-        return productShopMapper.deleteByPrimaryKey(id.intValue());
-    }
-
     @Transactional(rollbackFor = RuntimeException.class)
     public void delete(List<Long> idList) throws ServiceException {
         for (Long id : idList) {
             // 检查有没有挂钩产品了
+            if (id == 1 || id == 2) {
+                throw new ServiceException("系统内置记录，不能进行删除");
+            }
             if (productMapper.countByShopId(id.intValue()) > 0) {
                 throw new ServiceException("已经有关联的产品，不能进行删除");
             }
