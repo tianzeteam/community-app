@@ -26,5 +26,7 @@ public class MyDraftArticleVO {
     private String details;
     @ApiModelProperty("图片")
     private List<String> imageList;
+    @ApiModelProperty("文章类型：0文章1视频")
+    private Integer category;
 
 }

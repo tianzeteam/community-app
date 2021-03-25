@@ -851,6 +851,7 @@
     select id,
            title,
            details,
+           category,
            banner_images as bannerImages,
            updated_time as updatedTime
     from article
