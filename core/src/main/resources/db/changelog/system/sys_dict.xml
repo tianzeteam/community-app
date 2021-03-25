@@ -63,4 +63,28 @@
             update sys_dict set dict_value = 'v1.0' where dict_code = 'app.version';
         </sql>
     </changeSet>
+    <changeSet id="initValueAppDownloadPath4SysDict" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_dict where dict_code = 'android.download.url';
+            </sqlCheck>
+        </preConditions>
+        <comment>app 需要 提供一个接口用来安卓下载app地址</comment>
+        <sql>
+            insert into sys_dict(dict_name,dict_code,dict_type,state,revision)
+            values('安卓下载地址','android.download.url',0,0,0);
+        </sql>
+    </changeSet>
+    <changeSet id="initValueAppleAppPath4SysDict" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_dict where dict_code = 'apple.appstore.url';
+            </sqlCheck>
+        </preConditions>
+        <comment>苹果端直接跳转到appstore</comment>
+        <sql>
+            insert into sys_dict(dict_name,dict_code,dict_type,state,revision)
+            values('苹果应用市场地址','apple.appstore.url',0,0,0);
+        </sql>
+    </changeSet>
 </databaseChangeLog>
