@@ -11,11 +11,11 @@ import com.smart.home.modules.article.entity.ArticleChannel;
 import com.smart.home.modules.article.service.ArticleChannelService;
 import com.smart.home.modules.article.service.ArticleService;
 import com.smart.home.util.ResponsePageUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -44,9 +44,14 @@ public class IndexPageController {
     }
 
     @ApiOperation("根据频道id获取文章卡片列表-分页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true),
+            @ApiImplicitParam(name = "channelId", value = "文章频道主键id", required = true)
+    })
     @AnonAccess
     @GetMapping("/selectArticleCardByPage")
-    public APIResponse<ResponsePageBean<IndexArticleCardVO>> selectArticleCardByPage(Integer channelId, int pageNum, int pageSize) {
+    public APIResponse<ResponsePageBean<IndexArticleCardVO>> selectArticleCardByPage(@RequestParam(required = true) Integer channelId, int pageNum, int pageSize) {
         List<Article> list = articleService.selectArticleCardByPage(channelId, pageNum, pageSize);
         List<IndexArticleCardVO> resultList = BeanCopyUtils.convertListTo(list, IndexArticleCardVO::new);
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));

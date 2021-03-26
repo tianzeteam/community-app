@@ -784,7 +784,7 @@
     from article
                  left join article_channel on article.channel_id = article_channel.id
     where article.channel_id = #{channelId,jdbcType=INTEGER}
-    order by article.created_time desc;
+    order by article.created_time desc
   </select>
 
   <select id="queryViaProductIdByPage" resultType="com.smart.home.modules.article.entity.Article">
