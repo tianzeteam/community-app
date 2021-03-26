@@ -87,9 +87,9 @@ public class ArticleAdminReviewController {
     @ApiOperation("操作取消推荐-支持单个和批量")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/cancelRecommend")
-    public APIResponse reject(@RequestBody ArticleAdminRejectDTO articleAdminRejectDTO) {
+    public APIResponse reject(@RequestBody IdListBean idListBean) {
         Long userId = UserUtils.getLoginUserId();
-        articleService.cancelRecommend(articleAdminRejectDTO.getIdList(), userId);
+        articleService.cancelRecommend(idListBean.getIdList(), userId);
         return APIResponse.OK();
     }
 
