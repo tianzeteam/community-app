@@ -830,6 +830,7 @@
            ua.nick_name as nickName,
            ud.user_level as userLevel,
            a.created_time as createdTime,
+           a.cover_image as coverImage,
            a.title,
            a.details,
            a.banner_images as bannerImages,

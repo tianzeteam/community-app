@@ -1,8 +1,10 @@
 package com.smart.home.controller.common;
 
 import com.google.common.base.Splitter;
+import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.AnonAccess;
+import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.system.entity.SysDict;
 import com.smart.home.modules.system.service.SysDictService;
 import io.swagger.annotations.Api;
@@ -57,6 +59,17 @@ public class CommonDictController {
             return APIResponse.ERROR("apple.appstore.url数据字典还未配置");
         }
         return APIResponse.OK(sysDict.getDictValue());
+    }
+
+    @ApiOperation("获取所有支持平台")
+    @RoleAccess(RoleConsts.ADMIN)
+    @GetMapping("/queryAllSupportPlatform")
+    public APIResponse queryAllSupportPlatform() {
+        SysDict sysDict = sysDictService.queryByDictCode("product.support.platform");
+        if (Objects.isNull(sysDict)) {
+            return APIResponse.ERROR("product.support.platform的数据字典还未设置");
+        }
+        return APIResponse.OK(Splitter.on(",").splitToList(sysDict.getDictValue()));
     }
 
 }
