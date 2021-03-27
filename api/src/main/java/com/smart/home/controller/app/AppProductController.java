@@ -29,6 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 /**
  * @author jason
@@ -81,9 +82,13 @@ public class AppProductController {
            }
            if (StringUtils.isNotBlank(s.getParams()) && !"[]".equals(s.getParams())) {
                t.setProductParamValueList(JSON.parseArray(s.getParams(), ProductParamValue.class));
+           } else {
+               t.setProductShopMappingList(Collections.EMPTY_LIST);
            }
            if (StringUtils.isNotBlank(s.getShops()) && !"[]".equals(s.getShops())) {
               t.setProductShopMappingList(JSON.parseArray(s.getShops(), ProductShopMapping.class));
+           } else {
+               t.setProductShopMappingList(Collections.EMPTY_LIST);
            }
         });
         // 我有没有收藏过
