@@ -62,7 +62,7 @@ public class CommonDictController {
     }
 
     @ApiOperation("获取所有支持平台")
-    @RoleAccess(RoleConsts.ADMIN)
+    @AnonAccess
     @GetMapping("/queryAllSupportPlatform")
     public APIResponse queryAllSupportPlatform() {
         SysDict sysDict = sysDictService.queryByDictCode("product.support.platform");
