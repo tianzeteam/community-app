@@ -107,12 +107,6 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.smart.home.modules.user.entity.UserFocus">
-    insert into user_focus (id, user_id, focus_user_id, 
-      focus_rate, created_time)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{focusUserId,jdbcType=BIGINT}, 
-      #{focusRate,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP})
-  </insert>
   <insert id="insertSelective" parameterType="com.smart.home.modules.user.entity.UserFocus">
     insert into user_focus
     <trim prefix="(" suffix=")" suffixOverrides=",">

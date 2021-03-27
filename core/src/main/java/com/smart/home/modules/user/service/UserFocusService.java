@@ -73,6 +73,7 @@ public class UserFocusService {
         userFocus.setUserId(loginUserId);
         userFocus.setFocusUserId(focusUserId);
         userFocus.setCreatedTime(new Date());
+        userFocus.setFocusRate(0);
         userFocusMapper.insertSelective(userFocus);
         // 放关注一个用户后，对方会产生一个粉丝记录
         UserFollower userFollower = new UserFollower();
