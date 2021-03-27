@@ -2,6 +2,7 @@ package com.smart.home.controller.pc;
 
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.AuditStatusEnum;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.request.artcile.ArticleRecommendOnDTO;
 import com.smart.home.controller.pc.request.article.ArticleAdminRejectDTO;
@@ -81,8 +82,12 @@ public class ArticleAdminReviewController {
         for (ArticleRecommendOnDTO articleRecommendOnDTO : articleRecommendOnDTOList) {
             map.put(articleRecommendOnDTO.getArticleId(), articleRecommendOnDTO.getRecommendType());
         }
-        articleService.recommend(map, userId);
-        return APIResponse.OK();
+        try {
+            articleService.recommend(map, userId);
+            return APIResponse.OK();
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
     }
     @ApiOperation("操作取消推荐-支持单个和批量")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})

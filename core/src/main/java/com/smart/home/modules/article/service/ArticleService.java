@@ -249,9 +249,12 @@ public class ArticleService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void recommend(Map<Long, Integer> map, Long userId) {
+    public void recommend(Map<Long, Integer> map, Long userId) throws ServiceException {
         map.forEach((articleId, recommendType)->{
             Article article = findById(articleId);
+            if(article.getOnlineStatus().intValue()==RecordStatusEnum.PAUSED.getStatus()) {
+                throw new ServiceException("撤稿的状态的记录不能设置为推荐");
+            }
             article.setRecommendFlag(YesNoEnum.YES.getCode());
             article.setRecommendType(recommendType);
             article.setUpdatedBy(userId);
