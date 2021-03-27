@@ -109,7 +109,7 @@ public class ArticleController {
         if (!CollectionUtils.isEmpty(articleCreateDTO.getBannerImagesList())) {
             article.setBannerImages(JSON.toJSONString(articleCreateDTO.getBannerImagesList()));
         }
-        return processCreateArticle(articleCreateDTO, article);
+        return processCreateArticle(articleCreateDTO, article, articleCreateDTO.getImageList());
     }
 
     @ApiOperation("投稿/保存草稿视频")
@@ -124,7 +124,7 @@ public class ArticleController {
         article.setUserId(UserUtils.getLoginUserId());
         article.setCreatedBy(UserUtils.getLoginUserId());
         article.setCategory(ArticleCategoryEnum.VIDEO.getCode());
-        return processCreateArticle(articleCreateDTO, article);
+        return processCreateArticle(articleCreateDTO, article, null);
     }
 
     @ApiOperation("更新文章")
@@ -134,6 +134,7 @@ public class ArticleController {
         Article article = new Article();
         BeanUtils.copyProperties(articleUpdateDTO, article);
         article.setCreatedBy(UserUtils.getLoginUserId());
+        article.setImageList(articleUpdateDTO.getImageList());
         return APIResponse.OK(articleService.update(article));
     }
     @ApiOperation("更新视频文章")
@@ -174,7 +175,14 @@ public class ArticleController {
         return APIResponse.OK();
     }
 
-    private APIResponse processCreateArticle(@RequestBody @Valid ArticleCreateDTO articleCreateDTO, Article article) {
+    /**
+     *
+     * @param articleCreateDTO
+     * @param article
+     * @param imageList 正文包含的图片数组，如果有的花，用于同步图片用
+     * @return
+     */
+    private APIResponse processCreateArticle(@RequestBody @Valid ArticleCreateDTO articleCreateDTO, Article article, List<String> imageList) {
         if (articleCreateDTO.getProductTestResultDTO() == null && articleCreateDTO.getProductId() == null) {
             return APIResponse.ERROR("产品未插入，不能插入评测");
         }
@@ -193,7 +201,9 @@ public class ArticleController {
                 return APIResponse.ERROR("评测结论不能超过200字");
             }
         }
-        return APIResponse.OK(articleService.create(article, articleCreateDTO.getProductId(), testResult, recommendFlag));
+        article.setImageList(imageList);
+        int affectRow = articleService.create(article, articleCreateDTO.getProductId(), testResult, recommendFlag);
+        return APIResponse.OK(affectRow);
     }
 
 }

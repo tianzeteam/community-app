@@ -1,5 +1,6 @@
 package com.smart.home.modules.article.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.AuditStatusEnum;
@@ -59,7 +60,7 @@ public class ArticleService {
         article.setUpdatedTime(new Date());
         int affectRow = articleMapper.insertSelective(article);
         Long articleId = article.getId();
-        syncUploadFiles(article.getCoverImage(), article.getBannerImages());
+        syncUploadFiles(article.getCoverImage(), article.getBannerImages(), article.getImageList());
         if (productId != null) {
             // 插入关系表
             articleProductMappingService.create(articleId, productId, testResult, recommendFlag);
@@ -72,7 +73,7 @@ public class ArticleService {
     @Transactional(rollbackFor = RuntimeException.class)
     public int update(Article article) {
         int affectRow = articleMapper.updateByPrimaryKeySelective(article);
-        syncUploadFiles(article.getCoverImage(), article.getBannerImages());
+        syncUploadFiles(article.getCoverImage(), article.getBannerImages(), article.getImageList());
         Article dbArticle = findById(article.getId());
         if (AuditStatusEnum.APPROVED.getCode() == dbArticle.getAuditState() && RecordStatusEnum.NORMAL.getStatus() == dbArticle.getOnlineStatus()) {
             ArticleBean articleBean = new ArticleBean();
@@ -432,7 +433,7 @@ public class ArticleService {
         return articleMapper.queryIndexArticleCard(YesNoEnum.NO.getCode(), ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), articleChannelId, YesNoEnum.NO.getCode());
     }
 
-    private void syncUploadFiles(String coverImage, String bannerImages) {
+    private void syncUploadFiles(String coverImage, String bannerImages, List<String> imageList) {
         List<String> list = new ArrayList<>();
         if (StringUtils.isNotBlank(coverImage)) {
             list.add(FileUtils.getFileNameFromUrl(coverImage));
@@ -440,6 +441,11 @@ public class ArticleService {
         if (StringUtils.isNotBlank(bannerImages)) {
             for (String s : JSON.parseArray(bannerImages, String.class)) {
                 list.add(FileUtils.getFileNameFromUrl(s));
+            }
+        }
+        if (CollUtil.isNotEmpty(imageList)) {
+            for (String image : imageList) {
+                list.add(FileUtils.getFileNameFromUrl(image));
             }
         }
         sysFileService.syncList(list);

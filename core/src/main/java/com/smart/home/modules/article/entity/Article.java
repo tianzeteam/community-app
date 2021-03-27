@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-
+import java.util.List;
 public class Article implements Serializable {
 
     private String headUrl;
@@ -16,6 +16,7 @@ public class Article implements Serializable {
     private Integer likeFlag;
     private Integer stampFlag;
     private Integer focusFlag;
+    private List<String> imageList;
 ////////////////////////////////
     private Long id;
 
@@ -725,6 +726,14 @@ public class Article implements Serializable {
 
     public void setSourceFrom(String sourceFrom) {
         this.sourceFrom = sourceFrom;
+    }
+
+    public List<String> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<String> imageList) {
+        this.imageList = imageList;
     }
 
     /**
