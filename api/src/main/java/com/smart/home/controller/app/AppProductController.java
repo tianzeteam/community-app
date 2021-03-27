@@ -76,6 +76,8 @@ public class AppProductController {
         ProductDetailVO productDetailVO = BeanCopyUtils.convertTo(product, ProductDetailVO::new, (s, t)->{
            if (StringUtils.isNotBlank(s.getBannerImages())) {
                t.setBannerImageList(JSON.parseArray(s.getBannerImages(), String.class));
+           } else {
+               t.setBannerImageList(Collections.EMPTY_LIST);
            }
            if (StringUtils.isNotBlank(s.getTag())) {
                t.setTagList(JSON.parseArray(s.getTag(), String.class));
