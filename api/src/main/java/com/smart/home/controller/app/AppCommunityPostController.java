@@ -1,5 +1,6 @@
 package com.smart.home.controller.app;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.BeanCopyUtils;
@@ -62,6 +63,9 @@ public class AppCommunityPostController {
     public APIResponse<ResponsePageBean<RecommendCommunityPostVO>> recommendQueryList(Integer pageNum, Integer pageSize) {
         log.info("推荐帖子列表:");
         List<CommunityPostDTO> list = communityPostService.queryRecommendPostList(pageNum, pageSize);
+        if (CollUtil.isEmpty(list)) {
+            return APIResponse.OK(new ResponsePageBean<>());
+        }
         List<RecommendCommunityPostVO> resultList = BeanCopyUtils.convertListTo(list, RecommendCommunityPostVO::new);
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
@@ -77,6 +81,9 @@ public class AppCommunityPostController {
     public APIResponse<ResponsePageBean<RecommendCommunityPostVO>> hotQueryList(Integer pageNum, Integer pageSize) {
         log.info("热议帖子列表:");
         List<CommunityPostDTO> communityPosts = communityPostService.queryHotPostList(pageNum, pageSize);
+        if (CollUtil.isEmpty(communityPosts)) {
+            return APIResponse.OK(new ResponsePageBean<>());
+        }
         List<RecommendCommunityPostVO> recommendCommunityPostVOS = BeanCopyUtils.convertListTo(communityPosts, RecommendCommunityPostVO::new);
         return APIResponse.OK(ResponsePageUtil.restPage(recommendCommunityPostVOS, communityPosts));
     }
@@ -90,6 +97,9 @@ public class AppCommunityPostController {
     @GetMapping("/mine/page/{state}")
     public APIResponse<ResponsePageBean<CommunityPostVO>> draftList(@PathVariable Integer state, int pageNum, int pageSize){
         List<CommunityPost> page = communityPostService.page(UserUtils.getLoginUserId(), state, pageNum, pageSize);
+        if (CollUtil.isEmpty(page)) {
+            return APIResponse.OK(new ResponsePageBean<>());
+        }
         List<CommunityPostVO> communityPostVOS = BeanCopyUtils.convertListTo(page, CommunityPostVO::new);
         return APIResponse.OK(ResponsePageUtil.restPage(communityPostVOS, page));
     }

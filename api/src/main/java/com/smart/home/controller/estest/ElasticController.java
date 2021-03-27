@@ -1,5 +1,6 @@
 package com.smart.home.controller.estest;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -88,4 +90,25 @@ public class ElasticController {
         return APIResponse.OK(list);
     }
 
+
+    @AnonAccess
+    @GetMapping("/save")
+    public void save(Long id, String title, String content){
+        ArticleBean communityPostBean = new ArticleBean();
+        communityPostBean.setTitle(title);
+        communityPostBean.setDetails(content);
+        communityPostBean.setId(id);
+        communityPostBean.setSaveType(1);
+        communityPostBean.setUserId(1L);
+//        communityPostBean.setCreatedTime(new Date());
+        communityPostBean.setRemark(content);
+        esCommonService.insertOrUpdateOne(EsConstant.articleIndex, EsConstant.article, id, communityPostBean);
+    }
+
+    @AnonAccess
+    @GetMapping("/del")
+    public void del(Long id){
+        esCommonService.deleteOne(EsConstant.articleIndex, EsConstant.article, id);
+
+    }
 }

@@ -267,6 +267,9 @@ public class AppCommunityPostReplyController {
                 x.setList(twoResultList);
             });
         }
+        if (CollUtil.isEmpty(list)) {
+            return APIResponse.OK(new ResponsePageBean<>());
+        }
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
@@ -287,10 +290,16 @@ public class AppCommunityPostReplyController {
         if (userId > 0) {
             // 说明是登陆的
             List<CommunityPostReply> list = communityPostReplyService.queryPageByCommentId(communityPostReplyDTO, pageNum, pageSize, true);
+            if (CollUtil.isEmpty(list)) {
+                return APIResponse.OK(new ResponsePageBean<>());
+            }
             List<CommunityPostReplyVO> resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);
             return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         } else {
             List<CommunityPostReply> list = communityPostReplyService.queryPageByCommentId(communityPostReplyDTO, pageNum, pageSize, false);
+            if (CollUtil.isEmpty(list)) {
+                return APIResponse.OK(new ResponsePageBean<>());
+            }
             List<CommunityPostReplyVO> resultList = BeanCopyUtils.convertListTo(list, CommunityPostReplyVO::new);
             return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         }

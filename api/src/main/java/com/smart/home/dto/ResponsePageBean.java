@@ -3,6 +3,7 @@ package com.smart.home.dto;
 import com.smart.home.util.ResponsePageUtil;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class ResponsePageBean<T> {
     @ApiModelProperty("总数据量")
     private Long totalCount;
     @ApiModelProperty("分页数据")
-    private List<T> list;
+    private List<T> list = Collections.EMPTY_LIST;
 
     public Integer getPageNum() {
         return pageNum;
