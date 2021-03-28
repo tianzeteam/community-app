@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.community.CommunityDetailVO;
+import com.smart.home.controller.app.response.community.CommunityInfoVo;
 import com.smart.home.controller.pc.response.community.CommunitySelectVO;
 import com.smart.home.controller.pc.response.community.CommunityUserMappingVO;
 import com.smart.home.dto.APIResponse;
@@ -67,8 +68,8 @@ public class AppCommunityController {
         if (loginUserId != null) {
             List<CommunityUserMapping> communityUserMappings = communityUserMappingService.getByUserId(loginUserId);
             if (CollUtil.isNotEmpty(communityUserMappings)) {
-                communitySelectVOS.stream().forEach(x->{
-                    communityUserMappings.stream().forEach(y->{
+                communitySelectVOS.stream().forEach(x -> {
+                    communityUserMappings.stream().forEach(y -> {
                         if (x.getId().equals(y.getCommunityId())) {
                             x.setJoinFlag(1);
                         }
@@ -82,7 +83,7 @@ public class AppCommunityController {
     @AnonAccess
     @ApiOperation(value = "获取所有社区")
     @GetMapping("/query/all")
-    public APIResponse<List<CommunitySelectVO>> queryAll(){
+    public APIResponse<List<CommunitySelectVO>> queryAll() {
         List<Community> communities = communityService.selectAll();
         List<CommunitySelectVO> communitySelectVOS = BeanCopyUtils.convertListTo(communities, CommunitySelectVO::new);
         return APIResponse.OK(communitySelectVOS);
@@ -135,10 +136,31 @@ public class AppCommunityController {
             @ApiImplicitParam(name = "boutiqueFlag", value = "是否是精品，0否1是，无选择默认为null", required = false)
     })
     @GetMapping("/detail/post")
-    public APIResponse<ResponsePageBean<CommunityDetailVO>> detailPost(Long communityId, Integer boutiqueFlag, Integer pageNum, Integer pageSize){
+    public APIResponse<ResponsePageBean<CommunityDetailVO>> detailPost(Long communityId, Integer boutiqueFlag, Integer pageNum, Integer pageSize) {
         List<CommunityPostDTO> communityPostDTOS = communityPostService.queryCommunityDetailPostList(communityId, boutiqueFlag, pageNum, pageSize);
         List<CommunityDetailVO> detailVOS = BeanCopyUtils.convertListTo(communityPostDTOS, CommunityDetailVO::new);
         return APIResponse.OK(ResponsePageUtil.restPage(detailVOS, communityPostDTOS));
+    }
+
+    @AnonAccess
+    @ApiOperation("根据社区id查找社区信息以及是否加入")
+    @ApiImplicitParams(
+            @ApiImplicitParam(name = "id", value = "社区id", required = true)
+    )
+    @GetMapping("/info")
+    public APIResponse<CommunityInfoVo> info(Long id) {
+        Community community = communityService.findById(id);
+        if (community == null) {
+            return APIResponse.ERROR("没有此社区");
+        }
+        CommunityInfoVo communityInfoVo = new CommunityInfoVo();
+        BeanUtils.copyProperties(community, communityInfoVo);
+        Long loginUserId = UserUtils.getLoginUserId();
+        if (loginUserId != null) {
+            CommunityUserMapping communityUserMapping = communityUserMappingService.getByUserIdAndCommunityId(loginUserId, id.intValue());
+            communityInfoVo.setIfJoin(communityUserMapping == null ? false : true);
+        }
+        return APIResponse.OK(communityInfoVo);
     }
 
 
