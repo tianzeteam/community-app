@@ -48,13 +48,13 @@ public class ArticleAdminRecommendController {
     @ApiOperation("查询出所有的置顶文章")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/selectAllTopRecommend")
-    public APIResponse<ResponsePageBean<ArticleAdminRecommendPageVO>> selectAllTopRecommend() {
+    public APIResponse<List<ArticleAdminRecommendPageVO>> selectAllTopRecommend() {
         List<Article> list = articleService.selectAllTopRecommend();
         List<ArticleAdminRecommendPageVO> resultList = BeanCopyUtils.convertListTo(list, ArticleAdminRecommendPageVO::new, (s, t) -> {
             t.setAuthorId(s.getUserId());
             t.setArticleId(s.getId());
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
+        return APIResponse.OK(resultList);
     }
 
     @ApiOperation("分页查询文章")
