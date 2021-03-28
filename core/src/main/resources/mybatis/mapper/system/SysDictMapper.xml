@@ -343,4 +343,8 @@
       updated_time = #{updatedTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="queryCreatedTimeById" resultType="java.util.Date">
+    select created_time from sys_dict where id = #{id}
+    </select>
 </mapper>
