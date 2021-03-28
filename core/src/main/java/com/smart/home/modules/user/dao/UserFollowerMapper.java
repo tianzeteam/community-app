@@ -35,4 +35,6 @@ public interface UserFollowerMapper {
     List<MyFollowerDTO> myFollowerByPage(@Param("userId") Long userId);
 
     List<MyFocusDTO> myFocusByPage(@Param("userId") Long userId);
+
+    int followEach(@Param("userId") Long userId,@Param("followUserId") Long followUserId);
 }

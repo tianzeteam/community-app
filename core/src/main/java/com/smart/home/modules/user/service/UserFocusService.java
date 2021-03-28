@@ -63,6 +63,9 @@ public class UserFocusService {
      */
     @Transactional(rollbackFor = RuntimeException.class)
     public void focusUser(Long focusUserId, Long loginUserId) throws ServiceException {
+        if (loginUserId.equals(focusUserId)) {
+            throw new ServiceException("不能关注您自己");
+        }
         // 判断是否关注过了
         UserFocusExample example = new UserFocusExample();
         example.createCriteria().andUserIdEqualTo(loginUserId).andFocusUserIdEqualTo(focusUserId);
@@ -76,19 +79,26 @@ public class UserFocusService {
         userFocus.setFocusRate(0);
         userFocusMapper.insertSelective(userFocus);
         // 放关注一个用户后，对方会产生一个粉丝记录
-        UserFollower userFollower = new UserFollower();
-        userFollower.setCreatedTime(new Date());
-        userFollower.setFollowerUserId(loginUserId);
-        userFollower.setUserId(focusUserId);
-        // 判断下是否是互相关注
-        example = new UserFocusExample();
-        example.createCriteria().andUserIdEqualTo(focusUserId).andFocusUserIdEqualTo(loginUserId);
-        if (userFocusMapper.countByExample(example) > 0) {
-            userFollower.setFollowEach(YesNoEnum.YES.getCode());
-        } else {
+        // 先看看有没有粉丝记录了，如果有的话不需要再生成记录
+        UserFollowerExample userFollowerExample = new UserFollowerExample();
+        userFollowerExample.createCriteria().andUserIdEqualTo(focusUserId).andFollowerUserIdEqualTo(loginUserId);
+        if (userFollowerMapper.countByExample(userFollowerExample) == 0) {
+            UserFollower userFollower = new UserFollower();
+            userFollower.setCreatedTime(new Date());
+            userFollower.setFollowerUserId(loginUserId);
+            userFollower.setUserId(focusUserId);
             userFollower.setFollowEach(YesNoEnum.NO.getCode());
+            userFollowerMapper.insertSelective(userFollower);
+        } else {
+            // 更新成互相关注
+            userFollowerMapper.followEach(focusUserId, loginUserId);
         }
-        userFollowerMapper.insertSelective(userFollower);
+        // 判断下是否是互相关注
+        userFollowerExample = new UserFollowerExample();
+        userFollowerExample.createCriteria().andUserIdEqualTo(loginUserId).andFollowerUserIdEqualTo(focusUserId);
+        if (userFocusMapper.countByExample(example) > 0) {
+            userFollowerMapper.followEach(loginUserId, focusUserId);
+        }
     }
 
     public void cancelFocusUser(Long focusUserId, Long loginUserId) {
