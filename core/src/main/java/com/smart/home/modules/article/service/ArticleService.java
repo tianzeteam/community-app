@@ -346,6 +346,15 @@ public class ArticleService {
     }
 
     public void cancelSetTop(Long articleId) {
+        Integer recommendType = articleMapper.findRecommendTypeById(articleId);
+        if (Objects.isNull(recommendType)) {
+            articleMapper.updateTopFlag(articleId, YesNoEnum.NO.getCode());
+            return;
+        }
+        if(ArticleRecommendTypeEnum.BIG_IMAGE_TOP.getCode() == recommendType.intValue()) {
+            articleMapper.updateTopFlagAndRecommendType(articleId, YesNoEnum.NO.getCode(),ArticleRecommendTypeEnum.BIG_IMAGE_CARD.getCode());
+            return;
+        }
         articleMapper.updateTopFlag(articleId, YesNoEnum.NO.getCode());
     }
 
@@ -355,6 +364,15 @@ public class ArticleService {
         example.createCriteria().andChannelIdEqualTo(channelId).andTopFlagEqualTo(YesNoEnum.YES.getCode());
         if (articleMapper.countByExample(example) > 0) {
             throw new ServiceException("该频道下只能存在一个置顶文章");
+        }
+        Integer recommendType = articleMapper.findRecommendTypeById(articleId);
+        if (Objects.isNull(recommendType)) {
+            articleMapper.updateTopFlag(articleId, YesNoEnum.YES.getCode());
+            return;
+        }
+        if (ArticleRecommendTypeEnum.BIG_IMAGE_CARD.getCode() == recommendType.intValue()) {
+            articleMapper.updateTopFlagAndRecommendType(articleId, YesNoEnum.YES.getCode(), ArticleRecommendTypeEnum.BIG_IMAGE_TOP.getCode());
+            return;
         }
         articleMapper.updateTopFlag(articleId, YesNoEnum.YES.getCode());
     }

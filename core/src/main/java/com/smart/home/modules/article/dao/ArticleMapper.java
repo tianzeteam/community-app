@@ -66,7 +66,9 @@ public interface ArticleMapper {
 
     int updateTopFlag(@Param("id") Long id,@Param("flag") int flag);
 
-    int updateRecommendType(@Param("id") Long id,@Param("flag") int type);
+    int updateTopFlagAndRecommendType(@Param("id") Long id,@Param("flag") int flag, @Param("recommendType") int recommendType);
+
+    int updateRecommendType(@Param("id") Long id,@Param("flag") int flag);
 
     List<Article> selectArticleCardByPage(@Param("channelId") Integer channelId);
 
@@ -87,4 +89,6 @@ public interface ArticleMapper {
     Long findChannelIdById(@Param("id") Long id);
 
     int markAsTestArticle(@Param("id") Long id,@Param("testResult") String testResult,@Param("recommendFlag") Integer recommendFlag);
+
+    Integer findRecommendTypeById(@Param("id") Long id);
 }

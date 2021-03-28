@@ -25,10 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -89,7 +86,7 @@ public class ArticleAdminRecommendController {
     })
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/cancelSetTop")
-    public APIResponse cancelSetTop(Long articleId) {
+    public APIResponse cancelSetTop(@RequestParam(required = true) Long articleId) {
         articleService.cancelSetTop(articleId);
         return APIResponse.OK();
     }
@@ -100,7 +97,7 @@ public class ArticleAdminRecommendController {
     })
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/setTop")
-    public APIResponse setTop(Long articleId) {
+    public APIResponse setTop(@RequestParam(required = true) Long articleId) {
         try {
             articleService.setTop(articleId);
         } catch (ServiceException e) {
@@ -115,7 +112,7 @@ public class ArticleAdminRecommendController {
     })
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/setBigImage")
-    public APIResponse setBigImage(Long articleId) {
+    public APIResponse setBigImage(@RequestParam(required = true) Long articleId) {
         articleService.setBigImage(articleId);
         return APIResponse.OK();
     }
@@ -126,7 +123,7 @@ public class ArticleAdminRecommendController {
     })
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/setAsArticle")
-    public APIResponse setAsArticle(Long articleId) {
+    public APIResponse setAsArticle(@RequestParam(required = true) Long articleId) {
         articleService.setAsArticle(articleId);
         return APIResponse.OK();
     }
