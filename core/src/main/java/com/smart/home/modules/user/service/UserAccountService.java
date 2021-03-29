@@ -383,7 +383,7 @@ public class UserAccountService {
     public void updateUserAdminPermit(Long userId, Map<String, Integer> permits) {
         Map<String, Map<String, Integer>> map = new HashMap<>();
         map.put("permits", permits);
-        mapper.savePermits(userId, JSON.toJSONString(permits));
+        mapper.savePermits(userId, JSON.toJSONString(map));
         // 动态赋角色
         boolean hasAdminRole = false;
         if (new Integer(1).equals(permits.get("configCenter"))
