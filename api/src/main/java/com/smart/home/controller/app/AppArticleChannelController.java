@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,20 +76,23 @@ public class AppArticleChannelController {
     }
 
     @ApiOperation("查询我添加的频道")
-    @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyChannel")
     public APIResponse<List<ArticleChannelVO>> queryMyChannel() {
         Long userId = UserUtils.getLoginUserId();
-        List<ArticleChannel> list = userArticleChannelPreferenceService.queryMyChannel(userId);
-        if (CollUtil.isEmpty(list)) {
-            // 如果是空的，默认把所有评到给用户
-            list = articleChannelService.selectAllValid();
-            for (ArticleChannel articleChannel : list) {
-                userArticleChannelPreferenceService.create(userId, Long.valueOf(articleChannel.getId()), articleChannel.getSort());
+        if(userId > 0) {
+            List<ArticleChannel> list = userArticleChannelPreferenceService.queryMyChannel(userId);
+            if (CollUtil.isEmpty(list)) {
+                // 如果是空的，默认把所有评到给用户
+                list = articleChannelService.selectAllValid();
+                for (ArticleChannel articleChannel : list) {
+                    userArticleChannelPreferenceService.create(userId, Long.valueOf(articleChannel.getId()), articleChannel.getSort());
+                }
             }
+            List<ArticleChannelVO> resultList = BeanCopyUtils.convertListTo(list, ArticleChannelVO::new);
+            return APIResponse.OK(resultList);
+        } else {
+            return APIResponse.OK(Collections.EMPTY_LIST);
         }
-        List<ArticleChannelVO> resultList = BeanCopyUtils.convertListTo(list, ArticleChannelVO::new);
-        return APIResponse.OK(resultList);
     }
 
     @ApiOperation("查询除去我的频道后的其他频道")

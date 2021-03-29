@@ -2,6 +2,8 @@ package com.smart.home.modules.system.dao;
 
 import com.smart.home.modules.system.entity.SysDict;
 import com.smart.home.modules.system.entity.SysDictExample;
+
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -29,4 +31,6 @@ public interface SysDictMapper {
     int updateByPrimaryKeySelective(SysDict record);
 
     int updateByPrimaryKey(SysDict record);
+
+    Date queryCreatedTimeById(@Param("id") int id);
 }

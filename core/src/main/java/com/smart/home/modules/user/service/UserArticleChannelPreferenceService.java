@@ -28,7 +28,7 @@ public class UserArticleChannelPreferenceService {
         UserArticleChannelPreferenceExample example = new UserArticleChannelPreferenceExample();
         example.createCriteria().andUserIdEqualTo(userId).andChannelIdEqualTo(channelId);
         if (userArticleChannelPreferenceMapper.countByExample(example) > 0) {
-            throw new DuplicateDataException("已经添加过该频道了");
+            throw new ServiceException("已经添加过该频道了");
         }
         UserArticleChannelPreference userArticleChannelPreference = new UserArticleChannelPreference();
         userArticleChannelPreference.withChannelId(channelId)

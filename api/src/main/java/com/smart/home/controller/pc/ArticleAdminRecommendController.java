@@ -25,10 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -51,13 +48,13 @@ public class ArticleAdminRecommendController {
     @ApiOperation("查询出所有的置顶文章")
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/selectAllTopRecommend")
-    public APIResponse<ResponsePageBean<ArticleAdminRecommendPageVO>> selectAllTopRecommend() {
+    public APIResponse<List<ArticleAdminRecommendPageVO>> selectAllTopRecommend() {
         List<Article> list = articleService.selectAllTopRecommend();
         List<ArticleAdminRecommendPageVO> resultList = BeanCopyUtils.convertListTo(list, ArticleAdminRecommendPageVO::new, (s, t) -> {
             t.setAuthorId(s.getUserId());
             t.setArticleId(s.getId());
         });
-        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
+        return APIResponse.OK(resultList);
     }
 
     @ApiOperation("分页查询文章")
@@ -89,7 +86,7 @@ public class ArticleAdminRecommendController {
     })
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/cancelSetTop")
-    public APIResponse cancelSetTop(Long articleId) {
+    public APIResponse cancelSetTop(@RequestParam(required = true) Long articleId) {
         articleService.cancelSetTop(articleId);
         return APIResponse.OK();
     }
@@ -100,7 +97,7 @@ public class ArticleAdminRecommendController {
     })
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/setTop")
-    public APIResponse setTop(Long articleId) {
+    public APIResponse setTop(@RequestParam(required = true) Long articleId) {
         try {
             articleService.setTop(articleId);
         } catch (ServiceException e) {
@@ -115,7 +112,7 @@ public class ArticleAdminRecommendController {
     })
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/setBigImage")
-    public APIResponse setBigImage(Long articleId) {
+    public APIResponse setBigImage(@RequestParam(required = true) Long articleId) {
         articleService.setBigImage(articleId);
         return APIResponse.OK();
     }
@@ -126,7 +123,7 @@ public class ArticleAdminRecommendController {
     })
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/setAsArticle")
-    public APIResponse setAsArticle(Long articleId) {
+    public APIResponse setAsArticle(@RequestParam(required = true) Long articleId) {
         articleService.setAsArticle(articleId);
         return APIResponse.OK();
     }

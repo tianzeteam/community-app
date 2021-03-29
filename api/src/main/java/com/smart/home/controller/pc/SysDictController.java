@@ -1,5 +1,7 @@
 package com.smart.home.controller.pc;
 
+import com.smart.home.common.exception.RestfulRequestException;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.controller.pc.request.system.SysDictDTO;
 import com.smart.home.controller.pc.request.system.SysDictSearchDTO;
 import com.smart.home.controller.pc.request.system.SysDictUpdateDTO;
@@ -65,7 +67,12 @@ public class SysDictController {
     @ApiOperation(value = "删除数据字典")
     @PostMapping(value = "/delete")
     public APIResponse delete(@RequestBody IdListBean idListBean) {
-        return APIResponse.OK(sysDictService.delete(idListBean.getIdList()));
+        try {
+            sysDictService.delete(idListBean.getIdList());
+        } catch (ServiceException e) {
+            throw new RestfulRequestException(e.getCode(), e.getMessage());
+        }
+        return APIResponse.OK();
     }
 
     @ApiOperation(value = "分页查询数据字典")

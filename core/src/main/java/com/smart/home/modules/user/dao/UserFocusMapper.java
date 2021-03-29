@@ -14,8 +14,6 @@ public interface UserFocusMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    int insert(UserFocus record);
-
     int insertSelective(UserFocus record);
 
     List<UserFocus> selectByExample(UserFocusExample example);

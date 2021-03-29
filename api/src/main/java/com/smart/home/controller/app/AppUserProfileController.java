@@ -50,6 +50,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -201,6 +202,8 @@ public class AppUserProfileController {
         List<MyRootProfileArticleVO> resultList = BeanCopyUtils.convertListTo(list, MyRootProfileArticleVO::new,(s,t)->{
             if (StringUtils.isNotBlank(s.getBannerImages())) {
                 t.setImageList(JSON.parseArray(s.getBannerImages(), String.class));
+            } else {
+                t.setImageList(Collections.EMPTY_LIST);
             }
         });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));

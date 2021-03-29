@@ -770,8 +770,12 @@
     update article set top_flag = #{flag} where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <update id="updateTopFlagAndRecommendType">
+    update article set top_flag = #{flag},recommend_type = #{recommendType} where id = #{id,jdbcType=BIGINT}
+  </update>
+
   <update id="updateRecommendType">
-    update article set recommend_type = #{type} where id = #{id,jdbcType=BIGINT}
+    update article set recommend_type = #{flag} where id = #{id,jdbcType=BIGINT}
   </update>
 
   <select id="selectArticleCardByPage" resultType="com.smart.home.modules.article.entity.Article">
@@ -830,6 +834,7 @@
            ua.nick_name as nickName,
            ud.user_level as userLevel,
            a.created_time as createdTime,
+           a.cover_image as coverImage,
            a.title,
            a.details,
            a.banner_images as bannerImages,
@@ -911,4 +916,9 @@
   <update id="markAsTestArticle">
     update article set test_result = #{testResult},recommend_flag = #{recommendFlag},test_flag=1 where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="findRecommendTypeById" resultType="java.lang.Integer">
+    select recommend_type from article where id = #{id,jdbcType=BIGINT}
+  </select>
+
 </mapper>

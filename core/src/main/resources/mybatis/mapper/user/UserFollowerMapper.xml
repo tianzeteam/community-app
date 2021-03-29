@@ -239,4 +239,8 @@
                  left join user_data ud on ud.user_id = ua.id
     where uf.user_id = #{userId,jdbcType=BIGINT}
   </select>
+
+  <update id="followEach">
+    update user_follower set follow_each = 1 where user_id = #{userId,jdbcType=BIGINT} and follower_user_id = #{followUserId,jdbcType=BIGINT}
+    </update>
 </mapper>

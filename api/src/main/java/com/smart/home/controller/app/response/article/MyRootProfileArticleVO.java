@@ -24,6 +24,8 @@ public class MyRootProfileArticleVO {
     private Integer userLevel;
     @ApiModelProperty("创建时间")
     private Date createdTime;
+    @ApiModelProperty("封面图片")
+    private String coverImage;
     @ApiModelProperty("标题")
     private String title;
     @ApiModelProperty("内容")

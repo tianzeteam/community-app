@@ -29,6 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 /**
  * @author jason
@@ -75,15 +76,21 @@ public class AppProductController {
         ProductDetailVO productDetailVO = BeanCopyUtils.convertTo(product, ProductDetailVO::new, (s, t)->{
            if (StringUtils.isNotBlank(s.getBannerImages())) {
                t.setBannerImageList(JSON.parseArray(s.getBannerImages(), String.class));
+           } else {
+               t.setBannerImageList(Collections.EMPTY_LIST);
            }
            if (StringUtils.isNotBlank(s.getTag())) {
                t.setTagList(JSON.parseArray(s.getTag(), String.class));
            }
            if (StringUtils.isNotBlank(s.getParams()) && !"[]".equals(s.getParams())) {
                t.setProductParamValueList(JSON.parseArray(s.getParams(), ProductParamValue.class));
+           } else {
+               t.setProductShopMappingList(Collections.EMPTY_LIST);
            }
            if (StringUtils.isNotBlank(s.getShops()) && !"[]".equals(s.getShops())) {
               t.setProductShopMappingList(JSON.parseArray(s.getShops(), ProductShopMapping.class));
+           } else {
+               t.setProductShopMappingList(Collections.EMPTY_LIST);
            }
         });
         // 我有没有收藏过

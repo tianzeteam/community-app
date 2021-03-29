@@ -38,4 +38,15 @@
             create index idx_acp_user_id on user_article_channel_preference using btree (user_id);
         </sql>
     </changeSet>
+    <changeSet id="createUniIndex4ArticlePreference" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="user_article_channel_preference" indexName="uni_uacp_userid_channelid"/>
+            </not>
+        </preConditions>
+        <comment>新增唯一索引</comment>
+        <sql>
+            create unique index uni_uacp_userid_channelid on user_article_channel_preference using btree (user_id, channel_id);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

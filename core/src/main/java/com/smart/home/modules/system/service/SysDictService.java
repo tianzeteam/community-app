@@ -3,6 +3,7 @@ package com.smart.home.modules.system.service;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.APIResponseCodeEnum;
 import com.smart.home.common.enums.RecordStatusEnum;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.modules.system.dao.SysDictMapper;
 import com.smart.home.modules.system.entity.SysDict;
 import com.smart.home.modules.system.entity.SysDictExample;
@@ -67,8 +68,13 @@ public class SysDictService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public int delete(List<Long> idList) {
+    public int delete(List<Long> idList) throws ServiceException {
         for (Long id : idList) {
+            // 如果创建时间为空，代表是内置参数，不允许删除
+            Date createdTime = sysDictMapper.queryCreatedTimeById(id.intValue());
+            if (Objects.isNull(createdTime)) {
+                throw new ServiceException("系统内置数据，不能删除");
+            }
             sysDictMapper.deleteByPrimaryKey(id.intValue());
         }
         return 1;
