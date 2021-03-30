@@ -534,12 +534,41 @@
       <if test="userId != null">
           and userId = #{userId}
       </if>
-      <if test="hitSensitiveCount != null">
-          and hitSensitiveCount > #{hitSensitiveCount}
-      </if>
-      <if test="reportCount != null">
-          and reportCount > #{reportCount}
-      </if>
+      <choose>
+          <when test="contentException != null and contentException == 2">
+              and ( 1=1
+              <if test="hitSensitiveCount != null">
+                 or hitSensitiveCount > #{hitSensitiveCount}
+              </if>
+              <if test="reportCount != null">
+                 or reportCount > #{reportCount}
+              </if>
+              <if test="textExceptionFlag != null and textExceptionFlag == 1">
+                  or autoAuditFlag in (3,4)
+              </if>
+              <if test="imageExceptionFlag != null and imageExceptionFlag == 1">
+                  or autoAuditFlag in (2,4)
+              </if>
+              )
+          </when>
+          <when test="contentException != null and contentException == 1">
+              and ( 1=1
+              <if test="hitSensitiveCount != null">
+                  or hitSensitiveCount > #{hitSensitiveCount}
+              </if>
+              <if test="reportCount != null">
+                  or reportCount > #{reportCount}
+              </if>
+              <if test="textExceptionFlag != null and textExceptionFlag == 1">
+                  or autoAuditFlag in (3,4)
+              </if>
+              <if test="imageExceptionFlag != null and imageExceptionFlag == 1">
+                  or autoAuditFlag in (2,4)
+              </if>
+              )
+          </when>
+      </choose>
+
       and auditFlag = 0
       <if test="textExceptionFlag != null and textExceptionFlag == 1">
           and autoAuditFlag in (3,4)
