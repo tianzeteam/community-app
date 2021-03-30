@@ -524,8 +524,8 @@
                     from community_post_reply cpr
                                  left join user_account ua on ua.id = cpr.user_id
                     ) t
-    where 1=1
-        <if test="contentTypeList != null">
+    where auditFlag = 0
+      <if test="contentTypeList != null">
             and contentType in
             <foreach collection="contentTypeList" item="contentType" open="(" separator="," close=")">
                 #{contentType}
@@ -552,30 +552,13 @@
               )
           </when>
           <when test="contentException != null and contentException == 1">
-              and ( 1=1
-              <if test="hitSensitiveCount != null">
-                  or hitSensitiveCount > #{hitSensitiveCount}
-              </if>
-              <if test="reportCount != null">
-                  or reportCount > #{reportCount}
-              </if>
-              <if test="textExceptionFlag != null and textExceptionFlag == 1">
+              and (hitSensitiveCount > 0
+                  or reportCount > 0
                   or autoAuditFlag in (3,4)
-              </if>
-              <if test="imageExceptionFlag != null and imageExceptionFlag == 1">
                   or autoAuditFlag in (2,4)
-              </if>
               )
           </when>
       </choose>
-
-      and auditFlag = 0
-      <if test="textExceptionFlag != null and textExceptionFlag == 1">
-          and autoAuditFlag in (3,4)
-      </if>
-      <if test="imageExceptionFlag != null and imageExceptionFlag == 1">
-          and autoAuditFlag in (2,4)
-      </if>
       <if test="sortField != null">
           order by #{sortField} desc
       </if>
