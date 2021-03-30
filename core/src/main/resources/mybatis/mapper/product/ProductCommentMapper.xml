@@ -554,8 +554,7 @@
           <when test="contentException != null and contentException == 1">
               and (hitSensitiveCount > 0
                   or reportCount > 0
-                  or autoAuditFlag in (3,4)
-                  or autoAuditFlag in (2,4)
+                  or autoAuditFlag in (2,3,4)
               )
           </when>
       </choose>
