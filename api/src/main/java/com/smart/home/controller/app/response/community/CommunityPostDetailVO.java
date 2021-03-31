@@ -53,7 +53,7 @@ public class CommunityPostDetailVO {
     private Integer commentFlag;
 
     @ApiModelProperty("被举报数量")
-    private Integer reportCount;
+    private Integer reportCount = 0;
 
     @ApiModelProperty("收藏数量")
     private Integer collectCount;
@@ -68,14 +68,14 @@ public class CommunityPostDetailVO {
      * 回复数量
      */
     @ApiModelProperty("回复数量")
-    private Integer replyCount;
+    private Integer replyCount = 0;
 
 
     /**
      * 分享数量
      */
     @ApiModelProperty("分享数量")
-    private Integer shareCount;
+    private Integer shareCount = 0;
     /**
      * 浏览数量
      */
