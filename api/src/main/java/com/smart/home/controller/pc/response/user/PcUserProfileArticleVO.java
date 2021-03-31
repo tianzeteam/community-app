@@ -22,5 +22,7 @@ public class PcUserProfileArticleVO {
     private String coverImage;
     @ApiModelProperty("发布时间")
     private Date createdTime;
+    @ApiModelProperty("审核状态：0待审核1审核通过2审核失败")
+    private Integer auditState;
 
 }
