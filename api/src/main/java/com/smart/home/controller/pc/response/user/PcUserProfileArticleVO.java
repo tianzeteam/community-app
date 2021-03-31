@@ -24,5 +24,7 @@ public class PcUserProfileArticleVO {
     private Date createdTime;
     @ApiModelProperty("审核状态：0待审核1审核通过2审核失败")
     private Integer auditState;
+    @ApiModelProperty("0草稿1上线")
+    private Integer state;
 
 }
