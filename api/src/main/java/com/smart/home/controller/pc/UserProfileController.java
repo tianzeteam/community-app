@@ -60,7 +60,7 @@ public class UserProfileController {
     @ApiOperation("根据审核状态获取投稿数据-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "queryType", value = "查询类型：1我的投稿0我的草稿", required = true),
-            @ApiImplicitParam(name = "auditState", value = "审核状态：0审核中1审核通过2审核未通过", required = true),
+            @ApiImplicitParam(name = "auditState", value = "审核状态：0审核中1审核通过2审核未通过", required = false),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
     })

@@ -671,7 +671,10 @@
   <select id="selectTitleImageCreateIimeByPage" resultType="com.smart.home.modules.article.entity.Article">
     select id,title,cover_image as coverImage,created_time as createdTime
     from article where user_id = #{userId}
-                   and state = #{state} and audit_state = #{auditState}
+                   and state = #{state}
+                   <if test="auditState != null">
+                     and audit_state = #{auditState}
+                   </if>
   </select>
 
   <select id="queryDetailByIdNoLogin" resultType="com.smart.home.modules.article.entity.Article">
