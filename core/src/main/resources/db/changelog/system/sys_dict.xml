@@ -111,4 +111,18 @@
             values('投诉原因','report.reason','内容不实,旧文重复,内容质量差,广告软文,其他问题',0,0,0);
         </sql>
     </changeSet>
+    <changeSet id="initValueAppName4SysDict" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_dict where dict_code = 'app.name';
+            </sqlCheck>
+        </preConditions>
+        <comment>app名称</comment>
+        <sql>
+            insert into sys_dict(dict_name,dict_code,dict_value,dict_type,state,revision)
+            values('app名称','app.name','智慧社区',0,0,0);
+            insert into sys_dict(dict_name,dict_code,dict_value,dict_type,state,revision)
+            values('app的logo地址','app.logo.url','http://todo.png',0,0,0);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

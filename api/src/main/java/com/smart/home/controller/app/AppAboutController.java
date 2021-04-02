@@ -1,6 +1,7 @@
 package com.smart.home.controller.app;
 
 import com.smart.home.common.util.BeanCopyUtils;
+import com.smart.home.controller.app.response.AboutBaseInfoVO;
 import com.smart.home.controller.app.response.AboutVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.auth.annotation.AnonAccess;
@@ -68,6 +69,20 @@ public class AppAboutController {
             return APIResponse.ERROR("app.version的数据字段未配置");
         }
         return APIResponse.OK(sysDict.getDictValue());
+    }
+
+    @ApiOperation("获取关于页面基本信息")
+    @AnonAccess
+    @GetMapping("/queryAboutBaseInfo")
+    public APIResponse<AboutBaseInfoVO> queryAboutBaseInfo() {
+        SysDict sysDict = sysDictService.queryByDictCode("app.version");
+        AboutBaseInfoVO vo = new AboutBaseInfoVO();
+        vo.setAppVersion(sysDict.getDictValue());
+        sysDict = sysDictService.queryByDictCode("app.name");
+        vo.setAppName(sysDict.getDictValue());
+        sysDict = sysDictService.queryByDictCode("app.logo.url");
+        vo.setAppLogoUrl(sysDict.getDictValue());
+        return APIResponse.OK(vo);
     }
 
 }
