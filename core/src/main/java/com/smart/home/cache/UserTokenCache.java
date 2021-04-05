@@ -3,6 +3,7 @@ package com.smart.home.cache;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.smart.home.modules.user.entity.UserAccount;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -28,8 +29,12 @@ public class UserTokenCache {
         return cache.getIfPresent(key);
     }
 
-    public static void remove(String key) {
-        cache.invalidate(key);
+    public static boolean remove(String key) {
+        if (StringUtils.isNotBlank(key)) {
+            cache.invalidate(key);
+            return true;
+        }
+        return false;
     }
 
     public static long size() {

@@ -211,8 +211,9 @@ public class UserAccountService {
     public void doLogout(Long userId) {
         UserAccount userAccount = findUserByUserId(userId);
         String token = userAccount.getAccessToken();
-        UserTokenCache.remove(token);
-        mapper.clearToken(userAccount.getId());
+        if (UserTokenCache.remove(token)) {
+            mapper.clearToken(userAccount.getId());
+        }
     }
 
     private int verifyWhenLogin(UserAccount userAccount) {
