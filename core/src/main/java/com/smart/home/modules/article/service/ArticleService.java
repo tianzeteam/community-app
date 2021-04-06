@@ -447,6 +447,11 @@ public class ArticleService {
         return articleMapper.queryIndexArticleCard(YesNoEnum.NO.getCode(), ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), null, YesNoEnum.YES.getCode());
     }
 
+    public List<Article> queryIndexArticleCardByPage(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        return queryIndexArticleCard();
+    }
+
     public List<Article> queryArticleCardByChannelId(Integer articleChannelId) {
         return articleMapper.queryIndexArticleCard(YesNoEnum.NO.getCode(), ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), articleChannelId, YesNoEnum.NO.getCode());
     }

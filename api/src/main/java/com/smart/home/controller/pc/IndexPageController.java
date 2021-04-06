@@ -1,6 +1,7 @@
 package com.smart.home.controller.pc;
 
 import com.smart.home.common.util.BeanCopyUtils;
+import com.smart.home.controller.app.response.article.ArticleCardVO;
 import com.smart.home.controller.pc.response.article.ArticleChannelSelectVO;
 import com.smart.home.controller.pc.response.article.IndexArticleCardVO;
 import com.smart.home.dto.APIResponse;
@@ -52,8 +53,15 @@ public class IndexPageController {
     @AnonAccess
     @GetMapping("/selectArticleCardByPage")
     public APIResponse<ResponsePageBean<IndexArticleCardVO>> selectArticleCardByPage(@RequestParam(required = true) Integer channelId, int pageNum, int pageSize) {
-        List<Article> list = articleService.selectArticleCardByPage(channelId, pageNum, pageSize);
+        List<Article> list = null;
+        if (channelId == 1) {
+            // 说明是推荐列表
+            list = articleService.queryIndexArticleCardByPage(pageNum, pageSize);
+        } else {
+            list = articleService.selectArticleCardByPage(channelId, pageNum, pageSize);
+        }
         List<IndexArticleCardVO> resultList = BeanCopyUtils.convertListTo(list, IndexArticleCardVO::new);
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
+
 }
