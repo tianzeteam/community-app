@@ -401,6 +401,7 @@
     <if test="permitCode != null and permitCode != ''">
       and (permits::json -> 'permits' ->> '${permitCode}')::int = 1
     </if>
+    order by id asc
   </select>
 
   <select id="findNicknameByUserId" resultType="java.lang.String">

@@ -97,6 +97,14 @@ public class ArticleController {
         if (StringUtils.isBlank(articleCreateDTO.getCoverImage()) && CollectionUtils.isEmpty(articleCreateDTO.getBannerImagesList())) {
             return APIResponse.ERROR("封面图片和轮播图片不能同时为空");
         }
+        if (articleCreateDTO.getState() == 1) {
+            if (StringUtils.isBlank(articleCreateDTO.getDetails())) {
+                return APIResponse.ERROR("正文不能为空");
+            }
+            if (articleCreateDTO.getChannelId() == null) {
+                return APIResponse.ERROR("所属频道不能为空");
+            }
+        }
         if (StringUtils.isBlank(articleCreateDTO.getCoverImage())) {
             // 如果封面图片为空，取轮播图片第一个为封面图片
             articleCreateDTO.setCoverImage(articleCreateDTO.getBannerImagesList().get(0));

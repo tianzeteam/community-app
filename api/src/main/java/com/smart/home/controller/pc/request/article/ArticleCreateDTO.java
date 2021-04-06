@@ -23,7 +23,6 @@ public class ArticleCreateDTO {
     private String title;
 
     @ApiModelProperty("正文")
-    @NotBlank(message = "正文不能为空")
     private String details;
 
     @ApiModelProperty("状态：0保存草稿1投稿")
@@ -40,7 +39,6 @@ public class ArticleCreateDTO {
     private List<String> imageList;
 
     @ApiModelProperty("下拉选择的频道主键id")
-    @NotNull(message = "请选择频道")
     private Long channelId;
 
     @ApiModelProperty("文章类型：0原创1转载")
