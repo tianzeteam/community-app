@@ -26,5 +26,7 @@ public class PcUserProfileArticleVO {
     private Integer auditState;
     @ApiModelProperty("0草稿1上线")
     private Integer state;
+    @ApiModelProperty("投稿类型：0文章1视频")
+    private Integer category;
 
 }

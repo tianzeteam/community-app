@@ -669,7 +669,7 @@
   </update>
 
   <select id="selectTitleImageCreateIimeByPage" resultType="com.smart.home.modules.article.entity.Article">
-    select id,title,audit_state as auditState,state,cover_image as coverImage,created_time as createdTime
+    select id,title,category,audit_state as auditState,state,cover_image as coverImage,created_time as createdTime
     from article where user_id = #{userId}
                    and state = #{state}
                    <if test="auditState != null">
