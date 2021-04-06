@@ -353,7 +353,7 @@
                  left join product_comment_fun_history pcfh on pcfh.source_id = pc.id and pcfh.user_id = #{loginUserId} and pcfh.category = 0
                  left join product_comment_like_history pclh on pclh.source_id = pc.id and pclh.user_id = #{loginUserId} and pclh.category = 0
                  left join product_comment_stamp_history pcsh on pcsh.source_id = pc.id and pcsh.user_id = #{loginUserId} and pcsh.category = 0
-    where product_id = #{productId} and audit_flag = 1
+    where pc.product_id = #{productId} and pc.audit_flag = 1
   </select>
 
   <select id="queryCommentDetailHead" resultType="com.smart.home.modules.product.entity.ProductComment">

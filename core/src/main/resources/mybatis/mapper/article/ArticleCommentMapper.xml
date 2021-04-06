@@ -343,7 +343,7 @@
                  left join user_data ud on ud.user_id = ua.id
                  left join article_like_history alh on alh.source_id = ac.id and alh.category = 0 and alh.user_id = #{userId,jdbcType=BIGINT}
                  left join article_stamp_history ash on ash.source_id = ac.id and ash.type = 0 and ash.user_id = #{userId,jdbcType=BIGINT}
-    where ac.article_id = #{articleId,jdbcType=BIGINT} and audit_flag = 1
+    where ac.article_id = #{articleId,jdbcType=BIGINT} and ac.audit_flag = 1
   </select>
 
   <select id="queryViaUserIdByPageNoLogin" resultType="com.smart.home.modules.article.entity.ArticleComment">
