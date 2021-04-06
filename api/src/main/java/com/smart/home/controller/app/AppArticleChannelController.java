@@ -76,6 +76,7 @@ public class AppArticleChannelController {
     }
 
     @ApiOperation("查询我添加的频道")
+    @AnonAccess
     @GetMapping("/queryMyChannel")
     public APIResponse<List<ArticleChannelVO>> queryMyChannel() {
         Long userId = UserUtils.getLoginUserId();
