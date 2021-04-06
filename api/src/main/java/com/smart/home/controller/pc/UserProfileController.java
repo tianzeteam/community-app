@@ -49,6 +49,7 @@ public class UserProfileController {
         UserAccount userAccount = userAccountService.findUserByUserId(userId);
         UserData userData = userDataService.findByUserId(userId);
         PcUserProfileVO vo = new PcUserProfileVO();
+        vo.setSign(userData.getSign());
         vo.setHeadUrl(userAccount.getHeadUrl());
         vo.setNickName(userAccount.getNickName());
         vo.setRemark(userData.getRemark());

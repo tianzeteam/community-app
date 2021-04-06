@@ -16,6 +16,8 @@ public class PcUserProfileVO {
     private String headUrl;
     @ApiModelProperty("昵称")
     private String nickName;
+    @ApiModelProperty("签名")
+    private String sign;
     @ApiModelProperty("个人简介")
     private String remark;
     @ApiModelProperty("我的投稿数量")
