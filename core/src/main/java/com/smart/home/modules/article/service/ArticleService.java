@@ -481,4 +481,10 @@ public class ArticleService {
         return articleMapper.countByExample(example);
     }
 
+    public String queryChannelNameByChannelId(Long channelId) {
+        if (Objects.isNull(channelId)) {
+            return "";
+        }
+        return articleMapper.queryChannelNameByChannelId(channelId);
+    }
 }

@@ -55,6 +55,7 @@ public class ArticleAdminAuditController {
         List<ArticleAdminPageVO> resultList = BeanCopyUtils.convertListTo(list, ArticleAdminPageVO::new, (s, t) -> {
             t.setAuthorId(s.getUserId());
             t.setArticleId(s.getId());
+            t.setChannelName(articleService.queryChannelNameByChannelId(s.getChannelId()));
         });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }

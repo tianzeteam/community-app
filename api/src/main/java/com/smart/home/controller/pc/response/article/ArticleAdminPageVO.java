@@ -21,7 +21,7 @@ public class ArticleAdminPageVO {
     @ApiModelProperty("标题")
     private String title;
     @ApiModelProperty("投稿类型：0文章1视频")
-    private String category;
+    private Integer category;
     @ApiModelProperty("投稿频道")
     private String channelName;
     @ApiModelProperty("投稿时间")

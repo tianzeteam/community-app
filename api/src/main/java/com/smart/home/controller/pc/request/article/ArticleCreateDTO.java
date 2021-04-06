@@ -22,7 +22,10 @@ public class ArticleCreateDTO {
     @Size(max = 40)
     private String title;
 
-    @ApiModelProperty("正文")
+    @ApiModelProperty("视频地址")
+    private String remark;
+
+    @ApiModelProperty("正文/视频简介")
     private String details;
 
     @ApiModelProperty("状态：0保存草稿1投稿")

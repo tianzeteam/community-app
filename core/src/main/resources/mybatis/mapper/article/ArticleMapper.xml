@@ -924,4 +924,7 @@
     select recommend_type from article where id = #{id,jdbcType=BIGINT}
   </select>
 
+  <select id="queryChannelNameByChannelId" resultType="java.lang.String">
+    select title from article_channel where id = #{channelId}
+  </select>
 </mapper>

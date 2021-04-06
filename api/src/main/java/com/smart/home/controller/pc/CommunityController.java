@@ -52,6 +52,7 @@ public class CommunityController {
     @PostMapping("/update")
     public APIResponse update(@Valid CommunityUpdateDTO communityUpdateDTO, BindingResult bindingResult) {
         Community community = new Community();
+        BeanUtils.copyProperties(communityUpdateDTO, community);
         community.setCreatedBy(UserUtils.getLoginUserId());
         try {
             return APIResponse.OK(communityService.update(community));

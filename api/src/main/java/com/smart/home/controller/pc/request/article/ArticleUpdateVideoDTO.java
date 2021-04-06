@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  **/
 @Data
 @ToString
-public class ArticleUpdateVideoDTO extends ArticleCreateVideoDTO {
+public class ArticleUpdateVideoDTO extends ArticleCreateDTO {
 
     @ApiModelProperty("主键id")
     @NotNull(message = "主键id不能为空")

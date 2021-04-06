@@ -131,7 +131,7 @@ public class ArticleController {
             if (StringUtils.isBlank(articleCreateDTO.getCoverImage())) {
                 return APIResponse.ERROR("封面图片不能为空");
             }
-            if (StringUtils.isBlank(articleCreateDTO.getDetails())) {
+            if (StringUtils.isBlank(articleCreateDTO.getRemark())) {
                 return APIResponse.ERROR("视频地址不能为空");
             }
             if (articleCreateDTO.getChannelId() == null) {

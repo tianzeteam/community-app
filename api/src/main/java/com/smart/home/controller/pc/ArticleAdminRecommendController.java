@@ -53,6 +53,7 @@ public class ArticleAdminRecommendController {
         List<ArticleAdminRecommendPageVO> resultList = BeanCopyUtils.convertListTo(list, ArticleAdminRecommendPageVO::new, (s, t) -> {
             t.setAuthorId(s.getUserId());
             t.setArticleId(s.getId());
+            t.setChannelName(articleService.queryChannelNameByChannelId(s.getChannelId()));
         });
         return APIResponse.OK(resultList);
     }
