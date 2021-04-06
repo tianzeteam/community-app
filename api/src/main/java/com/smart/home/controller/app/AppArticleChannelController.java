@@ -89,6 +89,8 @@ public class AppArticleChannelController {
                 }
             }
             List<ArticleChannelVO> resultList = BeanCopyUtils.convertListTo(list, ArticleChannelVO::new);
+            // id = 1， 说明是推荐的，app端不需要返回
+            resultList = resultList.stream().filter(x->{return !x.getId().equals(1);}).collect(Collectors.toList());
             return APIResponse.OK(resultList);
         } else {
             return APIResponse.OK(Collections.EMPTY_LIST);

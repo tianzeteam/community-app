@@ -790,7 +790,7 @@
            article_channel.title as channelName
     from article
                  left join article_channel on article.channel_id = article_channel.id
-    where article.channel_id = #{channelId,jdbcType=INTEGER}
+    where article.channel_id = #{channelId,jdbcType=INTEGER} and audit_state=1 and online_status=0
     order by article.created_time desc
   </select>
 
@@ -872,7 +872,7 @@
             id,
             category
     from article
-    where  state = 1 and audit_state = 1
+    where  state = 1 and audit_state = 1 and online_status = 0
     <if test="recommendFlag != null">
       and recommend_flag = #{recommendFlag,jdbcType=INTEGER}
     </if>
@@ -896,7 +896,7 @@
             source_from as sourceFrom,
             created_time as createdTime
     from article
-    where  state = 1 and audit_state = 1
+    where  state = 1 and audit_state = 1 and online_status = 0
     <if test="recommendFlag != null">
       and recommend_flag = #{recommendFlag,jdbcType=INTEGER}
     </if>

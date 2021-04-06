@@ -183,7 +183,7 @@ public class ArticleController {
      * @return
      */
     private APIResponse processCreateArticle(@RequestBody @Valid ArticleCreateDTO articleCreateDTO, Article article, List<String> imageList) {
-        if (articleCreateDTO.getProductTestResultDTO() == null && articleCreateDTO.getProductId() == null) {
+        if (articleCreateDTO.getProductTestResultDTO() == null && articleCreateDTO.getProductId() != null) {
             return APIResponse.ERROR("产品未插入，不能插入评测");
         }
         String testResult = null;

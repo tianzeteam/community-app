@@ -22,4 +22,8 @@ public class UserContext implements AutoCloseable {
     public void close() throws Exception {
         current.remove();
     }
+
+    public static void manuallyClose() {
+        current.remove();
+    }
 }

@@ -59,6 +59,8 @@ public class AccessTokenFilter implements Filter {
             OnlineUserCache.online(user.getId());
             // controller层或者service层直接用UserContext.getCurrentUser() 就能拿到用户信息了
             new UserContext(user);
+        } else {
+            UserContext.manuallyClose();
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
