@@ -60,7 +60,9 @@ public class IndexPageController {
         } else {
             list = articleService.selectArticleCardByPage(channelId, pageNum, pageSize);
         }
-        List<IndexArticleCardVO> resultList = BeanCopyUtils.convertListTo(list, IndexArticleCardVO::new);
+        List<IndexArticleCardVO> resultList = BeanCopyUtils.convertListTo(list, IndexArticleCardVO::new, (s, t)->{
+            t.setChannelName(articleService.queryChannelNameByChannelId(s.getChannelId()));
+        });
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
