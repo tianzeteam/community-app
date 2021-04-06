@@ -8,8 +8,11 @@ import com.smart.home.cache.SmsVerifyCodeLimitCache;
 import com.smart.home.cache.WechatAccessTokenCache;
 import com.smart.home.cloud.qcloud.sms.SmsSendUtil;
 import com.smart.home.cloud.wechat.login.WechatLoginUtil;
+import com.smart.home.common.contants.SecurityConsts;
 import com.smart.home.common.enums.APIResponseCodeEnum;
+import com.smart.home.common.exception.RestfulRequestException;
 import com.smart.home.common.exception.ServiceException;
+import com.smart.home.common.util.JwtUtil;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.common.util.RandomUtils;
 import com.smart.home.dto.auth.User;
@@ -61,6 +64,22 @@ public class LoginController {
         }
         User user = UserAssembler.assemblerUser(userAccount);
         return APIResponse.OK(user);
+    }
+
+    @AnonAccess
+    @ApiOperation(value = "根据token获取用户信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "token", value = "访问令牌",required = true)
+    })
+    @PostMapping("queryUserInfoByToken")
+    public APIResponse<User> queryUserInfoByToken(@RequestParam(required = true) String token) {
+        try {
+            UserAccount userAccount = userAccountService.getUserAccountByAccessToken(token);
+            User user = UserAssembler.assemblerUser(userAccount);
+            return APIResponse.OK(user);
+        } catch (ServiceException e) {
+            throw new RestfulRequestException(e.getCode(), e.getMessage());
+        }
     }
 
     @AnonAccess

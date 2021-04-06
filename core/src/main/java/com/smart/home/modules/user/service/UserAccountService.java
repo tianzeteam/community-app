@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.cache.UserTokenCache;
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.contants.SecurityConsts;
 import com.smart.home.common.enums.APIResponseCodeEnum;
 import com.smart.home.common.enums.AccountStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
@@ -206,6 +207,23 @@ public class UserAccountService {
             }
         }
         throw new AuthorizationException("用户名或者密码错误");
+    }
+
+    public UserAccount getUserAccountByAccessToken(String accessToken) throws ServiceException {
+        UserAccount userAccount = null;
+        String userIdString = JwtUtil.getClaim(accessToken, SecurityConsts.ACCOUNT);
+        if (StringUtils.isNotBlank(userIdString)) {
+            Long userId = Long.valueOf(userIdString);
+            userAccount = mapper.selectByPrimaryKey(userId);
+            if (Objects.isNull(userAccount)) {
+                throw new ServiceException("用户不存在");
+            }
+            userAccount.setRoleCodeList(findUserRoleCodeList(userAccount.getId()));
+            loadCommunityAuth(userAccount);
+            return userAccount;
+        } else {
+            throw new ServiceException("非法的accessToken");
+        }
     }
 
     public void doLogout(Long userId) {

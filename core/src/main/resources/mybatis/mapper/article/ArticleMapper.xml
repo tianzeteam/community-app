@@ -783,6 +783,7 @@
 
   <select id="selectArticleCardByPage" resultType="com.smart.home.modules.article.entity.Article">
     select article.id,
+           article.channel_id as channelId,
            article.title,
            article.cover_image as coverImage,
            article.created_time as createdTime,
@@ -892,6 +893,7 @@
     select cover_image as coverImage,
             title,
             id,
+            channel_id as channelId,
             category,
             source_from as sourceFrom,
             created_time as createdTime
