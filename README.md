@@ -187,3 +187,9 @@ POST JSON格式请求  http://1.15.72.79:9200/_analyze
     "text":"中华人"
 }
 ```
+
+# 启动nginx
+```
+/etc/nginx/nginx.conf 
+service nginx start
+```
