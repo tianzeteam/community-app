@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.smart.home.common.contants.RoleConsts;
@@ -94,10 +95,10 @@ public class ArticleController {
     @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @PostMapping("/create")
     public APIResponse create(@Valid @RequestBody ArticleCreateDTO articleCreateDTO, BindingResult bindingResult) {
-        if (StringUtils.isBlank(articleCreateDTO.getCoverImage()) && CollectionUtils.isEmpty(articleCreateDTO.getBannerImagesList())) {
-            return APIResponse.ERROR("封面图片和轮播图片不能同时为空");
-        }
         if (articleCreateDTO.getState() == 1) {
+            if (StringUtils.isBlank(articleCreateDTO.getCoverImage()) && CollectionUtils.isEmpty(articleCreateDTO.getBannerImagesList())) {
+                return APIResponse.ERROR("封面图片和轮播图片不能同时为空");
+            }
             if (StringUtils.isBlank(articleCreateDTO.getDetails())) {
                 return APIResponse.ERROR("正文不能为空");
             }
@@ -107,14 +108,16 @@ public class ArticleController {
         }
         if (StringUtils.isBlank(articleCreateDTO.getCoverImage())) {
             // 如果封面图片为空，取轮播图片第一个为封面图片
-            articleCreateDTO.setCoverImage(articleCreateDTO.getBannerImagesList().get(0));
+            if (CollUtil.isNotEmpty(articleCreateDTO.getBannerImagesList())) {
+                articleCreateDTO.setCoverImage(articleCreateDTO.getBannerImagesList().get(0));
+            }
         }
         Article article = new Article();
         BeanUtils.copyProperties(articleCreateDTO, article);
         article.setUserId(UserUtils.getLoginUserId());
         article.setCreatedBy(UserUtils.getLoginUserId());
         article.setCategory(ArticleCategoryEnum.CONTENT.getCode());
-        if (!CollectionUtils.isEmpty(articleCreateDTO.getBannerImagesList())) {
+        if (CollUtil.isNotEmpty(articleCreateDTO.getBannerImagesList())) {
             article.setBannerImages(JSON.toJSONString(articleCreateDTO.getBannerImagesList()));
         }
         return processCreateArticle(articleCreateDTO, article, articleCreateDTO.getImageList());
@@ -124,8 +127,16 @@ public class ArticleController {
     @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
     @PostMapping("/createVideo")
     public APIResponse createVideo(@Valid @RequestBody ArticleCreateDTO articleCreateDTO, BindingResult bindingResult) {
-        if (StringUtils.isBlank(articleCreateDTO.getCoverImage())) {
-            return APIResponse.ERROR("封面图片不能为空");
+        if (articleCreateDTO.getState() == 1) {
+            if (StringUtils.isBlank(articleCreateDTO.getCoverImage())) {
+                return APIResponse.ERROR("封面图片不能为空");
+            }
+            if (StringUtils.isBlank(articleCreateDTO.getDetails())) {
+                return APIResponse.ERROR("视频地址不能为空");
+            }
+            if (articleCreateDTO.getChannelId() == null) {
+                return APIResponse.ERROR("所属频道不能为空");
+            }
         }
         Article article = new Article();
         BeanUtils.copyProperties(articleCreateDTO, article);
@@ -191,7 +202,7 @@ public class ArticleController {
      * @return
      */
     private APIResponse processCreateArticle(@RequestBody @Valid ArticleCreateDTO articleCreateDTO, Article article, List<String> imageList) {
-        if (articleCreateDTO.getProductTestResultDTO() == null && articleCreateDTO.getProductId() != null) {
+        if (articleCreateDTO.getProductTestResultDTO() != null && articleCreateDTO.getProductId() == null) {
             return APIResponse.ERROR("产品未插入，不能插入评测");
         }
         String testResult = null;
