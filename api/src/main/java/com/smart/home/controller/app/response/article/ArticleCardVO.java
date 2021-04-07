@@ -28,5 +28,7 @@ public class ArticleCardVO {
     private Date createdTime;
     @ApiModelProperty("文章类型：0文章1视频")
     private Integer category;
+    @ApiModelProperty("作者")
+    private String nickName;
 
 }

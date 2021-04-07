@@ -341,6 +341,7 @@ public class ArticleService {
         ArticleExample example = new ArticleExample();
         example.createCriteria().andStateEqualTo(ArticleStateEnum.PUBLISH.getState())
                 .andAuditStateEqualTo(AuditStatusEnum.APPROVED.getCode())
+                .andTopFlagEqualTo(YesNoEnum.YES.getCode())
                 .andRecommendFlagEqualTo(YesNoEnum.YES.getCode());
         return articleMapper.selectByExample(example);
     }

@@ -890,24 +890,25 @@
   </select>
 
   <select id="queryIndexArticleCard" resultType="com.smart.home.modules.article.entity.Article">
-    select cover_image as coverImage,
-            title,
-            id,
-            channel_id as channelId,
-            category,
-            source_from as sourceFrom,
-            created_time as createdTime
-    from article
-    where  state = 1 and audit_state = 1 and online_status = 0
+    select article.cover_image as coverImage,
+            article.title,
+            article.id,
+            article.channel_id as channelId,
+            article.category,
+            article.source_from as sourceFrom,
+            article.created_time as createdTime,
+            user_account.nick_name as nickName
+    from article left join user_account on article.user_id = user_account.id
+    where  article.state = 1 and article.audit_state = 1 and article.online_status = 0
     <if test="recommendFlag != null">
-      and recommend_flag = #{recommendFlag,jdbcType=INTEGER}
+      and article.recommend_flag = #{recommendFlag,jdbcType=INTEGER}
     </if>
     <if test="channelId != null">
-      and channel_id = #{channelId,jdbcType=INTEGER}
+      and article.channel_id = #{channelId,jdbcType=INTEGER}
     </if>
-    and top_flag = #{topFlag,jdbcType=INTEGER}
-    and recommend_type = #{recommendType,jdbcType=INTEGER}
-    order by audit_time desc
+    and article.top_flag = #{topFlag,jdbcType=INTEGER}
+    and article.recommend_type = #{recommendType,jdbcType=INTEGER}
+    order by article.audit_time desc
   </select>
 
   <select id="findUserIdAndCategory" resultType="com.smart.home.modules.article.po.UserIdAndCategoryPO">
