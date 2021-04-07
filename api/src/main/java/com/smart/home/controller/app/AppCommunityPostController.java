@@ -122,6 +122,15 @@ public class AppCommunityPostController {
             CommunityPostDTO communityPostDTO = communityPostService.queryDetailNotLogin(id);
             BeanUtils.copyProperties(communityPostDTO, communityPostDetailVO);
         }
+        if (communityPostDetailVO.getReportCount() == null) {
+            communityPostDetailVO.setReportCount(0);
+        }
+        if (communityPostDetailVO.getReplyCount() == null) {
+            communityPostDetailVO.setReportCount(0);
+        }
+        if (communityPostDetailVO.getShareCount() == null) {
+            communityPostDetailVO.setShareCount(0);
+        }
         return APIResponse.OK(communityPostDetailVO);
     }
 
