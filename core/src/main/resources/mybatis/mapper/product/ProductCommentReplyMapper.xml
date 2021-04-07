@@ -372,4 +372,12 @@
   <update id="updateHitSensitiveCount">
     update product_comment_reply set hit_sensitive_count = #{count} where id = #{id}
   </update>
+
+  <select id="findUserIdById" resultType="java.lang.Long">
+    select user_id from product_comment_reply where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <update id="manuallyReject">
+    update product_comment_reply set audit_flag = #{auditFlag} where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

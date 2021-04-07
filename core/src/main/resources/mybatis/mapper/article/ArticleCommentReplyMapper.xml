@@ -294,4 +294,12 @@
     set auto_audit_flag = #{autoAuditFlag},image_exception_reason=#{imageExceptionReason}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="findUserIdById" resultType="java.lang.Long">
+    select user_id from article_comment_reply where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <update id="manuallyReject">
+    update article_comment_reply set audit_flag = #{auditFlag} where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

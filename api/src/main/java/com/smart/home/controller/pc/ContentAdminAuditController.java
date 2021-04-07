@@ -1,5 +1,6 @@
 package com.smart.home.controller.pc;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.BeanCopyUtils;
@@ -12,6 +13,7 @@ import com.smart.home.dto.ContentAdminAuditApproveTO;
 import com.smart.home.dto.ContentAdminAuditSearchTO;
 import com.smart.home.dto.ContentAuditAdminRecordTO;
 import com.smart.home.dto.auth.annotation.RoleAccess;
+import com.smart.home.enums.ContentTypeEnum;
 import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.community.service.CommunityPostReplyService;
 import com.smart.home.modules.community.service.CommunityPostService;
@@ -108,7 +110,17 @@ public class ContentAdminAuditController {
     @PostMapping("/selectNeedAuditContent")
     public APIResponse<List<ContentAuditAdminRecordVO>> selectNeedAuditContent(@Valid @RequestBody ContentAdminAuditSearchDTO contentAdminAuditSearchDTO, BindingResult bindingResult) {
         ContentAdminAuditSearchTO to = BeanCopyUtils.convertTo(contentAdminAuditSearchDTO, ContentAdminAuditSearchTO::new,(s, t)->{
-           t.setContentTypeList(s.getContentType());
+            List<Integer> contentList = s.getContentType();
+            if (CollUtil.isNotEmpty(contentList)) {
+                if (contentList.contains(ContentTypeEnum.ARTICLE_COMMENT.getCode())) {
+                    contentList.add(ContentTypeEnum.ARTICLE_COMMENT_REPLY.getCode());
+                }
+                if (contentList.contains(ContentTypeEnum.PRODUCT_COMMENT.getCode())) {
+                    contentList.add(ContentTypeEnum.PRODUCT_COMMENT_REPLY.getCode());
+                }
+            }
+            t.setContentTypeList(contentList);
+
         });
         List<ContentAuditAdminRecordTO> list = contentService.selectNeedAuditContent(to);
         List<ContentAuditAdminRecordVO> resultList = BeanCopyUtils.convertListTo(list, ContentAuditAdminRecordVO::new, (s,t)->{

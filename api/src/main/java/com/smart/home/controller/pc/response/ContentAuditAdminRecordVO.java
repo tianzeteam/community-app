@@ -20,7 +20,7 @@ public class ContentAuditAdminRecordVO {
     private String nickName;
     @ApiModelProperty("标题")
     private String title;
-    @ApiModelProperty("内容类型：0评论1评价2帖子3回帖")
+    @ApiModelProperty("内容类型：0评论1评价2帖子3回帖4评论的回复5评价的回复")
     private Integer contentType;
     @ApiModelProperty("文本内容")
     private String contents;

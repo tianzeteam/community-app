@@ -38,4 +38,7 @@ public interface ArticleCommentReplyMapper {
 
     int updateAutoAuditFlag4ImageAudit(@Param("id") Long id, @Param("autoAuditFlag") int autoAuditFlag, @Param("imageExceptionReason") String imageExceptionReason);
 
+    Long findUserIdById(@Param("id") Long id);
+
+    int manuallyReject(@Param("id") Long id,@Param("auditFlag") int auditFlag);
 }
