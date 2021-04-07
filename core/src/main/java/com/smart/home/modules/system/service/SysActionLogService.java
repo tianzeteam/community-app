@@ -20,32 +20,21 @@ public class SysActionLogService {
     @Resource
     SysActionLogMapper sysActionLogMapper;
 
-    public int create(SysActionLog sysActionLog) {
-                                                                                                                                                                                        sysActionLog.setCreatedTime(new Date());
-                                            return sysActionLogMapper.insertSelective(sysActionLog);
-    }
-
-    public int update(SysActionLog sysActionLog) {
-                                                                                                                                                                                                return sysActionLogMapper.updateByPrimaryKeySelective(sysActionLog);
-    }
-
-    public int deleteById(Long id) {
-        return sysActionLogMapper.deleteByPrimaryKey(id);
-    }
-
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            sysActionLogMapper.deleteByPrimaryKey(id);
-        }
-    }
-
     public List<SysActionLog> selectByPage(SysActionLog sysActionLog, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         SysActionLogExample example = new SysActionLogExample();
         SysActionLogExample.Criteria criteria = example.createCriteria();
-        // TODO 按需根据字段查询
-                                                                                                                                        return sysActionLogMapper.selectByExample(example);
+        if (sysActionLog.getUserId() != null) {
+            criteria.andCreatedByEqualTo(sysActionLog.getUserId());
+        }
+        if (sysActionLog.getStartDate() != null) {
+            criteria.andCreatedTimeGreaterThanOrEqualTo(sysActionLog.getStartDate());
+        }
+        if (sysActionLog.getEndDate() != null) {
+            criteria.andCreatedTimeLessThanOrEqualTo(sysActionLog.getEndDate());
+        }
+        example.orderBy("created_time desc");
+        return sysActionLogMapper.selectByExample(example);
     }
 
     public SysActionLog findById(Long id) {
@@ -53,4 +42,12 @@ public class SysActionLogService {
         return sysActionLog;
     }
 
+    public void loginLog(String clientIpAddr, Long userId, String message) {
+        SysActionLog sysActionLog = new SysActionLog();
+        sysActionLog.withCreatedBy(userId)
+                .withCreatedTime(new Date())
+                .withIp(clientIpAddr)
+                .withName("用户登陆").withMessage(message);
+        sysActionLogMapper.insertSelective(sysActionLog);
+    }
 }

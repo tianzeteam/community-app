@@ -6,6 +6,10 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class SysActionLog implements Serializable {
+    private Long userId;
+    private Date startDate;
+    private Date endDate;
+    //////////////////////////
     private Long id;
 
     private String name;
@@ -145,6 +149,30 @@ public class SysActionLog implements Serializable {
         result = prime * result + ((getCreatedBy() == null) ? 0 : getCreatedBy().hashCode());
         result = prime * result + ((getCreatedTime() == null) ? 0 : getCreatedTime().hashCode());
         return result;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     /**

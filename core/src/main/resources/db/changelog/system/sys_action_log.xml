@@ -40,4 +40,16 @@
 
         </sql>
     </changeSet>
+    <changeSet id="createIndex4SysActionLog" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="sys_action_log" indexName="idx_sal_created_time"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_sal_created_time on sys_action_log using btree(CREATED_TIME);
+            create index idx_sal_user_id on sys_action_log using btree(CREATED_BY);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

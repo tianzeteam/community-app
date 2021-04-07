@@ -16,12 +16,15 @@ import com.smart.home.common.util.JwtUtil;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.common.util.RandomUtils;
 import com.smart.home.dto.auth.User;
+import com.smart.home.modules.system.entity.SysActionLog;
+import com.smart.home.modules.system.service.SysActionLogService;
 import com.smart.home.modules.system.service.SysConfigService;
 import com.smart.home.modules.user.entity.UserAccount;
 import com.smart.home.modules.user.entity.UserData;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.modules.user.service.UserDataService;
+import com.smart.home.util.WebUtils;
 import com.wf.captcha.utils.CaptchaUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -51,14 +54,18 @@ public class LoginController {
     private UserDataService userDataService;
     @Autowired
     private SysConfigService sysConfigService;
+    @Autowired
+    private SysActionLogService sysActionLogService;
 
     @AnonAccess
     @ApiOperation(value = "用户名密码登陆")
     @PostMapping("loginByPassword")
-    public APIResponse<User> login(@RequestParam String username, @RequestParam String password) {
+    public APIResponse<User> login(@RequestParam String username, @RequestParam String password, HttpServletRequest request) {
         UserAccount userAccount = null;
         try {
             userAccount = userAccountService.doAuthentication(username, password);
+            // 登陆日志
+            sysActionLogService.loginLog(WebUtils.getClientIpAddr(request), userAccount.getId(), "用户名密码登陆");
         } catch (ServiceException e) {
             return APIResponse.ERROR(e.getMessage());
         }
@@ -85,11 +92,12 @@ public class LoginController {
     @AnonAccess
     @ApiOperation(value = "手机验证码登陆")
     @PostMapping("/loginBySmsCode")
-    public APIResponse<User> loginBySmsCode(@RequestParam String mobile, @RequestParam String smsVerifyCode) {
+    public APIResponse<User> loginBySmsCode(@RequestParam String mobile, @RequestParam String smsVerifyCode, HttpServletRequest request) {
         if (SmsVerifyCodeCache.isValid(mobile, smsVerifyCode)) {
             UserAccount userAccount = null;
             try {
                 userAccount = userAccountService.loginViaMobile(mobile);
+                sysActionLogService.loginLog(WebUtils.getClientIpAddr(request), userAccount.getId(), "手机验证码登陆");
             } catch (ServiceException e) {
                 return APIResponse.ERROR(e.getMessage());
             }
@@ -129,7 +137,7 @@ public class LoginController {
                     "     * }", required = true)
     })
     @PostMapping("/loginByWechat")
-    public APIResponse loginByWechat(String data) {
+    public APIResponse loginByWechat(String data, HttpServletRequest request) {
         JSONObject jsonObject = JSON.parseObject(data);
         String wx = jsonObject.getString("openId");
         if (!WechatAccessTokenCache.exists(wx)) {
@@ -149,6 +157,7 @@ public class LoginController {
             return APIResponse.ERROR(e.getMessage());
         }
         User user = UserAssembler.assemblerUser(userAccount);
+        sysActionLogService.loginLog(WebUtils.getClientIpAddr(request), userAccount.getId(), "微信登陆");
         return APIResponse.OK(user);
     }
 
