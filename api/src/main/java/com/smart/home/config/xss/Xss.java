@@ -23,7 +23,7 @@ public class Xss {
     private String defaultExcludes = "/favicon.ico,/img/*,/js/*,/css/*,/lib/*";
 
     /** 忽略规则，可通过“,”隔开多个 */
-    private String excludes = "";
+    private String excludes = "/api/pc/statisticPage/update,/api/pc/statisticPage/create";
 
     /**
      * 拼接忽略规则

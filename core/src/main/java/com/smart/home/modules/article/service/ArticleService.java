@@ -286,6 +286,8 @@ public class ArticleService {
             Article article = findById(id);
             article.setOnlineStatus(RecordStatusEnum.PAUSED.getStatus());
             article.setUpdatedBy(userId);
+            article.setTopFlag(YesNoEnum.NO.getCode());
+            article.setRecommendFlag(YesNoEnum.NO.getCode());
             articleMapper.updateByPrimaryKeySelective(article);
             // 同步es
             articleEsServiceImpl.deleteById(id);

@@ -305,6 +305,7 @@
     select ac.id,
            ac.article_id as articleId,
            ac.contents,
+           ac.images,
            ac.created_time as createdTime,
            ac.like_count as likeCount,
            ac.stamp_count as stampCount,

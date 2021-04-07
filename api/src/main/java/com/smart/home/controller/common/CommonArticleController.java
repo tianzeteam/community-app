@@ -299,7 +299,11 @@ public class CommonArticleController {
             return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
         } else {
             List<ArticleComment> list = articleCommentService.queryCommentByPageNoLogin(articleId, pageNum, pageSize);
-            List<ArticleCommentVO> resultList = BeanCopyUtils.convertListTo(list, ArticleCommentVO::new);
+            List<ArticleCommentVO> resultList = BeanCopyUtils.convertListTo(list, ArticleCommentVO::new, (s, t)->{
+                if (StringUtils.isNotBlank(s.getImages())) {
+                    t.setImageList(JSON.parseArray(s.getImages(), String.class));
+                }
+            });
             if (CollUtil.isNotEmpty(resultList)) {
                 for (ArticleCommentVO articleCommentVO : resultList) {
                     // 加载二级评论
@@ -469,7 +473,10 @@ public class CommonArticleController {
     })
     @RoleAccess(RoleConsts.REGISTER)
     @PostMapping("/addCommentReply")
-    public APIResponse addCommentReply(Long articleId, Long articleCommentId,Long articleCommentAuthorId, String contents) {
+    public APIResponse addCommentReply(@RequestParam(required = true) Long articleId,
+                                       @RequestParam(required = true) Long articleCommentId,
+                                       @RequestParam(required = true) Long articleCommentAuthorId,
+                                       @RequestParam(required = true) String contents) {
         Long fromUserId = UserUtils.getLoginUserId();
         articleCommentReplyService.create(fromUserId, articleId, articleCommentId, contents);
         messageService.createReplyMessage(MessageSubTypeEnum.ARTICLE_COMMENT, articleId, fromUserId, articleCommentAuthorId, contents);
