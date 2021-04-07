@@ -9,6 +9,7 @@ import com.smart.home.common.util.FileUtils;
 import com.smart.home.enums.EsSaveTypeEnum;
 import com.smart.home.es.bean.ProductBean;
 import com.smart.home.es.dto.KeyValueDTO;
+import com.smart.home.es.service.ProductCommentEsService;
 import com.smart.home.es.service.ProductEsService;
 import com.smart.home.modules.product.dao.ProductMapper;
 import com.smart.home.modules.product.dao.ProductParamSettingMapper;
@@ -50,6 +51,8 @@ public class ProductService {
     private SysFileService sysFileService;
     @Autowired
     private ProductEsService productEsServiceImpl;
+    @Autowired
+    private ProductCommentEsService productCommentEsServiceImpl;
 
     @Transactional(rollbackFor = RuntimeException.class)
     public int create(Product product) throws ServiceException {
@@ -210,8 +213,12 @@ public class ProductService {
     public void delete(List<Long> idList) {
         for (Long id : idList) {
             productMapper.softDelete(id.intValue());
-            // 删除es数据
-            productEsServiceImpl.deleteById(id);
+            CompletableFuture.runAsync(()->{
+                // 删除es数据
+                productEsServiceImpl.deleteById(id);
+                // 删除es中的评论
+                productCommentEsServiceImpl.deleteByProductId(id.intValue());
+            });
         }
     }
 

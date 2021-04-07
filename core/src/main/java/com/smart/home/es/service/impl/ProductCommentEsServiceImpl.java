@@ -6,6 +6,7 @@ import com.smart.home.es.service.EsQueryService;
 import com.smart.home.es.service.ProductCommentEsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author jason
@@ -22,4 +23,9 @@ public class ProductCommentEsServiceImpl extends EsQueryService implements Produ
         productCommentRepository.save(productCommentBean);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteByProductId(Integer productId) {
+        return productCommentRepository.deleteByProductId(productId);
+    }
 }

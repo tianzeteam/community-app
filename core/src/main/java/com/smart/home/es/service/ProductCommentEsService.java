@@ -10,4 +10,5 @@ public interface ProductCommentEsService {
 
     void save(ProductCommentBean productCommentBean);
 
+    int deleteByProductId(Integer id);
 }

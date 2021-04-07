@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface ProductCommentRepository extends ElasticsearchRepository<ProductCommentBean, Long> {
+
+    int deleteByProductId(Integer productId);
+
 }
