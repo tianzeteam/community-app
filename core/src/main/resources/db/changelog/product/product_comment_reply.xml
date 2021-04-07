@@ -98,4 +98,28 @@
             COMMENT ON COLUMN product_comment_reply.to_user_name IS '回复给谁的昵称';
         </sql>
     </changeSet>
+    <changeSet id="addColumnAutoAuditFlag4ProductCommentReply" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product_comment_reply" columnName="auto_audit_flag"/>
+            </not>
+        </preConditions>
+        <comment>新增字段</comment>
+        <sql>
+            alter table product_comment_reply add column auto_audit_flag int default 0;
+            COMMENT ON COLUMN product_comment_reply.auto_audit_flag IS '机审标记:0还未机审1机审通过2机审图片异常3机审文本异常';
+
+            alter table product_comment_reply add column audit_flag int default 0;
+            COMMENT ON COLUMN product_comment_reply.audit_flag IS '机审标记:0还未审核1审核通过2审核不通过';
+
+            alter table product_comment_reply add column hit_sensitive_count int default 0;
+            COMMENT ON COLUMN product_comment_reply.hit_sensitive_count IS '命中敏感词数量';
+
+            alter table product_comment_reply add column text_exception_reason varchar(32);
+            COMMENT ON COLUMN product_comment_reply.text_exception_reason IS '机审文本异常原因';
+
+            alter table product_comment_reply add column image_exception_reason varchar(32);
+            COMMENT ON COLUMN product_comment_reply.image_exception_reason IS '机审图片异常原因';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

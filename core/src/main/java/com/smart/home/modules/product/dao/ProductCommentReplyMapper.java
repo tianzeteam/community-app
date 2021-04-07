@@ -47,4 +47,13 @@ public interface ProductCommentReplyMapper {
     List<ProductCommentReply> queryCommentDetailReplyByPage(@Param("loginUserId") Long loginUserId,@Param("productCommentId") Long productCommentId,@Param("pid") Long pid);
 
     UserAccount findUserAccountByCommentId(@Param("productCommentId") Long productCommentId);
+
+    int updateAutoAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag, @Param("textExceptionReason") String textExceptionReason);
+
+    int updateAutoAuditFlag4ImageAudit(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag, @Param("imageExceptionReason") String imageExceptionReason);
+
+    int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id,@Param("autoAuditFlag") int autoAuditFlag,@Param("auditFlag") int auditFlag);
+
+    int updateHitSensitiveCount(@Param("id") long id,@Param("count") int count);
+
 }

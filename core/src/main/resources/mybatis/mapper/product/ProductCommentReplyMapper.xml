@@ -122,7 +122,8 @@
       #{stampCount,jdbcType=INTEGER}, #{revision,jdbcType=INTEGER}, #{createdTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.smart.home.modules.product.entity.ProductCommentReply">
+  <insert id="insertSelective" parameterType="com.smart.home.modules.product.entity.ProductCommentReply"
+          useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert into product_comment_reply
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -351,4 +352,24 @@
     left join user_account ua on ua.id = pc.user_id
     where pc.id = #{productCommentId,jdbcType=BIGINT}
   </select>
+
+  <update id="updateAutoAuditFlag">
+    update product_comment_reply
+    set auto_audit_flag = #{autoAuditFlag},text_exception_reason=#{textExceptionReason}
+    where id = #{id,jdbcType=BIGINT}
+    </update>
+
+  <update id="updateAutoAuditFlag4ImageAudit">
+    update product_comment_reply
+    set auto_audit_flag = #{autoAuditFlag},image_exception_reason=#{imageExceptionReason}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateAutoAuditFlagAndAuditFlag">
+    update product_comment_reply set auto_audit_flag = #{autoAuditFlag},audit_flag=#{auditFlag} where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateHitSensitiveCount">
+    update product_comment_reply set hit_sensitive_count = #{count} where id = #{id}
+  </update>
 </mapper>
