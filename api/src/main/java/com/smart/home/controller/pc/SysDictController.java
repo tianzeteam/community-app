@@ -45,7 +45,7 @@ public class SysDictController {
 
     @ApiOperation(value = "更新数据字典")
     @PostMapping(value = "/update")
-    public APIResponse update(SysDictDTO sysDictDTO) {
+    public APIResponse update(SysDictUpdateDTO sysDictDTO) {
         SysDict sysDict = new SysDict();
         BeanUtils.copyProperties(sysDictDTO, sysDict);
         sysDict.setUpdatedBy(UserUtils.getLoginUserId());

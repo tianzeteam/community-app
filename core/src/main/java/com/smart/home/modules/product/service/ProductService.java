@@ -213,6 +213,8 @@ public class ProductService {
     public void delete(List<Long> idList) {
         for (Long id : idList) {
             productMapper.softDelete(id.intValue());
+            // 删除产品对应的参数
+            productParamValueMapper.deleteByProductId(id.intValue());
             CompletableFuture.runAsync(()->{
                 // 删除es数据
                 productEsServiceImpl.deleteById(id);
