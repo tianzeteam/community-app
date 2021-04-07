@@ -125,4 +125,16 @@
             values('app的logo地址','app.logo.url','http://todo.png',0,0,0);
         </sql>
     </changeSet>
+    <changeSet id="initValueAutoAuditSwitch4SysDict" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_dict where dict_code = 'switch.content.audit.autoPass';
+            </sqlCheck>
+        </preConditions>
+        <comment>机审通过是否自动通过</comment>
+        <sql>
+            insert into sys_dict(dict_name,dict_code,dict_value,dict_type,state,revision)
+            values('机审通过是否自动通过：0否1是','switch.content.audit.autoPass','0',0,0,0);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

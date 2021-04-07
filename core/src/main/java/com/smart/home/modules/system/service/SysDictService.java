@@ -112,6 +112,10 @@ public class SysDictService {
         return null;
     }
 
+    public String queryValueByDictCode(String dictCode) {
+        return queryByDictCode(dictCode).getDictValue();
+    }
+
     public SysDict findById(Integer id) {
         return sysDictMapper.selectByPrimaryKey(id);
     }

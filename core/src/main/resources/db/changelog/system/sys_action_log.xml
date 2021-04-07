@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableSysActionLog" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="sys_action_log"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建行为日志表</comment>
+        <sql>
+            CREATE TABLE sys_action_log(
+            ID BIGINT NOT NULL,
+            name VARCHAR(32),
+            ip VARCHAR(32),
+            message TEXT,
+            CREATED_BY BIGINT,
+            CREATED_TIME TIMESTAMP,
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON COLUMN sys_action_log.ID IS '主键ID';
+            COMMENT ON COLUMN sys_action_log.name IS '日志名称';
+            COMMENT ON COLUMN sys_action_log.ip IS 'ip地址';
+            COMMENT ON COLUMN sys_action_log.message IS '日志消息';
+            COMMENT ON COLUMN sys_action_log.CREATED_BY IS '创建人';
+            COMMENT ON COLUMN sys_action_log.CREATED_TIME IS '创建时间';
+
+            CREATE SEQUENCE sys_action_log_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "sys_action_log" alter column ID set default nextval('sys_action_log_id_seq');
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

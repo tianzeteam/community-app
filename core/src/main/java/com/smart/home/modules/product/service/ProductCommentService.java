@@ -21,6 +21,7 @@ import com.smart.home.modules.product.dao.ProductCommentMapper;
 import com.smart.home.modules.product.entity.Product;
 import com.smart.home.modules.product.entity.ProductComment;
 import com.smart.home.modules.product.entity.ProductCommentExample;
+import com.smart.home.modules.system.service.SysDictService;
 import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
@@ -53,6 +54,8 @@ public class ProductCommentService {
     private ProductCommentEsService productCommentEsServiceImpl;
     @Autowired
     private SysFileService sysFileService;
+    @Autowired
+    private SysDictService sysDictService;
 
     public List<ProductComment> selectByPage(ProductComment productComment, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
@@ -175,17 +178,31 @@ public class ProductCommentService {
                     if (imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Pass) {
                         // 图片机审成功 加上 文本审核成功
                         if (contentPass) {
-                            productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                            calculateProductAverageScore(productId, starCount, loginUserId,id, details, imageList);
-                            return;
+                            // 判断机审核成功是否需要自动成功
+                            if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                                productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                                calculateProductAverageScore(productId, starCount, loginUserId,id, details, imageList);
+                                return;
+                            } else {
+                                // 还是要进入人工审核的
+                                productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "需要进一步人工审核");
+                                return;
+                            }
                         }
                     }
                 } else {
                     // 没有图片的话判断机审结果，成功的话直接更新成成功
                     if (contentPass) {
-                        productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                        calculateProductAverageScore(productId, starCount, loginUserId,id, details, imageList);
-                        return;
+                        // 判断机审核成功是否需要自动成功
+                        if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                            productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                            calculateProductAverageScore(productId, starCount, loginUserId,id, details, imageList);
+                            return;
+                        } else {
+                            // 还是要进入人工审核的
+                            productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "需要进一步人工审核");
+                            return;
+                        }
                     }
                 }
 
@@ -220,8 +237,15 @@ public class ProductCommentService {
                         userDataService.increaseImageExceptionCount(loginUserId);
                     }
                 } else if (contentPass) {
-                    productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                    calculateProductAverageScore(productId, starCount, loginUserId, id, details, imageList);
+                    // 判断机审核成功是否需要自动成功
+                    if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                        productCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                        calculateProductAverageScore(productId, starCount, loginUserId, id, details, imageList);
+                    } else  {
+                        // 还是要进入人工审核的
+                        productCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "需要进一步人工审核");
+                        return;
+                    }
                 }
             }
         }).start();

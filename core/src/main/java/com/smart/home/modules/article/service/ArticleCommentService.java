@@ -19,6 +19,7 @@ import com.smart.home.modules.article.dao.ArticleMapper;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.entity.ArticleCommentExample;
 import com.smart.home.modules.article.po.UserIdAndCategoryPO;
+import com.smart.home.modules.system.service.SysDictService;
 import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
@@ -49,6 +50,8 @@ public class ArticleCommentService {
     private UserDataService userDataService;
     @Autowired
     private SysFileService sysFileService;
+    @Autowired
+    private SysDictService sysDictService;
 
     @Transactional(rollbackFor = RuntimeException.class)
     public void create(Long loginUserId, Long articleId, String contents, Long articleAuthorId, List<String> imageList) {
@@ -116,21 +119,34 @@ public class ArticleCommentService {
                     if (imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Pass) {
                         // 图片机审成功 加上 文本审核成功
                         if (contentPass) {
-                            articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                            // 文章增加一次评论数量
-                            articleMapper.increaseCommentCount(articleId);
-                            userDataService.increaseCommentCount(loginUserId);
-                            return;
+                            if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                                articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                                // 文章增加一次评论数量
+                                articleMapper.increaseCommentCount(articleId);
+                                userDataService.increaseCommentCount(loginUserId);
+                                return;
+                            } else {
+                                // 还是需要人工审核的
+                                articleCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "需要进一步进行人工审核");
+                                return;
+                            }
+
                         }
                     }
                 } else {
                     // 没有图片的话判断机审结果，成功的话直接更新成成功
                     if (contentPass) {
-                        articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                        // 文章增加一次评论数量
-                        articleMapper.increaseCommentCount(articleId);
-                        userDataService.increaseCommentCount(loginUserId);
-                        return;
+                        if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                            articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                            // 文章增加一次评论数量
+                            articleMapper.increaseCommentCount(articleId);
+                            userDataService.increaseCommentCount(loginUserId);
+                            return;
+                        } else {
+                            // 还是需要人工审核的
+                            articleCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "需要进一步进行人工审核");
+                            return;
+                        }
                     }
                 }
                 // 机器审核不通过，文本异常
@@ -164,11 +180,17 @@ public class ArticleCommentService {
                         userDataService.increaseImageExceptionCount(loginUserId);
                     }
                 } else if (contentPass) {
-                    // 正常，视为通过
-                    articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                    // 文章增加一次评论数量
-                    articleMapper.increaseCommentCount(articleId);
-                    userDataService.increaseCommentCount(loginUserId);
+                    if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                        // 正常，视为通过
+                        articleCommentMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                        // 文章增加一次评论数量
+                        articleMapper.increaseCommentCount(articleId);
+                        userDataService.increaseCommentCount(loginUserId);
+                    } else {
+                        // 还是需要人工审核的
+                        articleCommentMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "需要进一步进行人工审核");
+                        return;
+                    }
                 }
 
             }
