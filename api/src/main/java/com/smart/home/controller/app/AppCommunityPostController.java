@@ -126,7 +126,7 @@ public class AppCommunityPostController {
             communityPostDetailVO.setReportCount(0);
         }
         if (communityPostDetailVO.getReplyCount() == null) {
-            communityPostDetailVO.setReportCount(0);
+            communityPostDetailVO.setReplyCount(0);
         }
         if (communityPostDetailVO.getShareCount() == null) {
             communityPostDetailVO.setShareCount(0);
