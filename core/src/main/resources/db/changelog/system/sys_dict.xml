@@ -137,4 +137,20 @@
             values('机审通过是否自动通过：0否1是','switch.content.audit.autoPass','0',0,0,0);
         </sql>
     </changeSet>
+    <changeSet id="initValueShareLinkPrefix4SysDict" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(1) from sys_dict where dict_code = 'share.link.prefix.article';
+            </sqlCheck>
+        </preConditions>
+        <comment>各个分享页面的前缀</comment>
+        <sql>
+            insert into sys_dict(dict_name,dict_code,dict_value,dict_type,state,revision)
+            values('文章分享页面地址前缀','share.link.prefix.article','http://www.baidu.com',0,0,0);
+            insert into sys_dict(dict_name,dict_code,dict_value,dict_type,state,revision)
+            values('产品分享页面地址前缀','share.link.prefix.product','http://www.baidu.com',0,0,0);
+            insert into sys_dict(dict_name,dict_code,dict_value,dict_type,state,revision)
+            values('帖子分享页面地址前缀','share.link.prefix.post','http://www.baidu.com',0,0,0);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

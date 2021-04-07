@@ -20,6 +20,7 @@ import com.smart.home.modules.product.entity.ProductParamValue;
 import com.smart.home.modules.product.entity.ProductShopMapping;
 import com.smart.home.modules.product.service.ProductCommentService;
 import com.smart.home.modules.product.service.ProductService;
+import com.smart.home.modules.system.service.SysDictService;
 import com.smart.home.service.CollectService;
 import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
@@ -48,6 +49,8 @@ public class AppProductController {
     private ProductCommentService productCommentService;
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private SysDictService sysDictService;
 
 
     @ApiOperation("产品列表-分页查询")
@@ -101,6 +104,7 @@ public class AppProductController {
         } else {
             productDetailVO.setCollectFlag(YesNoEnum.NO.getCode());
         }
+        productDetailVO.setHref(sysDictService.queryValueByDictCode("share.link.prefix.product")+"?id="+productDetailVO.getId());
         return APIResponse.OK(productDetailVO);
     }
 

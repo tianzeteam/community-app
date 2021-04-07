@@ -41,5 +41,7 @@ public class ProductDetailVO {
     private List<ProductShopMapping> productShopMappingList;
     @ApiModelProperty("标签数组")
     private List<String> tagList;
+    @ApiModelProperty("分享页面")
+    private String href;
 
 }

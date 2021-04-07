@@ -11,6 +11,8 @@ import java.util.List;
 @Data
 public class CommunityPostDetailVO {
 
+    @ApiModelProperty("帖子主键id")
+    private Long id;
 
     @ApiModelProperty("用户id")
     private Long userId;
@@ -102,5 +104,8 @@ public class CommunityPostDetailVO {
 
     @ApiModelProperty("全部回复数")
     private Integer allReplyCount;
+
+    @ApiModelProperty("分享页面")
+    private String href;
 
 }

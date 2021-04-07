@@ -69,5 +69,7 @@ public class ArticleDetailVO {
     private Integer originalAuth;
     @ApiModelProperty("评测结果")
     private ProductTestResultVO productTestResultVO;
+    @ApiModelProperty("分享页面")
+    private String href;
 
 }

@@ -26,6 +26,7 @@ import com.smart.home.modules.article.service.ArticleCommentReplyService;
 import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.article.service.ArticleProductMappingService;
 import com.smart.home.modules.article.service.ArticleService;
+import com.smart.home.modules.system.service.SysDictService;
 import com.smart.home.modules.user.service.UserFocusService;
 import com.smart.home.service.CollectService;
 import com.smart.home.service.LikeService;
@@ -74,6 +75,8 @@ public class CommonArticleController {
     private MessageService messageService;
     @Autowired
     private UserFocusService userFocusService;
+    @Autowired
+    private SysDictService sysDictService;
 
     @ApiOperation("根据文章主键id获取详情")
     @ApiImplicitParams({
@@ -124,6 +127,7 @@ public class CommonArticleController {
                 articleDetailVO.setProductTestResultVO(productTestResultVO);
             }
         }
+        articleDetailVO.setHref(sysDictService.queryValueByDictCode("share.link.prefix.article")+"?id="+articleDetailVO.getId());
         return APIResponse.OK(articleDetailVO);
     }
     @ApiOperation("点赞文章")

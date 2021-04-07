@@ -15,6 +15,7 @@ import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.service.CommunityPostService;
+import com.smart.home.modules.system.service.SysDictService;
 import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
 import io.swagger.annotations.Api;
@@ -36,6 +37,8 @@ public class AppCommunityPostController {
 
     @Autowired
     private CommunityPostService communityPostService;
+    @Autowired
+    private SysDictService sysDictService;
 
 
     /**
@@ -131,6 +134,7 @@ public class AppCommunityPostController {
         if (communityPostDetailVO.getShareCount() == null) {
             communityPostDetailVO.setShareCount(0);
         }
+        communityPostDetailVO.setHref(sysDictService.queryValueByDictCode("share.link.prefix.post")+"?id="+communityPostDetailVO.getId());
         return APIResponse.OK(communityPostDetailVO);
     }
 
