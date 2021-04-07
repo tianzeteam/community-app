@@ -5,8 +5,11 @@ import cn.hutool.core.date.DateUtil;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditor;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditorResult;
+import com.smart.home.cloud.qcloud.auditor.ImageAuditor;
+import com.smart.home.cloud.qcloud.auditor.ImageAuditorResult;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorEvilEnum;
 import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
+import com.smart.home.cloud.qcloud.enums.ImageAuditorSuggestionEnum;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.enums.AutoAuditFlagEnum;
@@ -19,6 +22,7 @@ import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostReply;
 import com.smart.home.modules.community.entity.CommunityPostReplyExample;
 import com.smart.home.modules.product.entity.ProductCommentExample;
+import com.smart.home.modules.system.service.SysDictService;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -47,10 +48,15 @@ public class CommunityPostReplyService {
     private UserAccountService userAccountService;
     @Autowired
     private UserDataService userDataService;
+    @Autowired
+    private SysDictService sysDictService;
 
     public int create(CommunityPostReply communityPostReply) {
         communityPostReply.setCreatedTime(new Date());
-        return communityPostReplyMapper.insertSelective(communityPostReply);
+        int i = communityPostReplyMapper.insertSelective(communityPostReply);
+        Long id = communityPostReply.getId();
+        processAutoAudit(id, communityPostReply.getPostId(), communityPostReply.getContents(), communityPostReply.getUserId(), 2);
+        return i;
     }
 
     public CommunityPostReply getById(Long id){
@@ -80,10 +86,10 @@ public class CommunityPostReplyService {
         }
         communityPostReplyMapper.insertSelective(communityPostReply);
         long id = communityPostReply.getId();
-        processAutoAudit(id, postId, contents, loginUserId);
+        processAutoAudit(id, postId, contents, loginUserId, 1);
     }
 
-    private void processAutoAudit(long id, Long postId, String contents, Long loginUserId) {
+    private void processAutoAudit(long id, Long postId, String contents, Long loginUserId, int level) {
         CompletableFuture.runAsync(()->{
             ContentAuditorResult contentAuditorResult = ContentAuditor.auditorResult(contents);
             if (contentAuditorResult == null) {
@@ -93,10 +99,17 @@ public class CommunityPostReplyService {
             }
             if (contentAuditorResult.getContentAuditorEvilEnum() == ContentAuditorEvilEnum.NORMAL) {
                 // 机审成功， 直接通过
-                communityPostReplyMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                // 增加一次评论数量
-                communityPostMapper.increaseReplyCount(postId);
-                return;
+                if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                    communityPostReplyMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                    if (level == 1) {
+                        // 增加一次评论数量
+                        communityPostMapper.increaseReplyCount(postId);
+                    }
+                    return;
+                }else {
+                    communityPostReplyMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "人工再次审核");
+                    return;
+                }
             }
             // 机器审核不通过，文本异常
             // 先看看建议通过不通过
@@ -115,10 +128,17 @@ public class CommunityPostReplyService {
                 return;
             }
             if (ContentAuditorSuggestionEnum.Normal == contentAuditorSuggestionEnum) {
-                // 正常，视为通过
-                communityPostReplyMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                // 增加一次评论数量
-                communityPostMapper.increaseReplyCount(postId);
+                if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                    communityPostReplyMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                    if (level == 1) {
+                        // 增加一次评论数量
+                        communityPostMapper.increaseReplyCount(postId);
+                    }
+                    return;
+                }else {
+                    communityPostReplyMapper.updateAutoAuditFlag(id, AutoAuditFlagEnum.ERROR.getCode(), "人工再次审核");
+                    return;
+                }
             }
         });
     }
@@ -297,5 +317,6 @@ public class CommunityPostReplyService {
         return communityPostReplies;
 
     }
+
 
 }

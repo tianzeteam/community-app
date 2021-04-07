@@ -31,6 +31,7 @@ import com.smart.home.modules.community.dao.CommunityPostMapper;
 import com.smart.home.modules.community.entity.Community;
 import com.smart.home.modules.community.entity.CommunityPost;
 import com.smart.home.modules.community.entity.CommunityPostExample;
+import com.smart.home.modules.system.service.SysDictService;
 import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.user.dao.UserCollectMapper;
 import com.smart.home.modules.user.dao.UserCommunityAuthMapper;
@@ -76,6 +77,8 @@ public class CommunityPostService {
     private CommunityPostReplyMapper communityPostReplyMapper;
     @Resource
     private UserCollectMapper userCollectMapper;
+    @Autowired
+    private SysDictService sysDictService;
 
 
     public void create(CommunityPost communityPost) {
@@ -460,15 +463,27 @@ public class CommunityPostService {
                     if (imageAuditorResult.getImageAuditorSuggestionEnum() == ImageAuditorSuggestionEnum.Pass) {
                         // 图片机审成功 加上 文本审核成功
                         if (contentPass) {
-                            communityPostMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                            return;
+                            if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                                communityPostMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                                return;
+                            } else {
+                                // 还是要进入人工审核的
+                                communityPostMapper.updateAutoAuditFlagImage(id, AutoAuditFlagEnum.ERROR.getCode(), "需要进一步人工审核");
+                                return;
+                            }
                         }
                     }
                 } else {
                     // 没有图片的话判断机审结果，成功的话直接更新成成功
                     if (contentPass) {
-                        communityPostMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
-                        return;
+                        if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                            communityPostMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                            return;
+                        } else {
+                            // 还是要进入人工审核的
+                            communityPostMapper.updateAutoAuditFlagImage(id, AutoAuditFlagEnum.ERROR.getCode(), "需要进一步人工审核");
+                            return;
+                        }
                     }
                 }
 
@@ -503,7 +518,14 @@ public class CommunityPostService {
                         userDataService.increaseImageExceptionCount(loginUserId);
                     }
                 } else if (contentPass) {
-                    communityPostMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                    if ("1".equals(sysDictService.queryValueByDictCode("switch.content.audit.autoPass"))) {
+                        communityPostMapper.updateAutoAuditFlagAndAuditFlag(id, AutoAuditFlagEnum.APPROVE.getCode(), AuditStatusEnum.APPROVED.getCode());
+                        return;
+                    } else {
+                        // 还是要进入人工审核的
+                        communityPostMapper.updateAutoAuditFlagImage(id, AutoAuditFlagEnum.ERROR.getCode(), "需要进一步人工审核");
+                        return;
+                    }
                 }
             }
         }).start();
