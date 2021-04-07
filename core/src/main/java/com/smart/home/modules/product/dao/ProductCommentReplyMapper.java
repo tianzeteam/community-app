@@ -56,4 +56,7 @@ public interface ProductCommentReplyMapper {
 
     int updateHitSensitiveCount(@Param("id") long id,@Param("count") int count);
 
+    Long findUserIdById(@Param("id") Long id);
+
+    int manuallyReject(@Param("id") Long id,@Param("auditFlag") int auditFlag);
 }

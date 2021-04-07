@@ -5,9 +5,11 @@ import com.smart.home.dto.ContentAdminAuditApproveTO;
 import com.smart.home.dto.ContentAdminAuditSearchTO;
 import com.smart.home.dto.ContentAuditAdminRecordTO;
 import com.smart.home.enums.ContentTypeEnum;
+import com.smart.home.modules.article.service.ArticleCommentReplyService;
 import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.community.service.CommunityPostReplyService;
 import com.smart.home.modules.community.service.CommunityPostService;
+import com.smart.home.modules.product.service.ProductCommentReplyService;
 import com.smart.home.modules.product.service.ProductCommentService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,11 @@ public class ContentService {
     @Autowired
     private ProductCommentService productCommentService;
     @Autowired
+    private ProductCommentReplyService productCommentReplyService;
+    @Autowired
     private ArticleCommentService articleCommentService;
+    @Autowired
+    private ArticleCommentReplyService articleCommentReplyService;
     @Autowired
     private CommunityPostService communityPostService;
     @Autowired
@@ -53,6 +59,14 @@ public class ContentService {
                 }
                 if(ContentTypeEnum.COMMUNITY_POST_REPLY.getCode() == contentAdminAuditApproveTO.getContentType()) {
                     communityPostReplyService.manuallyReject(id);
+                    continue;
+                }
+                if (ContentTypeEnum.ARTICLE_COMMENT_REPLY.getCode() == contentAdminAuditApproveTO.getContentType()) {
+                    articleCommentReplyService.manuallyReject(id);
+                    continue;
+                }
+                if (ContentTypeEnum.PRODUCT_COMMENT_REPLY.getCode() == contentAdminAuditApproveTO.getContentType()) {
+                    productCommentReplyService.manuallyReject(id);
                     continue;
                 }
             } catch (Throwable e) {
@@ -79,6 +93,14 @@ public class ContentService {
                 }
                 if(ContentTypeEnum.COMMUNITY_POST_REPLY.getCode() == contentAdminAuditApproveTO.getContentType()) {
                     communityPostReplyService.manuallyApprove(id);
+                    continue;
+                }
+                if (ContentTypeEnum.ARTICLE_COMMENT_REPLY.getCode() == contentAdminAuditApproveTO.getContentType()) {
+                    articleCommentReplyService.manuallyApprove(id);
+                    continue;
+                }
+                if (ContentTypeEnum.PRODUCT_COMMENT_REPLY.getCode() == contentAdminAuditApproveTO.getContentType()) {
+                    productCommentReplyService.manuallyApprove(id);
                     continue;
                 }
             } catch (Throwable e) {

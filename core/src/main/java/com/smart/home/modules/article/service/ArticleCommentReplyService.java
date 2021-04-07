@@ -18,6 +18,7 @@ import com.smart.home.modules.user.entity.UserAccount;
 import com.smart.home.modules.user.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -186,4 +187,19 @@ public class ArticleCommentReplyService {
         }).start();
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public void manuallyReject(Long id) {
+        Long userId = articleCommentReplyMapper.findUserIdById(id);
+        userDataService.increaseManuallyExceptionCount(userId);
+        articleCommentReplyMapper.manuallyReject(id, AuditStatusEnum.REJECT.getCode());
+    }
+
+    public void manuallyApprove(Long id) {
+        int affectRow = articleCommentReplyMapper.manuallyReject(id, AuditStatusEnum.APPROVED.getCode());
+        if (affectRow > 0) {
+            ArticleCommentReply articleCommentReply = findById(id);
+            articleCommentMapper.increaseReplyCount(articleCommentReply.getArticleCommentId());
+            userDataService.increaseReplyCount(articleCommentReply.getUserId());
+        }
+    }
 }

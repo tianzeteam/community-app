@@ -437,92 +437,137 @@
           parameterType="com.smart.home.dto.ContentAdminAuditSearchTO">
     select * from
             (
-                    select
-                            pc.id,
-                            1 as contentType,
-                            ua.id as userId,
-                            ua.nick_name as nickName,
-                            '' as title,
-                            pc.details as contents,
-                            '' as images,
-                            pc.reply_count as replyCount,
-                            pc.like_count as likeCount,
-                            pc.audit_flag as auditFlag,
-                            pc.hit_sensitive_count as hitSensitiveCount,
-                            pc.report_count as reportCount,
-                            pc.report_count_rate as reportCountRate,
-                            pc.auto_audit_flag as autoAuditFlag,
-                            pc.text_exception_reason as textExceptionReason,
-                            pc.image_exception_reason as imageExceptionReason,
-                            pc.created_time as createdTime
-                    from product_comment pc
-                                 left join user_account ua on ua.id = pc.user_id
+                  select
+                  pc.id,
+                  1 as contentType,
+                  ua.id as userId,
+                  ua.nick_name as nickName,
+                  '' as title,
+                  pc.details as contents,
+                  '' as images,
+                  pc.reply_count as replyCount,
+                  pc.like_count as likeCount,
+                  pc.audit_flag as auditFlag,
+                  pc.hit_sensitive_count as hitSensitiveCount,
+                  pc.report_count as reportCount,
+                  pc.report_count_rate as reportCountRate,
+                  pc.auto_audit_flag as autoAuditFlag,
+                  pc.text_exception_reason as textExceptionReason,
+                  pc.image_exception_reason as imageExceptionReason,
+                  pc.created_time as createdTime
+                  from product_comment pc
+                  left join user_account ua on ua.id = pc.user_id
 
-                    union all
+                  union all
 
-                    select ac.id,
-                           0 as contentType,
-                           ua.id as userId,
-                           ua.nick_name as nickName,
-                           '' as title,
-                           ac.contents,
-                           '' as images,
-                           ac.reply_count as replyCount,
-                           ac.like_count as likeCount,
-                           ac.audit_flag as auditFlag,
-                           ac.hit_sensitive_count as hitSensitiveCount,
-                           ac.report_count as reportCount,
-                           ac.report_count_rate as reportCountRate,
-                           ac.auto_audit_flag as autoAuditFlag,
-                           ac.text_exception_reason as textExceptionReason,
-                           ac.image_exception_reason as imageExceptionReason,
-                           ac.created_time as createdTime
-                    from article_comment ac
-                                 left join user_account ua on ua.id = ac.user_id
+                  select
+                  pcr.id,
+                  5 as contentType,
+                  ua.id as userId,
+                  ua.nick_name as nickName,
+                  '' as title,
+                  pcr.details as contents,
+                  '' as images,
+                  0 as replyCount,
+                  pcr.like_count as likeCount,
+                  pcr.audit_flag as auditFlag,
+                  pcr.hit_sensitive_count as hitSensitiveCount,
+                  0 as reportCount,
+                  '' as reportCountRate,
+                  pcr.auto_audit_flag as autoAuditFlag,
+                  pcr.text_exception_reason as textExceptionReason,
+                  pcr.image_exception_reason as imageExceptionReason,
+                  pcr.created_time as createdTime
+                  from product_comment_reply pcr
+                  left join user_account ua on ua.id = pcr.user_id
 
-                    union all
+                  union all
 
-                    select cp.id,
-                           2 as contentType,
-                           ua.id as userId,
-                           ua.nick_name as nickName,
-                           cp.title,
-                           cp.contents,
-                           cp.images,
-                           cp.reply_count as replyCount,
-                           cp.like_count as likeCount,
-                           cp.audit_status as auditFlag,
-                           cp.hit_sensitive_count as hitSensitiveCount,
-                           cp.report_count as reportCount,
-                           cp.report_count_rate as reportCountRate,
-                           cp.auto_audit_flag as autoAuditFlag,
-                           cp.text_exception_reason as textExceptionReason,
-                           cp.image_exception_reason as imageExceptionReason,
-                           cp.created_time as createdTime
-                    from community_post cp
-                                 left join user_account ua on ua.id = cp.user_id
+                  select ac.id,
+                  0 as contentType,
+                  ua.id as userId,
+                  ua.nick_name as nickName,
+                  '' as title,
+                  ac.contents,
+                  '' as images,
+                  ac.reply_count as replyCount,
+                  ac.like_count as likeCount,
+                  ac.audit_flag as auditFlag,
+                  ac.hit_sensitive_count as hitSensitiveCount,
+                  ac.report_count as reportCount,
+                  ac.report_count_rate as reportCountRate,
+                  ac.auto_audit_flag as autoAuditFlag,
+                  ac.text_exception_reason as textExceptionReason,
+                  ac.image_exception_reason as imageExceptionReason,
+                  ac.created_time as createdTime
+                  from article_comment ac
+                  left join user_account ua on ua.id = ac.user_id
 
-                    union all
+                  union all
 
-                    select cpr.id,
-                           3 as contentType,
-                           ua.id as userId,
-                           ua.nick_name as nickName,
-                           '' as title,
-                           cpr.contents,
-                           '' as images,
-                           cpr.reply_count as replyCount,
-                           cpr.like_count as likeCount,
-                           cpr.audit_flag as auditFlag,
-                           cpr.hit_sensitive_count as hitSensitiveCount,
-                           cpr.report_count as reportCount,
-                           cpr.report_count_rate as reportCountRate,
-                           cpr.auto_audit_flag as autoAuditFlag,
-                           cpr.text_exception_reason as textExceptionReason,
-                           cpr.image_exception_reason as imageExceptionReason,
-                           cpr.created_time as createdTime
-                    from community_post_reply cpr
-                                 left join user_account ua on ua.id = cpr.user_id
+                  select acr.id,
+                  4 as contentType,
+                  ua.id as userId,
+                  ua.nick_name as nickName,
+                  '' as title,
+                  acr.contents,
+                  '' as images,
+                  0 as replyCount,
+                  0 as likeCount,
+                  acr.audit_flag as auditFlag,
+                  acr.hit_sensitive_count as hitSensitiveCount,
+                  0 as reportCount,
+                  '' as reportCountRate,
+                  acr.auto_audit_flag as autoAuditFlag,
+                  acr.text_exception_reason as textExceptionReason,
+                  acr.image_exception_reason as imageExceptionReason,
+                  acr.created_time as createdTime
+                  from article_comment_reply acr acr
+                  left join user_account ua on ua.id = acr.user_id
+
+                  union all
+
+                  select cp.id,
+                  2 as contentType,
+                  ua.id as userId,
+                  ua.nick_name as nickName,
+                  cp.title,
+                  cp.contents,
+                  cp.images,
+                  cp.reply_count as replyCount,
+                  cp.like_count as likeCount,
+                  cp.audit_status as auditFlag,
+                  cp.hit_sensitive_count as hitSensitiveCount,
+                  cp.report_count as reportCount,
+                  cp.report_count_rate as reportCountRate,
+                  cp.auto_audit_flag as autoAuditFlag,
+                  cp.text_exception_reason as textExceptionReason,
+                  cp.image_exception_reason as imageExceptionReason,
+                  cp.created_time as createdTime
+                  from community_post cp
+                  left join user_account ua on ua.id = cp.user_id
+
+                  union all
+
+                  select cpr.id,
+                  3 as contentType,
+                  ua.id as userId,
+                  ua.nick_name as nickName,
+                  '' as title,
+                  cpr.contents,
+                  '' as images,
+                  cpr.reply_count as replyCount,
+                  cpr.like_count as likeCount,
+                  cpr.audit_flag as auditFlag,
+                  cpr.hit_sensitive_count as hitSensitiveCount,
+                  cpr.report_count as reportCount,
+                  cpr.report_count_rate as reportCountRate,
+                  cpr.auto_audit_flag as autoAuditFlag,
+                  cpr.text_exception_reason as textExceptionReason,
+                  cpr.image_exception_reason as imageExceptionReason,
+                  cpr.created_time as createdTime
+                  from community_post_reply cpr
+                  left join user_account ua on ua.id = cpr.user_id
                     ) t
     where auditFlag = 0
       <if test="contentTypeList != null">

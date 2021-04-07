@@ -14,7 +14,7 @@ public class ContentAdminAuditApproveDTO {
 
     @ApiModelProperty("内容id")
     private Long id;
-    @ApiModelProperty("内容类型：0评论1产品评价2帖子3回帖")
+    @ApiModelProperty("内容类型：0评论1产品评价2帖子3回帖4评论的回复5评价的回复")
     private Integer contentType;
 
 }
