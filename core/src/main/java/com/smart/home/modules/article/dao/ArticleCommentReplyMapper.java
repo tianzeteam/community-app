@@ -30,4 +30,12 @@ public interface ArticleCommentReplyMapper {
 
     List<ArticleCommentReply> queryCommentReplyByPageNoLogin(Long articleCommentId);
 
+    int updateAutoAuditFlag(@Param("id") Long id, @Param("autoAuditFlag") int autoAuditFlag, @Param("textExceptionReason") String textExceptionReason);
+
+    int updateAutoAuditFlagAndAuditFlag(@Param("id") Long id, @Param("autoAuditFlag") int autoAuditFlag, @Param("auditFlag") int auditFlag);
+
+    int updateHitSensitiveCount(@Param("id") long id, @Param("count") int count);
+
+    int updateAutoAuditFlag4ImageAudit(@Param("id") Long id, @Param("autoAuditFlag") int autoAuditFlag, @Param("imageExceptionReason") String imageExceptionReason);
+
 }

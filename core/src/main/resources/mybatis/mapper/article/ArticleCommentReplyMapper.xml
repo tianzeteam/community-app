@@ -110,7 +110,8 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insertSelective" parameterType="com.smart.home.modules.article.entity.ArticleCommentReply">
+  <insert id="insertSelective" parameterType="com.smart.home.modules.article.entity.ArticleCommentReply"
+          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into article_comment_reply
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -273,4 +274,24 @@
     order by acr.id desc
   </select>
 
+  <update id="updateAutoAuditFlag">
+    update article_comment_reply
+    set auto_audit_flag = #{autoAuditFlag},
+        text_exception_reason = #{textExceptionReason}
+    where id = #{id,jdbcType=BIGINT}
+    </update>
+
+  <update id="updateAutoAuditFlagAndAuditFlag">
+    update article_comment_reply set auto_audit_flag = #{autoAuditFlag},audit_flag=#{auditFlag} where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateHitSensitiveCount">
+    update article_comment_reply set hit_sensitive_count = #{count} where id = #{id}
+  </update>
+
+  <update id="updateAutoAuditFlag4ImageAudit">
+    update article_comment_reply
+    set auto_audit_flag = #{autoAuditFlag},image_exception_reason=#{imageExceptionReason}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>
