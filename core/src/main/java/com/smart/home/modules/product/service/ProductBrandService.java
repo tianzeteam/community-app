@@ -1,5 +1,6 @@
 package com.smart.home.modules.product.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.RecordStatusEnum;
 import com.smart.home.common.exception.DuplicateDataException;
@@ -103,5 +104,28 @@ public class ProductBrandService {
         criteria.andStateEqualTo(RecordStatusEnum.NORMAL.getStatus());
         example.setOrderByClause("sort desc");
         return productBrandMapper.selectByExample(example);
+    }
+
+    public ProductBrand findByName(String productBrand) {
+        ProductBrandExample example = new ProductBrandExample();
+        example.createCriteria().andStateEqualTo(RecordStatusEnum.NORMAL.getStatus())
+                .andBrandNameEqualTo(productBrand);
+        List<ProductBrand> list = productBrandMapper.selectByExample(example);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public ProductBrand createNew(String productBrandName) {
+        ProductBrand productBrand = new ProductBrand();
+        productBrand.withBrandName(productBrandName)
+                .withCreatedBy(0L)
+                .withCreatedTime(new Date())
+                .withRevision(0)
+                .withSort(0)
+                .withState(RecordStatusEnum.NORMAL.getStatus());
+        productBrandMapper.insertSelective(productBrand);
+        return productBrand;
     }
 }

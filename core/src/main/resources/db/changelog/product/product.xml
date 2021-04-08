@@ -171,4 +171,16 @@
             comment on column product.sort is '排序，越大越靠前';
         </sql>
     </changeSet>
+    <changeSet id="addColumnImportFlag4Product" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="product" columnName="import_flag"/>
+            </not>
+        </preConditions>
+        <comment>添加字段</comment>
+        <sql>
+            alter table product add column import_flag int default 0;
+            comment on column product.import_flag is '是否自动导入的：0否1是';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -284,6 +284,9 @@
       <if test="sort != null">
         sort,
       </if>
+      <if test="importFlag != null">
+        import_flag,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -396,6 +399,9 @@
       </if>
       <if test="sort != null">
         #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="importFlag != null">
+        #{importFlag,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>

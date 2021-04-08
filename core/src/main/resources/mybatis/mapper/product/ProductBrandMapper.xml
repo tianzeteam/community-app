@@ -127,7 +127,8 @@
       #{createdTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=BIGINT}, #{updatedTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.smart.home.modules.product.entity.ProductBrand">
+  <insert id="insertSelective" parameterType="com.smart.home.modules.product.entity.ProductBrand"
+          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into product_brand
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

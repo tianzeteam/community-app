@@ -176,4 +176,36 @@ public class ProductCategoryService {
         }
         return list;
     }
+    //====================导入用到的相关方法====================
+    /**
+     * 根据分类名称查找分类对象
+     * @param categoryName
+     * @param level
+     * @return
+     */
+    public ProductCategory findByName(String categoryName, Integer level) {
+        ProductCategoryExample example = new ProductCategoryExample();
+        example.createCriteria().andTitleEqualTo(categoryName).andLevelEqualTo(level);
+        List<ProductCategory> list = productCategoryMapper.selectByExample(example);
+        if (CollUtil.isNotEmpty(list)) {
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public ProductCategory createNewCategory(String categoryName, int level) {
+        ProductCategory productCategory = new ProductCategory();
+        productCategory.withTitle(categoryName)
+                .withSort(0)
+                .withState(RecordStatusEnum.NORMAL.getStatus())
+                .withCreatedTime(new Date())
+                .withCreatedBy(0L)
+                .withRevision(0);
+        productCategory.setLevel(level);
+        if (level == 1) {
+            productCategory.setPid(0);
+        }
+        productCategoryMapper.insertSelective(productCategory);
+        return productCategory;
+    }
 }

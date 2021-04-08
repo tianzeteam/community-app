@@ -98,4 +98,14 @@ public class ProductShopService {
         ProductShopExample example = new ProductShopExample();
         return productShopMapper.selectByExample(example);
     }
+
+    public ProductShop queryJdShop() {
+        ProductShop productShop = findById(1L);
+        return productShop;
+    }
+
+    public ProductShop queryTaobaoShop() {
+        ProductShop productShop = findById(2L);
+        return productShop;
+    }
 }

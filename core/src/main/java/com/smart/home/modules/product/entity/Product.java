@@ -99,6 +99,10 @@ public class Product implements Serializable {
      * 排序，越大越靠前
      */
     private Integer sort;
+    /**
+     * 是否自动导入的 0否1是
+     */
+    private Integer importFlag;
 
     private static final long serialVersionUID = 1L;
 
@@ -723,6 +727,14 @@ public class Product implements Serializable {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public Integer getImportFlag() {
+        return importFlag;
+    }
+
+    public void setImportFlag(Integer importFlag) {
+        this.importFlag = importFlag;
     }
 
     /**
