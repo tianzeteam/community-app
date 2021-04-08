@@ -119,11 +119,15 @@ public class AppCommunityPostController {
         if (userId > 0) {
             //用户已登录
             CommunityPostDTO communityPostDTO = communityPostService.queryDetailWithLogin(id, userId);
-            BeanUtils.copyProperties(communityPostDTO, communityPostDetailVO);
+            if (communityPostDTO != null) {
+                BeanUtils.copyProperties(communityPostDTO, communityPostDetailVO);
+            }
         }else {
             //用户未登录
             CommunityPostDTO communityPostDTO = communityPostService.queryDetailNotLogin(id);
-            BeanUtils.copyProperties(communityPostDTO, communityPostDetailVO);
+            if (communityPostDTO != null) {
+                BeanUtils.copyProperties(communityPostDTO, communityPostDetailVO);
+            }
         }
         if (communityPostDetailVO.getReportCount() == null) {
             communityPostDetailVO.setReportCount(0);
