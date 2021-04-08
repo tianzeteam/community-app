@@ -318,6 +318,9 @@ public class SearchEsService {
                                     communityPostBean.setLevel(y.getUserLevel());
                                     communityPostBean.setUserRemark(y.getRemark());
                                 }
+                                if (StrUtil.isNotEmpty(communityPostBean.getImages())) {
+                                    communityPostBean.setImagesList(JSON.parseArray(communityPostBean.getImages(), String.class));
+                                }
                                 objects.add(communityPostBean);
                                 break;
 //                            case PRODUCT_COMMENT:

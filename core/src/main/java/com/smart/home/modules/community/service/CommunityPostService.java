@@ -554,6 +554,7 @@ public class CommunityPostService {
                 communityPostDTO.setHeadUrl(userDataDTO.getHeadUrl());
                 communityPostDTO.setUserLevel(userDataDTO.getUserLevel());
                 communityPostDTO.setUserRemark(userDataDTO.getRemark());
+                communityPostDTO.setUserId(x.getUserId());
             }
             //查社区
             Community community = communityMapper.selectByPrimaryKey(x.getCommunity());

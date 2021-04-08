@@ -30,6 +30,8 @@ public class RecommendCommunityPostVO {
     private String title;
     @ApiModelProperty("图片数组")
     private List<String> imagesList;
+    @ApiModelProperty("用户id")
+    private Long userId;
 
     //社区名
     @ApiModelProperty("社区名")
