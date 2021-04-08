@@ -3,6 +3,7 @@ package com.smart.home.modules.product.service;
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.google.common.base.Splitter;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.DuplicateDataException;
 import com.smart.home.common.exception.ServiceException;
@@ -53,6 +54,8 @@ public class ProductService {
     private ProductEsService productEsServiceImpl;
     @Autowired
     private ProductCommentEsService productCommentEsServiceImpl;
+    @Autowired
+    private ProductSupportPlatformService productSupportPlatformService;
 
     @Transactional(rollbackFor = RuntimeException.class)
     public int create(Product product) throws ServiceException {
@@ -137,6 +140,8 @@ public class ProductService {
                 }
                 productMapper.saveShops(productId, JSON.toJSONString(product.getProductShopMappingList()));
             }
+            // 插入支持平台的子表
+            createProductSupportPlatformRecord(product.getSupportPlatform(), productId);
             // 同步到es
             ProductBean productBean = new ProductBean();
             BeanUtils.copyProperties(product, productBean);
@@ -203,6 +208,9 @@ public class ProductService {
             } else {
                 productMapper.saveShops(productId, "[]");
             }
+            // 插入支持平台的子表, 插入前先删除
+            productSupportPlatformService.deleteByProductId(productId);
+            createProductSupportPlatformRecord(product.getSupportPlatform(), productId);
             // 同步到es
             ProductBean productBean = new ProductBean();
             BeanUtils.copyProperties(findById(productId), productBean);
@@ -213,6 +221,15 @@ public class ProductService {
         }
         syncImages(product);
         return affectRow;
+    }
+
+    private void createProductSupportPlatformRecord(String supportPlatform, Integer productId) {
+        if (StringUtils.isNotBlank(supportPlatform)) {
+            List<String> supportPlatformList = Splitter.on(",").splitToList(supportPlatform);
+            for (String platform : supportPlatformList) {
+                productSupportPlatformService.create(productId, platform);
+            }
+        }
     }
 
     private void syncImages(Product product) {

@@ -34,6 +34,7 @@
     <include file="classpath:/db/changelog/product/product_shop.xml"/>
     <include file="classpath:/db/changelog/product/product_shop_mapping.xml"/>
     <include file="classpath:/db/changelog/product/product_tag.xml"/>
+    <include file="classpath:/db/changelog/product/product_support_platform.xml"/>
     <include file="classpath:/db/changelog/system/sys_config.xml"/>
     <include file="classpath:/db/changelog/system/sys_dict.xml"/>
     <include file="classpath:/db/changelog/system/sys_role.xml"/>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="createTableProductSupportPlatform" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="product_support_platform"></tableExists>
+            </not>
+        </preConditions>
+        <comment>创建产品标签表</comment>
+        <sql>
+            CREATE TABLE product_support_platform(
+            ID BIGINT NOT NULL,
+            PRODUCT_ID INT,
+            SUPPORT_PLATFORM VARCHAR(32),
+            PRIMARY KEY (ID)
+            );
+
+            COMMENT ON TABLE product_support_platform IS '产品支持的平台';
+            COMMENT ON COLUMN product_support_platform.ID IS '主键ID';
+            COMMENT ON COLUMN product_support_platform.PRODUCT_ID IS '产品主键id';
+            COMMENT ON COLUMN product_support_platform.SUPPORT_PLATFORM IS '支持的平台';
+
+            CREATE SEQUENCE product_support_platform_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+
+            alter table "product_support_platform" alter column ID set default nextval('product_support_platform_id_seq');
+
+            create index idx_psp_product_id on product_support_platform using btree (PRODUCT_ID);
+        </sql>
+    </changeSet>
+</databaseChangeLog>
