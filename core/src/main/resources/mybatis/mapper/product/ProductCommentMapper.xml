@@ -522,7 +522,7 @@
                   acr.text_exception_reason as textExceptionReason,
                   acr.image_exception_reason as imageExceptionReason,
                   acr.created_time as createdTime
-                  from article_comment_reply acr acr
+                  from article_comment_reply acr
                   left join user_account ua on ua.id = acr.user_id
 
                   union all
