@@ -483,7 +483,8 @@
   </update>
 
   <select id="queryViaUserIdByPage" resultType="com.smart.home.modules.community.entity.CommunityPost">
-    select ua.head_url as headUrl,
+    select cp.id,
+           ua.head_url as headUrl,
            ua.nick_name as nickName,
            ud.user_level as userLevel,
            cp.title,
@@ -497,7 +498,7 @@
                  left join user_account ua on ua.id = cp.user_id
                  left join user_data ud on ud.user_id = ua.id
                  left join community_like_history clh on clh.post_id = cp.id and type = 0 and clh.user_id = #{loginUserId,jdbcType=BIGINT}
-    where cp.user_id = #{userId,jdbcType=BIGINT}
+    where cp.user_id = #{userId,jdbcType=BIGINT} and cp.audit_status = 1
   </select>
 
   <update id="updateAutoAuditFlag">

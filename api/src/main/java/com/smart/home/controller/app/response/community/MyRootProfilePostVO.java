@@ -15,7 +15,8 @@ import java.util.List;
 @ToString
 public class MyRootProfilePostVO extends UserBaseInfo {
 
-    private Integer userLevel;
+    @ApiModelProperty("主键id")
+    private Long id;
     @ApiModelProperty("标题")
     private String title;
     @ApiModelProperty("正文")

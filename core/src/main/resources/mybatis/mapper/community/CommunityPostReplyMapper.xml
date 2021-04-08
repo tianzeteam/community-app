@@ -349,7 +349,7 @@
                  left join user_data ud on ud.user_id = ua.id
                  left join community_like_history alh on alh.post_id = cpr.id and alh.type = 1 and alh.user_id = #{loginUserId,jdbcType=BIGINT}
                  left join community_stamp_history ash on ash.post_id = cpr.id and ash.type = 1 and ash.user_id = #{loginUserId,jdbcType=BIGINT}
-    where cpr.user_id = #{userId,jdbcType=BIGINT}
+    where cpr.user_id = #{userId,jdbcType=BIGINT} and cpr.audit_flag = 1
     order by cpr.created_time desc
     </select>
 
