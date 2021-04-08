@@ -272,7 +272,8 @@ public class SearchEsService {
         esSearchDTO.setLongList(collect);
         esSearchDTO.setFrom(pageNum);
         esSearchDTO.setSize(pageSize);
-        List<String> list = esCommonService.searchMultiple(new String[]{EsConstant.communityPostIndex, EsConstant.productCommentIndex, EsConstant.articleIndex},
+        //只展示投稿和发帖两种行为，其他行为不展示
+        List<String> list = esCommonService.searchMultiple(new String[]{EsConstant.communityPostIndex, EsConstant.articleIndex},
                 esSearchDTO);
         if (CollUtil.isEmpty(list)) {
             return Collections.EMPTY_LIST;
@@ -319,17 +320,17 @@ public class SearchEsService {
                                 }
                                 objects.add(communityPostBean);
                                 break;
-                            case PRODUCT_COMMENT:
-                                ProductCommentBean productCommentBean = JSONObject.parseObject(x, ProductCommentBean.class);
-                                UserDataDTO user = userDataMapper.getByUserId(productCommentBean.getUserId());
-                                if (user != null) {
-                                    productCommentBean.setNickname(y.getNickname());
-                                    productCommentBean.setHeadImg(y.getHeadUrl());
-                                    productCommentBean.setLevel(y.getUserLevel());
-                                    productCommentBean.setUserRemark(y.getRemark());
-                                }
-                                objects.add(productCommentBean);
-                                break;
+//                            case PRODUCT_COMMENT:
+//                                ProductCommentBean productCommentBean = JSONObject.parseObject(x, ProductCommentBean.class);
+//                                UserDataDTO user = userDataMapper.getByUserId(productCommentBean.getUserId());
+//                                if (user != null) {
+//                                    productCommentBean.setNickname(y.getNickname());
+//                                    productCommentBean.setHeadImg(y.getHeadUrl());
+//                                    productCommentBean.setLevel(y.getUserLevel());
+//                                    productCommentBean.setUserRemark(y.getRemark());
+//                                }
+//                                objects.add(productCommentBean);
+//                                break;
                         }
                     }
                 });
