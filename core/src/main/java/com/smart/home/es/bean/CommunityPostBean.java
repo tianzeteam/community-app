@@ -99,5 +99,8 @@ public class CommunityPostBean  extends PersionalMessageDTO {
     @Field(type = FieldType.Integer, index = true)
     private Integer saveType;
 
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", searchAnalyzer = "ik_smart")
+    private String communityTitle;
+
 
 }
