@@ -341,7 +341,7 @@
                  left join user_account ua on pcr.user_id = ua.id
                  left join product_comment_like_history pclh on pclh.source_id = pcr.id and pclh.user_id = #{loginUserId} and pclh.category = 1
                  left join product_comment_stamp_history pcsh on pcsh.source_id = pcr.id and pcsh.user_id = #{loginUserId} and pcsh.category = 1
-    where pcr.comment_id = #{productCommentId} and pcr.pid = #{pid}
+    where pcr.comment_id = #{productCommentId} and pcr.pid = #{pid} and pcr.audit_flag = 1
     order by pcr.id desc
   </select>
 
