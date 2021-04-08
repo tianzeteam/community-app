@@ -1,5 +1,6 @@
 package com.smart.home.modules.product.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.YesNoEnum;
@@ -16,10 +17,8 @@ import com.smart.home.modules.product.dao.ProductParamSettingMapper;
 import com.smart.home.modules.product.dao.ProductParamValueMapper;
 import com.smart.home.modules.product.dao.ProductShopMappingMapper;
 import com.smart.home.modules.product.entity.*;
-import com.smart.home.modules.system.entity.SysFile;
 import com.smart.home.modules.system.service.SysFileService;
 import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.K;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +30,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -103,17 +103,23 @@ public class ProductService {
             if (product.getProductParamValueList() != null) {
                 for (ProductParamValue productParamValue : product.getProductParamValueList()) {
                     if (productParamValue.getParamId() == null) {
-                        // 添加到参数库
-                        productParamValue.setEnableAll(3);
-                        ProductParamSetting productParamSetting = new ProductParamSetting();
-                        productParamSetting.withParamName(productParamValue.getParamName())
-                                .withRevision(0)
-                                // 说明是自定义的
-                                .withEnableAll(3)
-                                .withCreatedTime(new Date())
-                                .withCreatedBy(product.getCreatedBy());
-                        productParamSettingMapper.insertSelective(productParamSetting);
-                        productParamValue.setParamId(productParamSetting.getId());
+                        // 先检查参数库有没有了
+                        List<ProductParamSetting> list = queryProductParamSettingByNameForProduct(productParamValue);
+                        if (CollUtil.isNotEmpty(list)) {
+                            productParamValue.setParamId(list.get(0).getId());
+                        } else {
+                            // 添加到参数库
+                            productParamValue.setEnableAll(3);
+                            ProductParamSetting productParamSetting = new ProductParamSetting();
+                            productParamSetting.withParamName(productParamValue.getParamName())
+                                    .withRevision(0)
+                                    // 说明是自定义的
+                                    .withEnableAll(3)
+                                    .withCreatedTime(new Date())
+                                    .withCreatedBy(product.getCreatedBy());
+                            productParamSettingMapper.insertSelective(productParamSetting);
+                            productParamValue.setParamId(productParamSetting.getId());
+                        }
                     }
                     productParamValue.setProductId(productId);
                     productParamValueMapper.insertSelective(productParamValue);
@@ -143,6 +149,15 @@ public class ProductService {
         return affectRow;
     }
 
+    private List<ProductParamSetting> queryProductParamSettingByNameForProduct(ProductParamValue productParamValue) {
+        ProductParamSettingExample productParamSettingExample = new ProductParamSettingExample();
+        productParamSettingExample.createCriteria()
+                .andParamNameEqualTo(productParamValue.getParamName())
+                .andEnableAllEqualTo(3);
+        List<ProductParamSetting> list = productParamSettingMapper.selectByExample(productParamSettingExample);
+        return list;
+    }
+
     public int update(Product product) {
         product.setUpdatedTime(new Date());
         int affectRow = productMapper.updateByPrimaryKeySelective(product);
@@ -153,14 +168,19 @@ public class ProductService {
             if (product.getProductParamValueList() != null) {
                 for (ProductParamValue productParamValue : product.getProductParamValueList()) {
                     if (productParamValue.getParamId() == null) {
-                        // 添加到参数库
-                        productParamValue.setEnableAll(3);
-                        ProductParamSetting productParamSetting = new ProductParamSetting();
-                        productParamSetting.withParamName(productParamValue.getParamName())
-                                .withRevision(0)
-                                .withEnableAll(3);
-                        productParamSettingMapper.insertSelective(productParamSetting);
-                        productParamValue.setParamId(productParamSetting.getId());
+                        List<ProductParamSetting> list = queryProductParamSettingByNameForProduct(productParamValue);
+                        if (CollUtil.isNotEmpty(list)) {
+                            productParamValue.setParamId(list.get(0).getId());
+                        } else {
+                            // 添加到参数库
+                            productParamValue.setEnableAll(3);
+                            ProductParamSetting productParamSetting = new ProductParamSetting();
+                            productParamSetting.withParamName(productParamValue.getParamName())
+                                    .withRevision(0)
+                                    .withEnableAll(3);
+                            productParamSettingMapper.insertSelective(productParamSetting);
+                            productParamValue.setParamId(productParamSetting.getId());
+                        }
                     }
                     productParamValue.setProductId(productId);
                     productParamValueMapper.insertSelective(productParamValue);

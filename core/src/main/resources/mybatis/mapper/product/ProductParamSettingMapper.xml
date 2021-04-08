@@ -317,4 +317,8 @@
       updated_time = #{updatedTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="nameExistingForProduct" resultType="java.lang.Integer">
+    select 1 from product_param_setting where param_name = #{paramName,jdbcType=VARCHAR} and enable_all = 3 limit 1
+    </select>
 </mapper>

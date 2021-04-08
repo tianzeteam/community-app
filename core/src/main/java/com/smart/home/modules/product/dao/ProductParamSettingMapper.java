@@ -29,4 +29,6 @@ public interface ProductParamSettingMapper {
     int updateByPrimaryKeySelective(ProductParamSetting record);
 
     int updateByPrimaryKey(ProductParamSetting record);
+
+    Integer nameExistingForProduct(@Param("paramName") String paramName);
 }
