@@ -165,4 +165,25 @@ public class AppProductController {
         return APIResponse.OK();
     }
 
+    @ApiOperation("收藏/取消收藏产品-二合一")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "productId", value = "产品主键id", required = true),
+            @ApiImplicitParam(name = "action", value = "0收藏1取消收藏", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @PostMapping("/collectOrCancelCollectProduct")
+    public APIResponse collectOrCancelCollectProduct(@RequestParam(required = true) Long productId,@RequestParam(required = true) Integer action) {
+        Long userId = UserUtils.getLoginUserId();
+        try {
+            if (action == 0) {
+                collectService.addCollect(CollectTypeEnum.PRODUCT, userId, productId);
+            } else {
+                collectService.cancelCollect(CollectTypeEnum.PRODUCT, userId, productId);
+            }
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        return APIResponse.OK();
+    }
+
 }

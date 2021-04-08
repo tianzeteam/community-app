@@ -292,7 +292,11 @@ public class ProductService {
 
     public List<Product> queryByCategory(Product product, int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        return productMapper.queryByCategory(product);
+        if (StringUtils.isBlank(product.getSupportPlatform())) {
+            return productMapper.queryByCategory(product);
+        } else {
+            return productMapper.queryByCategoryAndSupportPlatform(product);
+        }
     }
 
     public List<Product> queryCollectViaUserIdByPage(Long userId, int pageNum, int pageSize) {
