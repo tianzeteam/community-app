@@ -79,6 +79,7 @@ public class ArticleService {
             ArticleBean articleBean = new ArticleBean();
             BeanUtils.copyProperties(dbArticle, articleBean);
             articleBean.setSaveType(EsSaveTypeEnum.ARTICLE.getType());
+            articleBean.setChannelName(queryChannelNameByChannelId(dbArticle.getChannelId()));
             articleEsServiceImpl.save(articleBean);
         }
         return affectRow;
@@ -210,6 +211,7 @@ public class ArticleService {
                 } else {
                     articleBean.setCreatedTime(article.getCreatedTime());
                 }
+                articleBean.setChannelName(queryChannelNameByChannelId(article.getChannelId()));
                 articleEsServiceImpl.save(articleBean);
             }
         }
@@ -304,6 +306,7 @@ public class ArticleService {
             ArticleBean articleBean = new ArticleBean();
             BeanUtils.copyProperties(article, articleBean);
             articleBean.setSaveType(EsSaveTypeEnum.ARTICLE.getType());
+            articleBean.setChannelName(queryChannelNameByChannelId(article.getChannelId()));
             articleEsServiceImpl.save(articleBean);
         }
     }
