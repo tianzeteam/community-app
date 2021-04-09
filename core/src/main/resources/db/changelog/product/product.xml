@@ -183,4 +183,10 @@
             comment on column product.import_flag is '是否自动导入的：0否1是';
         </sql>
     </changeSet>
+    <changeSet id="modifyColumnProductName4Product" author="jason">
+        <comment>修改字段</comment>
+        <sql>
+            alter table product alter column product_name type VARCHAR(255);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

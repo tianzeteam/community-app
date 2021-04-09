@@ -53,4 +53,11 @@
             create index idx_param_id on product_param_value using btree(PARAM_ID);
         </sql>
     </changeSet>
+    <changeSet id="modifyColumnParamValue4ProductParamValue" author="jason">
+        <comment>修改字段</comment>
+        <sql>
+            alter table product_param_value alter column PARAM_VALUE type VARCHAR(255);
+            alter table product_param_value alter column PARAM_NAME type VARCHAR(255);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration monitorInterval="5">
+    <Properties>
+        <property name="LOG_PATTERN" value="[TRACEID:%X{traceId}] %date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+        <property name="FILE_PATH" value="/home/app/log"/>
+        <property name="APP_DIR" value="phone"/>
+        <property name="FILE_NAME" value="phone"/>
+    </Properties>
+    <appenders>
+        <console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+        </console>
+    </appenders>
+    <loggers>
+        <root level="debug">
+            <appender-ref ref="Console"/>
+        </root>
+    </loggers>
+</configuration>

@@ -53,4 +53,10 @@
             COMMENT ON COLUMN product_shop_mapping.title IS '标题';
         </sql>
     </changeSet>
+    <changeSet id="modifyColumnUrl4ProductShopMappping" author="jason">
+        <comment>修改字段</comment>
+        <sql>
+            alter table product_shop_mapping alter column url type text;
+        </sql>
+    </changeSet>
 </databaseChangeLog>

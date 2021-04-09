@@ -80,6 +80,7 @@ public class ImportProductUtil {
                 productParamValue.setEnableAll(3);
                 productParamValue.setParamName(key);
                 productParamValue.setParamValue(value);
+                productParamValue.setSort(0);
                 productParamValueList.add(productParamValue);
             });
 
@@ -138,7 +139,12 @@ public class ImportProductUtil {
             product.setSupportPlatform(productSupportPlatform);
             product.setProductParamValueList(productParamValueList);
             product.setProductShopMappingList(productShopMappingList);
-            productService.create(product);
+
+            try {
+                productService.create(product);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
         }
         bufferedReader.close();
     }
