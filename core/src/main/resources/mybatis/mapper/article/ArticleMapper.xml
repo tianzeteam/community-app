@@ -908,7 +908,7 @@
     </if>
     and article.top_flag = #{topFlag,jdbcType=INTEGER}
     and article.recommend_type = #{recommendType,jdbcType=INTEGER}
-    order by article.audit_time desc
+    order by article.created_time desc
   </select>
 
   <select id="findUserIdAndCategory" resultType="com.smart.home.modules.article.po.UserIdAndCategoryPO">
