@@ -84,6 +84,7 @@ public class ProductParamSettingService {
         if (productParamSetting.getEnableAll() != null) {
             criteria.andEnableAllEqualTo(productParamSetting.getEnableAll());
         }
+        example.orderBy("id asc");
         return productParamSettingMapper.selectByExample(example);
     }
 
