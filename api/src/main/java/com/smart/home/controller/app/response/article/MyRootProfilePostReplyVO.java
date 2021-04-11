@@ -14,6 +14,9 @@ import java.util.Date;
 @ToString
 public class MyRootProfilePostReplyVO {
 
+    @ApiModelProperty("帖子主键id")
+    private Long postId;
+
     @ApiModelProperty("回帖主键id")
     private Long id;
     @ApiModelProperty("用户头像地址")

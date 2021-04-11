@@ -14,6 +14,8 @@ import java.util.Date;
 @ToString
 public class MyRootProfileCommentVO {
 
+    @ApiModelProperty("文章主键id")
+    private Long articleId;
     @ApiModelProperty("评论主键id")
     private Long id;
     @ApiModelProperty("用户头像地址")

@@ -15,6 +15,8 @@ import java.util.List;
 @ToString
 public class MyRootProfileProductCommentVO {
 
+    @ApiModelProperty("产品主键id")
+    private Integer productId;
     @ApiModelProperty("评价主键id")
     private Long id;
     @ApiModelProperty("用户头像")
