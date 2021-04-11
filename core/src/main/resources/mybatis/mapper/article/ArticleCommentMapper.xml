@@ -370,6 +370,7 @@
   <select id="queryViaUserIdByPageWhenLogin" resultType="com.smart.home.modules.article.entity.ArticleComment">
     select ac.id,
            ac.article_id as articleId,
+           ac.article_category as articleCategory,
            0 as pid,
            ua.head_url as headUrl,
            ua.nick_name as nickName,

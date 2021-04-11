@@ -834,6 +834,7 @@
 
   <select id="queryViaUserIdByPageWhenLogin"  resultType="com.smart.home.modules.article.entity.Article">
     select a.id,
+           a.category,
            ua.head_url as headUrl,
            ua.nick_name as nickName,
            ud.user_level as userLevel,

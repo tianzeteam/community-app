@@ -16,6 +16,8 @@ public class MyRootProfileCommentVO {
 
     @ApiModelProperty("文章主键id")
     private Long articleId;
+    @ApiModelProperty("文章分类：0文章1视频")
+    private Integer articleCategory;
     @ApiModelProperty("评论主键id")
     private Long id;
     @ApiModelProperty("用户头像地址")

@@ -16,6 +16,8 @@ public class MyRootProfileArticleVO {
 
     @ApiModelProperty("文章主键id")
     private Long id;
+    @ApiModelProperty("文章分类：0文章1视频")
+    private Integer category;
     @ApiModelProperty("用户头像")
     private String headUrl;
     @ApiModelProperty("用户昵称")
