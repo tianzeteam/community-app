@@ -33,4 +33,6 @@ public interface UserRoleMappingMapper {
     int deleteByUserId(@Param("userId") Long userId);
 
     List<String> findUserRoleCodeList(@Param("userId") Long userId);
+
+    Integer existsByRoleCodeAndUserId(@Param("roleCode") String roleCode,@Param("userId") Long userId);
 }

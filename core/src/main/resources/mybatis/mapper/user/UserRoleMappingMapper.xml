@@ -209,4 +209,8 @@
   <select id="findUserRoleCodeList" resultType="java.lang.String">
     select role_code from user_role_mapping where user_id = #{userId,jdbcType=BIGINT}
     </select>
+
+  <select id="existsByRoleCodeAndUserId" resultType="java.lang.Integer">
+    select 1 from user_role_mapping where user_id = #{userId,jdbcType=BIGINT} and role_code = #{roleCode,jdbcType=VARCHAR} limit 1
+    </select>
 </mapper>

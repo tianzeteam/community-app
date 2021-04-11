@@ -27,4 +27,15 @@
             COMMENT ON COLUMN user_role_mapping.ROLE_CODE IS '角色编码，冗余字段';
         </sql>
     </changeSet>
+    <changeSet id="addIndex4UserRoleMapping" author="jason">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="user_role_mapping" indexName="idx_urm_userid_role"/>
+            </not>
+        </preConditions>
+        <comment>新增索引</comment>
+        <sql>
+            create index idx_urm_userid_role on user_role_mapping using btree(USER_ID, ROLE_CODE);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

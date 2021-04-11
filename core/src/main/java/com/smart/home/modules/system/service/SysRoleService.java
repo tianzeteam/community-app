@@ -17,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -111,10 +112,14 @@ public class SysRoleService {
     }
 
     public void assignRole(String roleCode, Long userId) {
-        Integer roleId = findRoleIdByCode(roleCode);
-        UserRoleMapping userRoleMapping = new UserRoleMapping();
-        userRoleMapping.withRoleCode(roleCode).withRoleId(roleId).withUserId(userId);
-        userRoleMappingMapper.insertSelective(userRoleMapping);
+        // 判断有没有了，没有就新增
+        Integer existing = userRoleMappingMapper.existsByRoleCodeAndUserId(roleCode, userId);
+        if (Objects.isNull(existing)) {
+            Integer roleId = findRoleIdByCode(roleCode);
+            UserRoleMapping userRoleMapping = new UserRoleMapping();
+            userRoleMapping.withRoleCode(roleCode).withRoleId(roleId).withUserId(userId);
+            userRoleMappingMapper.insertSelective(userRoleMapping);
+        }
     }
 
     public void removeRole(String roleCode, Long userId) {
