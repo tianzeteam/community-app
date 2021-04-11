@@ -29,4 +29,6 @@ public interface UserFocusMapper {
     int updateByPrimaryKey(UserFocus record);
 
     List<UserFocus> selectByUserId(@Param("userId") Long userId);
+
+    Integer existsByLoginUserIdAndUserId(@Param("loginUserId") Long loginUserId,@Param("userId") Long userId);
 }

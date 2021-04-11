@@ -45,5 +45,7 @@ public class MyProfileVO {
 /////////////////////////////////////////////
     @ApiModelProperty("粉丝在个人主页可以看到的勾选的动态:0发帖1评论2回帖3评价4投稿")
     private List<Integer> userPrivatePrivacyList;
+    @ApiModelProperty("我是否关注了该用户:0否1是")
+    private Integer focusFlag;
 
 }

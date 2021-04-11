@@ -16,6 +16,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author jason
@@ -127,5 +128,13 @@ public class UserFocusService {
         UserFocusExample example = new UserFocusExample();
         example.createCriteria().andUserIdEqualTo(userId).andFocusUserIdEqualTo(focusUserId);
         return userFocusMapper.countByExample(example);
+    }
+
+    public Integer queryFocusFlag(Long loginUserId, Long userId) {
+        Integer existing = userFocusMapper.existsByLoginUserIdAndUserId(loginUserId, userId);
+        if (Objects.isNull(existing)) {
+            return YesNoEnum.NO.getCode();
+        }
+        return YesNoEnum.YES.getCode();
     }
 }

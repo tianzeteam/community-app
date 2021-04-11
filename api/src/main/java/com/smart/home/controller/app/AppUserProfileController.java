@@ -2,6 +2,7 @@ package com.smart.home.controller.app;
 
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.MyFocusVO;
@@ -97,8 +98,10 @@ public class AppUserProfileController {
     @RoleAccess(RoleConsts.REGISTER)
     @GetMapping("/queryMyRootProfile")
     public APIResponse<MyProfileVO> queryMyRootProfile(@RequestParam(value = "userId", required = false) Long userId) {
+        boolean selfUser = false;
         if (Objects.isNull(userId)) {
             userId = UserUtils.getLoginUserId();
+            selfUser = true;
         }
         UserAccount userAccount = userAccountService.findUserByUserId(userId);
         UserData userData = userDataService.findByUserId(userId);
@@ -111,6 +114,13 @@ public class AppUserProfileController {
             myProfileVO.setTag(userTag.getTag());
         }
         myProfileVO.setUserPrivatePrivacyList(userPrivacySettingService.queryUserSettingList(userId));
+        if (selfUser) {
+            myProfileVO.setFocusFlag(YesNoEnum.YES.getCode());
+        } else {
+            // 查看登陆用户的关注表
+            Long loginUserId = UserUtils.getLoginUserId();
+            myProfileVO.setFocusFlag(userFocusService.queryFocusFlag(loginUserId, userId));
+        }
         return APIResponse.OK(myProfileVO);
     }
 
