@@ -99,7 +99,7 @@ public class CommunityPostDetailVO {
     private Integer stampFlag;
 
     //是否被当前用户关注
-    @ApiModelProperty("是否被当前用户关注")
+    @ApiModelProperty("是否被当前用户关注:0否1是")
     private Integer focusFlag;
 
     @ApiModelProperty("全部回复数")

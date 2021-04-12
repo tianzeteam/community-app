@@ -1,5 +1,6 @@
 package com.smart.home.modules.product.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.smart.home.cloud.qcloud.auditor.ContentAuditor;
@@ -262,9 +263,11 @@ public class ProductCommentService {
         // 超出产品，计算产品的平均分
         BigDecimal averageScore = product.getAverageScore();
         if (Objects.isNull(averageScore)) {
-            averageScore = new BigDecimal(10);
+            // 说明还没有评分过
+            averageScore = starCount.multiply(new BigDecimal(2));
+        } else {
+            averageScore = starCount.multiply(new BigDecimal(2)).add(averageScore).divide(new BigDecimal(2), 1, RoundingMode.HALF_UP);
         }
-        averageScore = starCount.multiply(new BigDecimal(2)).add(averageScore).divide(new BigDecimal(2), 1, RoundingMode.HALF_UP);
         if (starCount.compareTo(new BigDecimal(4)) > 0) {
             product.setFiveStarCount(product.getFiveStarCount() + 1);
         } else if (starCount.compareTo(new BigDecimal(3)) > 0) {
@@ -377,5 +380,17 @@ public class ProductCommentService {
     public List<ProductComment> queryViaUserIdByPageWhenLogin(Long userId, int pageNum, int pageSize, Long loginUserId) {
         PageHelper.startPage(pageNum, pageSize);
         return productCommentMapper.queryViaUserIdByPageWhenLogin(userId, loginUserId);
+    }
+
+    public BigDecimal queryStarCountByUser(Long loginUserId, Integer productId) {
+        if (loginUserId > 0) {
+            ProductCommentExample example = new ProductCommentExample();
+            example.createCriteria().andUserIdEqualTo(loginUserId).andProductIdEqualTo(productId);
+            List<ProductComment> list = productCommentMapper.selectByExample(example);
+            if (CollUtil.isNotEmpty(list)) {
+                return list.get(0).getStarCount();
+            }
+        }
+        return null;
     }
 }

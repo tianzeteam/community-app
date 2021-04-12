@@ -49,26 +49,26 @@ public class ImportProductUtil {
             String productCategories = list.get(1);
             String[] categoryArray = productCategories.split("-");
             String categoryOneName = categoryArray[0];
-            ProductCategory productCategoryOne = productCategoryService.findByName(categoryOneName, 1);
+            ProductCategory productCategoryOne = productCategoryService.findByName(categoryOneName, 1, 0);
             if (Objects.isNull(productCategoryOne)) {
                 // 新建一个分类
-                productCategoryOne = productCategoryService.createNewCategory(categoryOneName, 1);
+                productCategoryOne = productCategoryService.createNewCategory(categoryOneName, 1, 0);
             }
             int categoryOneId = productCategoryOne.getId();
 
             String categoryTwoName = categoryArray[1];
-            ProductCategory productCategoryTwo = productCategoryService.findByName(categoryTwoName, 2);
+            ProductCategory productCategoryTwo = productCategoryService.findByName(categoryTwoName, 2, categoryOneId);
             if (Objects.isNull(productCategoryTwo)) {
                 // 新建一个分类
-                productCategoryTwo = productCategoryService.createNewCategory(categoryTwoName, 2);
+                productCategoryTwo = productCategoryService.createNewCategory(categoryTwoName, 2, categoryOneId);
             }
             int categoryTwoId = productCategoryTwo.getId();
 
             String categoryThreeName = categoryArray[2];
-            ProductCategory productCategoryThree = productCategoryService.findByName(categoryThreeName, 3);
+            ProductCategory productCategoryThree = productCategoryService.findByName(categoryThreeName, 3, categoryTwoId);
             if (Objects.isNull(productCategoryThree)) {
                 // 新建一个分类
-                productCategoryThree = productCategoryService.createNewCategory(categoryThreeName, 3);
+                productCategoryThree = productCategoryService.createNewCategory(categoryThreeName, 3, categoryTwoId);
             }
             int categoryThreeId = productCategoryThree.getId();
 

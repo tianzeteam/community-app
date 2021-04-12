@@ -183,9 +183,9 @@ public class ProductCategoryService {
      * @param level
      * @return
      */
-    public ProductCategory findByName(String categoryName, Integer level) {
+    public ProductCategory findByName(String categoryName, Integer level, Integer pid) {
         ProductCategoryExample example = new ProductCategoryExample();
-        example.createCriteria().andTitleEqualTo(categoryName).andLevelEqualTo(level);
+        example.createCriteria().andTitleEqualTo(categoryName).andLevelEqualTo(level).andPidEqualTo(pid);
         List<ProductCategory> list = productCategoryMapper.selectByExample(example);
         if (CollUtil.isNotEmpty(list)) {
             return list.get(0);
@@ -193,13 +193,14 @@ public class ProductCategoryService {
         return null;
     }
 
-    public ProductCategory createNewCategory(String categoryName, int level) {
+    public ProductCategory createNewCategory(String categoryName, int level, Integer pid) {
         ProductCategory productCategory = new ProductCategory();
         productCategory.withTitle(categoryName)
                 .withSort(0)
                 .withState(RecordStatusEnum.NORMAL.getStatus())
                 .withCreatedTime(new Date())
                 .withCreatedBy(0L)
+                .withPid(pid)
                 .withRevision(0);
         productCategory.setLevel(level);
         if (level == 1) {

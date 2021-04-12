@@ -3,6 +3,7 @@ package com.smart.home.controller.app;
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.request.CommunityPostReq;
 import com.smart.home.controller.app.response.community.CommunityPostDetailVO;
@@ -122,12 +123,19 @@ public class AppCommunityPostController {
             if (communityPostDTO != null) {
                 BeanUtils.copyProperties(communityPostDTO, communityPostDetailVO);
             }
+            boolean hasFocusThisAuthor = communityPostService.hasFocusThisAuthor(userId, communityPostDTO.getUserId());
+            if (hasFocusThisAuthor) {
+                communityPostDetailVO.setFocusFlag(YesNoEnum.YES.getCode());
+            } else {
+                communityPostDetailVO.setFocusFlag(YesNoEnum.NO.getCode());
+            }
         }else {
             //用户未登录
             CommunityPostDTO communityPostDTO = communityPostService.queryDetailNotLogin(id);
             if (communityPostDTO != null) {
                 BeanUtils.copyProperties(communityPostDTO, communityPostDetailVO);
             }
+            communityPostDetailVO.setFocusFlag(YesNoEnum.NO.getCode());
         }
         if (communityPostDetailVO.getReportCount() == null) {
             communityPostDetailVO.setReportCount(0);

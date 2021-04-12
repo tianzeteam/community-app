@@ -104,6 +104,7 @@ public class AppProductController {
         } else {
             productDetailVO.setCollectFlag(YesNoEnum.NO.getCode());
         }
+        productDetailVO.setMyScore(productCommentService.queryStarCountByUser(UserUtils.getLoginUserId(), productDetailVO.getId()));
         productDetailVO.setHref(sysDictService.queryValueByDictCode("share.link.prefix.product")+"?id="+productDetailVO.getId());
         return APIResponse.OK(productDetailVO);
     }

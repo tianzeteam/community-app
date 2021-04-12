@@ -43,5 +43,7 @@ public class ProductDetailVO {
     private List<String> tagList;
     @ApiModelProperty("分享页面")
     private String href;
+    @ApiModelProperty("我的评分")
+    private BigDecimal myScore;
 
 }

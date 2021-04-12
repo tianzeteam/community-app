@@ -40,6 +40,7 @@ import com.smart.home.modules.user.dto.UserDataDTO;
 import com.smart.home.modules.user.entity.UserCommunityAuth;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
+import com.smart.home.modules.user.service.UserFocusService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,6 +80,8 @@ public class CommunityPostService {
     private UserCollectMapper userCollectMapper;
     @Autowired
     private SysDictService sysDictService;
+    @Autowired
+    private UserFocusService userFocusService;
 
 
     public void create(CommunityPost communityPost) {
@@ -566,4 +569,7 @@ public class CommunityPostService {
         return communityPostDTOS;
     }
 
+    public boolean hasFocusThisAuthor(Long longUserId, Long authorId) {
+        return userFocusService.queryFocusFlag(longUserId, authorId) == YesNoEnum.YES.getCode();
+    }
 }

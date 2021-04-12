@@ -264,7 +264,7 @@
            ua.nick_name as nickName
     from user_community_auth uca
     left join user_account ua on ua.id = uca.user_id
-    and uca.admin_flag = 1
+    where uca.admin_flag = 1
     <if test="userId != null">
       and uca.user_id = #{userId,jdbcType=BIGINT}
     </if>

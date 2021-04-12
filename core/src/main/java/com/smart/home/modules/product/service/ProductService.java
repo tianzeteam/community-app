@@ -86,7 +86,7 @@ public class ProductService {
         }
         product.setCreatedTime(new Date());
         product.setRevision(0);
-        product.setAverageScore(new BigDecimal(10));
+        product.setAverageScore(null);
         product.setPraiseRate(100);
         product.setCommentCount(0);
         product.setTestCount(0);
