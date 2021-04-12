@@ -71,5 +71,7 @@ public class ArticleDetailVO {
     private ProductTestResultVO productTestResultVO;
     @ApiModelProperty("分享页面")
     private String href;
+    @ApiModelProperty("文章类型：0文章1视频")
+    private Integer category;
 
 }
