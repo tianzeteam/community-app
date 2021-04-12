@@ -24,7 +24,8 @@ public class ArticleStampHistoryService {
     @Autowired
     private ArticleService articleService;
 
-    public int create(ArticleStampHistory articleStampHistory) {
+    public boolean create(ArticleStampHistory articleStampHistory) {
+        boolean success = false;
         articleStampHistory.setCreatedTime(new Date());
         int affectRow = articleStampHistoryMapper.insertSelective(articleStampHistory);
         if (affectRow > 0) {
@@ -35,8 +36,9 @@ public class ArticleStampHistoryService {
             if (articleStampHistory.getType() == 1) {
                 articleCommentService.increaseStampCount(articleStampHistory.getSourceId());
             }
+            success = true;
         }
-        return affectRow;
+        return success;
     }
 
     public void unstampArticle(Long userId, Long id) {

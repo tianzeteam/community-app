@@ -27,7 +27,8 @@ public class ProductCommentLikeHistoryService {
     @Autowired
     private ProductCommentReplyService productCommentReplyService;
 
-    public int create(ProductCommentLikeHistory productCommentLikeHistory) throws ServiceException {
+    public boolean create(ProductCommentLikeHistory productCommentLikeHistory) throws ServiceException {
+        boolean success = false;
         ProductCommentLikeHistoryExample example = new ProductCommentLikeHistoryExample();
         example.createCriteria().andUserIdEqualTo(productCommentLikeHistory.getUserId())
                 .andCategoryEqualTo(productCommentLikeHistory.getCategory())
@@ -44,8 +45,9 @@ public class ProductCommentLikeHistoryService {
             if (productCommentLikeHistory.getCategory() == 1) {
                 productCommentReplyService.increaseLikeCount(productCommentLikeHistory.getSourceId());
             }
+            success = true;
         }
-        return affectRow;
+        return success;
     }
 
     public void unlikeComment(Long userId, Long id) {

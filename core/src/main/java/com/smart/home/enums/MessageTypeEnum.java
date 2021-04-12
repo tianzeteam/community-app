@@ -6,7 +6,7 @@ package com.smart.home.enums;
  **/
 public enum MessageTypeEnum {
 
-    REPLY_ME(0, "回复我的"), LIKE(1, "赞"), NOTIFY(2, "系统通知");
+    REPLY_ME(0, "回复我的"), LIKE(1, "赞"), NOTIFY(2, "系统通知"), MESSAGE(3, "私信");
 
     private int type;
     private String desc;

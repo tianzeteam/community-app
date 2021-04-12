@@ -2,12 +2,15 @@ package com.smart.home.service;
 
 import com.smart.home.common.exception.ServiceException;
 import com.smart.home.enums.LikeCategoryEnum;
+import com.smart.home.enums.StampCategoryEnum;
 import com.smart.home.modules.article.entity.ArticleLikeHistory;
+import com.smart.home.modules.article.entity.ArticleLikeHistoryExample;
 import com.smart.home.modules.article.service.ArticleLikeHistoryService;
 import com.smart.home.modules.community.entity.CommunityLikeHistory;
 import com.smart.home.modules.community.service.CommunityLikeHistoryService;
 import com.smart.home.modules.product.entity.ProductCommentLikeHistory;
 import com.smart.home.modules.product.service.ProductCommentLikeHistoryService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,8 @@ public class LikeService {
     private ProductCommentLikeHistoryService productCommentLikeHistoryService;
     @Autowired
     private CommunityLikeHistoryService communityLikeHistoryService;
+    @Autowired
+    private StampService stampService;
 
     /**
      * 增加一条赞历史记录
@@ -36,22 +41,40 @@ public class LikeService {
     public void like(LikeCategoryEnum likeCategoryEnum, Long userId, Long primaryKey) throws ServiceException {
         switch (likeCategoryEnum) {
             case ARTICLE:
-                createArticleLikeHistory(userId, primaryKey, 0);
+                if (createArticleLikeHistory(userId, primaryKey, 0)) {
+                    // 点赞成功的话就取消踩
+                    stampService.cancelStamp(StampCategoryEnum.ARTICLE, userId, primaryKey);
+                }
                 break;
             case ARTICLE_COMMENT:
-                createArticleLikeHistory(userId, primaryKey, 1);
+                if (createArticleLikeHistory(userId, primaryKey, 1)) {
+                    // 点赞成功的话就取消踩
+                    stampService.cancelStamp(StampCategoryEnum.ARTICLE_COMMENT, userId, primaryKey);
+                }
                 break;
             case PRODUCT_COMMENT:
-                createProductCommentLikeHistory(userId, primaryKey, 0);
+                if (createProductCommentLikeHistory(userId, primaryKey, 0)) {
+                    // 点赞成功的话就取消踩
+                    stampService.cancelStamp(StampCategoryEnum.PRODUCT_COMMENT, userId, primaryKey);
+                }
                 break;
             case PRODUCT_REPLY:
-                createProductCommentLikeHistory(userId, primaryKey, 1);
+                if (createProductCommentLikeHistory(userId, primaryKey, 1)) {
+                    // 点赞成功的话就取消踩
+                    stampService.cancelStamp(StampCategoryEnum.PRODUCT_REPLY, userId, primaryKey);
+                }
                 break;
             case POST:
-                createPostLikeHistory(userId, primaryKey, 0);
+                if (createPostLikeHistory(userId, primaryKey, 0)) {
+                    // 点赞成功的话就取消踩
+                    stampService.cancelStamp(StampCategoryEnum.POST, userId, primaryKey);
+                }
                 break;
             case POST_REPLY:
-                createPostLikeHistory(userId, primaryKey, 1);
+                if (createPostLikeHistory(userId, primaryKey, 1)) {
+                    // 点赞成功的话就取消踩
+                    stampService.cancelStamp(StampCategoryEnum.POST_REPLY, userId, primaryKey);
+                }
                 break;
             default:
                 break;
@@ -114,31 +137,31 @@ public class LikeService {
         return false;
     }
 
-    private void createPostLikeHistory(Long userId, Long primaryKey, Integer category) {
+    private boolean createPostLikeHistory(Long userId, Long primaryKey, Integer category) {
         CommunityLikeHistory communityLikeHistory = new CommunityLikeHistory();
         communityLikeHistory.withCreatedTime(new Date())
                 .withPostId(primaryKey)
                 .withUserId(userId)
                 .withType(category);
-        communityLikeHistoryService.create(communityLikeHistory);
+        return communityLikeHistoryService.create(communityLikeHistory);
     }
 
-    private void createProductCommentLikeHistory(Long userId, Long primaryKey, Integer category) throws ServiceException {
+    private boolean createProductCommentLikeHistory(Long userId, Long primaryKey, Integer category) throws ServiceException {
         ProductCommentLikeHistory productCommentLikeHistory = new ProductCommentLikeHistory();
         productCommentLikeHistory.withCategory(category)
                 .withCreatedTime(new Date())
                 .withSourceId(primaryKey)
                 .withUserId(userId);
-        productCommentLikeHistoryService.create(productCommentLikeHistory);
+        return productCommentLikeHistoryService.create(productCommentLikeHistory);
     }
 
-    private void createArticleLikeHistory(Long userId, Long primaryKey, Integer category) {
+    private boolean createArticleLikeHistory(Long userId, Long primaryKey, Integer category) {
         ArticleLikeHistory articleLikeHistory = new ArticleLikeHistory();
         articleLikeHistory.withCategory(category)
                 .withCreatedTime(new Date())
                 .withSourceId(primaryKey)
                 .withUserId(userId);
-        articleLikeHistoryService.create(articleLikeHistory);
+        return articleLikeHistoryService.create(articleLikeHistory);
     }
 
 }

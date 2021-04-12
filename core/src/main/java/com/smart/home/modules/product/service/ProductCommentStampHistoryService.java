@@ -26,7 +26,8 @@ public class ProductCommentStampHistoryService {
     @Autowired
     private ProductCommentReplyService productCommentReplyService;
 
-    public int create(ProductCommentStampHistory productCommentStampHistory) throws ServiceException {
+    public boolean create(ProductCommentStampHistory productCommentStampHistory) throws ServiceException {
+        boolean success = false;
         ProductCommentStampHistoryExample example = new ProductCommentStampHistoryExample();
         example.createCriteria().andUserIdEqualTo(productCommentStampHistory.getUserId())
                 .andCategoryEqualTo(productCommentStampHistory.getCategory())
@@ -43,8 +44,9 @@ public class ProductCommentStampHistoryService {
             if (productCommentStampHistory.getCategory() == 1) {
                 productCommentReplyService.increaseStampCount(productCommentStampHistory.getSourceId());
             }
+            success = true;
         }
-        return affectRow;
+        return success;
     }
 
     public void unstampComment(Long userId, Long id) {

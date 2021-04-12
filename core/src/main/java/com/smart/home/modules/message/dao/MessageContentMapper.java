@@ -31,4 +31,8 @@ public interface MessageContentMapper {
     int updateByPrimaryKey(MessageContent record);
 
     List<MessageContent> queryUnReadNotifyMessage(@Param("receiverId") Long receiverId);
+
+    int updateToRead(@Param("messageIdList") List<Long> messageIdList,@Param("readFlag") int readFlag, @Param("toUserId") Long toUserId);
+
+    List<MessageContent> queryChatMessage(@Param("loginUserId") Long loginUserId,@Param("fromUserId") Long fromUserId);
 }

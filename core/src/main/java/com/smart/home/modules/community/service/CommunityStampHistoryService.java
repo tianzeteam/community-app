@@ -28,11 +28,12 @@ public class CommunityStampHistoryService {
     @Autowired
     private CommunityPostReplyService communityPostReplyService;
 
-    public int create(CommunityStampHistory communityStampHistory) {
+    public boolean create(CommunityStampHistory communityStampHistory) {
+        boolean success = false;
         CommunityStampHistory stampHistory = communityStampHistoryMapper.selectByUserIdAndPostId(communityStampHistory.getUserId(), communityStampHistory.getPostId(), communityStampHistory.getType());
         if (stampHistory != null) {
             log.warn("已经踩过:{}", JSON.toJSONString(communityStampHistory));
-            return 1;
+            return false;
         }
         communityStampHistory.setCreatedTime(new Date());
         int affectRow = communityStampHistoryMapper.insertSelective(communityStampHistory);
@@ -43,8 +44,9 @@ public class CommunityStampHistoryService {
             if (communityStampHistory.getType() == 1) {
                 communityPostReplyService.increaseStampCount(communityStampHistory.getPostId());
             }
+            success = true;
         }
-        return affectRow;
+        return success;
     }
 
     public void unstampPost(Long userId, Long id) {

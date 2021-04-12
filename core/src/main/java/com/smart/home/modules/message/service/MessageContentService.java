@@ -7,6 +7,9 @@ import com.smart.home.modules.message.dao.MessageContentMapper;
 import com.smart.home.modules.message.entity.MessageContent;
 import com.smart.home.modules.message.entity.MessageContentExample;
 import com.smart.home.modules.message.entity.MessageReadHistory;
+import com.smart.home.modules.user.entity.UserAccount;
+import com.smart.home.modules.user.service.UserAccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,8 @@ public class MessageContentService {
     MessageContentMapper messageContentMapper;
     @Resource
     MessageReadHistoryService messageReadHistoryService;
+    @Autowired
+    private UserAccountService userAccountService;
 
     public int createNotifyMessage(MessageContent messageContent) {
         messageContent.setReadFlag(YesNoEnum.NO.getCode());
@@ -43,9 +48,16 @@ public class MessageContentService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     public void delete(List<Long> idList) {
-        for (Long id : idList) {
-            messageContentMapper.deleteByPrimaryKey(id);
-        }
+        MessageContentExample example = new MessageContentExample();
+        example.createCriteria().andIdIn(idList);
+        messageContentMapper.deleteByExample(example);
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void delete(List<Long> idList, Long loginUserId) {
+        MessageContentExample example = new MessageContentExample();
+        example.createCriteria().andIdIn(idList).andReceiverIdEqualTo(loginUserId);
+        messageContentMapper.deleteByExample(example);
     }
 
     public List<MessageContent> selectByPage(MessageContent messageContent, int pageNum, int pageSize) {
@@ -100,5 +112,42 @@ public class MessageContentService {
 
     public void create(MessageContent messageContent) {
         messageContentMapper.insertSelective(messageContent);
+    }
+
+    public void sendMessage(Long fromUserId, Long toUserId, String message) {
+        UserAccount userAccount = userAccountService.findUserByUserId(fromUserId);
+        MessageContent messageContent = new MessageContent();
+        messageContent.withMessageContent(message)
+                .withHeadUrl(userAccount.getHeadUrl())
+                .withDeleteFlag(YesNoEnum.NO.getCode())
+                .withReadFlag(YesNoEnum.NO.getCode())
+                .withMessageType(MessageTypeEnum.MESSAGE.getType())
+                .withNickName(userAccount.getNickName())
+                .withCreatedTime(new Date())
+                .withReceiverId(toUserId)
+                .withSenderId(fromUserId)
+                .withCreatedBy(fromUserId);
+        messageContentMapper.insertSelective(messageContent);
+    }
+
+    public List<MessageContent> queryUnReadMessage(Long loginUserId, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        MessageContentExample messageContentExample = new MessageContentExample();
+        messageContentExample.createCriteria()
+                .andReceiverIdEqualTo(loginUserId)
+                .andMessageTypeEqualTo(MessageTypeEnum.MESSAGE.getType())
+                .andReadFlagEqualTo(YesNoEnum.NO.getCode());
+        messageContentExample.orderBy("created_time desc");
+        return messageContentMapper.selectByExample(messageContentExample);
+    }
+
+    public List<MessageContent> queryChatMessage(Long loginUserId, Long fromUserId, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<MessageContent> messageContentList = messageContentMapper.queryChatMessage(loginUserId, fromUserId);
+        return messageContentList;
+    }
+
+    public void updateToRead(List<Long> messageIdList, Long loginUserId) {
+        messageContentMapper.updateToRead(messageIdList, YesNoEnum.YES.getCode(), loginUserId);
     }
 }

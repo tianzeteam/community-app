@@ -27,6 +27,8 @@ public class StampService {
     private ProductCommentStampHistoryService productCommentStampHistoryService;
     @Autowired
     private CommunityStampHistoryService communityStampHistoryService;
+    @Autowired
+    private LikeService likeService;
 
     /**
      * 增加一条踩历史记录
@@ -37,22 +39,34 @@ public class StampService {
     public void stamp(StampCategoryEnum stampCategoryEnum, Long userId, Long primaryKey) throws ServiceException {
         switch (stampCategoryEnum) {
             case ARTICLE:
-                createArticleStampHistory(userId, primaryKey, 0);
+                if (createArticleStampHistory(userId, primaryKey, 0)) {
+                    likeService.cancelLike(LikeCategoryEnum.ARTICLE, userId, primaryKey);
+                }
                 break;
             case ARTICLE_COMMENT:
-                createArticleStampHistory(userId, primaryKey, 1);
+                if (createArticleStampHistory(userId, primaryKey, 1)) {
+                    likeService.cancelLike(LikeCategoryEnum.ARTICLE_COMMENT, userId, primaryKey);
+                }
                 break;
             case PRODUCT_COMMENT:
-                createProductCommentStampHistory(userId, primaryKey, 0);
+                if (createProductCommentStampHistory(userId, primaryKey, 0)) {
+                    likeService.cancelLike(LikeCategoryEnum.PRODUCT_COMMENT, userId, primaryKey);
+                }
                 break;
             case PRODUCT_REPLY:
-                createProductCommentStampHistory(userId, primaryKey, 1);
+                if (createProductCommentStampHistory(userId, primaryKey, 1)) {
+                    likeService.cancelLike(LikeCategoryEnum.PRODUCT_REPLY, userId, primaryKey);
+                }
                 break;
             case POST:
-                createPostStampHistory(userId, primaryKey, 0);
+                if (createPostStampHistory(userId, primaryKey, 0)) {
+                    likeService.cancelLike(LikeCategoryEnum.POST, userId, primaryKey);
+                }
                 break;
             case POST_REPLY:
-                createPostStampHistory(userId, primaryKey, 1);
+                if (createPostStampHistory(userId, primaryKey, 1)) {
+                    likeService.cancelLike(LikeCategoryEnum.POST_REPLY, userId, primaryKey);
+                }
                 break;
             default:
                 break;
@@ -114,31 +128,31 @@ public class StampService {
         return false;
     }
 
-    private void createPostStampHistory(Long userId, Long primaryKey, Integer category) {
+    private boolean createPostStampHistory(Long userId, Long primaryKey, Integer category) {
         CommunityStampHistory communityStampHistory = new CommunityStampHistory();
         communityStampHistory.withCreatedTime(new Date())
                 .withPostId(primaryKey)
                 .withUserId(userId)
                 .withType(category);
-        communityStampHistoryService.create(communityStampHistory);
+        return communityStampHistoryService.create(communityStampHistory);
     }
 
-    private void createProductCommentStampHistory(Long userId, Long primaryKey, Integer category) throws ServiceException {
+    private boolean createProductCommentStampHistory(Long userId, Long primaryKey, Integer category) throws ServiceException {
         ProductCommentStampHistory productCommentStampHistory = new ProductCommentStampHistory();
         productCommentStampHistory.withCategory(category)
                 .withCreatedTime(new Date())
                 .withSourceId(primaryKey)
                 .withUserId(userId);
-        productCommentStampHistoryService.create(productCommentStampHistory);
+        return productCommentStampHistoryService.create(productCommentStampHistory);
     }
 
-    private void createArticleStampHistory(Long userId, Long primaryKey, Integer category) {
+    private boolean createArticleStampHistory(Long userId, Long primaryKey, Integer category) {
         ArticleStampHistory articleStampHistory = new ArticleStampHistory();
         articleStampHistory.withType(category)
                 .withCreatedTime(new Date())
                 .withSourceId(primaryKey)
                 .withUserId(userId);
-        articleStampHistoryService.create(articleStampHistory);
+        return articleStampHistoryService.create(articleStampHistory);
     }
 
 }

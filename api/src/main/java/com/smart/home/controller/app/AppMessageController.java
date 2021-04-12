@@ -1,10 +1,12 @@
 package com.smart.home.controller.app;
 
+import cn.hutool.core.collection.CollUtil;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.message.MessageLikeVO;
 import com.smart.home.controller.app.response.message.MessageNotifyVO;
 import com.smart.home.controller.app.response.message.MessageReplyVO;
+import com.smart.home.controller.app.response.message.UnReadMessageVO;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
@@ -19,13 +21,11 @@ import com.smart.home.modules.message.entity.MessageContent;
 import com.smart.home.modules.message.service.MessageContentService;
 import com.smart.home.util.ResponsePageUtil;
 import com.smart.home.util.UserUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 /**
  * @author jason
@@ -133,6 +133,79 @@ public class AppMessageController {
         Article article = articleService.findById(sourceId);
         // TODO 还不知道前端要什么样的数据呢
         return APIResponse.OK(article);
+    }
+
+    @ApiOperation("发私信")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "message", value = "消息内容", required = true),
+            @ApiImplicitParam(name = "toUserId", value = "发送给谁", required = true)
+    })
+    @PostMapping("/sendMessage")
+    @RoleAccess(RoleConsts.REGISTER)
+    public APIResponse sendMessage(@RequestParam(required = true) String message,@RequestParam(required = true) Long toUserId) {
+        Long fromUserId = UserUtils.getLoginUserId();
+        messageContentService.sendMessage(fromUserId, toUserId, message);
+        return APIResponse.OK();
+    }
+
+    @ApiOperation("获取未读私信-分页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "deleteAfterQuery", value = "读取后删除:0否1是", required = true),
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @GetMapping("/queryUnReadMessage")
+    public APIResponse<ResponsePageBean<UnReadMessageVO>> queryUnReadMessage(
+            @RequestParam(required = true) Integer deleteAfterQuery,
+            @RequestParam(required = true) Integer pageNum,
+            @RequestParam(required = true) Integer pageSize) {
+        Long loginUserId = UserUtils.getLoginUserId();
+        List<MessageContent> list = messageContentService.queryUnReadMessage(loginUserId, pageNum, pageSize);
+        if (CollUtil.isNotEmpty(list)) {
+            List<Long> messageIdList = new ArrayList<>();
+            for (MessageContent messageContent : list) {
+                messageIdList.add(messageContent.getId());
+            }
+            if (deleteAfterQuery == 1) {
+                messageContentService.delete(messageIdList);
+            } else {
+                messageContentService.updateToRead(messageIdList, loginUserId);
+            }
+        }
+        List<UnReadMessageVO> resultList = BeanCopyUtils.convertListTo(list, UnReadMessageVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
+    }
+
+    @ApiOperation("获取聊天界面消息-分页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "deleteAfterQuery", value = "读取后删除:0否1是", required = true),
+            @ApiImplicitParam(name = "friendId", value = "对方用户主键id", required = true),
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @GetMapping("/queryChatMessage")
+    public APIResponse<ResponsePageBean<UnReadMessageVO>> queryChatMessage(
+            @RequestParam(required = true) Integer deleteAfterQuery,
+            @RequestParam(required = true) Long friendId,
+            @RequestParam(required = true) Integer pageNum,
+            @RequestParam(required = true) Integer pageSize) {
+        Long loginUserId = UserUtils.getLoginUserId();
+        List<MessageContent> list = messageContentService.queryChatMessage(loginUserId, friendId, pageNum, pageSize);
+        if (CollUtil.isNotEmpty(list)) {
+            List<Long> messageIdList = new ArrayList<>();
+            for (MessageContent messageContent : list) {
+                messageIdList.add(messageContent.getId());
+            }
+            if (deleteAfterQuery == 1) {
+                messageContentService.delete(messageIdList, loginUserId);
+            } else {
+                messageContentService.updateToRead(messageIdList, loginUserId);
+            }
+        }
+        List<UnReadMessageVO> resultList = BeanCopyUtils.convertListTo(list, UnReadMessageVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 
 }

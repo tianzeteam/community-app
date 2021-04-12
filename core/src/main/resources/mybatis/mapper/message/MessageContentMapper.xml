@@ -362,4 +362,22 @@
                     and message_content.receiver_id = message_read_history.user_id
     where message_content.receiver_id = #{receiverId,jdbcType=BIGINT} and message_content.message_type = 2 and message_read_history.id is null
   </select>
+
+  <update id="updateToRead">
+    update message_content set read_flag = #{readFlag}
+    where id in
+      <foreach collection="messageIdList" item="messageId" open="(" separator="," close=")">
+        #{messageId}
+      </foreach>
+    and reciver_id = #{toUserId}
+  </update>
+
+  <select id="queryChatMessage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from message_content
+    where (reciver_id = #{loginUserId,jdbcType=BIGINT} and sender_id = #{fromUserId})
+    or (reciver_id = #{fromUserId,jdbcType=BIGINT} and sender_id = #{loginUserId})
+    order by created_time desc;
+  </select>
 </mapper>

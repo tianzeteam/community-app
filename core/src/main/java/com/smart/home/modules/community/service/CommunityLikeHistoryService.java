@@ -28,11 +28,12 @@ public class CommunityLikeHistoryService {
     @Autowired
     private CommunityPostReplyService communityPostReplyService;
 
-    public int create(CommunityLikeHistory communityLikeHistory) {
+    public boolean create(CommunityLikeHistory communityLikeHistory) {
+        boolean success = false;
         CommunityLikeHistory likeHistory = communityLikeHistoryMapper.selectByUserIdAndPostId(communityLikeHistory.getUserId(), communityLikeHistory.getPostId(), communityLikeHistory.getType());
         if (likeHistory != null) {
             log.warn("已经点赞过:{}", JSON.toJSONString(communityLikeHistory));
-            return 1;
+            return false;
         }
 
         communityLikeHistory.setCreatedTime(new Date());
@@ -44,8 +45,9 @@ public class CommunityLikeHistoryService {
             if (communityLikeHistory.getType() == 1) {
                 communityPostReplyService.increaseLikeCount(communityLikeHistory.getPostId());
             }
+            success = true;
         }
-        return affectRow;
+        return success;
     }
 
     public void unlikePost(Long userId, Long id) {
