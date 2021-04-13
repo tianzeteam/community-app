@@ -68,6 +68,7 @@ public class UserFeedbackService {
         userFeedback.setId(id);
         userFeedback.setUpdatedBy(userId);
         userFeedback.setState(FeedbackStatusEnum.CLOSED.getStatus());
+        userFeedback.setUpdatedTime(new Date());
         update(userFeedback);
     }
 
@@ -84,6 +85,13 @@ public class UserFeedbackService {
     public void delete(List<Long> idList) {
         for (Long id : idList) {
             userFeedbackMapper.deleteByPrimaryKey(id);
+        }
+    }
+
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void close(List<Long> idList, Long loginUserId) {
+        for (Long id : idList) {
+            updateToClose(id, loginUserId);
         }
     }
 
