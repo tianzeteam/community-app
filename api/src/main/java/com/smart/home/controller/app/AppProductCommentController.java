@@ -175,6 +175,17 @@ public class AppProductCommentController {
             t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
             t.setStampFlag(s.getStampId() == null ? 0 : 1);
         });
+        // 加载一下二级回复
+        if (CollUtil.isNotEmpty(resultList)) {
+            for (ProductCommentReplyVO productCommentReplyVO : resultList) {
+                List<ProductCommentReply> subList = productCommentReplyService.queryCommentDetailReplyByPage(userId, productCommentId, productCommentReplyVO.getId(), 1, 5);
+                List<ProductCommentReplyVO> subResultList = BeanCopyUtils.convertListTo(list, ProductCommentReplyVO::new, (s,t)->{
+                    t.setLikeFlag(s.getLikeId() == null ? 0 : 1);
+                    t.setStampFlag(s.getStampId() == null ? 0 : 1);
+                });
+                productCommentReplyVO.setSecondReplyVOList(ResponsePageUtil.restPage(subResultList, subList));
+            }
+        }
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
 

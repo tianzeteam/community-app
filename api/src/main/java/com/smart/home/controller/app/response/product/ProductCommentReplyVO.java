@@ -1,5 +1,6 @@
 package com.smart.home.controller.app.response.product;
 
+import com.smart.home.dto.ResponsePageBean;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.ToString;
@@ -42,5 +43,7 @@ public class ProductCommentReplyVO {
     private Long toUserId;
     @ApiModelProperty("回复给谁用户昵称")
     private String toUserName;
+    @ApiModelProperty("二级回复分页")
+    private ResponsePageBean<ProductCommentReplyVO> secondReplyVOList;
 
 }

@@ -105,6 +105,10 @@ public class AppArticleChannelController {
         List<ArticleChannel> allList = articleChannelService.selectAllValid();
         List<ArticleChannel> myList = userArticleChannelPreferenceService.queryMyChannel(UserUtils.getLoginUserId());
         List<ArticleChannel> newList = allList.stream().filter(x->{
+            // id = 1， 说明是推荐的，app端不需要返回
+            if (x.getId().equals(1)) {
+                return false;
+            }
             for (ArticleChannel articleChannel : myList) {
                 if (articleChannel.getId().equals(x.getId())) {
                     return false;
