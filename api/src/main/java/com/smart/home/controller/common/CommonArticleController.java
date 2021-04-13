@@ -99,7 +99,7 @@ public class CommonArticleController {
                 articleDetailVO.setImageList(JSON.parseArray(article.getBannerImages(), String.class));
             }
             // 我有没有关注过作者了
-            long count = userFocusService.countByFocusUserId(userId, articleId);
+            long count = userFocusService.countByFocusUserId(userId, article.getUserId());
             articleDetailVO.setFocusUserFlag(count > 0 ? YesNoEnum.YES.getCode() : YesNoEnum.NO.getCode());
             // 我有没有评论过了
             count = articleCommentService.countByUserId(userId, articleId);
