@@ -96,7 +96,7 @@ public class CommunityPostService {
         communityPost.setCollectCount(0);
         communityPost.setCreatedTime(new Date());
         BeanUtils.copyProperties(communityPost, communityPostDTO);
-        executeSavePost(communityPostDTO);
+        executeSavePost(communityPostDTO, 0);
     }
 
     public int update(CommunityPost communityPost) {
@@ -353,7 +353,7 @@ public class CommunityPostService {
      * 保存
      */
     @Transactional(rollbackFor = RuntimeException.class)
-    public Long executeSavePost(CommunityPostDTO communityPostDTO){
+    public Long executeSavePost(CommunityPostDTO communityPostDTO, int ifSend){
         UserCommunityAuth userCommunityAuth = userCommunityAuthMapper.selectByUserId(communityPostDTO.getUserId());
         if (userCommunityAuth == null) {
             throw new ServiceException("您无社区权限");
@@ -391,6 +391,10 @@ public class CommunityPostService {
             return communityPostDTO.getId();
         }else {
             communityPostMapper.insertSelective(communityPost);
+            if (ifSend == 1) {
+                //直接发布
+                release(communityPost.getId());
+            }
             return communityPost.getId();
         }
     }

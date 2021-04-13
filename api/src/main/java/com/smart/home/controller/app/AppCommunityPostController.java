@@ -154,9 +154,10 @@ public class AppCommunityPostController {
     }
 
     @RoleAccess(RoleConsts.REGISTER)
-    @ApiOperation(value = "保存帖子为草稿", notes = "注意：传帖子id代表原草稿更新，不传id代表新生成一条草稿记录。用于控制是新建保存或者是修改保存")
-    @PostMapping("/draft/save")
-    public APIResponse draftSave(@RequestBody CommunityPostReq communityPostReq){
+    @ApiOperation(value = "保存帖子为草稿 / 直接发布", notes = "注意：传帖子id代表原草稿更新，不传id代表新生成一条草稿记录。用于控制是新建保存或者是修改保存;" +
+            "ifSend：0保存草稿，1直接发布")
+    @PostMapping("/draft/save/{ifSend}")
+    public APIResponse draftSave(@RequestBody CommunityPostReq communityPostReq, @PathVariable("ifSend") int ifSend){
         log.info("发帖params：{}", JSON.toJSONString(communityPostReq));
         //用户是否存在，检查是否禁言
         CommunityPostDTO communityPostDTO = new CommunityPostDTO();
@@ -164,7 +165,7 @@ public class AppCommunityPostController {
         communityPostDTO.setUserId(UserUtils.getLoginUserId());
         communityPostDTO.setImages(JSON.toJSONString(communityPostReq.getList()));
         communityPostDTO.setImagesList(communityPostReq.getList());
-        Long id = communityPostService.executeSavePost(communityPostDTO);
+        Long id = communityPostService.executeSavePost(communityPostDTO, ifSend);
         return APIResponse.OK(id);
     }
 
