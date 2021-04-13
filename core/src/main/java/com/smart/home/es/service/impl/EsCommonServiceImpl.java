@@ -99,7 +99,16 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
         //此处多重索引会报错，除非使用_id或者_score 暂时可以通过count后取最后几条 后续寻求多索引查询解决方案 下面是sort解决
 //        sourceBuilder.sort("_id", SortOrder.DESC);
         //不满10取10条，满10：计算起始位置
-        sourceBuilder.from(count > 10 ? count - esSearchDTO.getFrom() * esSearchDTO.getSize() : 0);
+        int startWith = 0;
+        if (count > 10) {
+            if (count >= esSearchDTO.getFrom() * esSearchDTO.getSize()) {
+                startWith = count - esSearchDTO.getFrom() * esSearchDTO.getSize();
+            }else {
+                //此时说明后面没有数据了
+                return Collections.EMPTY_LIST;
+            }
+        }
+        sourceBuilder.from(startWith);
         sourceBuilder.size(esSearchDTO.getSize());
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
         searchRequest.source(sourceBuilder);
@@ -146,7 +155,7 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
 
         sourceBuilder.query(boolQueryBuilder);//多条件查询
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
-        sourceBuilder.from(esSearchDTO.getFrom() <= 1 ? 0 : (esSearchDTO.getFrom()-1) * esSearchDTO.getSize());
+        sourceBuilder.from(esSearchDTO.getFrom() <= 1 ? 0 : (esSearchDTO.getFrom() - 1) * esSearchDTO.getSize());
         sourceBuilder.size(esSearchDTO.getSize());
         searchRequest.source(sourceBuilder);
         try {

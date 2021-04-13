@@ -61,4 +61,5 @@ public interface CommunityPostReplyMapper {
     List<CommunityPostReply> queryByCommentIdNotLogin(CommunityPostReplyDTO communityPostReplyDTO);
 
     long countByUserId(@Param("userId") Long userId, @Param("postId") Long postId);
+
 }

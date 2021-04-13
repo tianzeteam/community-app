@@ -432,6 +432,7 @@
   </select>
 
 
+
   <select id="queryByCommentIdWhenLogin" resultType="com.smart.home.modules.community.entity.CommunityPostReply" parameterType="com.smart.home.modules.community.dto.CommunityPostReplyDTO">
     select cpr.id,
     ua.head_url as headUrl,

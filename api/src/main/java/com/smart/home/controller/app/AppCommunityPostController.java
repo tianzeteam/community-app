@@ -15,6 +15,7 @@ import com.smart.home.dto.auth.annotation.AnonAccess;
 import com.smart.home.dto.auth.annotation.RoleAccess;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.entity.CommunityPost;
+import com.smart.home.modules.community.service.CommunityPostReplyService;
 import com.smart.home.modules.community.service.CommunityPostService;
 import com.smart.home.modules.system.service.SysDictService;
 import com.smart.home.util.ResponsePageUtil;
@@ -40,6 +41,8 @@ public class AppCommunityPostController {
     private CommunityPostService communityPostService;
     @Autowired
     private SysDictService sysDictService;
+    @Autowired
+    private CommunityPostReplyService communityPostReplyService;
 
 
     /**

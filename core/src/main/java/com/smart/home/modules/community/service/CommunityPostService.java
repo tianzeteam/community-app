@@ -307,6 +307,7 @@ public class CommunityPostService {
      * 精华条件搜索
      */
     public List<CommunityPostDTO> queryCommunityDetailPostList(Long communityId, Integer boutiqueFlag, int pageNum, int pageSize){
+
         PageHelper.startPage(pageNum, pageSize);
         List<CommunityPost> communityDetail = communityPostMapper.getCommunityDetail(communityId, boutiqueFlag);
         List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(communityDetail);

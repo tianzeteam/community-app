@@ -108,4 +108,5 @@ public class CommunityPostDetailVO {
     @ApiModelProperty("分享页面")
     private String href;
 
+
 }

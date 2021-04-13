@@ -126,6 +126,10 @@ public class AppCommunityController {
 
     /**
      * 社区下有哪些帖子，精华帖子
+     *
+     1. 精华帖需要在帖子页和精华页都展示
+
+     2. 非精华不能在精华页展示
      */
     @AnonAccess
     @ApiOperation("社区详情")
