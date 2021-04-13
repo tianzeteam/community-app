@@ -40,6 +40,16 @@ public class AppSearchController {
     @Autowired
     private EsCommonService esCommonService;
 
+//    @GetMapping("/test001")
+//    public APIResponse test001(String contents){
+//        EsSearchDTO esSearchDTO = new EsSearchDTO();
+//        esSearchDTO.setFrom(0);
+//        esSearchDTO.setSize(2);
+//        esSearchDTO.setContents(contents);
+//        List<ArticleBean> search = esCommonService.search(EsConstant.articleIndex, esSearchDTO, ArticleBean.class);
+//        return APIResponse.OK(search);
+//    }
+
 
     @ApiOperation("搜索前N位的热词")
     @ApiImplicitParams({

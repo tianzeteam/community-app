@@ -577,7 +577,7 @@
       reply_count DESC
   </select>
 
-  <select id="getCommunityDetail" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  <select id="getCommunityDetail" resultMap="BaseResultMap">
       select <include refid="Base_Column_List_NO_CONTENTS"/>
       FROM
       community_post
@@ -589,6 +589,7 @@
       </where>
       ORDER BY
       top_flag desc,
+      boutique_flag desc,
       created_time DESC
   </select>
   

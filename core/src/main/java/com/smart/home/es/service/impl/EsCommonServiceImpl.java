@@ -163,6 +163,11 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
             SearchHit[] hits = response.getHits().getHits();
             List<T> res = new ArrayList<>(hits.length);
             for (SearchHit hit : hits) {
+                log.info("id:{} 查询分数：{}", hit.getId(), hit.getScore());
+                //查询分数小于3则不展示，TODO 具体后续可以再测
+                if (hit.getScore() < 3) {
+                    continue;
+                }
                 res.add(JSON.parseObject(hit.getSourceAsString(), c));
             }
             return res;
@@ -186,10 +191,10 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
         }
         //帖子 标题完全匹配 正文匹配分
         if (StrUtil.isNotEmpty(esSearchDTO.getContents())) {
-            sourceBuilder.sort("id", SortOrder.DESC);
+//            sourceBuilder.sort("id", SortOrder.DESC);
             QueryBuilder queryBuilder = QueryBuilders.termQuery("title.keyword", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder);
-            if (esSearchDTO.getContents().length() < 2) {
+            if (esSearchDTO.getContents().length() < 5) {
                 return boolQueryBuilder;
             }
             QueryBuilder queryBuilder1 = QueryBuilders.matchQuery("contents", esSearchDTO.getContents());
@@ -209,10 +214,10 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
             boolQueryBuilder.must(queryBuilder);
         }
         if (StrUtil.isNotEmpty(esSearchDTO.getContents())) {
-            sourceBuilder.sort("id", SortOrder.DESC);
+//            sourceBuilder.sort("id", SortOrder.DESC);
             QueryBuilder queryBuilder = QueryBuilders.termQuery("title.keyword", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder);
-            if (esSearchDTO.getContents().length() < 2) {
+            if (esSearchDTO.getContents().length() < 5) {
                 return boolQueryBuilder;
             }
             QueryBuilder queryBuilder1 = QueryBuilders.matchQuery("details", esSearchDTO.getContents());
@@ -228,7 +233,7 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
             boolQueryBuilder.must(queryBuilder);
         }
         if (StrUtil.isNotEmpty(esSearchDTO.getContents())) {
-            sourceBuilder.sort("id", SortOrder.DESC);
+//            sourceBuilder.sort("id", SortOrder.DESC);
             QueryBuilder queryBuilder = QueryBuilders.termQuery("productName.keyword", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder);
         }
@@ -246,7 +251,7 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
             boolQueryBuilder.must(queryBuilder);
         }
         if (StrUtil.isNotEmpty(esSearchDTO.getContents())) {
-            sourceBuilder.sort("id", SortOrder.DESC);
+//            sourceBuilder.sort("id", SortOrder.DESC);
             QueryBuilder queryBuilder = QueryBuilders.matchQuery("details", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder);
         }
