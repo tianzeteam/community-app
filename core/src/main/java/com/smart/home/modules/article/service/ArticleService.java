@@ -72,16 +72,21 @@ public class ArticleService {
 
     @Transactional(rollbackFor = RuntimeException.class)
     public int update(Article article) {
+        // 需求：更新后变成待审核
+        article.setAuditState(AuditStatusEnum.WAIT_AUDIT.getCode());
         int affectRow = articleMapper.updateByPrimaryKeySelective(article);
-        syncUploadFiles(article.getCoverImage(), article.getBannerImages(), article.getImageList());
-        Article dbArticle = findById(article.getId());
-        if (AuditStatusEnum.APPROVED.getCode() == dbArticle.getAuditState() && RecordStatusEnum.NORMAL.getStatus() == dbArticle.getOnlineStatus()) {
-            ArticleBean articleBean = new ArticleBean();
-            BeanUtils.copyProperties(dbArticle, articleBean);
-            articleBean.setSaveType(EsSaveTypeEnum.ARTICLE.getType());
-            articleBean.setChannelName(queryChannelNameByChannelId(dbArticle.getChannelId()));
-            articleEsServiceImpl.save(articleBean);
+        if (affectRow > 0) {
+            articleEsServiceImpl.deleteById(article.getId());
         }
+        syncUploadFiles(article.getCoverImage(), article.getBannerImages(), article.getImageList());
+//        Article dbArticle = findById(article.getId());
+//        if (AuditStatusEnum.APPROVED.getCode() == dbArticle.getAuditState() && RecordStatusEnum.NORMAL.getStatus() == dbArticle.getOnlineStatus()) {
+//            ArticleBean articleBean = new ArticleBean();
+//            BeanUtils.copyProperties(dbArticle, articleBean);
+//            articleBean.setSaveType(EsSaveTypeEnum.ARTICLE.getType());
+//            articleBean.setChannelName(queryChannelNameByChannelId(dbArticle.getChannelId()));
+//            articleEsServiceImpl.save(articleBean);
+//        }
         return affectRow;
     }
 
