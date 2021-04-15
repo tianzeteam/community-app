@@ -790,9 +790,11 @@
            article.cover_image as coverImage,
            article.created_time as createdTime,
            article.source_from as sourceFrom,
-           article_channel.title as channelName
+           article_channel.title as channelName,
+           ua.nick_name as nickName
     from article
                  left join article_channel on article.channel_id = article_channel.id
+      left join user_account ua on ua.id = article.user_id
     where article.channel_id = #{channelId,jdbcType=INTEGER} and audit_state=1 and online_status=0
     order by article.created_time desc
   </select>

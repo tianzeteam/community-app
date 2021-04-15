@@ -26,5 +26,7 @@ public class IndexArticleCardVO {
     private String coverImage;
     @ApiModelProperty("创建时间")
     private Date createdTime;
+    @ApiModelProperty("作者昵称")
+    private String nickName;
 
 }
