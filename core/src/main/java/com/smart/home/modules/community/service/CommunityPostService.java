@@ -380,10 +380,10 @@ public class CommunityPostService {
         communityPost.setStampCount(0);
         communityPost.setCollectCount(0);
         communityPost.setState(0);
-        if (communityPostDTO.getContents().length() > 100) {
-            communityPost.setRemark(StrUtil.sub(communityPostDTO.getContents(), 0, 100) + "……");
+        if (StrUtil.isNotEmpty(communityPostDTO.getRemark()) && communityPostDTO.getRemark().length() > 100) {
+            communityPost.setRemark(StrUtil.sub(communityPostDTO.getRemark(), 0, 100) + "……");
         }else {
-            communityPost.setRemark(communityPostDTO.getContents());
+            communityPost.setRemark(communityPostDTO.getRemark());
         }
         if (communityPostDTO.getId() != null && communityPostDTO.getId() != 0) {
             communityPost.setId(communityPostDTO.getId());

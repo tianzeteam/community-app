@@ -19,6 +19,9 @@ public class CommunityPostReq {
     @ApiModelProperty("文本")
     private String contents;
 
+    @ApiModelProperty("简介：传递文字，可以就文本进行提取")
+    private String remark;
+
     @ApiModelProperty("社区主键id")
     private Integer community;
 
