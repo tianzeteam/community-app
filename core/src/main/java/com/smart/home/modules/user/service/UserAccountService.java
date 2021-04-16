@@ -271,6 +271,27 @@ public class UserAccountService {
         throw new AuthorizationException("用户名或者密码错误");
     }
 
+    public UserAccount loginViaMobileAndPassword(String mobile, String password) {
+        UserAccount userAccount = findUserByMobile(mobile);
+        if (Objects.isNull(userAccount)) {
+            throw new AuthorizationException("用户名或者密码不正确");
+        }
+        String encryptedPassword = encryptPassword(password, userAccount.getSalt());
+        if (!StringUtils.equals(userAccount.getPassword(), encryptedPassword)) {
+            throw new AuthorizationException("用户名或者密码不正确");
+        }
+        int state = verifyWhenLogin(userAccount);
+        if (AccountStatusEnum.NORMAL.getStatus() == state) {
+            String token = generateNewAccessToken(userAccount.getId());
+            userAccount.setAccessToken(token);
+            userAccount.setRoleCodeList(findUserRoleCodeList(userAccount.getId()));
+            UserTokenCache.put(token, userAccount);
+            loadCommunityAuth(userAccount);
+            return userAccount;
+        }
+        throw new AuthorizationException("用户名或者密码错误");
+    }
+
     /**
      * 重启后重新初始化用户数据
      * @param userId 这个是从合法的token中解析出来的用户主键ID

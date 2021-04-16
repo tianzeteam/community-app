@@ -52,7 +52,7 @@ public class PermissionAop {
         if (!Objects.isNull(roleAccess)) {
             if (Objects.isNull(user)) {
                 // 没有登陆信息，报错
-                throw new AuthorizationException("Permission Denied");
+                throw new AuthorizationException(AuthorizationException.MESSAGE);
             }
             String[] roles = roleAccess.value();
             if (Objects.isNull(roles) && roles.length == 0) {
@@ -62,7 +62,7 @@ public class PermissionAop {
             List<String> roleCodeList = user.getRoleCodeList();
             if (CollectionUtils.isEmpty(roleCodeList)) {
                 // 没有授权任何角色，则不能访问
-                throw new AuthorizationException("Permission Denied");
+                throw new AuthorizationException(AuthorizationException.MESSAGE);
             }
             List<String> needRoleList = Arrays.asList(roles);
             boolean validAccess = false;
@@ -81,7 +81,7 @@ public class PermissionAop {
             // 说明必须要登陆才能访问的, 检查有没有登陆信息
             if (Objects.isNull(user)) {
                 // 没有登陆信息，报错
-                throw new AuthorizationException("Permission Denied");
+                throw new AuthorizationException(AuthorizationException.MESSAGE);
             }
         }
         return proceedingJoinPoint.proceed();

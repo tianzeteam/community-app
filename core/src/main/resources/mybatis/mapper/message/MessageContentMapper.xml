@@ -369,15 +369,15 @@
       <foreach collection="messageIdList" item="messageId" open="(" separator="," close=")">
         #{messageId}
       </foreach>
-    and reciver_id = #{toUserId}
+    and receiver_id = #{toUserId}
   </update>
 
   <select id="queryChatMessage" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from message_content
-    where (reciver_id = #{loginUserId,jdbcType=BIGINT} and sender_id = #{fromUserId})
-    or (reciver_id = #{fromUserId,jdbcType=BIGINT} and sender_id = #{loginUserId})
+    where (receiver_id = #{loginUserId,jdbcType=BIGINT} and sender_id = #{fromUserId})
+    or (receiver_id = #{fromUserId,jdbcType=BIGINT} and sender_id = #{loginUserId})
     order by created_time desc;
   </select>
 </mapper>

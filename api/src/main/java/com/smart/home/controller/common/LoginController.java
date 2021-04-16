@@ -107,6 +107,26 @@ public class LoginController {
         return APIResponse.ERROR("验证码错误");
     }
 
+    @AnonAccess
+    @ApiOperation(value = "手机号和密码登陆")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "mobile", value = "手机号码", required = true),
+            @ApiImplicitParam(name = "password", value = "密码", required = true)
+    })
+    @PostMapping("/loginByPassword")
+    public APIResponse<User> loginByPassword(@RequestParam(required = true) String mobile,
+                                             @RequestParam(required = true) String password, HttpServletRequest request) {
+        UserAccount userAccount = null;
+        try {
+            userAccount = userAccountService.loginViaMobileAndPassword(mobile, password);
+            sysActionLogService.loginLog(WebUtils.getClientIpAddr(request), userAccount.getId(), "手机号和密码登陆");
+        } catch (ServiceException e) {
+            return APIResponse.ERROR(e.getMessage());
+        }
+        User user = UserAssembler.assemblerUser(userAccount);
+        return APIResponse.OK(user);
+    }
+
     /**
      * {
      * "openId": "oRrdQt4h823nm3Xf79OFEiKUjD90",
@@ -123,7 +143,7 @@ public class LoginController {
      * @return
      */
     @AnonAccess
-    @ApiOperation(value = "微信登陆,返回0正常登陆，返回2需要进一步绑定手机", notes = "返回0正常登陆，返回2需要进一步绑定手机")
+    @ApiOperation(value = "微信登陆", notes = "data返回2需要绑定手机，否则登陆登陆成功，返回用户信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "data", value = "{\n" +
                     "     * \"openId\": \"oRrdQt4h823nm3Xf79OFEiKUjD90\",\n" +
@@ -138,7 +158,8 @@ public class LoginController {
     })
     @PostMapping("/loginByWechat")
     public APIResponse loginByWechat(String data, HttpServletRequest request) {
-        JSONObject jsonObject = JSON.parseObject(data);
+        JSONObject jsonObject1 = JSON.parseObject(data);
+        JSONObject jsonObject = jsonObject1.getJSONObject("userInfo");
         String wx = jsonObject.getString("openId");
         if (!WechatAccessTokenCache.exists(wx)) {
             return APIResponse.ERROR("非法请求");
@@ -146,7 +167,7 @@ public class LoginController {
         UserData userData = userDataService.findByWxOpenid(wx);
         if (Objects.isNull(userData)) {
             // 说明还没微信登陆过，需要绑定手机
-            APIResponse apiResponse = APIResponse.ERROR(APIResponseCodeEnum.BIND_PHONE.getCode(), "需要进行手机绑定");
+            APIResponse apiResponse = APIResponse.OK(APIResponseCodeEnum.BIND_PHONE.getCode());
             apiResponse.setData(wx);
             return apiResponse;
         }

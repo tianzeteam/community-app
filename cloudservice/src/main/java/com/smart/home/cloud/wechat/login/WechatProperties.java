@@ -6,7 +6,7 @@ package com.smart.home.cloud.wechat.login;
  **/
 public class WechatProperties {
 
-    public static final String APPID = "";
-    public static final String SECRET = "";
+    public static final String APPID = "wxc79be894fff5f6eb";
+    public static final String SECRET = "c8af74b91786375f92157eae1c320750";
 
 }

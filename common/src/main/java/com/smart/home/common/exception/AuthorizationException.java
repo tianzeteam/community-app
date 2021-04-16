@@ -8,6 +8,8 @@ import com.smart.home.common.enums.APIResponseCodeEnum;
  **/
 public class AuthorizationException extends RuntimeException  {
 
+    public static final String MESSAGE = "请先去登录";
+
     /**
      *
      */

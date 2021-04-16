@@ -40,8 +40,9 @@ public class WechatLoginUtil {
                 for (String temp = reader.readLine(); temp != null; temp = reader.readLine()) {
                     sb.append(temp);
                 }
-
-                JSONObject object = JSON.parseObject(sb.toString().trim());
+                String responseMessage = sb.toString().trim();
+                log.info("微信登陆getAccessToken返回消息：{}", responseMessage);
+                JSONObject object = JSON.parseObject(responseMessage);
                 String accessToken = object.getString("access_token");
                 String openID = object.getString("openid");
                 //String refreshToken = object.getString("refresh_token");
