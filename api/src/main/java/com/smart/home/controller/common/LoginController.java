@@ -113,8 +113,8 @@ public class LoginController {
             @ApiImplicitParam(name = "mobile", value = "手机号码", required = true),
             @ApiImplicitParam(name = "password", value = "密码", required = true)
     })
-    @PostMapping("/loginByPassword")
-    public APIResponse<User> loginByPassword(@RequestParam(required = true) String mobile,
+    @PostMapping("/loginByMobileAndPassword")
+    public APIResponse<User> loginByMobileAndPassword(@RequestParam(required = true) String mobile,
                                              @RequestParam(required = true) String password, HttpServletRequest request) {
         UserAccount userAccount = null;
         try {
