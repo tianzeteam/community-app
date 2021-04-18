@@ -31,6 +31,9 @@ public class CommunityPostDetailVO {
     //社区名
     @ApiModelProperty("社区名")
     private String communityTitle;
+
+    @ApiModelProperty("社区id")
+    private Integer community;
     ///////////////////////////
 
     @ApiModelProperty("标题")
