@@ -32,12 +32,21 @@ public class ProductSearchResultVO {
     private BigDecimal averageScore;
     @ApiModelProperty("好评率, 不带%号的，前端自己加%")
     private BigDecimal praiseRate;
+    @ApiModelProperty("支持的平台")
+    private String supportPlatform;
 
     public BigDecimal getPraiseRate() {
         if (Objects.isNull(praiseRate)) {
             return new BigDecimal(100);
         }
         return praiseRate;
+    }
+
+    public BigDecimal getAverageScore() {
+        if (Objects.isNull(averageScore)) {
+            return new BigDecimal(0);
+        }
+        return averageScore;
     }
 
 }

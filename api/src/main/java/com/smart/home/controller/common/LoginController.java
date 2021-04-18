@@ -8,11 +8,11 @@ import com.smart.home.cache.SmsVerifyCodeLimitCache;
 import com.smart.home.cache.WechatAccessTokenCache;
 import com.smart.home.cloud.qcloud.sms.SmsSendUtil;
 import com.smart.home.cloud.wechat.login.WechatLoginUtil;
-import com.smart.home.common.contants.SecurityConsts;
 import com.smart.home.common.enums.APIResponseCodeEnum;
 import com.smart.home.common.exception.RestfulRequestException;
 import com.smart.home.common.exception.ServiceException;
-import com.smart.home.common.util.JwtUtil;
+import com.smart.home.controller.app.request.WechatLoginBindPhoneRequest;
+import com.smart.home.controller.app.request.WechatLoginRequest;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.common.util.RandomUtils;
 import com.smart.home.dto.auth.User;
@@ -138,37 +138,23 @@ public class LoginController {
      * "avatarUrl": "https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM6PoXL9wZ7rTb9niaicokPwiaAH0WibvZXSFLkSQuBPg4d5OkklibP8HAYosuqjzJIiaZtxDWtFrSnRibdGg/132",
      * "unionId": "oU5Yyt449NKWxoTJ3ohIAdcIjRoI"
      * }
-     *
-     * @param data
      * @return
      */
     @AnonAccess
     @ApiOperation(value = "微信登陆", notes = "data返回2需要绑定手机，否则登陆登陆成功，返回用户信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "data", value = "{\n" +
-                    "     * \"openId\": \"oRrdQt4h823nm3Xf79OFEiKUjD90\",\n" +
-                    "     * \"nickName\": \"阿白\",\n" +
-                    "     * \"gender\": 0,\n" +
-                    "     * \"city\": \"\",\n" +
-                    "     * \"province\": \"\",\n" +
-                    "     * \"country\": \"\",\n" +
-                    "     * \"avatarUrl\": \"https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM6PoXL9wZ7rTb9niaicokPwiaAH0WibvZXSFLkSQuBPg4d5OkklibP8HAYosuqjzJIiaZtxDWtFrSnRibdGg/132\",\n" +
-                    "     * \"unionId\": \"oU5Yyt449NKWxoTJ3ohIAdcIjRoI\"\n" +
-                    "     * }", required = true)
-    })
     @PostMapping("/loginByWechat")
-    public APIResponse loginByWechat(String data, HttpServletRequest request) {
-        JSONObject jsonObject1 = JSON.parseObject(data);
-        JSONObject jsonObject = jsonObject1.getJSONObject("userInfo");
-        String wx = jsonObject.getString("openId");
-        if (!WechatAccessTokenCache.exists(wx)) {
-            return APIResponse.ERROR("非法请求");
+    public APIResponse loginByWechat(WechatLoginRequest wechatLoginRequest, HttpServletRequest request) {
+//        if (!WechatAccessTokenCache.exists(wx)) {
+//            return APIResponse.ERROR("非法请求");
+//        }
+        if (StringUtils.isBlank(wechatLoginRequest.getOpendId())) {
+            return APIResponse.ERROR("openId不能为空");
         }
-        UserData userData = userDataService.findByWxOpenid(wx);
+        UserData userData = userDataService.findByWxOpenid(wechatLoginRequest.getOpendId());
         if (Objects.isNull(userData)) {
             // 说明还没微信登陆过，需要绑定手机
             APIResponse apiResponse = APIResponse.OK(APIResponseCodeEnum.BIND_PHONE.getCode());
-            apiResponse.setData(wx);
+            apiResponse.setData(APIResponseCodeEnum.BIND_PHONE.getCode());
             return apiResponse;
         }
         UserAccount userAccount = userAccountService.findUserByUserId(userData.getUserId());
@@ -202,9 +188,19 @@ public class LoginController {
     @AnonAccess
     @ApiOperation(value = "微信登陆后绑定手机号")
     @PostMapping("/bindMobile")
-    public APIResponse<User> bindMobile(@RequestParam String openid, @RequestParam String mobile, @RequestParam String smsVerifyCode) {
+    public APIResponse<User> bindMobile(WechatLoginBindPhoneRequest wechatLoginBindPhoneRequest) {
+        String mobile = wechatLoginBindPhoneRequest.getMobile();
+        String smsVerifyCode = wechatLoginBindPhoneRequest.getSmsVerifyCode();
+        if (StringUtils.isBlank(mobile) || StringUtils.isBlank(mobile)) {
+            return APIResponse.ERROR("手机号或者验证码不能为空");
+        }
+        String openid = wechatLoginBindPhoneRequest.getOpendId();
+        if (StringUtils.isBlank(openid)) {
+            return APIResponse.ERROR("openId不能为空");
+        }
         if (SmsVerifyCodeCache.isValid(mobile, smsVerifyCode)) {
-            UserAccount userAccount = userAccountService.createUserByWxOpenid(openid, mobile);
+            UserAccount userAccount = userAccountService.createUserByWxOpenid(openid, mobile, wechatLoginBindPhoneRequest.getNickName(), wechatLoginBindPhoneRequest.getAvatarUrl());
+            userAccountService.loadCommunityAuth(userAccount);
             User user = UserAssembler.assemblerUser(userAccount);
             return APIResponse.OK(user);
         }

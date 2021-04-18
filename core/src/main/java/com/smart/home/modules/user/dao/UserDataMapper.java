@@ -64,4 +64,7 @@ public interface UserDataMapper {
 
     List<UserDataDTO> selectByUserIds(@Param("ids") List<Long> ids);
 
+    int updateOpendid(@Param("userId") Long userId,@Param("openid") String openid);
+
+
 }

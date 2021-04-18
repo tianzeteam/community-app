@@ -24,5 +24,7 @@ public class UnReadMessageVO {
     private String headUrl;
     @ApiModelProperty("创建时间")
     private Date createdTime;
+    @ApiModelProperty("是否本人的消息：0否1是")
+    private Integer type;
 
 }

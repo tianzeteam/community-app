@@ -785,6 +785,7 @@
            product_name as productName,
            remark,
            tag,
+           support_platform as supportPlatform,
            comment_count as commentCount,
            average_score as averageScore
     from product
@@ -819,7 +820,8 @@
       p.remark,
       p.tag,
       p.comment_count as commentCount,
-      p.average_score as averageScore
+      p.average_score as averageScore,
+      psp.support_platform as supportPlatform
       from product p
       left join product_support_platform psp on p.id  = psp.product_id
       where psp.support_platform = #{supportPlatform,jdbcType=VARCHAR}

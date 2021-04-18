@@ -45,4 +45,5 @@ public interface UserAccountMapper {
     String findNicknameByUserId(@Param("userId") Long userId);
 
     int clearToken(@Param("id") Long id);
+
 }

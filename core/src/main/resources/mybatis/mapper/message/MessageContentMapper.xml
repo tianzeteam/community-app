@@ -378,6 +378,6 @@
     from message_content
     where (receiver_id = #{loginUserId,jdbcType=BIGINT} and sender_id = #{fromUserId})
     or (receiver_id = #{fromUserId,jdbcType=BIGINT} and sender_id = #{loginUserId})
-    order by created_time desc;
+    order by created_time desc
   </select>
 </mapper>

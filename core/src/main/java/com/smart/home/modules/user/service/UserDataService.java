@@ -181,4 +181,8 @@ public class UserDataService {
         }
         return null;
     }
+
+    public void updateOpenid(Long userId, String openid) {
+        this.userDataMapper.updateOpendid(userId, openid);
+    }
 }

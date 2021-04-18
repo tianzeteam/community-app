@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class MessageContent implements Serializable {
+
+    private Integer type;
+
     private Long id;
 
     private String coverImage;
@@ -296,6 +299,14 @@ public class MessageContent implements Serializable {
 
     public void setHeadUrl(String headUrl) {
         this.headUrl = headUrl;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     /**

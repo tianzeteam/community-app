@@ -308,10 +308,17 @@ public class UserAccountService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public UserAccount createUserByWxOpenid(String openid, String mobile) {
-        // TODO
-        // UserTokenCache.put(userAccount.getAccessToken(), userAccount);
-        return null;
+    public UserAccount createUserByWxOpenid(String openid, String mobile, String nickName, String headUrl) {
+        UserAccount userAccount = createUserAccountWithoutPassword(mobile, RoleConsts.REGISTER);
+        updateOpenid(userAccount.getId(), openid);
+        if (StringUtils.isNotBlank(headUrl)) {
+            updateHeadUrl(userAccount.getId(), headUrl);
+        }
+        if (StringUtils.isNotBlank(nickName)) {
+            updateNickName(userAccount.getId(), nickName);
+        }
+        UserTokenCache.put(userAccount.getAccessToken(), userAccount);
+        return userAccount;
     }
 
     private UserAccount createUserAccountWithoutPassword(String mobile, String defaultRoleCode) {
@@ -330,6 +337,7 @@ public class UserAccountService {
             // 赋予默认的注册用户角色
             assignDefaultRole(userId, defaultRoleCode);
         }
+        userAccount.setAccessToken(token);
         userDataService.initUserData(userId);
         return userAccount;
     }
@@ -367,6 +375,10 @@ public class UserAccountService {
         userAccount.setUpdatedTime(new Date());
         userAccount.setUpdatedBy(userId);
         this.mapper.updateByPrimaryKeySelective(userAccount);
+    }
+
+    public void updateOpenid(Long userId, String openid) {
+        this.userDataService.updateOpenid(userId, openid);
     }
 
     /**

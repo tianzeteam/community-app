@@ -576,4 +576,8 @@
       #{id}
     </foreach>
   </select>
+
+  <update id="updateOpendid">
+    update user_data set wx_openid = #{openid,jdbcType=VARCHAR} where user_id = #{userId,jdbcType=BIGINT}
+    </update>
 </mapper>

@@ -2,6 +2,7 @@ package com.smart.home.controller.app;
 
 import cn.hutool.core.collection.CollUtil;
 import com.smart.home.common.contants.RoleConsts;
+import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.util.BeanCopyUtils;
 import com.smart.home.controller.app.response.message.MessageLikeVO;
 import com.smart.home.controller.app.response.message.MessageNotifyVO;
@@ -197,6 +198,9 @@ public class AppMessageController {
             List<Long> messageIdList = new ArrayList<>();
             for (MessageContent messageContent : list) {
                 messageIdList.add(messageContent.getId());
+                if (messageContent.getSenderId().equals(loginUserId)) {
+                    messageContent.setType(YesNoEnum.YES.getCode());
+                }
             }
             if (deleteAfterQuery == 1) {
                 messageContentService.delete(messageIdList, loginUserId);
