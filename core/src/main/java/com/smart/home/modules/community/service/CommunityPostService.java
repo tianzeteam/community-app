@@ -41,6 +41,7 @@ import com.smart.home.modules.user.entity.UserCommunityAuth;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
 import com.smart.home.modules.user.service.UserFocusService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * @author jason
  **/
+@Slf4j
 @Service
 public class CommunityPostService {
 
@@ -249,6 +251,7 @@ public class CommunityPostService {
         Community community = communityMapper.selectByPrimaryKey(communityPost.getCommunity());
         communityPostBean.setCommunityTitle(community.getTitle());
         esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
+        log.info("es insertOrUpdateOne 完毕：{}", communityPost.getId());
         if (affectRow > 0) {
             // 增加用户的发帖数量
             Long userId = communityPostMapper.findUserIdById(id);

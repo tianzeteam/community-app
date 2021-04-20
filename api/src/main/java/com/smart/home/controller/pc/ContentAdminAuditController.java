@@ -21,6 +21,7 @@ import com.smart.home.modules.product.service.ProductCommentService;
 import com.smart.home.service.ContentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,7 @@ import java.util.List;
  * @author jason
  * @date 2021/3/5
  **/
+@Slf4j
 @Api(tags = "管理后台-内容审核")
 @RestController
 @RequestMapping("/api/pc/contentAdmin")
@@ -135,6 +137,7 @@ public class ContentAdminAuditController {
     @RoleAccess({RoleConsts.ADMIN, RoleConsts.AUDITOR})
     @PostMapping("/approveAuditContent")
     public APIResponse approveAuditContent(@RequestBody List<ContentAdminAuditApproveDTO> contentAdminAuditApproveDTOList) {
+        log.info("认证正常-支持批量 contentAdminAuditApproveDTOList:{}", JSON.toJSONString(contentAdminAuditApproveDTOList));
         new Thread(new Runnable() {
             @Override
             public void run() {
