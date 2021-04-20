@@ -65,7 +65,7 @@ public class CommunityPostReplyService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void create(Long loginUserId, Long postId, String contents) {
+    public void create(Long loginUserId, Long postId, String contents, Long communityId) {
         CommunityPost communityPost = communityPostMapper.selectByPrimaryKey(postId);
         if (communityPost == null) {
             return;
@@ -79,6 +79,7 @@ public class CommunityPostReplyService {
         communityPostReply.setCreatedTime(DateUtil.date());
         communityPostReply.setLikeCount(0);
         communityPostReply.setStampCount(0);
+        communityPostReply.setCommunityId(communityId);
         if (communityPost.getUserId().equals(loginUserId)) {
             communityPostReply.setAuthorFlag(YesNoEnum.YES.getCode());
         }else {

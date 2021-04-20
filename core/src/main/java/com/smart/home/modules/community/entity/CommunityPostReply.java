@@ -20,6 +20,8 @@ public class CommunityPostReply implements Serializable {
 
     private Long postReplyId;
 
+    private Long communityId;
+
     private Integer replyType;
 
     private String contents;
@@ -109,6 +111,15 @@ public class CommunityPostReply implements Serializable {
 
     public CommunityPostReply withPostId(Long postId) {
         this.setPostId(postId);
+        return this;
+    }
+
+    public Long getCommunityId() {
+        return communityId;
+    }
+
+    public CommunityPostReply setCommunityId(Long communityId) {
+        this.communityId = communityId;
         return this;
     }
 

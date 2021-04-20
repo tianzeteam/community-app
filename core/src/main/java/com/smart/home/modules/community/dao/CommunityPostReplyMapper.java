@@ -62,4 +62,6 @@ public interface CommunityPostReplyMapper {
 
     long countByUserId(@Param("userId") Long userId, @Param("postId") Long postId);
 
+    List<Long> selectOrderById(@Param("list") List<Integer> list);
+
 }

@@ -27,6 +27,8 @@ public interface CommunityPostMapper {
 
     List<CommunityPost> selectByIds(@Param("list") List<Long> list);
 
+    List<CommunityPost> selectOrderById(@Param("list") List<Integer> list);
+
     int updateByExampleSelective(@Param("record") CommunityPost record, @Param("example") CommunityPostExample example);
 
     int updateByExample(@Param("record") CommunityPost record, @Param("example") CommunityPostExample example);

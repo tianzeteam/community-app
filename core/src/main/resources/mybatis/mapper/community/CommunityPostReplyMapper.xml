@@ -13,6 +13,7 @@
     <result column="stamp_count" jdbcType="INTEGER" property="stampCount" />
     <result column="author_flag" jdbcType="INTEGER" property="authorFlag" />
     <result column="to_user_id" jdbcType="BIGINT" property="toUserId" />
+    <result column="community_id" javaType="INTEGER" property="communityId"/>
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, user_id, post_id, post_reply_id, reply_type, contents, like_count, created_time, 
-    stamp_count,author_flag,to_user_id
+    stamp_count,author_flag,to_user_id, community_id
   </sql>
   <select id="selectByExample" parameterType="com.smart.home.modules.community.entity.CommunityPostReplyExample" resultMap="BaseResultMap">
     select
@@ -429,6 +430,19 @@
 
   <select id="countByUserId" resultType="long">
     select count(1) from community_post_reply where user_id = #{userId,jdbcType=BIGINT} and post_id = #{postId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectOrderById" resultType="long">
+    select distinct post_id from community_post_reply
+     <where>
+       <if test="list != null">
+         community_id in
+         <foreach collection="list" item="key" open="(" separator="," close=")">
+           #{key}
+         </foreach>
+       </if>
+     </where>
+     order by post_id desc
   </select>
 
 

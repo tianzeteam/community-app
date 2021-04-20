@@ -26,11 +26,10 @@ import com.smart.home.es.common.EsConstant;
 import com.smart.home.es.service.EsCommonService;
 import com.smart.home.modules.community.dao.CommunityMapper;
 import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
+import com.smart.home.modules.community.dao.CommunityUserMappingMapper;
 import com.smart.home.modules.community.dto.CommunityPostDTO;
 import com.smart.home.modules.community.dao.CommunityPostMapper;
-import com.smart.home.modules.community.entity.Community;
-import com.smart.home.modules.community.entity.CommunityPost;
-import com.smart.home.modules.community.entity.CommunityPostExample;
+import com.smart.home.modules.community.entity.*;
 import com.smart.home.modules.system.service.SysDictService;
 import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.user.dao.UserCollectMapper;
@@ -52,6 +51,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * @author jason
@@ -84,6 +84,8 @@ public class CommunityPostService {
     private SysDictService sysDictService;
     @Autowired
     private UserFocusService userFocusService;
+    @Resource
+    private CommunityUserMappingMapper communityUserMappingMapper;
 
 
     public void create(CommunityPost communityPost) {
@@ -280,13 +282,40 @@ public class CommunityPostService {
 
     /**
      * 推荐帖子列表
-     * 排序规则：帖子浏览人数，帖子已发布时间，帖子回帖数，点赞数，收藏数，分享数
+     * 排序规则：帖子最后更新时间 =
+     * 有回复：最新回复时间
+     * 没回复：按发帖时间
+     * 如果用户没有加入任何社区或未登录：展示所有社区的帖子，如果有至少加入一个社区，只展示加入社区的帖子
      */
-    public List<CommunityPostDTO> queryRecommendPostList(int pageNum, int pageSize) {
+    public List<CommunityPostDTO> queryRecommendPostList(Long userId, int pageNum, int pageSize) {
+        List<CommunityPost> communityPosts = queryReplySortPost(userId, pageNum, pageSize);
+        List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(communityPosts);
+        return toPageList((Page) communityPosts, communityPostDTOS);
+    }
+
+    private List<CommunityPost> queryReplySortPost(Long userId, int pageNum, int pageSize){
+        List<CommunityPost> sortPostList = null;
+        List<Integer> communityIds = null;
+        if (userId > 0) {
+            //已登陆 查询已加入社区，提取社区作为条件
+            List<CommunityUserMapping> communityUserMappings = communityUserMappingMapper.selectByUserId(userId);
+            if (CollUtil.isNotEmpty(communityUserMappings)) {
+                communityIds = communityUserMappings.parallelStream().map(CommunityUserMapping::getCommunityId).collect(Collectors.toList());
+            }
+        }
         PageHelper.startPage(pageNum, pageSize);
-        List<CommunityPost> sortRecommends = communityPostMapper.getSortRecommend();
-        List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(sortRecommends);
-        return toPageList((Page) sortRecommends, communityPostDTOS);
+        //评论要聚合，否则查帖子时数据会忽多忽少
+        List<Long> postIds = communityPostReplyMapper.selectOrderById(communityIds);
+        if (CollUtil.isEmpty(postIds)) {
+            //没回复
+            PageHelper.startPage(pageNum, pageSize);
+            sortPostList = communityPostMapper.selectOrderById(communityIds);
+        }else {
+            //有回复，不满足10条也不用给增加，下一页自然会走无回复的逻辑，不论是否满足都需要查询帖子数量，和总数，只是条件上取自回复中的帖子id
+            PageHelper.startPage(pageNum, pageSize);
+            sortPostList = communityPostMapper.selectByIds(postIds);
+        }
+        return sortPostList;
     }
 
     private <T> Page<T> toPageList(Page pager, List<T> list) {
@@ -309,14 +338,27 @@ public class CommunityPostService {
 
     /**
      * 社区详情-帖子列表
-     * 精华条件搜索
+     * 搜索规则：
+     * 帖子最后更新时间 =
+     * 有回复：最新回复时间
+     * 没回复：按发帖时间
+     * 注意帖子置顶优先
      */
     public List<CommunityPostDTO> queryCommunityDetailPostList(Long communityId, Integer boutiqueFlag, int pageNum, int pageSize){
-
+        List<CommunityPost> sortPostList = null;
         PageHelper.startPage(pageNum, pageSize);
-        List<CommunityPost> communityDetail = communityPostMapper.getCommunityDetail(communityId, boutiqueFlag);
-        List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(communityDetail);
-        return toPageList((Page) communityDetail, communityPostDTOS);
+        List<Long> postIds = communityPostReplyMapper.selectOrderById(null);
+        if (CollUtil.isEmpty(postIds)) {
+            //没回复
+            PageHelper.startPage(pageNum, pageSize);
+            sortPostList = communityPostMapper.selectOrderById(null);
+        }else {
+            //有回复，不满足10条也不用给增加，下一页自然会走无回复的逻辑，不论是否满足都需要查询帖子数量，和总数，只是条件上取自回复中的帖子id
+            PageHelper.startPage(pageNum, pageSize);
+            sortPostList = communityPostMapper.selectByIds(postIds);
+        }
+        List<CommunityPostDTO> communityPostDTOS = transCommunityPostDTO(sortPostList);
+        return toPageList((Page) sortPostList, communityPostDTOS);
     }
 
     /**

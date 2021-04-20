@@ -70,7 +70,8 @@ public class AppCommunityPostController {
     @GetMapping("/recommend/queryList")
     public APIResponse<ResponsePageBean<RecommendCommunityPostVO>> recommendQueryList(Integer pageNum, Integer pageSize) {
         log.info("推荐帖子列表:");
-        List<CommunityPostDTO> list = communityPostService.queryRecommendPostList(pageNum, pageSize);
+        Long loginUserId = UserUtils.getLoginUserId();
+        List<CommunityPostDTO> list = communityPostService.queryRecommendPostList(loginUserId, pageNum, pageSize);
         if (CollUtil.isEmpty(list)) {
             return APIResponse.OK(new ResponsePageBean<>());
         }

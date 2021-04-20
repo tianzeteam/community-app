@@ -665,6 +665,25 @@
     <foreach collection="list" close=")" item="id" open="(" separator=",">
       #{id}
     </foreach>
+    and state = 1 and audit_status = 1
+    order by top_flag desc,
+    id desc
+  </select>
+
+  <select id="selectOrderById" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from community_post
+    <where>
+      state = 1 and audit_status = 1
+      <if test="list != null">
+        and community in
+        <foreach collection="list" item="key" open="(" separator="," close=")">
+          #{key}
+        </foreach>
+      </if>
+    </where>
+    order by top_flag desc,
+    id desc
   </select>
 
   

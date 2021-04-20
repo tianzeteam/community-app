@@ -72,7 +72,7 @@ public class AppCommunityPostReplyController {
             return APIResponse.ERROR("没有此文章");
         }
         Long fromUserId = UserUtils.getLoginUserId();
-        communityPostReplyService.create(fromUserId, communityPostReplyReq.getId(), communityPostReplyReq.getContents());
+        communityPostReplyService.create(fromUserId, communityPostReplyReq.getId(), communityPostReplyReq.getContents(), communityPost.getCommunity().longValue());
         messageService.createReplyMessage(MessageSubTypeEnum.COMMUNITY_POST_REPLY, communityPostReplyReq.getId(), fromUserId, communityPost.getUserId(), communityPostReplyReq.getContents());
         return APIResponse.OK();
     }
@@ -213,6 +213,7 @@ public class AppCommunityPostReplyController {
         communityPostReply.setToUserId(postReply.getUserId());
         communityPostReply.setLikeCount(0);
         communityPostReply.setStampCount(0);
+        communityPostReply.setCommunityId(communityPost.getCommunity().longValue());
         if (fromUserId.equals(communityPost.getUserId())) {
             communityPostReply.setAuthorFlag(1);
         }else {
