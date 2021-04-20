@@ -1,6 +1,7 @@
 package com.smart.home.controller.app;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.YesNoEnum;
@@ -159,6 +160,15 @@ public class AppCommunityPostController {
     @PostMapping("/draft/save/{ifSend}")
     public APIResponse draftSave(@RequestBody CommunityPostReq communityPostReq, @PathVariable("ifSend") int ifSend){
         log.info("发帖params：{}", JSON.toJSONString(communityPostReq));
+        if (communityPostReq.getCommunity() == null) {
+            return APIResponse.ERROR("请选择社区");
+        }
+        if (StrUtil.isEmpty(communityPostReq.getTitle())) {
+            return APIResponse.ERROR("请输入标题");
+        }
+        if (StrUtil.isEmpty(communityPostReq.getContents())) {
+            return APIResponse.ERROR("请输入正文");
+        }
         //用户是否存在，检查是否禁言
         CommunityPostDTO communityPostDTO = new CommunityPostDTO();
         BeanUtils.copyProperties(communityPostReq, communityPostDTO);
