@@ -463,8 +463,13 @@ public class ArticleService {
         return queryIndexArticleCard();
     }
 
+    /**
+     * 推荐的文章在原频道也要显示，所以recommendFlag传null
+     * @param articleChannelId
+     * @return
+     */
     public List<Article> queryArticleCardByChannelId(Integer articleChannelId) {
-        return articleMapper.queryIndexArticleCard(YesNoEnum.NO.getCode(), ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), articleChannelId, YesNoEnum.NO.getCode());
+        return articleMapper.queryIndexArticleCard(YesNoEnum.NO.getCode(), ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), articleChannelId, null);
     }
 
     private void syncUploadFiles(String coverImage, String bannerImages, List<String> imageList) {
