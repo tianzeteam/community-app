@@ -192,9 +192,9 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
         //帖子 标题完全匹配 正文匹配分
         if (StrUtil.isNotEmpty(esSearchDTO.getContents())) {
 //            sourceBuilder.sort("id", SortOrder.DESC);
-            QueryBuilder queryBuilder = QueryBuilders.termQuery("title.keyword", esSearchDTO.getContents());
+            QueryBuilder queryBuilder = QueryBuilders.matchQuery("title", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder);
-            if (esSearchDTO.getContents().length() < 5) {
+            if (esSearchDTO.getContents().length() < 2) {
                 return boolQueryBuilder;
             }
             QueryBuilder queryBuilder1 = QueryBuilders.matchQuery("contents", esSearchDTO.getContents());
@@ -215,9 +215,9 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
         }
         if (StrUtil.isNotEmpty(esSearchDTO.getContents())) {
 //            sourceBuilder.sort("id", SortOrder.DESC);
-            QueryBuilder queryBuilder = QueryBuilders.termQuery("title.keyword", esSearchDTO.getContents());
+            QueryBuilder queryBuilder = QueryBuilders.matchQuery("title", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder);
-            if (esSearchDTO.getContents().length() < 5) {
+            if (esSearchDTO.getContents().length() < 2) {
                 return boolQueryBuilder;
             }
             QueryBuilder queryBuilder1 = QueryBuilders.matchQuery("details", esSearchDTO.getContents());
@@ -234,7 +234,7 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
         }
         if (StrUtil.isNotEmpty(esSearchDTO.getContents())) {
 //            sourceBuilder.sort("id", SortOrder.DESC);
-            QueryBuilder queryBuilder = QueryBuilders.termQuery("productName.keyword", esSearchDTO.getContents());
+            QueryBuilder queryBuilder = QueryBuilders.matchQuery("productName", esSearchDTO.getContents());
             boolQueryBuilder.should(queryBuilder);
         }
         return boolQueryBuilder;

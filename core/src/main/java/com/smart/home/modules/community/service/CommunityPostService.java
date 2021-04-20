@@ -248,8 +248,10 @@ public class CommunityPostService {
         communityPostBean.setSaveType(EsSaveTypeEnum.COMMUNITY_POST.getType());
         BeanUtils.copyProperties(communityPost, communityPostBean);
         communityPostBean.setCreatedTime(new Date());
-        Community community = communityMapper.selectByPrimaryKey(communityPost.getCommunity());
-        communityPostBean.setCommunityTitle(community.getTitle());
+        if (communityPost.getCommunity() != null) {
+            Community community = communityMapper.selectByPrimaryKey(communityPost.getCommunity());
+            communityPostBean.setCommunityTitle(community.getTitle());
+        }
         esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
         log.info("es insertOrUpdateOne 完毕：{}", communityPost.getId());
         if (affectRow > 0) {
