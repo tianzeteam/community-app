@@ -911,7 +911,9 @@
     <if test="channelId != null">
       and article.channel_id = #{channelId,jdbcType=INTEGER}
     </if>
-    and article.top_flag = #{topFlag,jdbcType=INTEGER}
+    <if test="topFlag != null">
+      and article.top_flag = #{topFlag,jdbcType=INTEGER}
+    </if>
     and article.recommend_type = #{recommendType,jdbcType=INTEGER}
     order by article.created_time desc
   </select>

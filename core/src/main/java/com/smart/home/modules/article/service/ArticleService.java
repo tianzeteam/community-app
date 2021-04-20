@@ -458,9 +458,9 @@ public class ArticleService {
         return articleMapper.queryIndexArticleCard(YesNoEnum.NO.getCode(), ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), null, YesNoEnum.YES.getCode());
     }
 
-    public List<Article> queryIndexArticleCardByPage(int pageNum, int pageSize) {
+    public List<Article> queryIndexArticleCardByPageIncludeTop(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        return queryIndexArticleCard();
+        return articleMapper.queryIndexArticleCard(null, ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), null, YesNoEnum.YES.getCode());
     }
 
     /**
@@ -503,4 +503,5 @@ public class ArticleService {
         }
         return articleMapper.queryChannelNameByChannelId(channelId);
     }
+
 }

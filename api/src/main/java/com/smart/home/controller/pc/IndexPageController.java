@@ -56,7 +56,7 @@ public class IndexPageController {
         List<Article> list = null;
         if (channelId == 1) {
             // 说明是推荐列表
-            list = articleService.queryIndexArticleCardByPage(pageNum, pageSize);
+            list = articleService.queryIndexArticleCardByPageIncludeTop(pageNum, pageSize);
         } else {
             list = articleService.selectArticleCardByPage(channelId, pageNum, pageSize);
         }
