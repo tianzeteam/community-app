@@ -71,9 +71,11 @@ public class ArticleService {
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public int update(Article article) {
+    public int update(Article article, boolean needChangeAuditStatus) {
         // 需求：更新后变成待审核
-        article.setAuditState(AuditStatusEnum.WAIT_AUDIT.getCode());
+        if (needChangeAuditStatus) {
+            article.setAuditState(AuditStatusEnum.WAIT_AUDIT.getCode());
+        }
         int affectRow = articleMapper.updateByPrimaryKeySelective(article);
         if (affectRow > 0) {
             articleEsServiceImpl.deleteById(article.getId());
@@ -203,7 +205,7 @@ public class ArticleService {
             article.setUpdatedBy(userId);
             article.setUpdatedTime(new Date());
             article.setAuditTime(new Date());
-            int affectRow = update(article);
+            int affectRow = update(article, false);
             if (affectRow > 0) {
                 // 增加一条审核记录
                 auditHistoryService.create(AuditCategoryEnum.ARTICLE_AUDIT, id, "文章审核通过", YesNoEnum.YES, userId);
@@ -248,7 +250,7 @@ public class ArticleService {
             article.setUpdatedBy(userId);
             article.setUpdatedTime(new Date());
             article.setRejectReason(rejectReason);
-            int affectRow = update(article);
+            int affectRow = update(article, false);
             if (affectRow > 0) {
                 // 增加一条审核记录
                 auditHistoryService.create(AuditCategoryEnum.ARTICLE_AUDIT, id, "文章审核未通过", YesNoEnum.NO, userId);
@@ -460,7 +462,7 @@ public class ArticleService {
 
     public List<Article> queryIndexArticleCardByPageIncludeTop(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
-        return articleMapper.queryIndexArticleCard(null, ArticleRecommendTypeEnum.ARTCILE_CARD.getCode(), null, YesNoEnum.YES.getCode());
+        return articleMapper.queryIndexArticleCard(null, null, null, YesNoEnum.YES.getCode());
     }
 
     /**

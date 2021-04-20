@@ -154,7 +154,7 @@ public class ArticleController {
         BeanUtils.copyProperties(articleUpdateDTO, article);
         article.setCreatedBy(UserUtils.getLoginUserId());
         article.setImageList(articleUpdateDTO.getImageList());
-        return APIResponse.OK(articleService.update(article));
+        return APIResponse.OK(articleService.update(article, true));
     }
     @ApiOperation("更新视频文章")
     @RoleAccess({RoleConsts.CREATOR, RoleConsts.REGISTER})
@@ -163,7 +163,7 @@ public class ArticleController {
         Article article = new Article();
         BeanUtils.copyProperties(articleUpdateDTO, article);
         article.setCreatedBy(UserUtils.getLoginUserId());
-        return APIResponse.OK(articleService.update(article));
+        return APIResponse.OK(articleService.update(article, true));
     }
 
     @ApiOperation("按主键id查询文章")
