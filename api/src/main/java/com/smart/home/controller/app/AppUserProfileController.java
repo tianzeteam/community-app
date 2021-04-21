@@ -121,6 +121,8 @@ public class AppUserProfileController {
             Long loginUserId = UserUtils.getLoginUserId();
             myProfileVO.setFocusFlag(userFocusService.queryFocusFlag(loginUserId, userId));
         }
+        myProfileVO.setFocusCount(userFocusService.countByUserId(userId));
+        myProfileVO.setFollowCount(userFollowerService.countByUserId(userId));
         return APIResponse.OK(myProfileVO);
     }
 

@@ -30,7 +30,12 @@ public class ArticleLikeHistoryService {
     public boolean create(ArticleLikeHistory articleLikeHistory) {
         boolean success = false;
         articleLikeHistory.setCreatedTime(new Date());
-        int affectRow = articleLikeHistoryMapper.insertSelective(articleLikeHistory);
+        int affectRow = 0;
+        try {
+            affectRow = articleLikeHistoryMapper.insertSelective(articleLikeHistory);
+        } catch (Throwable e) {
+            return false;
+        }
         if (affectRow > 0) {
             // 增加点赞数量
             if (articleLikeHistory.getCategory() == 0) {

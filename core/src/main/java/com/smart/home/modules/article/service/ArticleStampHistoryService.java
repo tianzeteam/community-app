@@ -27,7 +27,12 @@ public class ArticleStampHistoryService {
     public boolean create(ArticleStampHistory articleStampHistory) {
         boolean success = false;
         articleStampHistory.setCreatedTime(new Date());
-        int affectRow = articleStampHistoryMapper.insertSelective(articleStampHistory);
+        int affectRow = 0;
+        try {
+            affectRow = articleStampHistoryMapper.insertSelective(articleStampHistory);
+        } catch (Throwable e) {
+            return false;
+        }
         if (affectRow > 0) {
             // 增加点赞数量
             if (articleStampHistory.getType() == 0) {
