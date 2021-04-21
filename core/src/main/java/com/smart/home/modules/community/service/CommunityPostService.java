@@ -257,8 +257,8 @@ public class CommunityPostService {
             Community community = communityMapper.selectByPrimaryKey(communityPost.getCommunity());
             communityPostBean.setCommunityTitle(community.getTitle());
         }
-        CommunityPostBean bean = communityPostRepository.save(communityPostBean);
-//        esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
+//        CommunityPostBean bean = communityPostRepository.save(communityPostBean);
+        esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
         log.info("es insertOrUpdateOne 完毕：{}", communityPost.getId());
         if (affectRow > 0) {
             // 增加用户的发帖数量

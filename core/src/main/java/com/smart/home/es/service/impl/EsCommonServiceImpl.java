@@ -5,6 +5,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smart.home.es.common.EsConstant;
 import com.smart.home.es.dto.CommunityPostEsDTO;
 import com.smart.home.es.dto.EsSearchDTO;
@@ -52,12 +54,16 @@ public class EsCommonServiceImpl<T> implements EsCommonService<T> {
     @Autowired
     private RestHighLevelClient restHighLevelClient;
 
-
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     @Override
     public void insertOrUpdateOne(String idxName, String type, Long id, T t) {
         IndexRequest request = new IndexRequest(idxName, type, id.toString());
         log.info("es插入数据:index:{}  :  {}", idxName, JSON.toJSONString(t));
-        request.source(JSON.toJSONString(t), XContentType.JSON);
+        try {
+            request.source(MAPPER.writeValueAsString(t), XContentType.JSON);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         request.id(id.toString());
         try {
             restHighLevelClient.index(request, RequestOptions.DEFAULT);
