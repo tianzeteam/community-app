@@ -380,4 +380,18 @@
     or (receiver_id = #{fromUserId,jdbcType=BIGINT} and sender_id = #{loginUserId})
     order by created_time desc
   </select>
+
+  <select id="queryUnReadMessageSummary" resultType="com.smart.home.modules.message.dto.UnReadMessageSummary">
+    select ua.nick_name as nickName,
+           ua.head_url as headUrl,
+           ua.id as senderId,
+           count(ua.id) as totalCount,
+           (select mc2.message_content from message_content mc2 where mc2.sender_id  = ua.id) as latestMessage
+    from message_content mc
+                 left join user_account ua on ua.id = mc.sender_id
+    where mc.receiver_id  = #{receiverId,jdbcType=BIGINT}
+      and mc.read_flag  = 0
+      and mc.message_type =3
+    group by ua.id
+  </select>
 </mapper>
