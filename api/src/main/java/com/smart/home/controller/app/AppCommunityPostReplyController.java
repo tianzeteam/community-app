@@ -69,7 +69,7 @@ public class AppCommunityPostReplyController {
         log.info("发表一级评论params：{}", JSON.toJSONString(communityPostReplyReq));
         CommunityPost communityPost = communityPostService.findById(communityPostReplyReq.getId());
         if (communityPost == null) {
-            return APIResponse.ERROR("没有此文章");
+            return APIResponse.ERROR("没有此帖子");
         }
         Long fromUserId = UserUtils.getLoginUserId();
         communityPostReplyService.create(fromUserId, communityPostReplyReq.getId(), communityPostReplyReq.getContents(), communityPost.getCommunity().longValue());
