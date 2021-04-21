@@ -23,6 +23,7 @@ import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.enums.EsSaveTypeEnum;
 import com.smart.home.es.bean.CommunityPostBean;
 import com.smart.home.es.common.EsConstant;
+import com.smart.home.es.dao.CommunityPostRepository;
 import com.smart.home.es.service.EsCommonService;
 import com.smart.home.modules.community.dao.CommunityMapper;
 import com.smart.home.modules.community.dao.CommunityPostReplyMapper;
@@ -86,6 +87,8 @@ public class CommunityPostService {
     private UserFocusService userFocusService;
     @Resource
     private CommunityUserMappingMapper communityUserMappingMapper;
+    @Autowired
+    private CommunityPostRepository communityPostRepository;
 
 
     public void create(CommunityPost communityPost) {
@@ -254,7 +257,8 @@ public class CommunityPostService {
             Community community = communityMapper.selectByPrimaryKey(communityPost.getCommunity());
             communityPostBean.setCommunityTitle(community.getTitle());
         }
-        esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
+        CommunityPostBean bean = communityPostRepository.save(communityPostBean);
+//        esCommonService.insertOrUpdateOne(EsConstant.communityPostIndex, EsConstant.communityPost, communityPost.getId(), communityPostBean);
         log.info("es insertOrUpdateOne 完毕：{}", communityPost.getId());
         if (affectRow > 0) {
             // 增加用户的发帖数量
