@@ -24,9 +24,9 @@ public class MyProfileVO {
     @ApiModelProperty("签名")
     private String sign;
     @ApiModelProperty("关注数量")
-    private Integer focusCount;
+    private Long focusCount;
     @ApiModelProperty("粉丝数量")
-    private Integer followCount;
+    private Long followCount;
     @ApiModelProperty("获赞数量")
     private Integer likeCount;
 

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.enums.MessageTypeEnum;
 import com.smart.home.modules.message.dao.MessageContentMapper;
+import com.smart.home.modules.message.dto.UnReadMessageSummary;
 import com.smart.home.modules.message.entity.MessageContent;
 import com.smart.home.modules.message.entity.MessageContentExample;
 import com.smart.home.modules.message.entity.MessageReadHistory;
@@ -130,13 +131,16 @@ public class MessageContentService {
         messageContentMapper.insertSelective(messageContent);
     }
 
-    public List<MessageContent> queryUnReadMessage(Long loginUserId, Integer pageNum, Integer pageSize) {
+    public List<MessageContent> queryUnReadMessage(Long loginUserId,Long senderId, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         MessageContentExample messageContentExample = new MessageContentExample();
         messageContentExample.createCriteria()
                 .andReceiverIdEqualTo(loginUserId)
                 .andMessageTypeEqualTo(MessageTypeEnum.MESSAGE.getType())
                 .andReadFlagEqualTo(YesNoEnum.NO.getCode());
+        if (senderId != null) {
+            messageContentExample.createCriteria().andSenderIdEqualTo(senderId);
+        }
         messageContentExample.orderBy("created_time desc");
         return messageContentMapper.selectByExample(messageContentExample);
     }
@@ -149,5 +153,14 @@ public class MessageContentService {
 
     public void updateToRead(List<Long> messageIdList, Long loginUserId) {
         messageContentMapper.updateToRead(messageIdList, YesNoEnum.YES.getCode(), loginUserId);
+    }
+
+    public List<UnReadMessageSummary> queryUnReadMessageSummary(Long loginUserId, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<UnReadMessageSummary> list = messageContentMapper.queryUnReadMessageSummary(loginUserId);
+        for (UnReadMessageSummary unReadMessageSummary : list) {
+            unReadMessageSummary.setReceiverId(loginUserId);
+        }
+        return list;
     }
 }

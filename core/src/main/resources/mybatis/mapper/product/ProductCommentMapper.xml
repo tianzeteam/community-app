@@ -489,7 +489,7 @@
                   ua.nick_name as nickName,
                   '' as title,
                   ac.contents,
-                  '' as images,
+                  ac.images as images,
                   ac.reply_count as replyCount,
                   ac.like_count as likeCount,
                   ac.audit_flag as auditFlag,

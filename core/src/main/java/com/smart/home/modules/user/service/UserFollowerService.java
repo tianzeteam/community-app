@@ -64,4 +64,10 @@ public class UserFollowerService {
         PageHelper.startPage(pageNum, pageSize);
         return userFollowerMapper.myFocusByPage(userId);
     }
+
+    public Long countByUserId(Long userId) {
+        UserFollowerExample example = new UserFollowerExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        return userFollowerMapper.countByExample(example);
+    }
 }

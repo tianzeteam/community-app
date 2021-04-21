@@ -1,5 +1,6 @@
 package com.smart.home.modules.message.dao;
 
+import com.smart.home.modules.message.dto.UnReadMessageSummary;
 import com.smart.home.modules.message.entity.MessageContent;
 import com.smart.home.modules.message.entity.MessageContentExample;
 import java.util.List;
@@ -35,4 +36,6 @@ public interface MessageContentMapper {
     int updateToRead(@Param("messageIdList") List<Long> messageIdList,@Param("readFlag") int readFlag, @Param("toUserId") Long toUserId);
 
     List<MessageContent> queryChatMessage(@Param("loginUserId") Long loginUserId,@Param("fromUserId") Long fromUserId);
+
+    List<UnReadMessageSummary> queryUnReadMessageSummary(@Param("receiverId") Long receiverId);
 }

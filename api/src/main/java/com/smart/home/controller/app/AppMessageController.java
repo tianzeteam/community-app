@@ -4,10 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.smart.home.common.contants.RoleConsts;
 import com.smart.home.common.enums.YesNoEnum;
 import com.smart.home.common.util.BeanCopyUtils;
-import com.smart.home.controller.app.response.message.MessageLikeVO;
-import com.smart.home.controller.app.response.message.MessageNotifyVO;
-import com.smart.home.controller.app.response.message.MessageReplyVO;
-import com.smart.home.controller.app.response.message.UnReadMessageVO;
+import com.smart.home.controller.app.response.message.*;
 import com.smart.home.dto.APIResponse;
 import com.smart.home.dto.IdListBean;
 import com.smart.home.dto.ResponsePageBean;
@@ -18,6 +15,7 @@ import com.smart.home.modules.article.entity.Article;
 import com.smart.home.modules.article.entity.ArticleComment;
 import com.smart.home.modules.article.service.ArticleCommentService;
 import com.smart.home.modules.article.service.ArticleService;
+import com.smart.home.modules.message.dto.UnReadMessageSummary;
 import com.smart.home.modules.message.entity.MessageContent;
 import com.smart.home.modules.message.service.MessageContentService;
 import com.smart.home.util.ResponsePageUtil;
@@ -152,6 +150,7 @@ public class AppMessageController {
     @ApiOperation("获取未读私信-分页")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "deleteAfterQuery", value = "读取后删除:0否1是", required = true),
+            @ApiImplicitParam(name = "senderId", value = "发送人主键id", required = false),
             @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
             @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
     })
@@ -159,10 +158,11 @@ public class AppMessageController {
     @GetMapping("/queryUnReadMessage")
     public APIResponse<ResponsePageBean<UnReadMessageVO>> queryUnReadMessage(
             @RequestParam(required = true) Integer deleteAfterQuery,
+            @RequestParam(required = false) Long senderId,
             @RequestParam(required = true) Integer pageNum,
             @RequestParam(required = true) Integer pageSize) {
         Long loginUserId = UserUtils.getLoginUserId();
-        List<MessageContent> list = messageContentService.queryUnReadMessage(loginUserId, pageNum, pageSize);
+        List<MessageContent> list = messageContentService.queryUnReadMessage(loginUserId,senderId, pageNum, pageSize);
         if (CollUtil.isNotEmpty(list)) {
             List<Long> messageIdList = new ArrayList<>();
             for (MessageContent messageContent : list) {
@@ -177,6 +177,24 @@ public class AppMessageController {
         List<UnReadMessageVO> resultList = BeanCopyUtils.convertListTo(list, UnReadMessageVO::new);
         return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
     }
+
+    @ApiOperation("获取未读私信概览-分页")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "分页页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页数量", required = true)
+    })
+    @RoleAccess(RoleConsts.REGISTER)
+    @GetMapping("/queryUnReadMessageSummary")
+    public APIResponse<ResponsePageBean<UnReadMessageSummaryVO>> queryUnReadMessageSummary(
+            @RequestParam(required = true) Integer pageNum,
+            @RequestParam(required = true) Integer pageSize) {
+        Long loginUserId = UserUtils.getLoginUserId();
+        List<UnReadMessageSummary> list = messageContentService.queryUnReadMessageSummary(loginUserId, pageNum, pageSize);
+        List<UnReadMessageSummaryVO> resultList = BeanCopyUtils.convertListTo(list, UnReadMessageSummaryVO::new);
+        return APIResponse.OK(ResponsePageUtil.restPage(resultList, list));
+    }
+
+
 
     @ApiOperation("获取聊天界面消息-分页")
     @ApiImplicitParams({

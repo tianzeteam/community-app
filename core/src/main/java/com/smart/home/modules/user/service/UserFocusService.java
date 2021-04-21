@@ -137,4 +137,10 @@ public class UserFocusService {
         }
         return YesNoEnum.YES.getCode();
     }
+
+    public long countByUserId(Long userId) {
+        UserFocusExample example = new UserFocusExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        return userFocusMapper.countByExample(example);
+    }
 }
