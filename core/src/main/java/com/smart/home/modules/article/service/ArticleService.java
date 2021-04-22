@@ -78,17 +78,20 @@ public class ArticleService {
         }
         int affectRow = articleMapper.updateByPrimaryKeySelective(article);
         if (affectRow > 0) {
-            articleEsServiceImpl.deleteById(article.getId());
+            if (needChangeAuditStatus) {
+                articleEsServiceImpl.deleteById(article.getId());
+            } else {
+//                Article dbArticle = findById(article.getId());
+//                if (AuditStatusEnum.APPROVED.getCode() == dbArticle.getAuditState() && RecordStatusEnum.NORMAL.getStatus() == dbArticle.getOnlineStatus()) {
+//                    ArticleBean articleBean = new ArticleBean();
+//                    BeanUtils.copyProperties(dbArticle, articleBean);
+//                    articleBean.setSaveType(EsSaveTypeEnum.ARTICLE.getType());
+//                    articleBean.setChannelName(queryChannelNameByChannelId(dbArticle.getChannelId()));
+//                    articleEsServiceImpl.save(articleBean);
+//                }
+            }
         }
         syncUploadFiles(article.getCoverImage(), article.getBannerImages(), article.getImageList());
-//        Article dbArticle = findById(article.getId());
-//        if (AuditStatusEnum.APPROVED.getCode() == dbArticle.getAuditState() && RecordStatusEnum.NORMAL.getStatus() == dbArticle.getOnlineStatus()) {
-//            ArticleBean articleBean = new ArticleBean();
-//            BeanUtils.copyProperties(dbArticle, articleBean);
-//            articleBean.setSaveType(EsSaveTypeEnum.ARTICLE.getType());
-//            articleBean.setChannelName(queryChannelNameByChannelId(dbArticle.getChannelId()));
-//            articleEsServiceImpl.save(articleBean);
-//        }
         return affectRow;
     }
 
@@ -207,6 +210,8 @@ public class ArticleService {
             article.setAuditTime(new Date());
             int affectRow = update(article, false);
             if (affectRow > 0) {
+                // 累计评论数量
+                articleMapper.increaseCommentCount(id);
                 // 增加一条审核记录
                 auditHistoryService.create(AuditCategoryEnum.ARTICLE_AUDIT, id, "文章审核通过", YesNoEnum.YES, userId);
                 // 同步到es

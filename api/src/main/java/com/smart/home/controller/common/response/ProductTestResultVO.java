@@ -12,6 +12,8 @@ import lombok.ToString;
 @ToString
 public class ProductTestResultVO {
 
+    @ApiModelProperty("产品主键id")
+    private Integer productId;
     @ApiModelProperty("产品封面图片")
     private String coverImage;
     @ApiModelProperty("产品名称")
