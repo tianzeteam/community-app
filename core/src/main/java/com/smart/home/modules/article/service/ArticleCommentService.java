@@ -12,6 +12,7 @@ import com.smart.home.cloud.qcloud.enums.ContentAuditorSuggestionEnum;
 import com.smart.home.cloud.qcloud.enums.ImageAuditorSuggestionEnum;
 import com.smart.home.common.enums.AuditStatusEnum;
 import com.smart.home.common.enums.YesNoEnum;
+import com.smart.home.common.exception.ServiceException;
 import com.smart.home.enums.ArticleCategoryEnum;
 import com.smart.home.enums.AutoAuditFlagEnum;
 import com.smart.home.modules.article.dao.ArticleCommentMapper;
@@ -23,6 +24,7 @@ import com.smart.home.modules.system.service.SysDictService;
 import com.smart.home.modules.system.service.SysFileService;
 import com.smart.home.modules.user.service.UserAccountService;
 import com.smart.home.modules.user.service.UserDataService;
+import joptsimple.internal.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,6 +66,11 @@ public class ArticleCommentService {
                 .withUserId(loginUserId);
         articleComment.setToUserId(articleAuthorId);
         if (CollUtil.isNotEmpty(imageList)) {
+            for (String s : imageList) {
+                if (Strings.EMPTY.equals(s)) {
+                    throw new ServiceException("图片地址不能为空");
+                }
+            }
             articleComment.setImages(JSON.toJSONString(imageList));
             sysFileService.syncImageFileList(imageList);
         }
