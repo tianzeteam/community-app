@@ -90,7 +90,7 @@ public class AppCommunityController {
     }
 
     @RoleAccess(RoleConsts.REGISTER)
-    @ApiOperation("加入/不加入")
+    @ApiOperation("加入")
     @PostMapping("/userMapping/join")
     public APIResponse add(@RequestBody String idStr) {
         log.info("社区，加入：{}", idStr);
@@ -100,8 +100,8 @@ public class AppCommunityController {
         Integer id = jsonObject.getInteger("id");
         CommunityUserMapping userMapping = communityUserMappingService.getByUserIdAndCommunityId(loginUserId, id);
         if (userMapping != null) {
-            int i = communityUserMappingService.deleteById(Long.valueOf(id));
-            return APIResponse.OK(i);
+//            int i = communityUserMappingService.deleteById(Long.valueOf(id));
+            return APIResponse.ERROR("已加入");
         }
         communityUserMapping.setCommunityId(jsonObject.getInteger("id"));
         communityUserMapping.setUserId(loginUserId);
