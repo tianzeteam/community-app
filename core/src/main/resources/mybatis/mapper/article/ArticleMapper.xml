@@ -684,6 +684,7 @@
            a.cover_image as coverImage,
            a.banner_images as bannerImages,
            a.title,
+           a.user_id as userId,
            a.details,
            a.like_count as likeCount,
            a.visit_count as visitCount,
