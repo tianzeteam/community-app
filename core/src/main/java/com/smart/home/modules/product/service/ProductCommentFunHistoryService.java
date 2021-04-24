@@ -50,7 +50,7 @@ public class ProductCommentFunHistoryService {
 
     public void unfunCommnet(Long userId, Long id) {
         ProductCommentFunHistoryExample example = new ProductCommentFunHistoryExample();
-        example.createCriteria().andIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(0);
+        example.createCriteria().andSourceIdEqualTo(id).andUserIdEqualTo(userId).andCategoryEqualTo(0);
         if (productCommentFunHistoryMapper.deleteByExample(example) > 0) {
             productCommentService.decreaseFunCount(id);
         }

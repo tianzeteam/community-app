@@ -335,6 +335,7 @@
            pcr.stamp_count as stampCount,
            pcr.to_user_id as toUserId,
            pcr.to_user_name as toUserName,
+           pcr.created_time as createdTime,
            pclh.id as likeId,
            pcsh.id as stampId
     from product_comment_reply pcr

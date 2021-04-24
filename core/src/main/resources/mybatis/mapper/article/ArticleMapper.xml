@@ -746,7 +746,8 @@
   </select>
 
   <update id="increaseCommentCount">
-    update article set comment_count = comment_count + 1 where id = #{articleId,jdbcType=BIGINT}
+    update article set comment_count = comment_count + 1
+    where id = (select article_id from article_comment where id = #{articleCommentId,jdbcType=BIGINT})
   </update>
 
   <update id="increaseVisitCount">

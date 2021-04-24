@@ -312,6 +312,10 @@ public class ArticleCommentService {
         articleCommentMapper.updateAuditFlag(id, AuditStatusEnum.REJECT.getCode());
     }
 
+    /**
+     *
+     * @param id 这个是评论主键id， 不是文章主键id
+     */
     public void manuallyApprove(Long id) {
         int affectRow = articleCommentMapper.updateAuditFlag(id, AuditStatusEnum.APPROVED.getCode());
         if (affectRow > 0) {

@@ -112,4 +112,10 @@
             insert into sys_config(param_key, param_value, remark, REVISION) values ('qcloud.sms.temp.bindCode', '890845','绑定手机号发送的验证码', 0);
         </sql>
     </changeSet>
+    <changeSet id="updateSysTraceLog4SysConfig" author="jason">
+        <comment>上线的时候不要记录日志到数据库了</comment>
+        <sql>
+            update sys_config set param_value = 'log' where param_key = 'trace.log.storeType';
+        </sql>
+    </changeSet>
 </databaseChangeLog>

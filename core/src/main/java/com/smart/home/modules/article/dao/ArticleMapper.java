@@ -52,7 +52,7 @@ public interface ArticleMapper {
 
     Article queryDetailByIdWhenLogin(@Param("articleId") Long articleId,@Param("userId") Long userId);
 
-    int increaseCommentCount(@Param("articleId") Long articleId);
+    int increaseCommentCount(@Param("articleCommentId") Long articleCommentId);
 
     int increaseVisitCount(@Param("articleId") Long articleId);
 
