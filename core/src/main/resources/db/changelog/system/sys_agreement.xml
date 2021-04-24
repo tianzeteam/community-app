@@ -68,4 +68,19 @@
             insert into sys_agreement(type,name,details,REVISION) values (6,'第三方服务','测试数据，待完善',0);
         </sql>
     </changeSet>
+    <changeSet id="updateDetails4SysAgreement" author="jason">
+        <comment>更新关联的静态页面数据</comment>
+        <sql>
+            UPDATE sys_agreement SET details='https://www.stonelit.cn/page/8' WHERE type = 0;
+            UPDATE sys_agreement SET details='https://www.stonelit.cn/page/12' WHERE type = 1;
+            UPDATE sys_agreement SET details='https://www.stonelit.cn/page/10' WHERE type = 2;
+            UPDATE sys_agreement SET details='https://www.stonelit.cn/page/11' WHERE type = 3;
+            UPDATE sys_agreement SET details='https://www.stonelit.cn/page/13' WHERE type = 4;
+            UPDATE sys_agreement SET details='https://www.stonelit.cn/page/14' WHERE type = 5;
+            UPDATE sys_agreement SET details='https://www.stonelit.cn/page/15' WHERE type = 6;
+            UPDATE sys_agreement SET details='https://www.stonelit.cn/page/16' WHERE type = 50;
+            UPDATE sys_agreement SET details='https://www.stonelit.cn/page/17' WHERE type = 51;
+            UPDATE sys_agreement SET details='https://www.stonelit.cn/page/18' WHERE type = 52;
+        </sql>
+    </changeSet>
 </databaseChangeLog>
